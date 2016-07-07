@@ -1,2 +1,4 @@
 *.[oa]
 *~
+# default directory with subdirectories containing results from single runs
+results/
