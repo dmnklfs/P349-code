@@ -34,7 +34,7 @@ public:
 	void save_output_file();
 	void create_rough_data_tree();
 
-	long int no_of_events_to_analyse();
+	long int get_no_of_events_to_analyse();
 	int no_of_good_hits();
 
 	void get_entry(int _entry);
@@ -111,10 +111,10 @@ private:
 	int hits_hodo_D;
 	int hits_start_up;
 	int error_flag;
-	std::vector < double > time_real;			// does not work 22.06
-	std::vector < double > time_overthres;
-	std::vector < double > time_diff;
-	std::vector < int > gglobal_chan;
+	std::vector < double > *time_real;
+	std::vector < double > *time_overthres;
+	std::vector < double > *time_diff;
+	std::vector < int > *gglobal_chan; // does not work 08.07
 	int hits_good;
 	double treal;
 	double tover;
@@ -135,6 +135,5 @@ private:
 	Int_t gh_element;
 	Int_t gh_edge;
 };
-
 
 #endif

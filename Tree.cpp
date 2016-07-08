@@ -100,13 +100,13 @@ void Tree::create_preselected_data_tree()
 	preselected_data_tree->Branch ("time_real", &time_real);
 	preselected_data_tree->Branch ("time_diff", &time_diff);
 	preselected_data_tree->Branch ("time_overthres", &time_overthres);
-	preselected_data_tree->Branch ("global_chan", &gglobal_chan);
+	preselected_data_tree->Branch ("gglobal_chan", &gglobal_chan);
 	preselected_data_tree->Branch ("hits_total", &hits_total);
-	preselected_data_tree->Branch ("hits_ref", &hits_ref);
-	preselected_data_tree->Branch ("hits_cherenkov", &hits_cherenkov);
+	//preselected_data_tree->Branch ("hits_ref", &hits_ref);
+	//preselected_data_tree->Branch ("hits_cherenkov", &hits_cherenkov);
 	preselected_data_tree->Branch ("hits_good", &hits_good);
-	preselected_data_tree->Branch ("hits_channel", hits_channel, "hits_channel[2860]/I");
-	preselected_data_tree->Branch ("tottime_trigger", &tottime_trigger, "time_trigger/D");
+	//preselected_data_tree->Branch ("hits_channel", hits_channel, "hits_channel[2860]/I");
+	//preselected_data_tree->Branch ("tottime_trigger", &tottime_trigger, "time_trigger/D");
 	preselected_data_tree->Branch ("P349_hitdata",&ghitdata);
 	std::cout << "        tree for preselected data was created" << std::endl;
 }
@@ -118,13 +118,13 @@ void Tree::create_rough_data_tree()
 	rough_data_tree->Branch ("time_real", &time_real);
 	rough_data_tree->Branch ("time_diff", &time_diff);
 	rough_data_tree->Branch ("time_overthres", &time_overthres);
-	rough_data_tree->Branch ("global_chan", &gglobal_chan);
+	rough_data_tree->Branch ("gglobal_chan", &gglobal_chan);
 	rough_data_tree->Branch ("hits_total", &hits_total);
-	rough_data_tree->Branch ("hits_ref", &hits_ref);
-	rough_data_tree->Branch ("hits_cherenkov", &hits_cherenkov);
+	//rough_data_tree->Branch ("hits_ref", &hits_ref);
+	//rough_data_tree->Branch ("hits_cherenkov", &hits_cherenkov);
 	rough_data_tree->Branch ("hits_good", &hits_good);
-	rough_data_tree->Branch ("hits_channel", hits_channel, "hits_channel[2860]/I");
-	rough_data_tree->Branch ("tottime_trigger", &tottime_trigger, "time_trigger/D");
+	//rough_data_tree->Branch ("hits_channel", hits_channel, "hits_channel[2860]/I");
+	//rough_data_tree->Branch ("tottime_trigger", &tottime_trigger, "time_trigger/D");
 	rough_data_tree->Branch ("P349_hitdata",&ghitdata);
 	std::cout << "        tree for rough data was created" << std::endl;
 }
@@ -144,13 +144,17 @@ void Tree::open_input_files(char *argv[])
 	chain->SetBranchAddress("hits_total", &hits_total);
 	chain->SetBranchAddress("hits_good", &hits_good);
 	chain->SetBranchAddress("P349_hitdata",&ghitdata);
+	chain->SetBranchAddress("time_real", &time_real);
+	chain->SetBranchAddress("time_diff", &time_diff);
+	chain->SetBranchAddress("time_overthres", &time_overthres);
+	chain->SetBranchAddress("gglobal_chan", &gglobal_chan);
 
 	all_entries = chain->GetEntries();
 
 	std::cout << "* total number of events in chain: " << all_entries << std::endl;
 }
 
-long int Tree::no_of_events_to_analyse()
+long int Tree::get_no_of_events_to_analyse()
 {
 	return number_to_analyse;
 }
@@ -159,6 +163,10 @@ long int Tree::no_of_events_to_analyse()
 void Tree::get_entry(int _entry)
 {
 	ghitdata->Clear();
+	time_real->clear();
+	time_overthres->clear();
+	time_diff->clear();
+	gglobal_chan->clear();
 	chain->GetEntry(_entry);
 }
 

@@ -30,7 +30,7 @@
 
 bool check_input(int argc, char *argv[])
 {
-	if (argc < 8 || atoi(argv[2]) > 2 || atoi(argv[2]) < 0)
+	if (argc < 8 || atoi(argv[2]) > 2 || atoi(argv[2]) < 0 || atoi(argv[3]) < -1 || atoi(argv[4]) < 0 || atoi(argv[4]) > 1 || atoi(argv[5]) < 0 || atoi(argv[5]) > 1 )
 	{
 		std::cout << "\n" << std::endl;
 		std::cout << "Wrong input!!!" << std::endl;

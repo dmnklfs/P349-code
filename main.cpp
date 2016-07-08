@@ -3,20 +3,17 @@
 
 int main(int argc, char *argv[])
 {
-	TCanvas *dummycanvas=new TCanvas(); // ???
-	delete dummycanvas;
-
-	if( false == check_input(argc, argv) ) return 0;
+	if( false == check_input(argc, argv) ) return 0; // add checks
 	Tree *in_out = new Tree(argc, argv);  // input file(s) are opened, output file is created
 
 	SingleEvent *single_event;
-	int detector;
+	int detector; // make it a struct
 	int layer;
 	int element;
 	int edge;
 	double treal;
 	std::cout << "* start of the loop over the events" << std::endl;
-	for (long int entry = 0; entry < in_out -> Tree::no_of_events_to_analyse(); entry++)
+	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
   	{
   		single_event = new SingleEvent();
   		if(0==entry%100000) std::cout << entry << std::endl;
@@ -25,7 +22,7 @@ int main(int argc, char *argv[])
   		//loop over good hits in the single event
   		for (Int_t i = 0; i < in_out -> Tree::no_of_good_hits() ; i++)
 	    {
-		   	in_out -> Tree::get_good_hit(i);
+		   	in_out -> Tree::get_good_hit(i);  // make it a struct
 		   	detector = in_out -> Tree::get_det();
 		   	layer = in_out -> Tree::get_layer();
 			element = in_out -> Tree::get_element();
