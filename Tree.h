@@ -22,7 +22,7 @@
 #include <sstream>
 #include "P349_data.h"
 #include "Hist.h"
-#include "Config.h" // only because of struct
+#include "struct.h"
 
 class Tree
 	: public Hist
@@ -40,8 +40,9 @@ public:
 	void get_entry(int _entry);
 	void get_good_hit(int _hit);
 
-	void fill_rough_data_tree(start_hist_data _start_data);
-	void fill_preselected_data_tree(start_hist_data _start_data);
+	// these functions also fill control histograms (histos are filled despite rough/preselected variable value)
+	void fill_rough_data_tree(hist_data _data_for_hists);
+	void fill_preselected_data_tree(hist_data _data_for_hists);
 
 	// get hits
 	Double_t get_treal();

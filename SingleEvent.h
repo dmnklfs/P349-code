@@ -8,8 +8,9 @@ class SingleEvent
 public:
 	SingleEvent();
 	~SingleEvent();
-	void fill_good_hits(int _stage, int _layer, int _element, double _treal, int _edge);
-	bool was_correct_event(int stage);
+	void fill_good_hits(const int _stage, single_gh_data _good_hit_data);
+	bool was_correct_event(const int stage);
+	hist_data get_hist_data();
 
 private:
 	bool correct_event;

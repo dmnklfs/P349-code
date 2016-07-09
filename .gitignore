@@ -1,5 +1,6 @@
 *.[oa]
 *~
+*.exe
 <<<<<<< HEAD
 =======
 # default directory with subdirectories containing results from single runs

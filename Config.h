@@ -1,13 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// move from here?
-struct start_hist_data
-{
-	unsigned int rough_multiplicity_up, rough_multiplicity_down; 
-	unsigned int preselected_multiplicity_up, preselected_multiplicity_down; 
-};
-
 class Config
 {
 public:

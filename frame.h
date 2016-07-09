@@ -22,6 +22,7 @@
 #include <string>
 #include <sstream>
 #include <ctime>
+#include "struct.h"
 #include "Tree.h"
 #include "SingleEvent.h" 
 

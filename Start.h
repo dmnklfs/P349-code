@@ -28,6 +28,7 @@
 #include <string>
 #include <sstream>
 #include "Config.h"
+#include "struct.h"
 
 class Start
 	: public Config
@@ -35,7 +36,7 @@ class Start
 public:
 	Start();
 	~Start();
-	void fill_good_hits(int _stage, int _layer, int _element, double _treal, int _edge);
+	void fill_good_hits(const int _stage, single_gh_data _good_hit_data);
 	bool was_correct_event();
 	void check_hits();
 	start_hist_data get_hist_data();

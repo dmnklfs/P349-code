@@ -187,20 +187,20 @@ void Tree::get_good_hit(int _hit)
 }
 
 // --- filling trees ---
-void Tree::fill_rough_data_tree(start_hist_data _start_data)
+void Tree::fill_rough_data_tree(hist_data _data_for_hists)
 {
-	Hist::Rough_Layer_Up_Multiplicity -> Fill(_start_data.rough_multiplicity_up);
-	Hist::Rough_Layer_Down_Multiplicity -> Fill(_start_data.rough_multiplicity_down);
+	Hist::Rough_Layer_Up_Multiplicity -> Fill(_data_for_hists.start_data.rough_multiplicity_up);
+	Hist::Rough_Layer_Down_Multiplicity -> Fill(_data_for_hists.start_data.rough_multiplicity_down);
 	if (rough_tree)
 	{
 		rough_data_tree -> Fill();
 	}
 }
 
-void Tree::fill_preselected_data_tree(start_hist_data _start_data)
+void Tree::fill_preselected_data_tree(hist_data _data_for_hists)
 {
-	Hist::Preselected_Layer_Up_Multiplicity -> Fill(_start_data.preselected_multiplicity_up);
-	Hist::Preselected_Layer_Down_Multiplicity -> Fill(_start_data.preselected_multiplicity_down);
+	Hist::Preselected_Layer_Up_Multiplicity -> Fill(_data_for_hists.start_data.preselected_multiplicity_up);
+	Hist::Preselected_Layer_Down_Multiplicity -> Fill(_data_for_hists.start_data.preselected_multiplicity_down);
 	if (preselected_tree)
 	{
 		preselected_data_tree -> Fill();

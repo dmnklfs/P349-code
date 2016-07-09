@@ -11,35 +11,35 @@ Start::~Start()
 	
 }
 
-void Start::fill_good_hits(int _stage, int _layer, int _element, double _treal, int _edge)
+void Start::fill_good_hits(const int _stage, single_gh_data _good_hit_data)
 {
 	if (1 ==_stage)  // input data before preselection
 	{
-		if ( 1 == _layer)
+		if ( 1 == _good_hit_data.layer)
 		{
-			RoughEdgeUp.push_back(_edge);
-			RoughTrealUp.push_back(_treal);
-			RoughElementUp.push_back(_element);
+			RoughEdgeUp.push_back(_good_hit_data.edge);
+			RoughTrealUp.push_back(_good_hit_data.treal);
+			RoughElementUp.push_back(_good_hit_data.element);
 		}
-		if ( 2 == _layer)
+		if ( 2 == _good_hit_data.layer)
 		{
-			RoughEdgeDown.push_back(_edge);
-			RoughTrealDown.push_back(_treal);
-			RoughElementDown.push_back(_element);
+			RoughEdgeDown.push_back(_good_hit_data.edge);
+			RoughTrealDown.push_back(_good_hit_data.treal);
+			RoughElementDown.push_back(_good_hit_data.element);
 		}
 	}
 
 	if (2 ==_stage)  // input data after preselection
 	{
-		if ( 1 == _layer)
+		if ( 1 == _good_hit_data.layer)
 		{
-			TrealUp.push_back(_treal);
-			ElementUp.push_back(_element);
+			TrealUp.push_back(_good_hit_data.treal);
+			ElementUp.push_back(_good_hit_data.element);
 		}
-		if ( 2 == _layer)
+		if ( 2 == _good_hit_data.layer)
 		{
-			TrealDown.push_back(_treal);
-			ElementDown.push_back(_element);
+			TrealDown.push_back(_good_hit_data.treal);
+			ElementDown.push_back(_good_hit_data.element);
 		}
 	}
 }
