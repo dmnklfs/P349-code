@@ -52,7 +52,7 @@ bool Start::was_correct_event()
 
 void Start::check_hits()
 {
-	if (Start::check_size() && Start::check_signal(RoughEdgeUp, RoughTrealUp) && Start::check_signal(RoughEdgeDown, RoughTrealDown)) correct_event = true;
+	if (Start::check_size_up() && Start::check_size_down() && Start::check_signal(RoughEdgeUp, RoughTrealUp) && Start::check_signal(RoughEdgeDown, RoughTrealDown)) correct_event = true;
 	else correct_event = false;
 	Start::fill_data_if_correct();
 }
@@ -74,9 +74,18 @@ bool Start::check_signal(std::vector<int> & Edge, std::vector<double > & Time)
 	return true;
 }
 
-bool Start::check_size()
+bool Start::check_size_up()
 {
-	if (Config::start_hits*2 == RoughElementUp.size() && Config::start_hits*2 == RoughElementDown.size()) 
+	if (Config::start_hits*2 == RoughElementUp.size()) 
+	{
+		return true;
+	}
+	else return false;
+}
+
+bool Start::check_size_down()
+{
+	if (Config::start_hits*2 == RoughElementDown.size()) 
 	{
 		return true;
 	}

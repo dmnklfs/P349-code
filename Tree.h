@@ -23,6 +23,7 @@
 #include "P349_data.h"
 #include "Hist.h"
 #include "struct.h"
+#include "SingleEvent.h"
 
 class Tree
 	: public Hist

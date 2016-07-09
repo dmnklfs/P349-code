@@ -18,14 +18,14 @@ public:
 	// ...
 
 	// ---TOF---
-	// range of selected elements (1 - 10)
-	int TOF_element_min;
-	int TOF_element_max;
 	// no of correct signals (leading & trailing edge) in up (down) layer
-	int TOF_hits;
+	unsigned int TOF_hits;
 	// time range for signals
 	double TOF_time_min;
 	double TOF_time_max;
+	// range of selected elements (1 - 10)
+	int TOF_element_min;
+	int TOF_element_max;
 	// detector position
 	// ...
 

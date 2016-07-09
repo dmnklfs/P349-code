@@ -29,12 +29,23 @@ public:
 	~Hist();
 	std::vector<TH1F> return_histos();
 
-// private ??
-	TH1F *Rough_Layer_Up_Multiplicity;
-	TH1F *Rough_Layer_Down_Multiplicity;
-	TH1F *Preselected_Layer_Up_Multiplicity;
-	TH1F *Preselected_Layer_Down_Multiplicity;
-	// some more?
+	// START
+	TH1F *START_Rough_Layer_Up_Multiplicity;
+	TH1F *START_Rough_Layer_Down_Multiplicity;
+	TH1F *START_Preselected_Layer_Up_Multiplicity;
+	TH1F *START_Preselected_Layer_Down_Multiplicity;
+	
+	// TOF
+	TH1F *TOF_Rough_Layer_Up_Multiplicity;
+	TH1F *TOF_Rough_Layer_Down_Multiplicity;
+	TH1F *TOF_Preselected_Layer_Up_Multiplicity;
+	TH1F *TOF_Preselected_Layer_Down_Multiplicity;
+
+	TH1F *TOF_Rough_Layer_Up_Elements;
+	TH1F *TOF_Rough_Layer_Down_Element;
+	TH1F *TOF_Preselected_Layer_Up_Element;
+	TH1F *TOF_Preselected_Layer_Down_Element;
+
 	
 };
 

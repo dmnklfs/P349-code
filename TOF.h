@@ -1,5 +1,5 @@
-#ifndef START_H
-#define START_H
+#ifndef TOF_H
+#define TOF_H
 #include "TFile.h"
 #include "TH1.h"
 #include "TH2.h"
@@ -24,22 +24,23 @@
 #include "Config.h"
 #include "struct.h"
 
-class Start
+class TOF
 	: public Config
 {
 public:
-	Start();
-	~Start();
+	TOF();
+	~TOF();
 	void fill_good_hits(const int _stage, single_gh_data _good_hit_data);
 	bool was_correct_event();
 	void check_hits();
-	start_hist_data get_hist_data();
+	TOF_hist_data get_hist_data();
 
 private:
 	bool check_signal(std::vector<int> & Edge, std::vector<double > & Time);
 	bool check_size_up();
 	bool check_size_down();
 	bool check_time_range(double treal);
+	bool check_elements(std::vector<int> & _ElementDown, std::vector<int> & _ElementUp);
 	void fill_data_if_correct();
 
 	// after preselection

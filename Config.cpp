@@ -7,11 +7,11 @@ Config::Config()
 	start_time_min = -1500;
 	start_time_max = 1500;
 
-	TOF_element_min = 1;
-	TOF_element_max = 10;
 	TOF_hits  = 1;
 	TOF_time_min = -1500;
 	TOF_time_max = 1500;
+	TOF_element_min = 5;
+	TOF_element_max = 9;
 	
 /*
 	INTERMEDIATE_element_min = 1;

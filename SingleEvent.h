@@ -1,9 +1,10 @@
 #ifndef SINGLE_EVENT_H
 #define SINGLE_EVENT_H
 #include "Start.h"
+#include "TOF.h"
 
 class SingleEvent
-	: public Start
+	: public Start, public TOF
 {
 public:
 	SingleEvent();
