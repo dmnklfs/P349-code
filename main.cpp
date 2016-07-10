@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 			// filling detectors variables
 		   	if (good_hit_data.detector == START) single_event -> Start::fill_good_hits(analysis_stage, good_hit_data);
 		   	if (good_hit_data.detector == NTOF) single_event -> TOF::fill_good_hits(analysis_stage, good_hit_data);	
+		   	if (good_hit_data.detector == ND1) single_event -> D1::fill_good_hits(analysis_stage, good_hit_data);	
 		} // end of loop over good hits
 
 		if (single_event -> SingleEvent::was_correct_event(analysis_stage))

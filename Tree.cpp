@@ -64,7 +64,9 @@ Tree::~Tree()
 
 }
 
-// --- output ---
+// =======================================================================================================
+// =============================== OUTPUT ================================================================
+// =======================================================================================================
 void Tree::create_output_directory()
 {
 	boost::filesystem::create_directories(output_dir_name);
@@ -81,29 +83,14 @@ void Tree::save_output_file()
 {
 	output_file -> cd();
 	rough_hist -> cd();
-	Hist::START_Rough_Layer_Up_Multiplicity -> Write();
-	Hist::START_Rough_Layer_Down_Multiplicity -> Write();
-
-	Hist::TOF_Rough_Layer_Up_Multiplicity -> Write();
-	Hist::TOF_Rough_Layer_Down_Multiplicity -> Write();
-
-	Hist::TOF_Rough_Layer_Up_Elements -> Write();
-	Hist::TOF_Rough_Layer_Down_Element -> Write();
+	save_rough_histos();
 
 	output_file -> cd();
 	preselected_hist -> cd();
-	Hist::START_Preselected_Layer_Up_Multiplicity -> Write();
-	Hist::START_Preselected_Layer_Down_Multiplicity -> Write();
-
-	Hist::TOF_Preselected_Layer_Up_Multiplicity -> Write();
-	Hist::TOF_Preselected_Layer_Down_Multiplicity -> Write();
-
-	Hist::TOF_Preselected_Layer_Up_Element -> Write();
-	Hist::TOF_Preselected_Layer_Down_Element -> Write();
+	save_preselected_histos();
 	
 	output_file -> Write();
 }
-
 
 void Tree::create_preselected_data_tree()
 {
@@ -141,7 +128,32 @@ void Tree::create_rough_data_tree()
 	std::cout << "        tree for rough data was created" << std::endl;
 }
 
-// --- input ---
+// --- filling trees ---
+void Tree::fill_rough_data_tree(hist_data _data_for_hists)
+{
+	fill_start_histos_rough(_data_for_hists.start_data);
+	fill_TOF_histos_rough(_data_for_hists.tof_data);
+	fill_D1_histos_rough(_data_for_hists.d1_data);
+	if (rough_tree)
+	{
+		rough_data_tree -> Fill();
+	}
+}
+
+void Tree::fill_preselected_data_tree(hist_data _data_for_hists)
+{
+	fill_start_histos_preselected(_data_for_hists.start_data);
+	fill_TOF_histos_preselected(_data_for_hists.tof_data);
+	fill_D1_histos_preselected(_data_for_hists.d1_data);
+	if (preselected_tree)
+	{
+		preselected_data_tree -> Fill();
+	}
+}
+
+// =======================================================================================================
+// =============================== INPUT  ================================================================
+// =======================================================================================================
 void Tree::open_input_files(char *argv[])
 {
 	std::cout << "* no of used root trees: " << no_of_args - 6 << std::endl;
@@ -171,7 +183,9 @@ long int Tree::get_no_of_events_to_analyse()
 	return number_to_analyse;
 }
 
-// --- entries ---
+// =======================================================================================================
+// =============================== ENTRIES & GOOD HITS====================================================
+// =======================================================================================================
 void Tree::get_entry(int _entry)
 {
 	ghitdata->Clear();
@@ -198,27 +212,37 @@ void Tree::get_good_hit(int _hit)
 	gh_edge = temp->GetEdge();
 }
 
-// --- filling trees ---
-void Tree::fill_rough_data_tree(hist_data _data_for_hists)
+// --- return values ---
+Double_t Tree::get_treal()
 {
-	fill_start_histos_rough(_data_for_hists.start_data);
-	fill_TOF_histos_rough(_data_for_hists.tof_data);
-	if (rough_tree)
-	{
-		rough_data_tree -> Fill();
-	}
+	return gh_treal;
 }
 
-void Tree::fill_preselected_data_tree(hist_data _data_for_hists)
+Int_t Tree::get_det()
 {
-	fill_start_histos_preselected(_data_for_hists.start_data);
-	fill_TOF_histos_preselected(_data_for_hists.tof_data);
-	if (preselected_tree)
-	{
-		preselected_data_tree -> Fill();
-	}
+	return gh_det;
 }
 
+Int_t Tree::get_layer()
+{
+	return gh_layer;
+}
+
+Int_t Tree::get_element()
+{
+	return gh_element;
+}
+
+Int_t Tree::get_edge()
+{
+	return gh_edge;
+}
+
+// ==========================================================================================================
+// ======================== HISTOS FUNCTIONS ================================================================
+// ==========================================================================================================
+
+// ======================== FILLING =========================================================================
 void Tree::fill_start_histos_rough(start_hist_data _start_data)
 {
 	Hist::START_Rough_Layer_Up_Multiplicity -> Fill(_start_data.rough_multiplicity_up);
@@ -248,29 +272,76 @@ void Tree::fill_TOF_histos_preselected(TOF_hist_data _tof_data)
 	for (unsigned int i = 0; i < _tof_data.preselected_elements_down.size(); i++) Hist::TOF_Preselected_Layer_Down_Element -> Fill(_tof_data.preselected_elements_down.at(i));
 }
 
-// --- return values ---
-Double_t Tree::get_treal()
+void Tree::fill_D1_histos_rough(D1_hist_data _d1_data)
 {
-	return gh_treal;
+	// layer 1
+	for (unsigned int i = 0; i < _d1_data.layer1_data.rough_elements.size(); i++) Hist::D1_Rough_Layer1_Elements -> Fill(_d1_data.layer1_data.rough_elements.at(i));
+	Hist::D1_Rough_Layer1_Multiplicity -> Fill(_d1_data.layer1_data.rough_elements.size());
+	// layer 2
+	for (unsigned int i = 0; i < _d1_data.layer2_data.rough_elements.size(); i++) Hist::D1_Rough_Layer2_Elements -> Fill(_d1_data.layer2_data.rough_elements.at(i));
+	Hist::D1_Rough_Layer2_Multiplicity -> Fill(_d1_data.layer2_data.rough_elements.size());
+	// layer 7
+	for (unsigned int i = 0; i < _d1_data.layer7_data.rough_elements.size(); i++) Hist::D1_Rough_Layer7_Elements -> Fill(_d1_data.layer7_data.rough_elements.at(i));
+	Hist::D1_Rough_Layer7_Multiplicity -> Fill(_d1_data.layer7_data.rough_elements.size());
+	// layer 8
+	for (unsigned int i = 0; i < _d1_data.layer8_data.rough_elements.size(); i++) Hist::D1_Rough_Layer8_Elements -> Fill(_d1_data.layer8_data.rough_elements.at(i));
+	Hist::D1_Rough_Layer8_Multiplicity -> Fill(_d1_data.layer8_data.rough_elements.size());
 }
 
-Int_t Tree::get_det()
+void Tree::fill_D1_histos_preselected(D1_hist_data _d1_data)
 {
-	return gh_det;
+	// layer 1
+	for (unsigned int i = 0; i < _d1_data.layer1_data.preselected_elements.size(); i++) Hist::D1_Preselected_Layer1_Elements -> Fill(_d1_data.layer1_data.preselected_elements.at(i));
+	D1_Preselected_Layer1_Multiplicity -> Fill(_d1_data.layer1_data.preselected_elements.size());
+	// layer 2
+	for (unsigned int i = 0; i < _d1_data.layer2_data.preselected_elements.size(); i++) Hist::D1_Preselected_Layer2_Elements -> Fill(_d1_data.layer2_data.preselected_elements.at(i));
+	Hist::D1_Preselected_Layer2_Multiplicity -> Fill(_d1_data.layer2_data.preselected_elements.size());
+	// layer 7
+	for (unsigned int i = 0; i < _d1_data.layer7_data.preselected_elements.size(); i++) Hist::D1_Preselected_Layer7_Elements -> Fill(_d1_data.layer7_data.preselected_elements.at(i));
+	Hist::D1_Preselected_Layer7_Multiplicity -> Fill(_d1_data.layer7_data.preselected_elements.size());
+	// layer 8
+	for (unsigned int i = 0; i < _d1_data.layer8_data.preselected_elements.size(); i++) Hist::D1_Preselected_Layer8_Elements -> Fill(_d1_data.layer8_data.preselected_elements.at(i));
+	Hist::D1_Preselected_Layer8_Multiplicity -> Fill(_d1_data.layer8_data.preselected_elements.size());
 }
 
-Int_t Tree::get_layer()
+// ======================== SAVING +=========================================================================
+void Tree::save_rough_histos()
 {
-	return gh_layer;
-}
+	Hist::START_Rough_Layer_Up_Multiplicity -> Write();
+	Hist::START_Rough_Layer_Down_Multiplicity -> Write();
 
-Int_t Tree::get_element()
+	Hist::TOF_Rough_Layer_Up_Multiplicity -> Write();
+	Hist::TOF_Rough_Layer_Down_Multiplicity -> Write();
+
+	Hist::TOF_Rough_Layer_Up_Elements -> Write();
+	Hist::TOF_Rough_Layer_Down_Element -> Write();
+
+	Hist::D1_Rough_Layer1_Elements ->Write();
+	Hist::D1_Rough_Layer1_Multiplicity -> Write();
+	Hist::D1_Rough_Layer2_Elements -> Write();
+	Hist::D1_Rough_Layer2_Multiplicity -> Write();
+	Hist::D1_Rough_Layer7_Elements -> Write();
+	Hist::D1_Rough_Layer7_Multiplicity -> Write();
+	Hist::D1_Rough_Layer8_Elements -> Write();
+	Hist::D1_Rough_Layer8_Multiplicity -> Write();
+}
+void Tree::save_preselected_histos()
 {
-	return gh_element;
-}
+	Hist::START_Preselected_Layer_Up_Multiplicity -> Write();
+	Hist::START_Preselected_Layer_Down_Multiplicity -> Write();
 
-Int_t Tree::get_edge()
-{
-	return gh_edge;
-}
+	Hist::TOF_Preselected_Layer_Up_Multiplicity -> Write();
+	Hist::TOF_Preselected_Layer_Down_Multiplicity -> Write();
 
+	Hist::TOF_Preselected_Layer_Up_Element -> Write();
+	Hist::TOF_Preselected_Layer_Down_Element -> Write();
+
+	Hist::D1_Preselected_Layer1_Elements -> Write();
+	Hist::D1_Preselected_Layer1_Multiplicity -> Write();
+	Hist::D1_Preselected_Layer2_Elements -> Write();
+	Hist::D1_Preselected_Layer2_Multiplicity -> Write();
+	Hist::D1_Preselected_Layer7_Elements -> Write();
+	Hist::D1_Preselected_Layer7_Multiplicity -> Write();
+	Hist::D1_Preselected_Layer8_Elements -> Write();
+	Hist::D1_Preselected_Layer8_Multiplicity -> Write();
+}

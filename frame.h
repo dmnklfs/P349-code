@@ -28,7 +28,7 @@
 
 #define START 1
 #define NTOF 10
-
+#define ND1 6
 
 bool check_input(int argc, char *argv[])
 {

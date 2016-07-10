@@ -63,6 +63,11 @@ private:
 	void fill_start_histos_preselected(start_hist_data _start_data);
 	void fill_TOF_histos_rough(TOF_hist_data _tof_data);
 	void fill_TOF_histos_preselected(TOF_hist_data _tof_data);
+	void fill_D1_histos_rough(D1_hist_data _d1_data);
+	void fill_D1_histos_preselected(D1_hist_data _d1_data);
+
+	void save_rough_histos();
+	void save_preselected_histos();
 
 	// values from command line
 	// <outputDirectoryName> <analysis stage> <no_of_events_to_process> <rough data tree> <preselected data tree> <path/data_file_1.root> ... <path/data_file_N.root> <path_to_tree>
