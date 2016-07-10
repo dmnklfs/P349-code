@@ -41,6 +41,7 @@ private:
 	bool check_size_down();
 	bool check_time_range(double treal);
 	bool check_elements(std::vector<int> & _ElementDown, std::vector<int> & _ElementUp);
+	bool check_elements_range(std::vector<int> & _Elements);
 	void fill_data_if_correct();
 
 	// after preselection

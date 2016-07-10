@@ -201,20 +201,8 @@ void Tree::get_good_hit(int _hit)
 // --- filling trees ---
 void Tree::fill_rough_data_tree(hist_data _data_for_hists)
 {
-	Hist::START_Rough_Layer_Up_Multiplicity -> Fill(_data_for_hists.start_data.rough_multiplicity_up);
-	Hist::START_Rough_Layer_Down_Multiplicity -> Fill(_data_for_hists.start_data.rough_multiplicity_down);
-
-	Hist::TOF_Rough_Layer_Up_Multiplicity -> Fill(_data_for_hists.tof_data.rough_multiplicity_up);
-	Hist::TOF_Rough_Layer_Down_Multiplicity -> Fill(_data_for_hists.tof_data.rough_multiplicity_down);
-	for (unsigned int i = 0; i < _data_for_hists.tof_data.rough_elements_up.size(); i++)
-	{
-		Hist::TOF_Rough_Layer_Up_Elements -> Fill(_data_for_hists.tof_data.rough_elements_up.at(i));
-	}
-	for (unsigned int i = 0; i < _data_for_hists.tof_data.rough_elements_down.size(); i++)
-	{
-		Hist::TOF_Rough_Layer_Down_Element -> Fill(_data_for_hists.tof_data.rough_elements_down.at(i));
-	}
-
+	fill_start_histos_rough(_data_for_hists.start_data);
+	fill_TOF_histos_rough(_data_for_hists.tof_data);
 	if (rough_tree)
 	{
 		rough_data_tree -> Fill();
@@ -223,21 +211,41 @@ void Tree::fill_rough_data_tree(hist_data _data_for_hists)
 
 void Tree::fill_preselected_data_tree(hist_data _data_for_hists)
 {
-	Hist::START_Preselected_Layer_Up_Multiplicity -> Fill(_data_for_hists.start_data.preselected_multiplicity_up);
-	Hist::START_Preselected_Layer_Down_Multiplicity -> Fill(_data_for_hists.start_data.preselected_multiplicity_down);
-
-	Hist::TOF_Preselected_Layer_Up_Multiplicity -> Fill(_data_for_hists.tof_data.preselected_multiplicity_up);
-	Hist::TOF_Preselected_Layer_Down_Multiplicity -> Fill(_data_for_hists.tof_data.preselected_multiplicity_down);
-
-	for (unsigned int i = 0; i < _data_for_hists.tof_data.preselected_elements_up.size(); i++) Hist::TOF_Preselected_Layer_Up_Element -> Fill(_data_for_hists.tof_data.preselected_elements_up.at(i));
-	for (unsigned int i = 0; i < _data_for_hists.tof_data.preselected_elements_down.size(); i++)
-	{
-		Hist::TOF_Preselected_Layer_Down_Element -> Fill(_data_for_hists.tof_data.preselected_elements_down.at(i));
-	}
+	fill_start_histos_preselected(_data_for_hists.start_data);
+	fill_TOF_histos_preselected(_data_for_hists.tof_data);
 	if (preselected_tree)
 	{
 		preselected_data_tree -> Fill();
 	}
+}
+
+void Tree::fill_start_histos_rough(start_hist_data _start_data)
+{
+	Hist::START_Rough_Layer_Up_Multiplicity -> Fill(_start_data.rough_multiplicity_up);
+	Hist::START_Rough_Layer_Down_Multiplicity -> Fill(_start_data.rough_multiplicity_down);
+}
+
+void Tree::fill_start_histos_preselected(start_hist_data _start_data)
+{
+	Hist::START_Preselected_Layer_Up_Multiplicity -> Fill(_start_data.preselected_multiplicity_up);
+	Hist::START_Preselected_Layer_Down_Multiplicity -> Fill(_start_data.preselected_multiplicity_down);
+}
+
+void Tree::fill_TOF_histos_rough(TOF_hist_data _tof_data)
+{
+	Hist::TOF_Rough_Layer_Up_Multiplicity -> Fill(_tof_data.rough_multiplicity_up);
+	Hist::TOF_Rough_Layer_Down_Multiplicity -> Fill(_tof_data.rough_multiplicity_down);
+	for (unsigned int i = 0; i < _tof_data.rough_elements_up.size(); i++) Hist::TOF_Rough_Layer_Up_Elements -> Fill(_tof_data.rough_elements_up.at(i));
+	for (unsigned int i = 0; i < _tof_data.rough_elements_down.size(); i++) Hist::TOF_Rough_Layer_Down_Element -> Fill(_tof_data.rough_elements_down.at(i));
+}
+
+void Tree::fill_TOF_histos_preselected(TOF_hist_data _tof_data)
+{
+	Hist::TOF_Preselected_Layer_Up_Multiplicity -> Fill(_tof_data.preselected_multiplicity_up);
+	Hist::TOF_Preselected_Layer_Down_Multiplicity -> Fill(_tof_data.preselected_multiplicity_down);
+
+	for (unsigned int i = 0; i < _tof_data.preselected_elements_up.size(); i++) Hist::TOF_Preselected_Layer_Up_Element -> Fill(_tof_data.preselected_elements_up.at(i));
+	for (unsigned int i = 0; i < _tof_data.preselected_elements_down.size(); i++) Hist::TOF_Preselected_Layer_Down_Element -> Fill(_tof_data.preselected_elements_down.at(i));
 }
 
 // --- return values ---

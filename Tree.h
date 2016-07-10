@@ -59,6 +59,11 @@ private:
 	void add_files_to_chain();
 	void open_input_files(char *argv[]);
 
+	void fill_start_histos_rough(start_hist_data _start_data);
+	void fill_start_histos_preselected(start_hist_data _start_data);
+	void fill_TOF_histos_rough(TOF_hist_data _tof_data);
+	void fill_TOF_histos_preselected(TOF_hist_data _tof_data);
+
 	// values from command line
 	// <outputDirectoryName> <analysis stage> <no_of_events_to_process> <rough data tree> <preselected data tree> <path/data_file_1.root> ... <path/data_file_N.root> <path_to_tree>
 	int no_of_args;

@@ -55,7 +55,9 @@ void TOF::check_hits()
 {
 	bool config_size_up = TOF::check_size_up();
 	bool config_size_down = TOF::check_size_down();
-	bool same_elements = TOF::check_elements(RoughElementDown, RoughElementUp);
+	bool same_elements = TOF::check_elements(RoughElementDown, RoughElementUp); // same elements in up and down, elements in the correct range
+	//bool elements_range_up = check_elements_range(RoughElementUp); // in case only one layer check is needed.
+	//bool elements_range_down = check_elements_range(RoughElementDown); // unused now
 	bool correct_signal_up = TOF::check_signal(RoughEdgeUp, RoughTrealUp);
 	//std::cout << "ok1" << std::endl;
 	//std::cout << RoughEdgeDown.size() << " " << RoughTrealDown.size() << std::endl;
@@ -103,12 +105,26 @@ bool TOF::check_elements(std::vector<int> & _ElementDown, std::vector<int> & _El
 				{
 					continue;
 				}
-				else corr_elements = false;
+				else return false;
 			}
-			else corr_elements = false;
+			else return false;
 		}
 	}
-	else corr_elements = false;
+	else return false;
+	return corr_elements;
+}
+
+bool TOF::check_elements_range(std::vector<int> & _Elements)
+{
+	bool corr_elements = true;
+	for (unsigned int i = 0; i < _Elements.size(); i++)
+	{
+		if (_Elements.at(i) >= Config::TOF_element_min && _Elements.at(i) <= Config::TOF_element_max)
+		{
+			continue;
+		}
+		else return false;
+	}
 	return corr_elements;
 }
 
