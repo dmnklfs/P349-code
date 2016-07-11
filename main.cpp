@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
   	{
   		single_event = new SingleEvent();
-  		if(0==entry%100000) std::cout << entry << std::endl;
+  		if(0==entry%10000) std::cout << entry << std::endl;
   		in_out -> Tree::get_entry(entry);
   		// start of the loop over good hits in the single event
   		for (Int_t i = 0; i < in_out -> Tree::no_of_good_hits() ; i++)

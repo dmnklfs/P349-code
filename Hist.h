@@ -27,8 +27,8 @@ class Hist
 public:
 	Hist();
 	~Hist();
-	std::vector<TH1F> return_histos();
 
+	// --- CONTROL SPECTRA ----
 	// START
 	TH1F *START_Rough_Layer_Up_Multiplicity;
 	TH1F *START_Rough_Layer_Down_Multiplicity;
@@ -47,29 +47,12 @@ public:
 	TH1F *TOF_Preselected_Layer_Down_Element;
 
 	// D1
-	// layer 1
-	TH1F *D1_Rough_Layer1_Elements;
-	TH1F *D1_Rough_Layer1_Multiplicity;
-	TH1F *D1_Preselected_Layer1_Elements;
-	TH1F *D1_Preselected_Layer1_Multiplicity;
-
-	// layer 2
-	TH1F *D1_Rough_Layer2_Elements;
-	TH1F *D1_Rough_Layer2_Multiplicity;
-	TH1F *D1_Preselected_Layer2_Elements;
-	TH1F *D1_Preselected_Layer2_Multiplicity;
-
-	// layer 7
-	TH1F *D1_Rough_Layer7_Elements;
-	TH1F *D1_Rough_Layer7_Multiplicity;
-	TH1F *D1_Preselected_Layer7_Elements;
-	TH1F *D1_Preselected_Layer7_Multiplicity;
-
-	// layer 8
-	TH1F *D1_Rough_Layer8_Elements;
-	TH1F *D1_Rough_Layer8_Multiplicity;
-	TH1F *D1_Preselected_Layer8_Elements;
-	TH1F *D1_Preselected_Layer8_Multiplicity;
+	TH1F *D1_Rough_Elements[8];
+	TH1F *D1_Rough_Multiplicity[8];
+	TH1F *D1_Rough_DriftTime[8];
+	TH1F *D1_Preselected_Elements[8];
+	TH1F *D1_Preselected_Multiplicity[8];
+	TH1F *D1_Preselected_DriftTime[8];
 
 	
 };

@@ -3,7 +3,6 @@
 Config::Config()
 {
 	// here hit = one correct singal (leading and trailing edge corresponding to TWO hits from easyparser)
-
 	start_hits = 1;
 	start_time_min = -1500;
 	start_time_max = 1500;

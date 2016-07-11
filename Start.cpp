@@ -115,12 +115,12 @@ void Start::fill_data_if_correct()
 	}
 }
 
-start_hist_data Start::get_hist_data()
+start_hist_data* Start::get_hist_data()
 {
-	start_hist_data start_data;
-	start_data.rough_multiplicity_up = RoughElementDown.size(); // RoughElementDown has all elements with leading and trailing edges
-	start_data.rough_multiplicity_down = RoughElementUp.size();
-	start_data.preselected_multiplicity_up = 2*ElementDown.size(); // ElementDown only single correct elements -> multiplicity = size*2
-	start_data.preselected_multiplicity_down = 2*ElementUp.size();
+	start_hist_data *start_data = new start_hist_data();
+	start_data -> rough_multiplicity_up = RoughElementDown.size(); // RoughElementDown has all elements with leading and trailing edges
+	start_data -> rough_multiplicity_down = RoughElementUp.size();
+	start_data -> preselected_multiplicity_up = 2*ElementDown.size(); // ElementDown only single correct elements -> multiplicity = size*2
+	start_data -> preselected_multiplicity_down = 2*ElementUp.size();
 	return start_data;
 }

@@ -16,8 +16,6 @@ $(LIBP349SO): P349_data.o dictp349_data.o
 $(EXECUTABLE): $(OBJECTS) 
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
-
-	
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
 

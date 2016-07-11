@@ -11,7 +11,7 @@ public:
 	~D1Layer();
 	void fill_rough_data(single_gh_data _good_hit_data);
 	void fill_preselected_data(single_gh_data _good_hit_data);
-	D1Layer_hist_data get_hist_data();
+	D1Layer_hist_data* get_hist_data();
 	bool was_correct_event();
 
 	// after preselection

@@ -17,33 +17,12 @@ public:
 	D1();
 	~D1();
 	void fill_good_hits(const int _stage, single_gh_data _good_hit_data);
-	D1_hist_data get_hist_data();
+	D1_hist_data* get_hist_data();
 	bool was_correct_event();
 
 private:
-	D1Layer *Layer1;
-	D1Layer *Layer2;
-	D1Layer *Layer7;
-	D1Layer *Layer8;
+	D1Layer *Layer;
 	bool correct_event;
-	// after preselection
-	//std::vector<double> DriftTimeLayer1;
-	//std::vector<double> DriftTimeLayer2;
-	//std::vector<double> DriftTimeLayer3;
-	//std::vector<double> DriftTimeLayer4;
-	//std::vector<double> DriftTimeLayer5;
-	//std::vector<double> DriftTimeLayer6;
-	//std::vector<double> DriftTimeLayer7;
-	//std::vector<double> DriftTimeLayer8;
-	//std::vector<int> WireLayer1;
-	//std::vector<int> WireLayer2;
-	//std::vector<int> WireLayer3;
-	//std::vector<int> WireLayer4;
-	//std::vector<int> WireLayer5;
-	//std::vector<int> WireLayer6;
-	//std::vector<int> WireLayer7;
-	//std::vector<int> WireLayer8;
-	
 };
 
 

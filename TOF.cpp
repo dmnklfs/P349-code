@@ -169,17 +169,17 @@ void TOF::fill_data_if_correct()
 	}
 }
 
-TOF_hist_data TOF::get_hist_data()
+TOF_hist_data* TOF::get_hist_data()
 {
-	TOF_hist_data TOF_data;
-	TOF_data.rough_multiplicity_up = RoughElementDown.size(); // RoughElementDown has all elements with leading and trailing edges
-	TOF_data.rough_multiplicity_down = RoughElementUp.size();
-	TOF_data.preselected_multiplicity_up = 2*ElementDown.size(); // ElementDown only single correct elements -> multiplicity = size*2
-	TOF_data.preselected_multiplicity_down = 2*ElementUp.size();
-	TOF_data.rough_elements_up = RoughElementUp;
-	TOF_data.rough_elements_down = RoughElementDown;
-	TOF_data.preselected_elements_up = ElementUp;
-	TOF_data.preselected_elements_down = ElementDown;
+	TOF_hist_data *TOF_data = new TOF_hist_data(RoughElementUp,RoughElementDown,ElementUp,ElementDown);
+	TOF_data->rough_multiplicity_up = RoughElementDown.size(); // RoughElementDown has all elements with leading and trailing edges
+	TOF_data->rough_multiplicity_down = RoughElementUp.size();
+	TOF_data->preselected_multiplicity_up = 2*ElementDown.size(); // ElementDown only single correct elements -> multiplicity = size*2
+	TOF_data->preselected_multiplicity_down = 2*ElementUp.size();
+	TOF_data->rough_elements_up = RoughElementUp;
+	TOF_data->rough_elements_down = RoughElementDown;
+	TOF_data->preselected_elements_up = ElementUp;
+	TOF_data->preselected_elements_down = ElementDown;
 
 	return TOF_data;
 }

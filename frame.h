@@ -36,7 +36,7 @@ bool check_input(int argc, char *argv[])
 	{
 		std::cout << "\n" << std::endl;
 		std::cout << "Wrong input!!!" << std::endl;
-		std::cout << "Minimal info: " << argv[0] << " <outputDirectoryName> <analysis stage> <no_of_events_to_process> <rough data tree> <preselected data tree> <path/data_file_1.root> ... <path/data_file_N.root> <path_to_tree>" << std::endl;
+		std::cout << "Minimal info: " << argv[0] << " <OutputFileName> <analysis stage> <no_of_events_to_process> <rough data tree> <preselected data tree> <path/data_file_1.root> ... <path/data_file_N.root> <path_to_tree>" << std::endl;
 		std::cout << "* analysis stage defines the moment from wchich the data set is read and analysed:"<< std::endl;
 		std::cout << "    1 - read data and make preselection (test conditions from CONFIG)"<< std::endl;
 		std::cout << "    2 - read preselected data (without testing conditions from CONFIG)"<< std::endl;

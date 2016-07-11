@@ -38,12 +38,10 @@ void D1Layer::check_hits()
 	correct_event = true;
 }
 
-D1Layer_hist_data D1Layer::get_hist_data()
+D1Layer_hist_data* D1Layer::get_hist_data()
 {
-	D1Layer_hist_data d1layer_data;
-	d1layer_data.rough_multiplicity = RoughWire.size();
-	d1layer_data.preselected_multiplicity = Wire.size();
-	d1layer_data.rough_elements = RoughWire;
-	d1layer_data.preselected_elements = Wire;
+	D1Layer_hist_data *d1layer_data = new D1Layer_hist_data(RoughWire, Wire, RoughDriftTime, DriftTime);
+	d1layer_data -> rough_multiplicity = RoughWire.size();
+	d1layer_data -> preselected_multiplicity = Wire.size();
 	return d1layer_data;
 }

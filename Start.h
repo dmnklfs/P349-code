@@ -33,7 +33,7 @@ public:
 	void fill_good_hits(const int _stage, single_gh_data _good_hit_data);
 	bool was_correct_event();
 	void check_hits();
-	start_hist_data get_hist_data();
+	start_hist_data* get_hist_data();
 
 private:
 	bool check_signal(std::vector<int> & Edge, std::vector<double > & Time);

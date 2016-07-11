@@ -2,13 +2,13 @@
 
 SingleEvent::SingleEvent()
 {
-	std::cout << "Object created " << std::endl;
+	//std::cout << "Object created " << std::endl;
 
 }
 
 SingleEvent::~SingleEvent()
 {
-	std::cout << "Object destructed " << std::endl;
+	//std::cout << "Object destructed " << std::endl;
 }
 
 bool SingleEvent::was_correct_event(const int stage)

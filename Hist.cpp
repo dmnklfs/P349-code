@@ -2,6 +2,8 @@
 
 Hist::Hist()
 {
+	TString temp_name;
+
 	// START 
 	START_Rough_Layer_Up_Multiplicity = new TH1F("START Rough data start layer up multiplicity", "START Rough start layer up multiplicity", 10, -0.5, 9.5);
 	START_Rough_Layer_Down_Multiplicity = new TH1F("START Rough data start layer down multiplicity", "START Rough start layer down multiplicity", 10, -0.5, 9.5);
@@ -20,29 +22,23 @@ Hist::Hist()
 	TOF_Preselected_Layer_Down_Element = new TH1F("TOF preselected data start layer down element", "TOF preselected start layer down element", 12, -0.5, 11.5);
 
 	// D1
-	// layer 1
-	D1_Rough_Layer1_Elements = new TH1F("D1 Rough Layer1 Elements", "D1 Rough Layer1 Elements", 45, -0.5, 44.5);
-	D1_Rough_Layer1_Multiplicity = new TH1F("D1 Rough Layer1 Multiplicity", "D1 Rough Layer1 Multiplicity", 10, -0.5, 9.5);
-	D1_Preselected_Layer1_Elements = new TH1F("D1 Preselected Layer1 Elements", "D1 Preselected Layer1 Elements", 45, -0.5, 44.5);
-	D1_Preselected_Layer1_Multiplicity = new TH1F("D1 Preselected Layer1 Multiplicity", "D1 Preselected Layer1 Multiplicity", 10, -0.5, 9.5);
-
-	// layer 2
-	D1_Rough_Layer2_Elements = new TH1F("D1 Rough Layer2 Elements", "D1 Rough Layer2 Elements", 45, -0.5, 44.5);
-	D1_Rough_Layer2_Multiplicity = new TH1F("D1 Rough Layer2 Multiplicity", "D1 Rough Layer2 Multiplicity", 10, -0.5, 9.5);
-	D1_Preselected_Layer2_Elements = new TH1F("D1 Preselected Layer2 Elements", "D1 Preselected Layer2 Elements", 45, -0.5, 44.5);
-	D1_Preselected_Layer2_Multiplicity = new TH1F("D1 Preselected Layer2 Multiplicity", "D1 Preselected Layer2 Multiplicity", 10, -0.5, 9.5);
-
-	// layer 7
-	D1_Rough_Layer7_Elements = new TH1F("D1 Rough Layer7 Elements", "D1 Rough Layer7 Elements", 45, -0.5, 44.5);
-	D1_Rough_Layer7_Multiplicity = new TH1F("D1 Rough Layer7 Multiplicity", "D1 Rough Layer7 Multiplicity", 10, -0.5, 9.5);
-	D1_Preselected_Layer7_Elements = new TH1F("D1 Preselected Layer7 Elements", "D1 Preselected Layer7 Elements", 45, -0.5, 44.5);
-	D1_Preselected_Layer7_Multiplicity = new TH1F("D1 Preselected Layer7 Multiplicity", "D1 Preselected Layer7 Multiplicity", 10, -0.5, 9.5);
-
-	// layer 8
-	D1_Rough_Layer8_Elements = new TH1F("D1 Rough Layer8 Elements", "D1 Rough Layer8 Elements", 45, -0.5, 44.5);
-	D1_Rough_Layer8_Multiplicity = new TH1F("D1 Rough Layer8 Multiplicity", "D1 Rough Layer8 Multiplicity", 10, -0.5, 9.5);
-	D1_Preselected_Layer8_Elements = new TH1F("D1 Preselected Layer8 Elements", "D1 Preselected Layer8 Elements", 45, -0.5, 44.5);
-	D1_Preselected_Layer8_Multiplicity = new TH1F("D1 Preselected Layer8 Multiplicity", "D1 Preselected Layer8 Multiplicity", 10, -0.5, 9.5);
+	for (int i = 0; i < 8; i++)
+	{
+		// rough
+		temp_name = Form("D1 Rough Layer %d Elements", i+1);
+		D1_Rough_Elements[i] = new TH1F(temp_name, temp_name, 45, -0.5, 44.5);
+		temp_name = Form("D1 Rough Layer %d Multiplicity", i+1);
+		D1_Rough_Multiplicity[i] = new TH1F(temp_name, temp_name, 10, -0.5, 9.5);
+		temp_name = Form("D1 Rough Layer %d Drift Time", i+1);
+		D1_Rough_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
+		// preselected
+		temp_name = Form("D1 Preselected Layer %d Elements", i+1);
+		D1_Preselected_Elements[i] = new TH1F(temp_name, temp_name, 45, -0.5, 44.5);
+		temp_name = Form("D1 Preselected Layer %d Multiplicity", i+1);
+		D1_Preselected_Multiplicity[i] = new TH1F(temp_name, temp_name, 10, -0.5, 9.5);
+		temp_name = Form("D1 Preselected Layer %d Drift Time", i+1);
+		D1_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
+	}
 }
 
 Hist::~Hist()
