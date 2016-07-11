@@ -81,8 +81,6 @@ void Tree::create_output_file()
 
 void Tree::save_output_file()
 {
-	output_file -> cd();
-	rough_hist -> cd();
 	save_rough_histos();
 
 	output_file -> cd();
@@ -301,15 +299,27 @@ void Tree::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 // ======================== SAVING =========================================================================
 void Tree::save_rough_histos()
 {
+	output_file -> cd();
+	rough_hist -> cd();
+	r_START = rough_hist -> mkdir("START");
+	r_START -> cd();
 	Hist::START_Rough_Layer_Up_Multiplicity -> Write();
 	Hist::START_Rough_Layer_Down_Multiplicity -> Write();
 
+	output_file -> cd();
+	rough_hist -> cd();
+	r_TOF = rough_hist -> mkdir("TOF");
+	r_TOF -> cd();
 	Hist::TOF_Rough_Layer_Up_Multiplicity -> Write();
 	Hist::TOF_Rough_Layer_Down_Multiplicity -> Write();
 
 	Hist::TOF_Rough_Layer_Up_Elements -> Write();
 	Hist::TOF_Rough_Layer_Down_Element -> Write();
 
+	output_file -> cd();
+	rough_hist -> cd();
+	r_D1 = rough_hist -> mkdir("D1");
+	r_D1 -> cd();
 	for (int i = 0; i < 8; i++)
 	{
 		Hist::D1_Rough_Elements[i] -> Write();
@@ -318,14 +328,27 @@ void Tree::save_rough_histos()
 	}
 
 }
+
 void Tree::save_preselected_histos()
 {
+	output_file -> cd();
+	preselected_hist -> cd();
+	p_START = preselected_hist -> mkdir("START");
+	p_START -> cd();
 	Hist::START_Preselected_Layer_Up_Multiplicity -> Write();
 	Hist::START_Preselected_Layer_Down_Multiplicity -> Write();
 
+	output_file -> cd();
+	preselected_hist -> cd();
+	p_TOF = preselected_hist -> mkdir("TOF");
+	p_TOF -> cd();
 	Hist::TOF_Preselected_Layer_Up_Multiplicity -> Write();
 	Hist::TOF_Preselected_Layer_Down_Multiplicity -> Write();
 
+	output_file -> cd();
+	preselected_hist -> cd();
+	p_D1 = preselected_hist -> mkdir("D1");
+	p_D1 -> cd();
 	Hist::TOF_Preselected_Layer_Up_Element -> Write();
 	Hist::TOF_Preselected_Layer_Down_Element -> Write();
 

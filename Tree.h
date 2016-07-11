@@ -93,8 +93,8 @@ private:
 	TTree *preselected_data_tree;
 
 	// directories
-	TDirectory *rough_hist;
-	TDirectory *preselected_hist;
+	TDirectory *rough_hist, *r_START, *r_TOF, *r_D1;
+	TDirectory *preselected_hist, *p_START, *p_TOF, *p_D1;
 
 	// variables for reading/saving ---> change
 	std::vector < int > trb;
