@@ -1,17 +1,17 @@
-#ifndef D1LAYER_H
-#define D1LAYER_H
+#ifndef DCLayer_H
+#define DCLayer_H
 
 #include "Config.h"
 #include "struct.h"
 
-class D1Layer
+class DCLayer
 {
 public:
-	D1Layer();
-	~D1Layer();
+	DCLayer();
+	~DCLayer();
 	void fill_rough_data(single_gh_data _good_hit_data);
 	void fill_preselected_data(single_gh_data _good_hit_data);
-	D1Layer_hist_data* get_hist_data();
+	DCLayer_hist_data* get_hist_data();
 	bool was_correct_event();
 
 	// after preselection

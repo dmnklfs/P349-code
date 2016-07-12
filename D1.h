@@ -1,15 +1,15 @@
 #ifndef D1_H
 #define D1_H
-#include "D1Layer.h"
+#include "DCLayer.h"
 
-#define NL1  8
-#define NL2  7
-#define NL3  6
-#define NL4  5
-#define NL5  4 
-#define NL6  3
-#define NL7  2
-#define NL8  1
+#define ND1L1  1	// layer 1 is the closest one to the start detector
+#define ND1L2  2
+#define ND1L3  3
+#define ND1L4  4
+#define ND1L5  5 
+#define ND1L6  6
+#define ND1L7  7
+#define ND1L8  8 // layer 8 is the closest one to d2 drift chamber
 
 class D1
 {
@@ -21,7 +21,7 @@ public:
 	bool was_correct_event();
 
 private:
-	D1Layer *Layer;
+	DCLayer *Layer;
 	bool correct_event;
 };
 

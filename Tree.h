@@ -59,12 +59,18 @@ private:
 	void add_files_to_chain();
 	void open_input_files(char *argv[]);
 
+	// histos functions
 	void fill_start_histos_rough(start_hist_data* _start_data);
 	void fill_start_histos_preselected(start_hist_data* _start_data);
+
 	void fill_TOF_histos_rough(TOF_hist_data* _tof_data);
 	void fill_TOF_histos_preselected(TOF_hist_data* _tof_data);
+
 	void fill_D1_histos_rough(D1_hist_data* _d1_data);
 	void fill_D1_histos_preselected(D1_hist_data* _d1_data);
+
+	void fill_D2_histos_rough(D2_hist_data* _d2_data);
+	void fill_D2_histos_preselected(D2_hist_data* _d2_data);
 
 	void save_rough_histos();
 	void save_preselected_histos();
@@ -93,8 +99,8 @@ private:
 	TTree *preselected_data_tree;
 
 	// directories
-	TDirectory *rough_hist, *r_START, *r_TOF, *r_D1;
-	TDirectory *preselected_hist, *p_START, *p_TOF, *p_D1;
+	TDirectory *rough_hist, *r_START, *r_TOF, *r_D1, *r_D2;
+	TDirectory *preselected_hist, *p_START, *p_TOF, *p_D1, *p_D2;
 
 	// variables for reading/saving ---> change
 	std::vector < int > trb;

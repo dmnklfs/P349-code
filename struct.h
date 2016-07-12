@@ -36,9 +36,9 @@ struct TOF_hist_data
 	std::vector<int> &preselected_elements_down;
 };
 
-struct D1Layer_hist_data
+struct DCLayer_hist_data
 {
-	D1Layer_hist_data(std::vector<int>& _rough_elements, std::vector<int>& _preselected_elements, std::vector<double>& _rough_times, std::vector<double>& _preselected_times)
+	DCLayer_hist_data(std::vector<int>& _rough_elements, std::vector<int>& _preselected_elements, std::vector<double>& _rough_times, std::vector<double>& _preselected_times)
 		: rough_elements(_rough_elements), preselected_elements(_preselected_elements), rough_times(_rough_times), preselected_times(_preselected_times) {}
 	unsigned int rough_multiplicity; 
 	unsigned int preselected_multiplicity;
@@ -50,7 +50,12 @@ struct D1Layer_hist_data
 
 struct D1_hist_data
 {
-	D1Layer_hist_data* layer_data[8];
+	DCLayer_hist_data* layer_data[8];
+};
+
+struct D2_hist_data
+{
+	DCLayer_hist_data* layer_data[6];
 };
 
 // structure required to fill histos by ... function
@@ -59,6 +64,7 @@ struct hist_data
 	start_hist_data 	*start_data;
 	TOF_hist_data 		*tof_data;
 	D1_hist_data 		*d1_data;
+	D2_hist_data 		*d2_data;
 };
 
  #endif

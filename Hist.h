@@ -54,6 +54,14 @@ public:
 	TH1F *D1_Preselected_Multiplicity[8];
 	TH1F *D1_Preselected_DriftTime[8];
 
+	// D2
+	TH1F *D2_Rough_Elements[6];
+	TH1F *D2_Rough_Multiplicity[6];
+	TH1F *D2_Rough_DriftTime[6];
+	TH1F *D2_Preselected_Elements[6];
+	TH1F *D2_Preselected_Multiplicity[6];
+	TH1F *D2_Preselected_DriftTime[6];
+
 	
 };
 

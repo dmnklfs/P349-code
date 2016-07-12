@@ -3,9 +3,10 @@
 #include "Start.h"
 #include "TOF.h"
 #include "D1.h"
+#include "D2.h"
 
 class SingleEvent
-	: public Start, public TOF, public D1
+	: public Start, public TOF, public D1, public D2
 {
 public:
 	SingleEvent();
