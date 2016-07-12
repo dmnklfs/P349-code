@@ -21,12 +21,31 @@
 #include <string>
 #include <sstream>
 #include "P349_data.h"
+#include "struct.h"
 
 class Hist
 {
 public:
 	Hist();
 	~Hist();
+
+	void fill_start_histos_rough(start_hist_data* _start_data);
+	void fill_start_histos_preselected(start_hist_data* _start_data);
+
+	void fill_TOF_histos_rough(TOF_hist_data* _tof_data);
+	void fill_TOF_histos_preselected(TOF_hist_data* _tof_data);
+
+	void fill_Intermediate_histos_rough(TOF_hist_data* _tof_data);
+	void fill_Intermediate_histos_preselected(TOF_hist_data* _tof_data);
+
+	void fill_D1_histos_rough(D1_hist_data* _d1_data);
+	void fill_D1_histos_preselected(D1_hist_data* _d1_data);
+
+	void fill_D2_histos_rough(D2_hist_data* _d2_data);
+	void fill_D2_histos_preselected(D2_hist_data* _d2_data);
+
+	void fill_HEX_histos_rough(HEX_hist_data* _hex_data);
+	void fill_HEX_histos_preselected(HEX_hist_data* _hex_data);
 
 	// --- CONTROL SPECTRA ----
 	// START
@@ -46,6 +65,17 @@ public:
 	TH1F *TOF_Preselected_Layer_Up_Element;
 	TH1F *TOF_Preselected_Layer_Down_Element;
 
+	// Intermediate
+	TH1F *Intermediate_Rough_Layer_Up_Multiplicity;
+	TH1F *Intermediate_Rough_Layer_Down_Multiplicity;
+	TH1F *Intermediate_Preselected_Layer_Up_Multiplicity;
+	TH1F *Intermediate_Preselected_Layer_Down_Multiplicity;
+
+	TH1F *Intermediate_Rough_Layer_Up_Elements;
+	TH1F *Intermediate_Rough_Layer_Down_Element;
+	TH1F *Intermediate_Preselected_Layer_Up_Element;
+	TH1F *Intermediate_Preselected_Layer_Down_Element;
+
 	// D1
 	TH1F *D1_Rough_Elements[8];
 	TH1F *D1_Rough_Multiplicity[8];
@@ -61,6 +91,14 @@ public:
 	TH1F *D2_Preselected_Elements[6];
 	TH1F *D2_Preselected_Multiplicity[6];
 	TH1F *D2_Preselected_DriftTime[6];
+
+	// HEX
+	TH1F *HEX_Rough_Elements[7];
+	TH1F *HEX_Rough_Multiplicity[7];
+	TH1F *HEX_Rough_DriftTime[7];
+	TH1F *HEX_Preselected_Elements[7];
+	TH1F *HEX_Preselected_Multiplicity[7];
+	TH1F *HEX_Preselected_DriftTime[7];
 
 	
 };

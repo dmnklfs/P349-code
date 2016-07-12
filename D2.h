@@ -2,12 +2,12 @@
 #define D2_H
 #include "DCLayer.h"
 
-#define ND2L1  6
-#define ND2L2  5
-#define ND2L3  4
-#define ND2L4  3
-#define ND2L5  2 
-#define ND2L6  1
+#define ND2L1  1	// layer 1 is the closest one to HEX
+#define ND2L2  2
+#define ND2L3  3
+#define ND2L4  4
+#define ND2L5  5 
+#define ND2L6  6	// layer 6 is the closest one to D1
 
 class D2
 {

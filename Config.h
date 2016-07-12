@@ -29,19 +29,17 @@ public:
 	// detector position
 	// ...
 
-	// ---INTERMEDIATE---
-	// range of selected elements (1 - 16)
-	int INTERMEDIATE_element_min;
-	int INTERMEDIATE_element_max;
-	// no of correct signals (leading & trailing edge) in up/down layer
-	int INTERMEDIATE_layer_up_hits;
-	int INTERMEDIATE_layer_down_hits;
-	// time range for signals (depends on the trigger channel in the easyparser; from -1500 to 1500)
-	double INTERMEDIATE_time_min;
-	double INTERMEDIATE_time_max;
+	// ---Intermediate---
+	// no of correct signals (leading & trailing edge) in up (down) layer
+	unsigned int Intermediate_hits;
+	// time range for signals
+	double Intermediate_time_min;
+	double Intermediate_time_max;
+	// range of selected elements (1 - 10)
+	int Intermediate_element_min;
+	int Intermediate_element_max;
 	// detector position
-	double INTERMEDIATE_pos_y;
-	double INTERMEDIATE_pos_z;
+	// ...
 
 	// ---DRIFT CHAMBER D1---
 	// min and max number of hits in layers (if set to -1: any value is ok)

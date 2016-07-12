@@ -58,6 +58,11 @@ struct D2_hist_data
 	DCLayer_hist_data* layer_data[6];
 };
 
+struct HEX_hist_data
+{
+	DCLayer_hist_data* layer_data[7];
+};
+
 // structure required to fill histos by ... function
 struct hist_data
 {
@@ -65,6 +70,8 @@ struct hist_data
 	TOF_hist_data 		*tof_data;
 	D1_hist_data 		*d1_data;
 	D2_hist_data 		*d2_data;
+	HEX_hist_data 		*hex_data;
+	TOF_hist_data 		*intermediate_data;
 };
 
  #endif

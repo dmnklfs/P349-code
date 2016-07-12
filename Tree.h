@@ -52,6 +52,9 @@ public:
 	Int_t get_element();
 	Int_t get_edge();
 
+	// test
+	TFile *get_output_file();
+
 private:
 	void create_output_directory();
 	void create_output_file();
@@ -59,21 +62,10 @@ private:
 	void add_files_to_chain();
 	void open_input_files(char *argv[]);
 
-	// histos functions
-	void fill_start_histos_rough(start_hist_data* _start_data);
-	void fill_start_histos_preselected(start_hist_data* _start_data);
-
-	void fill_TOF_histos_rough(TOF_hist_data* _tof_data);
-	void fill_TOF_histos_preselected(TOF_hist_data* _tof_data);
-
-	void fill_D1_histos_rough(D1_hist_data* _d1_data);
-	void fill_D1_histos_preselected(D1_hist_data* _d1_data);
-
-	void fill_D2_histos_rough(D2_hist_data* _d2_data);
-	void fill_D2_histos_preselected(D2_hist_data* _d2_data);
-
 	void save_rough_histos();
 	void save_preselected_histos();
+
+	void make_hist_dir(const char* name, const int dir);
 
 	// values from command line
 	// <outputDirectoryName> <analysis stage> <no_of_events_to_process> <rough data tree> <preselected data tree> <path/data_file_1.root> ... <path/data_file_N.root> <path_to_tree>
@@ -99,8 +91,7 @@ private:
 	TTree *preselected_data_tree;
 
 	// directories
-	TDirectory *rough_hist, *r_START, *r_TOF, *r_D1, *r_D2;
-	TDirectory *preselected_hist, *p_START, *p_TOF, *p_D1, *p_D2;
+	TDirectory *rough_hist, *preselected_hist, *output_hist;
 
 	// variables for reading/saving ---> change
 	std::vector < int > trb;

@@ -1,4 +1,4 @@
-samle usage
+sample usage
 ------------
 
 - on data from easyparser:

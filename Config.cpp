@@ -13,7 +13,13 @@ Config::Config()
 	TOF_element_min = 5;
 	TOF_element_max = 9;
 
-	D1_layer1_max_hits = 10;
+	Intermediate_hits  = 1;
+	Intermediate_time_min = -1500;
+	Intermediate_time_max = 1500;
+	Intermediate_element_min = 1;
+	Intermediate_element_max = 16;
+
+	D1_layer1_max_hits = 10;	// unused now. 12.07.16
 	D1_layer1_min_hits =  0;
 	D1_layer2_max_hits = 10;
 	D1_layer2_min_hits =  0;

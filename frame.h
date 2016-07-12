@@ -28,8 +28,10 @@
 
 #define START 1
 #define NTOF 10
+#define NINTER 7
 #define ND1 6
 #define ND2 5
+#define NHEX 4
 
 bool check_input(int argc, char *argv[])
 {

@@ -4,9 +4,11 @@
 #include "TOF.h"
 #include "D1.h"
 #include "D2.h"
+#include "HEX.h"
+#include "Intermediate.h"
 
 class SingleEvent
-	: public Start, public TOF, public D1, public D2
+	: public Start, public TOF, public D1, public D2, public HEX, public Intermediate
 {
 public:
 	SingleEvent();
