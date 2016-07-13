@@ -36,6 +36,20 @@ struct TOF_hist_data
 	std::vector<int> &preselected_elements_down;
 };
 
+struct Fiber_hist_data
+{
+	Fiber_hist_data(std::vector<int>& _rough_fibers_V, std::vector<int>& _rough_fibers_H, std::vector<int>& _rough_fibers_D, std::vector<int>& _fibers_V, std::vector<int>& _fibers_H, std::vector<int>& _fibers_D) 
+		: rough_fibers_V(_rough_fibers_V), rough_fibers_H(_rough_fibers_H), rough_fibers_D(_rough_fibers_D), fibers_V(_fibers_V), fibers_H(_fibers_H), fibers_D(_fibers_D) {}
+	unsigned int rough_multiplicity_V, rough_multiplicity_H, rough_multiplicity_D; 
+	unsigned int preselected_multiplicity_V, preselected_multiplicity_H, preselected_multiplicity_D; 
+	std::vector<int> &rough_fibers_V;
+	std::vector<int> &rough_fibers_H;
+	std::vector<int> &rough_fibers_D;
+	std::vector<int> &fibers_V;	// preselected
+	std::vector<int> &fibers_H;
+	std::vector<int> &fibers_D;
+};
+
 struct DCLayer_hist_data
 {
 	DCLayer_hist_data(std::vector<int>& _rough_elements, std::vector<int>& _preselected_elements, std::vector<double>& _rough_times, std::vector<double>& _preselected_times)
@@ -72,6 +86,7 @@ struct hist_data
 	D2_hist_data 		*d2_data;
 	HEX_hist_data 		*hex_data;
 	TOF_hist_data 		*intermediate_data;
+	Fiber_hist_data 	*fiber_data;
 };
 
  #endif

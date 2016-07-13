@@ -59,6 +59,18 @@ public:
 	// drift time range
 	double D1_drift_time_max;
 	double D1_drift_time_min;
+
+	// ---DRIFT CHEMBER D2---
+	// ...
+
+	// ---HEX---
+	// ...
+
+	// ---FIBER HODOSCOPE---
+	// ranges of elements
+	int element_V_min, element_V_max;
+	int element_H_min, element_H_max;
+	int element_D_min, element_D_max;
 };
 
 #endif

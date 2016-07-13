@@ -2,7 +2,7 @@ CC=g++ -std=c++0x
 CFLAGS=-c -Wall -pthread -m32 -fPIC -I$(shell root-config --incdir) -I$(shell root-config --cflags)
 # CFLAGS=-c -Wall -pthread -m64 -I$(shell root-config --incdir)
 LDFLAGS= -Wl,--no-as-needed -Wall $(shell root-config --libs) -m32 -lboost_system -lboost_filesystem
-SOURCES=main.cpp  Tree.cpp Start.cpp TOF.cpp Intermediate.cpp D1.cpp D2.cpp HEX.cpp DCLayer.cpp Config.cpp P349_data.cpp SingleEvent.cpp dictp349_data.cpp Hist.cpp
+SOURCES=main.cpp  Tree.cpp Start.cpp TOF.cpp Intermediate.cpp Fiber.cpp D1.cpp D2.cpp HEX.cpp DCLayer.cpp Config.cpp P349_data.cpp SingleEvent.cpp dictp349_data.cpp Hist.cpp
 # OBJECTS=easyparser_timecut.o P349_data.o  dictp349_data.o
 OBJECTS=$(SOURCES:.cpp=.o) 
 EXECUTABLE=test.exe

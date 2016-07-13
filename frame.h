@@ -32,6 +32,7 @@
 #define ND1 6
 #define ND2 5
 #define NHEX 4
+#define NFIBER 2
 
 bool check_input(int argc, char *argv[])
 {

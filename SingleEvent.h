@@ -6,9 +6,10 @@
 #include "D2.h"
 #include "HEX.h"
 #include "Intermediate.h"
+#include "Fiber.h"
 
 class SingleEvent
-	: public Start, public TOF, public D1, public D2, public HEX, public Intermediate
+	: public Start, public TOF, public D1, public D2, public HEX, public Intermediate, public Fiber
 {
 public:
 	SingleEvent();

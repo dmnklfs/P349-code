@@ -34,7 +34,8 @@ int main(int argc, char *argv[])
 		   	if (good_hit_data.detector == ND1) single_event -> D1::fill_good_hits(analysis_stage, good_hit_data);
 		   	if (good_hit_data.detector == ND2) single_event -> D2::fill_good_hits(analysis_stage, good_hit_data);
 		   	if (good_hit_data.detector == NHEX) single_event -> HEX::fill_good_hits(analysis_stage, good_hit_data);
-		   	if (good_hit_data.detector == NINTER) single_event -> Intermediate::fill_good_hits(analysis_stage, good_hit_data);		
+		   	if (good_hit_data.detector == NINTER) single_event -> Intermediate::fill_good_hits(analysis_stage, good_hit_data);
+		   	if (good_hit_data.detector == NFIBER) single_event -> Fiber::fill_good_hits(analysis_stage, good_hit_data);		
 		} // end of loop over good hits
 
 		if (single_event -> SingleEvent::was_correct_event(analysis_stage))

@@ -87,6 +87,24 @@ Hist::Hist()
 		temp_name = Form("HEX preselected layer %d drift time;drift time [ns];counts", i+1);
 		HEX_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
 	}
+
+	// FIBER HODOSCOPE
+	TString hodo_layer[3];
+	hodo_layer[0] = "V";
+	hodo_layer[1] = "H";
+	hodo_layer[2] = "D";
+	for (int i = 0; i < 3; i++)
+	{
+		// rough
+		temp_name = Form("Fiber rough data layer " + hodo_layer[i] +" fiber;wire;counts", i);
+		Fiber_Rough_Elements[i] = new TH1F(temp_name,temp_name,100, -0.5, 99.5);
+		temp_name = Form("Fiber rough data layer " + hodo_layer[i] +" multiplicity;multiplicity;counts", i+1);
+		Fiber_Rough_Multiplicity[i] = new TH1F(temp_name,temp_name,30,-0.5,29.5);	
+		temp_name = Form("Fiber preselected data layer " + hodo_layer[i] +" fiber;wire;counts", i);
+		Fiber_Preselected_Elements[i] = new TH1F(temp_name,temp_name,100, -0.5, 99.5);
+		temp_name = Form("Fiber preselected data layer " + hodo_layer[i] +" multiplicity;multiplicity;counts", i+1);
+		Fiber_Preselected_Multiplicity[i] = new TH1F(temp_name,temp_name,30,-0.5,29.5);	
+	}
 }
 
 Hist::~Hist()
@@ -215,4 +233,24 @@ void Hist::fill_HEX_histos_preselected(HEX_hist_data* _hex_data)
 		}
 		Hist::HEX_Preselected_Multiplicity[j] -> Fill(_hex_data->layer_data[j]->preselected_elements.size());
 	}
+}
+
+void Hist::fill_Fiber_histos_rough(Fiber_hist_data* _fiber_data)
+{
+	for (unsigned int i = 0; i < _fiber_data->rough_fibers_V.size(); i++) Fiber_Rough_Elements[0] -> Fill(_fiber_data->rough_fibers_V.at(i));
+	for (unsigned int i = 0; i < _fiber_data->rough_fibers_H.size(); i++) Fiber_Rough_Elements[1] -> Fill(_fiber_data->rough_fibers_H.at(i));
+	for (unsigned int i = 0; i < _fiber_data->rough_fibers_D.size(); i++) Fiber_Rough_Elements[2] -> Fill(_fiber_data->rough_fibers_D.at(i));
+	Fiber_Rough_Multiplicity[0] -> Fill(_fiber_data->rough_fibers_V.size());
+	Fiber_Rough_Multiplicity[1] -> Fill(_fiber_data->rough_fibers_H.size());
+	Fiber_Rough_Multiplicity[2] -> Fill(_fiber_data->rough_fibers_D.size());
+}
+
+void Hist::fill_Fiber_histos_preselected(Fiber_hist_data* _fiber_data)
+{
+	for (unsigned int i = 0; i < _fiber_data->fibers_V.size(); i++) Fiber_Preselected_Elements[0] -> Fill(_fiber_data->fibers_V.at(i));
+	for (unsigned int i = 0; i < _fiber_data->fibers_H.size(); i++) Fiber_Preselected_Elements[1] -> Fill(_fiber_data->fibers_H.at(i));
+	for (unsigned int i = 0; i < _fiber_data->fibers_D.size(); i++) Fiber_Preselected_Elements[2] -> Fill(_fiber_data->fibers_D.at(i));
+	Fiber_Preselected_Multiplicity[0] -> Fill(_fiber_data->fibers_V.size());
+	Fiber_Preselected_Multiplicity[1] -> Fill(_fiber_data->fibers_H.size());
+	Fiber_Preselected_Multiplicity[2] -> Fill(_fiber_data->fibers_D.size());
 }

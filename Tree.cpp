@@ -131,6 +131,7 @@ void Tree::fill_rough_data_tree(hist_data _data_for_hists)
 	Hist::fill_D2_histos_rough(_data_for_hists.d2_data);
 	Hist::fill_HEX_histos_rough(_data_for_hists.hex_data);
 	Hist::fill_Intermediate_histos_rough(_data_for_hists.intermediate_data);
+	Hist::fill_Fiber_histos_rough(_data_for_hists.fiber_data);
 	if (rough_tree)
 	{
 		rough_data_tree -> Fill();
@@ -145,6 +146,7 @@ void Tree::fill_preselected_data_tree(hist_data _data_for_hists)
 	Hist::fill_D2_histos_preselected(_data_for_hists.d2_data);
 	Hist::fill_HEX_histos_preselected(_data_for_hists.hex_data);
 	Hist::fill_Intermediate_histos_preselected(_data_for_hists.intermediate_data);
+	Hist::fill_Fiber_histos_preselected(_data_for_hists.fiber_data);
 
 	if (preselected_tree)
 	{
@@ -288,6 +290,13 @@ void Tree::save_rough_histos()
 		Hist::HEX_Rough_Multiplicity[i] -> Write();
 		Hist::HEX_Rough_DriftTime[i] -> Write();
 	}
+
+	make_hist_dir("FIBER",1);
+	for (int i = 0; i < 3; i++)
+	{
+		Hist::Fiber_Rough_Elements[i] -> Write();
+		Hist::Fiber_Rough_Multiplicity[i] -> Write();
+	}
 }
 
 void Tree::save_preselected_histos()
@@ -317,7 +326,6 @@ void Tree::save_preselected_histos()
 	}
 
 	make_hist_dir("D2",2);
-	output_hist -> cd();
 	for (int i = 0; i < 6; i++)
 	{
 		Hist::D2_Preselected_Elements[i] -> Write();
@@ -325,13 +333,19 @@ void Tree::save_preselected_histos()
 		Hist::D2_Preselected_DriftTime[i] -> Write();
 	}
 
-	make_hist_dir("HEX",2);
-	output_hist -> cd();
+	make_hist_dir("HEX",2);;
 	for (int i = 0; i < 6; i++)
 	{
 		Hist::HEX_Preselected_Elements[i] -> Write();
 		Hist::HEX_Preselected_Multiplicity[i] -> Write();
 		Hist::HEX_Preselected_DriftTime[i] -> Write();
+	}
+
+	make_hist_dir("FIBER",2);
+	for (int i = 0; i < 3; i++)
+	{
+		Hist::Fiber_Preselected_Elements[i] -> Write();
+		Hist::Fiber_Preselected_Multiplicity[i] -> Write();
 	}
 }
 

@@ -47,6 +47,9 @@ public:
 	void fill_HEX_histos_rough(HEX_hist_data* _hex_data);
 	void fill_HEX_histos_preselected(HEX_hist_data* _hex_data);
 
+	void fill_Fiber_histos_rough(Fiber_hist_data* _fiber_data);
+	void fill_Fiber_histos_preselected(Fiber_hist_data* _fiber_data);
+
 	// --- CONTROL SPECTRA ----
 	// START
 	TH1F *START_Rough_Layer_Up_Multiplicity;
@@ -100,7 +103,11 @@ public:
 	TH1F *HEX_Preselected_Multiplicity[7];
 	TH1F *HEX_Preselected_DriftTime[7];
 
-	
+	// FIBER
+	TH1F *Fiber_Rough_Multiplicity[3];
+	TH1F *Fiber_Rough_Elements[3];
+	TH1F *Fiber_Preselected_Multiplicity[3];
+	TH1F *Fiber_Preselected_Elements[3];
 };
 
 #endif

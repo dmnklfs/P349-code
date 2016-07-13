@@ -34,16 +34,20 @@ Config::Config()
 	D1_drift_time_min = -1500;
 	D1_drift_time_max =  1500;
 	
-/*
-	INTERMEDIATE_element_min = 1;
-	INTERMEDIATE_element_max = 16;
-	INTERMEDIATE_layer_up_hits = 2;
-	INTERMEDIATE_layer_down_hits = 2;
-	INTERMEDIATE_time_min = -1500;
-	INTERMEDIATE_time_max = -1500;
-	//INTERMEDIATE_pos_y;
-	//INTERMEDIATE_pos_z;
-*/
+	// ---DRIFT CHEMBER D2---
+	// ...
+
+	// ---HEX---
+	// ...
+
+	// ---FIBER HODOSCOPE---
+	// ranges of elements
+	element_V_min = 0;
+	element_V_max = 70;
+	element_H_min = 0;
+	element_H_max = 70;
+	element_D_min = 0;
+	element_D_max = 70;
 }
 
 Config::~Config()
