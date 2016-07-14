@@ -10,7 +10,7 @@ public:
 	// configuration
 	// ---START---
 	// no of correct signals (leading & trailing edge) in up (down) layer
-	unsigned int start_hits;
+	int start_hits;
 	// time range for signals
 	double start_time_min;
 	double start_time_max;
@@ -19,7 +19,7 @@ public:
 
 	// ---TOF---
 	// no of correct signals (leading & trailing edge) in up (down) layer
-	unsigned int TOF_hits;
+	int TOF_hits;
 	// time range for signals
 	double TOF_time_min;
 	double TOF_time_max;
@@ -31,7 +31,7 @@ public:
 
 	// ---Intermediate---
 	// no of correct signals (leading & trailing edge) in up (down) layer
-	unsigned int Intermediate_hits;
+	int Intermediate_hits;
 	// time range for signals
 	double Intermediate_time_min;
 	double Intermediate_time_max;
@@ -43,28 +43,30 @@ public:
 
 	// ---DRIFT CHAMBER D1---
 	// min and max number of hits in layers (if set to -1: any value is ok)
-	// for a correct event ALL conditions need to be fulfilled
-	int D1_layer1_max_hits;
-	int D1_layer1_min_hits;
-	int D1_layer2_max_hits;
-	int D1_layer2_min_hits;
-	int D1_layer3_max_hits;
-	int D1_layer3_min_hits;
-	int D1_layer4_max_hits;
-	int D1_layer4_min_hits;
-	int D1_layer5_max_hits;
-	int D1_layer5_min_hits;
-	int D1_layer6_max_hits;
-	int D1_layer6_min_hits;
+	int D1_layer_max_hits[8];
+	int D1_layer_min_hits[8];
+
 	// drift time range
-	double D1_drift_time_max;
-	double D1_drift_time_min;
+	double D1_drift_time_max[8];
+	double D1_drift_time_min[8];
 
 	// ---DRIFT CHEMBER D2---
-	// ...
+	// min and max number of hits in layers (if set to -1: any value is ok)
+	int D2_layer_max_hits[6];
+	int D2_layer_min_hits[6];
+
+	// drift time range
+	double D2_drift_time_max[6];
+	double D2_drift_time_min[6];
 
 	// ---HEX---
-	// ...
+	// min and max number of hits in layers (if set to -1: any value is ok)
+	int HEX_layer_max_hits[7];
+	int HEX_layer_min_hits[7];
+
+	// drift time range
+	double HEX_drift_time_max[7];
+	double HEX_drift_time_min[7];
 
 	// ---FIBER HODOSCOPE---
 	// ranges of elements

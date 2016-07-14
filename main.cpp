@@ -3,6 +3,9 @@
 
 int main(int argc, char *argv[])
 {
+	TCanvas *dummy = new TCanvas();
+	delete dummy;
+	
 	if( false == check_input(argc, argv) ) return 0;
 	// opening input file(s), creating output file
 	Tree *in_out = new Tree(argc, argv);

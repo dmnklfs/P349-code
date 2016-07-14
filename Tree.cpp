@@ -93,7 +93,7 @@ void Tree::create_preselected_data_tree()
 	preselected_data_tree->Branch ("time_real", &time_real);
 	preselected_data_tree->Branch ("time_diff", &time_diff);
 	preselected_data_tree->Branch ("time_overthres", &time_overthres);
-	preselected_data_tree->Branch ("gglobal_chan", &gglobal_chan);
+	preselected_data_tree->Branch ("global_chan", &gglobal_chan);
 	preselected_data_tree->Branch ("hits_total", &hits_total);
 	//preselected_data_tree->Branch ("hits_ref", &hits_ref);
 	//preselected_data_tree->Branch ("hits_cherenkov", &hits_cherenkov);
@@ -111,7 +111,7 @@ void Tree::create_rough_data_tree()
 	rough_data_tree->Branch ("time_real", &time_real);
 	rough_data_tree->Branch ("time_diff", &time_diff);
 	rough_data_tree->Branch ("time_overthres", &time_overthres);
-	rough_data_tree->Branch ("gglobal_chan", &gglobal_chan);
+	rough_data_tree->Branch ("global_chan", &gglobal_chan);
 	rough_data_tree->Branch ("hits_total", &hits_total);
 	//rough_data_tree->Branch ("hits_ref", &hits_ref);
 	//rough_data_tree->Branch ("hits_cherenkov", &hits_cherenkov);
@@ -179,7 +179,7 @@ void Tree::open_input_files(char *argv[])
 	chain->SetBranchAddress("time_real", &time_real);
 	chain->SetBranchAddress("time_diff", &time_diff);
 	chain->SetBranchAddress("time_overthres", &time_overthres);
-	chain->SetBranchAddress("gglobal_chan", &gglobal_chan);
+	chain->SetBranchAddress("global_chan", &gglobal_chan);
 
 	all_entries = chain->GetEntries();
 
@@ -347,6 +347,7 @@ void Tree::save_preselected_histos()
 		Hist::Fiber_Preselected_Elements[i] -> Write();
 		Hist::Fiber_Preselected_Multiplicity[i] -> Write();
 	}
+	Hist::V_vs_H -> Write();
 }
 
 void Tree::make_hist_dir(const char* name, const int dir)

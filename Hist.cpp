@@ -14,7 +14,7 @@ Hist::Hist()
 	TOF_Rough_Layer_Up_Multiplicity = new TH1F("TOF rough data layer up multiplicity", "TOF rough layer up multiplicity;multiplicity;counts", 12, -0.5, 11.5);
 	TOF_Rough_Layer_Down_Multiplicity = new TH1F("TOF rough data layer down multiplicity", "TOF rough layer down multiplicity;multiplicity;counts", 12, -0.5, 11.5);
 	TOF_Preselected_Layer_Up_Multiplicity = new TH1F("TOF preselected data layer up multiplicity", "TOF preselected layer up multiplicity;multiplicity;counts", 12, -0.5, 11.5);
-	TOF_Preselected_Layer_Down_Multiplicity = new TH1F("TOF preselected data layer down multiplicity", "TOF preselected layer down multiplicity;multiplicity;counts", 11, -0.5, 11.5);
+	TOF_Preselected_Layer_Down_Multiplicity = new TH1F("TOF preselected data layer down multiplicity", "TOF preselected layer down multiplicity;multiplicity;counts", 12, -0.5, 11.5);
 
 	TOF_Rough_Layer_Up_Elements = new TH1F("TOF rough data layer up element", "TOF rough layer up element;element;counts", 12, -0.5, 11.5);
 	TOF_Rough_Layer_Down_Element = new TH1F("TOF rough data layer down element", "TOF rough layer down element;element;counts", 12, -0.5, 11.5);
@@ -105,6 +105,8 @@ Hist::Hist()
 		temp_name = Form("Fiber preselected data layer " + hodo_layer[i] +" multiplicity;multiplicity;counts", i+1);
 		Fiber_Preselected_Multiplicity[i] = new TH1F(temp_name,temp_name,30,-0.5,29.5);	
 	}
+
+	V_vs_H = new TH2F("V vs H","V vs H;element V;element H",100,-0.5,99.5,100,-0.5,99.5);
 }
 
 Hist::~Hist()
@@ -253,4 +255,12 @@ void Hist::fill_Fiber_histos_preselected(Fiber_hist_data* _fiber_data)
 	Fiber_Preselected_Multiplicity[0] -> Fill(_fiber_data->fibers_V.size());
 	Fiber_Preselected_Multiplicity[1] -> Fill(_fiber_data->fibers_H.size());
 	Fiber_Preselected_Multiplicity[2] -> Fill(_fiber_data->fibers_D.size());
+
+	for (unsigned int j = 0; j < _fiber_data->fibers_H.size(); j++)
+	{
+		for (unsigned int i = 0; i < _fiber_data->fibers_V.size(); i++)
+		{
+			V_vs_H -> Fill(_fiber_data->fibers_V.at(i), _fiber_data->fibers_H.at(j));
+		}
+	}
 }

@@ -108,6 +108,7 @@ public:
 	TH1F *Fiber_Rough_Elements[3];
 	TH1F *Fiber_Preselected_Multiplicity[3];
 	TH1F *Fiber_Preselected_Elements[3];
+	TH2F *V_vs_H;
 };
 
 #endif

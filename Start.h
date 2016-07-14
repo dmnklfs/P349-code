@@ -36,11 +36,12 @@ public:
 	start_hist_data* get_hist_data();
 
 private:
-	bool check_signal(std::vector<int> & Edge, std::vector<double > & Time);
+	void choose_corr_leading_up();
+	void choose_corr_leading_down();
 	bool check_size_up();
 	bool check_size_down();
 	bool check_time_range(double treal);
-	void fill_data_if_correct();
+	bool check_coincidence();
 
 	// after preselection
 	std::vector<double> TrealUp;

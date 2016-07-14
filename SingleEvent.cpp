@@ -20,10 +20,12 @@ bool SingleEvent::was_correct_event(const int stage)
 	bool HEX = HEX::was_correct_event();
 	bool intermediate = Intermediate::was_correct_event();
 	bool fiber = Fiber::was_correct_event();
+	bool D1andD2 = false;
+	if ( D1::get_no_of_layers_with_hits() + D2::get_no_of_layers_with_hits() >= 4 ) D1andD2 = true;
 	// event is ok if
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
-	if ( (start && tof && D1 && D2 && HEX && intermediate && fiber) || stage == 2)  // add TOF
+	if ( (start && tof && intermediate && D1andD2 && HEX) || stage == 2)
 	{
 		return true;
 	}

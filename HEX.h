@@ -11,6 +11,7 @@
 #define NHEXL7  1	// layer 7 is the closest one to D2
 
 class HEX
+	: public Config
 {
 public:
 	HEX();
@@ -18,9 +19,11 @@ public:
 	void fill_good_hits(const int _stage, single_gh_data _good_hit_data);
 	HEX_hist_data* get_hist_data();
 	bool was_correct_event();
+	int get_no_of_layers_with_hits();
 
 private:
-	DCLayer *Layer;
+	DCLayer *Layer[7];
+	int no_of_layers_with_hits;
 	bool correct_event;
 };
 
