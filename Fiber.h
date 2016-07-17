@@ -36,13 +36,15 @@ public:
 	Fiber_hist_data* get_hist_data();
 
 private:
-	bool check_size_V();	// ? -> check signals
+	void choose_corr_leading_V();
+	void choose_corr_leading_H();
+	void choose_corr_leading_D();
+	bool check_elements_range_V(int element);
+	bool check_elements_range_H(int element);
+	bool check_elements_range_D(int element);
+	bool check_size_V();
 	bool check_size_H();
 	bool check_size_D();
-	bool check_elements_range_V();
-	bool check_elements_range_H();
-	bool check_elements_range_D();
-	void fill_data_if_correct();
 
 	// after preselection
 	std::vector<int> Fibers_V;

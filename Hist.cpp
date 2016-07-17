@@ -16,10 +16,10 @@ Hist::Hist()
 	TOF_Preselected_Layer_Up_Multiplicity = new TH1F("TOF preselected data layer up multiplicity", "TOF preselected layer up multiplicity;multiplicity;counts", 12, -0.5, 11.5);
 	TOF_Preselected_Layer_Down_Multiplicity = new TH1F("TOF preselected data layer down multiplicity", "TOF preselected layer down multiplicity;multiplicity;counts", 12, -0.5, 11.5);
 
-	TOF_Rough_Layer_Up_Elements = new TH1F("TOF rough data layer up element", "TOF rough layer up element;element;counts", 12, -0.5, 11.5);
-	TOF_Rough_Layer_Down_Element = new TH1F("TOF rough data layer down element", "TOF rough layer down element;element;counts", 12, -0.5, 11.5);
-	TOF_Preselected_Layer_Up_Element = new TH1F("TOF preselected data layer up element", "TOF preselected layer up element;element;counts", 12, -0.5, 11.5);
-	TOF_Preselected_Layer_Down_Element = new TH1F("TOF preselected data layer down element", "TOF preselected layer down element;element;counts", 12, -0.5, 11.5);
+	TOF_Rough_Layer_Up_Elements = new TH1F("TOF rough data layer up element", "TOF rough layer up element;element;counts", 15, -0.5, 14.5);
+	TOF_Rough_Layer_Down_Element = new TH1F("TOF rough data layer down element", "TOF rough layer down element;element;counts", 15, -0.5, 14.5);
+	TOF_Preselected_Layer_Up_Element = new TH1F("TOF preselected data layer up element", "TOF preselected layer up element;element;counts", 15, -0.5, 14.5);
+	TOF_Preselected_Layer_Down_Element = new TH1F("TOF preselected data layer down element", "TOF preselected layer down element;element;counts", 15, -0.5, 14.5);
 
 	// Intermediate
 	Intermediate_Rough_Layer_Up_Multiplicity = new TH1F("Intermediate rough data layer up multiplicity", "Intermediate rough layer up multiplicity;multiplicity;counts", 18, -0.5, 17.5);
@@ -106,7 +106,7 @@ Hist::Hist()
 		Fiber_Preselected_Multiplicity[i] = new TH1F(temp_name,temp_name,30,-0.5,29.5);	
 	}
 
-	V_vs_H = new TH2F("V vs H","V vs H;element V;element H",100,-0.5,99.5,100,-0.5,99.5);
+	V_vs_H = new TH2F("V vs H","V vs H;fiber no. layer V;fiber no. layer H",100,-0.5,99.5,100,-0.5,99.5);
 }
 
 Hist::~Hist()

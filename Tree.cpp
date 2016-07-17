@@ -11,7 +11,7 @@ Tree::Tree(int argc, char *argv[])
 	if(1==std::atoi(argv[4])) rough_tree = true;
 	preselected_tree = false;
 	if(1==std::atoi(argv[5])) preselected_tree = true;
-	path_to_tree = argv[no_of_args];
+	path_to_tree = argv[6];
 
 	// variables to read / write data 
 	hits_total = 1;
@@ -164,15 +164,15 @@ TFile* Tree::get_output_file()
 // =======================================================================================================
 void Tree::open_input_files(char *argv[])
 {
-	std::cout << "* no of used root trees: " << no_of_args - 6 << std::endl;
+	std::cout << "* no of used root files: " << no_of_args - 6 << std::endl;
 	// create chain
-	chain = new TChain(argv[no_of_args]);
-	for (int i = 6; i < no_of_args; i++)
+	chain = new TChain(argv[6]);
+	for (int i = 7; i < no_of_args+1; i++)
 	{
-		std::cout << "    " << i - 5 << ". file: " << argv[i] << " added to chain" << std::endl;
+		std::cout << "    " << i - 6 << ". file: " << argv[i] << " added to chain" << std::endl;
 		chain->Add(argv[i]);
 	}
-
+	std::cout << "    path to the input tree: " << argv[6] << std::endl;
 	chain->SetBranchAddress("hits_total", &hits_total);
 	chain->SetBranchAddress("hits_good", &hits_good);
 	chain->SetBranchAddress("P349_hitdata",&ghitdata);

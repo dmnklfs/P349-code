@@ -40,11 +40,12 @@ bool check_input(int argc, char *argv[])
 	{
 		std::cout << "\n" << std::endl;
 		std::cout << "Wrong input!!!" << std::endl;
-		std::cout << "Minimal info: " << argv[0] << " <OutputFileName> <analysis stage> <no_of_events_to_process> <rough data tree> <preselected data tree> <path/data_file_1.root> ... <path/data_file_N.root> <path_to_tree>" << std::endl;
+		std::cout << "Minimal info: " << argv[0] << " <OutputFileName> <analysis stage> <no_of_events_to_process> <rough data tree> <preselected data tree> <path_to_input_data_tree> <path/data_file_1.root> ... <path/data_file_N.root>" << std::endl;
 		std::cout << "* analysis stage defines the moment from wchich the data set is read and analysed:"<< std::endl;
 		std::cout << "    1 - read data and make preselection (test conditions from CONFIG)"<< std::endl;
 		std::cout << "    2 - read preselected data (without testing conditions from CONFIG)"<< std::endl;
 		std::cout << "* if you want to process all events in the files set no of events to -1"<< std::endl;
+		std::cout << "* for data from easyparser path to the tree is: Trees/calibrated, for this code: rough or preselected"<< std::endl;
 		std::cout << "* you can analyse any number of the *.root files provided they have the same structure"<< std::endl;
 		std::cout << "\n" << std::endl;
 		return false;

@@ -25,7 +25,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	// event is ok if
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
-	if ( (start && tof && intermediate && D1andD2 && HEX) || stage == 2)
+	if ( (start && tof && D1andD2 && HEX && fiber) || stage == 2)
 	{
 		return true;
 	}

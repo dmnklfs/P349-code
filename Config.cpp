@@ -52,7 +52,13 @@ Config::Config()
 	element_H_min = 0;
 	element_H_max = 70;
 	element_D_min = 0;
-	element_D_max = 70;
+	element_D_max = 160;
+	hit_V_min = 1;
+	hit_V_max = 20;
+	hit_H_min = 1;
+	hit_H_max = 20;
+	hit_D_min = 1;
+	hit_D_max = 20;
 }
 
 Config::~Config()
