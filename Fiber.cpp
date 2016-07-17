@@ -120,112 +120,6 @@ bool Fiber::check_elements_range_H(int element)
 
 bool Fiber::check_elements_range_D(int element)
 {
-<<<<<<< HEAD
-	if (element >= Config::element_D_min && element <= Config::element_D_max)
-=======
-	choose_corr_leading_V();
-	choose_corr_leading_H();
-	choose_corr_leading_D();
-	if (check_size_V()&&check_size_H()&&check_size_D())
->>>>>>> 6a8ea030b1af9b9b0c820c3db8426fc0b4305f06
-	{
-		return true;
-	}
-<<<<<<< HEAD
-	else return false;
-}
-
-bool Fiber::check_size_V()
-{
-	if (-1 == Config::hit_V_min || -1 == Config::hit_V_max) return true;
-	if (Fibers_V.size()>=(unsigned int)Config::hit_V_min && Fibers_V.size()<=(unsigned int)Config::hit_V_max) return true;
-	else return false;
-}
-
-bool Fiber::check_size_H()
-{
-	if (-1 == Config::hit_H_min || -1 == Config::hit_H_max) return true;
-	if (Fibers_H.size()>=(unsigned int)Config::hit_H_min && Fibers_H.size()<=(unsigned int)Config::hit_H_max) return true;
-	else return false;
-}
-
-bool Fiber::check_size_D()
-{
-=======
-	else correct_event = false;
-}
-
-void Fiber::choose_corr_leading_V()
-{
-	int iterations = Rough_Fibers_V.size()-1;
-	if (Edge_V.size()-1 < 0) iterations = 0;
-	for (int i = 0; i < iterations; i++)
-	{
-		if (1==Edge_V.at(i)&&0==Edge_V.at(i+1)&&Rough_Fibers_V.at(i)==Rough_Fibers_V.at(i+1))
-		{
-			if (check_elements_range_V(Rough_Fibers_V.at(i)))
-			{
-				Fibers_V.push_back(Rough_Fibers_V.at(i));
-			}
-		}
-		if (Edge_V.at(i)==Edge_V.at(i+1)) break;
-	}
-}
-
-void Fiber::choose_corr_leading_H()
-{
-	int iterations = Rough_Fibers_H.size()-1;
-	if (Edge_H.size()-1 < 0) iterations = 0;
-	for (int i = 0; i < iterations; i++)
-	{
-		if (1==Edge_H.at(i)&&0==Edge_H.at(i+1)&&Rough_Fibers_H.at(i)==Rough_Fibers_H.at(i+1))
-		{
-			if (check_elements_range_H(Rough_Fibers_H.at(i)))
-			{
-				Fibers_H.push_back(Rough_Fibers_H.at(i));
-			}
-		}
-		if (Edge_H.at(i)==Edge_H.at(i+1)) break;
-	}
-}
-
-void Fiber::choose_corr_leading_D()
-{
-	int iterations = Rough_Fibers_D.size()-1;
-	if (Edge_D.size()-1 < 0) iterations = 0;
-	for (int i = 0; i < iterations; i++)
-	{
-		if (1==Edge_D.at(i)&&0==Edge_D.at(i+1)&&Rough_Fibers_D.at(i)==Rough_Fibers_D.at(i+1))
-		{
-			if (check_elements_range_D(Rough_Fibers_D.at(i)))
-			{
-				Fibers_D.push_back(Rough_Fibers_D.at(i));
-			}
-		}
-		if (Edge_D.at(i)==Edge_D.at(i+1)) break;
-	}
-}
-
-bool Fiber::check_elements_range_V(int element)
-{
-	if (element >= Config::element_V_min && element <= Config::element_V_max)
-	{
-		return true;
-	}
-	else return false;
-}
-
-bool Fiber::check_elements_range_H(int element)
-{
-	if (element >= Config::element_H_min && element <= Config::element_H_max)
-	{
-		return true;
-	}
-	else return false;
-}
-
-bool Fiber::check_elements_range_D(int element)
-{
 	if (element >= Config::element_D_min && element <= Config::element_D_max)
 	{
 		return true;
@@ -249,7 +143,6 @@ bool Fiber::check_size_H()
 
 bool Fiber::check_size_D()
 {
->>>>>>> 6a8ea030b1af9b9b0c820c3db8426fc0b4305f06
 	if (-1 == Config::hit_D_min || -1 == Config::hit_D_max) return true;
 	if (Fibers_D.size()>=(unsigned int)Config::hit_D_min && Fibers_D.size()<=(unsigned int)Config::hit_D_max) return true;
 	else return false;
