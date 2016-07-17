@@ -16,29 +16,15 @@ HEX::~HEX()
 	}
 }
 
-void HEX::fill_good_hits(const int _stage, single_gh_data _good_hit_data)
+void HEX::fill_good_hits(single_gh_data _good_hit_data)
 {
-	if (1 ==_stage)  // input data before preselection
-	{
-		if (NHEXL1 == _good_hit_data.layer) Layer[0] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (NHEXL2 == _good_hit_data.layer) Layer[1] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (NHEXL3 == _good_hit_data.layer) Layer[2] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (NHEXL4 == _good_hit_data.layer) Layer[3] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (NHEXL5 == _good_hit_data.layer) Layer[4] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (NHEXL6 == _good_hit_data.layer) Layer[5] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (NHEXL7 == _good_hit_data.layer) Layer[6] -> DCLayer::fill_rough_data(_good_hit_data);
-	}
-
-	if (2 ==_stage)  // input data after preselection
-	{
-		if (NHEXL1 == _good_hit_data.layer) Layer[0] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (NHEXL2 == _good_hit_data.layer) Layer[1] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (NHEXL3 == _good_hit_data.layer) Layer[2] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (NHEXL4 == _good_hit_data.layer) Layer[3] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (NHEXL5 == _good_hit_data.layer) Layer[4] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (NHEXL6 == _good_hit_data.layer) Layer[5] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (NHEXL7 == _good_hit_data.layer) Layer[6] -> DCLayer::fill_preselected_data(_good_hit_data);
-	}
+	if (NHEXL1 == _good_hit_data.layer) Layer[0] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (NHEXL2 == _good_hit_data.layer) Layer[1] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (NHEXL3 == _good_hit_data.layer) Layer[2] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (NHEXL4 == _good_hit_data.layer) Layer[3] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (NHEXL5 == _good_hit_data.layer) Layer[4] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (NHEXL6 == _good_hit_data.layer) Layer[5] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (NHEXL7 == _good_hit_data.layer) Layer[6] -> DCLayer::fill_rough_data(_good_hit_data);
 }
 
 bool HEX::was_correct_event()

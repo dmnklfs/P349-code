@@ -5,27 +5,27 @@ Hist::Hist()
 	TString temp_name;
 
 	// START 
-	START_Rough_Layer_Up_Multiplicity = new TH1F("START rough data layer up multiplicity", "START Rough layer up multiplicity;multiplicity;counts", 10, -0.5, 9.5);
-	START_Rough_Layer_Down_Multiplicity = new TH1F("START rough data layer down multiplicity", "START Rough layer down multiplicity;multiplicity;counts", 10, -0.5, 9.5);
-	START_Preselected_Layer_Up_Multiplicity = new TH1F("START preselected data layer up multiplicity", "START preselected layer up multiplicity;multiplicity;counts", 10, -0.5, 9.5);
-	START_Preselected_Layer_Down_Multiplicity = new TH1F("START preselected data layer down multiplicity", "START preselected layer down multiplicity;multiplicity;counts", 10, -0.5, 9.5);
+	START_Rough_Layer_Up_Multiplicity = new TH1F("START rough data layer up multiplicity", "START Rough layer up multiplicity;multiplicity (hits: leading+trailing);counts", 10, -0.5, 9.5);
+	START_Rough_Layer_Down_Multiplicity = new TH1F("START rough data layer down multiplicity", "START Rough layer down multiplicity;multiplicity (hits: leading+trailing);counts", 10, -0.5, 9.5);
+	START_Preselected_Layer_Up_Multiplicity = new TH1F("START preselected data layer up multiplicity", "START preselected layer up multiplicity;multiplicity (hits: leading+trailing);counts", 10, -0.5, 9.5);
+	START_Preselected_Layer_Down_Multiplicity = new TH1F("START preselected data layer down multiplicity", "START preselected layer down multiplicity;multiplicity (hits: leading+trailing);counts", 10, -0.5, 9.5);
 
 	// TOF
-	TOF_Rough_Layer_Up_Multiplicity = new TH1F("TOF rough data layer up multiplicity", "TOF rough layer up multiplicity;multiplicity;counts", 12, -0.5, 11.5);
-	TOF_Rough_Layer_Down_Multiplicity = new TH1F("TOF rough data layer down multiplicity", "TOF rough layer down multiplicity;multiplicity;counts", 12, -0.5, 11.5);
-	TOF_Preselected_Layer_Up_Multiplicity = new TH1F("TOF preselected data layer up multiplicity", "TOF preselected layer up multiplicity;multiplicity;counts", 12, -0.5, 11.5);
-	TOF_Preselected_Layer_Down_Multiplicity = new TH1F("TOF preselected data layer down multiplicity", "TOF preselected layer down multiplicity;multiplicity;counts", 12, -0.5, 11.5);
+	TOF_Rough_Layer_Up_Multiplicity = new TH1F("TOF rough data layer up multiplicity", "TOF rough layer up multiplicity;multiplicity (hits: leading+trailing);counts", 12, -0.5, 11.5);
+	TOF_Rough_Layer_Down_Multiplicity = new TH1F("TOF rough data layer down multiplicity", "TOF rough layer down multiplicity;multiplicity (hits: leading+trailing);counts", 12, -0.5, 11.5);
+	TOF_Preselected_Layer_Up_Multiplicity = new TH1F("TOF preselected data layer up multiplicity", "TOF preselected layer up multiplicity;multiplicity (hits: leading+trailing);counts", 12, -0.5, 11.5);
+	TOF_Preselected_Layer_Down_Multiplicity = new TH1F("TOF preselected data layer down multiplicity", "TOF preselected layer down multiplicity;multiplicity (hits: leading+trailing);counts", 12, -0.5, 11.5);
 
-	TOF_Rough_Layer_Up_Elements = new TH1F("TOF rough data layer up element", "TOF rough layer up element;element;counts", 12, -0.5, 11.5);
-	TOF_Rough_Layer_Down_Element = new TH1F("TOF rough data layer down element", "TOF rough layer down element;element;counts", 12, -0.5, 11.5);
-	TOF_Preselected_Layer_Up_Element = new TH1F("TOF preselected data layer up element", "TOF preselected layer up element;element;counts", 12, -0.5, 11.5);
-	TOF_Preselected_Layer_Down_Element = new TH1F("TOF preselected data layer down element", "TOF preselected layer down element;element;counts", 12, -0.5, 11.5);
+	TOF_Rough_Layer_Up_Elements = new TH1F("TOF rough data layer up element", "TOF rough layer up element;element;counts", 15, -0.5, 14.5);
+	TOF_Rough_Layer_Down_Element = new TH1F("TOF rough data layer down element", "TOF rough layer down element;element;counts", 15, -0.5, 14.5);
+	TOF_Preselected_Layer_Up_Element = new TH1F("TOF preselected data layer up element", "TOF preselected layer up element;element;counts", 15, -0.5, 14.5);
+	TOF_Preselected_Layer_Down_Element = new TH1F("TOF preselected data layer down element", "TOF preselected layer down element;element;counts", 15, -0.5, 14.5);
 
 	// Intermediate
-	Intermediate_Rough_Layer_Up_Multiplicity = new TH1F("Intermediate rough data layer up multiplicity", "Intermediate rough layer up multiplicity;multiplicity;counts", 18, -0.5, 17.5);
-	Intermediate_Rough_Layer_Down_Multiplicity = new TH1F("Intermediate rough data layer down multiplicity", "Intermediate rough layer down multiplicity;multiplicity;counts", 18, -0.5, 17.5);
-	Intermediate_Preselected_Layer_Up_Multiplicity = new TH1F("Intermediate preselected data layer up multiplicity", "Intermediate preselected layer up multiplicity;multiplicity;counts", 18, -0.5, 17.5);
-	Intermediate_Preselected_Layer_Down_Multiplicity = new TH1F("Intermediate preselected data layer down multiplicity", "Intermediate preselected layer down multiplicity;multiplicity;counts", 18, -0.5, 17.5);
+	Intermediate_Rough_Layer_Up_Multiplicity = new TH1F("Intermediate rough data layer up multiplicity", "Intermediate rough layer up multiplicity;multiplicity (hits: leading+trailing);counts", 18, -0.5, 17.5);
+	Intermediate_Rough_Layer_Down_Multiplicity = new TH1F("Intermediate rough data layer down multiplicity", "Intermediate rough layer down multiplicity;multiplicity (hits: leading+trailing);counts", 18, -0.5, 17.5);
+	Intermediate_Preselected_Layer_Up_Multiplicity = new TH1F("Intermediate preselected data layer up multiplicity", "Intermediate preselected layer up multiplicity;multiplicity (hits: leading+trailing);counts", 18, -0.5, 17.5);
+	Intermediate_Preselected_Layer_Down_Multiplicity = new TH1F("Intermediate preselected data layer down multiplicity", "Intermediate preselected layer down multiplicity;multiplicity (hits: leading+trailing);counts", 18, -0.5, 17.5);
 
 	Intermediate_Rough_Layer_Up_Elements = new TH1F("Intermediate rough data layer up element", "Intermediate rough layer up element;element;counts", 18, -0.5, 17.5);
 	Intermediate_Rough_Layer_Down_Element = new TH1F("Intermediate rough data layer down element", "Intermediate rough layer down element;element;counts", 18, -0.5, 17.5);
@@ -37,14 +37,14 @@ Hist::Hist()
 		// rough
 		temp_name = Form("D1 rough data layer %d wires;wire;counts", i+1);
 		D1_Rough_Elements[i] = new TH1F(temp_name, temp_name, 60, -0.5, 59.5);
-		temp_name = Form("D1 rough layer %d multiplicity;multiplicity;counts", i+1);
+		temp_name = Form("D1 rough layer %d multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		D1_Rough_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
 		temp_name = Form("D1 rough layer %d drift time;drift time [ns];counts", i+1);
 		D1_Rough_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
 		// preselected
 		temp_name = Form("D1 preselected data layer %d wires;wire;counts", i+1);
 		D1_Preselected_Elements[i] = new TH1F(temp_name, temp_name, 60, -0.5, 59.5);
-		temp_name = Form("D1 preselected layer %d multiplicity;multiplicity;counts", i+1);
+		temp_name = Form("D1 preselected layer %d multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		D1_Preselected_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
 		temp_name = Form("D1 preselected layer %d drift time;drift time [ns];counts", i+1);
 		D1_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
@@ -56,14 +56,14 @@ Hist::Hist()
 		// rough
 		temp_name = Form("D2 rough data layer %d wires;wire;counts", i+1);
 		D2_Rough_Elements[i] = new TH1F(temp_name, temp_name, 60, -0.5, 59.5);
-		temp_name = Form("D2 rough layer %d multiplicity;multiplicity;counts", i+1);
+		temp_name = Form("D2 rough layer %d multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		D2_Rough_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
 		temp_name = Form("D2 rough layer %d drift time;drift time [ns];counts", i+1);
 		D2_Rough_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
 		// preselected
 		temp_name = Form("D2 preselected data layer %d wires;wire;counts", i+1);
 		D2_Preselected_Elements[i] = new TH1F(temp_name, temp_name, 60, -0.5, 59.5);
-		temp_name = Form("D2 preselected layer %d multiplicity;multiplicity;counts", i+1);
+		temp_name = Form("D2 preselected layer %d multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		D2_Preselected_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
 		temp_name = Form("D2 preselected layer %d drift time;drift time [ns];counts", i+1);
 		D2_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
@@ -75,14 +75,14 @@ Hist::Hist()
 		// rough
 		temp_name = Form("HEX rough data layer %d wires;wire;counts", i+1);
 		HEX_Rough_Elements[i] = new TH1F(temp_name, temp_name, 60, -0.5, 59.5);
-		temp_name = Form("HEX rough layer %d multiplicity;multiplicity;counts", i+1);
+		temp_name = Form("HEX rough layer %d multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		HEX_Rough_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
 		temp_name = Form("HEX rough layer %d drift time;drift time [ns];counts", i+1);
 		HEX_Rough_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
 		// preselected
 		temp_name = Form("HEX preselected data layer %d wires;wire;counts", i+1);
 		HEX_Preselected_Elements[i] = new TH1F(temp_name, temp_name, 60, -0.5, 59.5);
-		temp_name = Form("HEX preselected layer %d multiplicity;multiplicity;counts", i+1);
+		temp_name = Form("HEX preselected layer %d multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		HEX_Preselected_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
 		temp_name = Form("HEX preselected layer %d drift time;drift time [ns];counts", i+1);
 		HEX_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
@@ -98,15 +98,15 @@ Hist::Hist()
 		// rough
 		temp_name = Form("Fiber rough data layer " + hodo_layer[i] +" fiber;wire;counts", i);
 		Fiber_Rough_Elements[i] = new TH1F(temp_name,temp_name,100, -0.5, 99.5);
-		temp_name = Form("Fiber rough data layer " + hodo_layer[i] +" multiplicity;multiplicity;counts", i+1);
+		temp_name = Form("Fiber rough data layer " + hodo_layer[i] +" multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		Fiber_Rough_Multiplicity[i] = new TH1F(temp_name,temp_name,30,-0.5,29.5);	
 		temp_name = Form("Fiber preselected data layer " + hodo_layer[i] +" fiber;wire;counts", i);
 		Fiber_Preselected_Elements[i] = new TH1F(temp_name,temp_name,100, -0.5, 99.5);
-		temp_name = Form("Fiber preselected data layer " + hodo_layer[i] +" multiplicity;multiplicity;counts", i+1);
+		temp_name = Form("Fiber preselected data layer " + hodo_layer[i] +" multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		Fiber_Preselected_Multiplicity[i] = new TH1F(temp_name,temp_name,30,-0.5,29.5);	
 	}
 
-	V_vs_H = new TH2F("V vs H","V vs H;element V;element H",100,-0.5,99.5,100,-0.5,99.5);
+	V_vs_H = new TH2F("V vs H","V vs H;fiber no. layer V;fiber no. layer H",100,-0.5,99.5,100,-0.5,99.5);
 }
 
 Hist::~Hist()

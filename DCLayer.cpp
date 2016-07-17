@@ -28,12 +28,6 @@ void DCLayer::fill_rough_data(single_gh_data _good_hit_data)
 	RoughEdge.push_back(_good_hit_data.edge);
 }
 
-void DCLayer::fill_preselected_data(single_gh_data _good_hit_data)
-{
-	DriftTime.push_back(_good_hit_data.treal);
-	Wire.push_back(_good_hit_data.element);
-}
-
 bool DCLayer::was_correct_event()
 {
 	DCLayer::check_hits();
@@ -65,7 +59,7 @@ void DCLayer::choose_corr_leading()
 				Wire.push_back(RoughWire.at(i));
 			}
 		}
-		if (RoughEdge.at(i)==RoughEdge.at(i+1)) break;
+		//if (RoughEdge.at(i)==RoughEdge.at(i+1)) break;
 	}
 }
 

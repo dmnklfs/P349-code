@@ -11,7 +11,6 @@ public:
 	DCLayer(double _min_drift_time, double _max_drift_time, int _min_no, int _max_no);
 	~DCLayer();
 	void fill_rough_data(single_gh_data _good_hit_data);
-	void fill_preselected_data(single_gh_data _good_hit_data);
 	DCLayer_hist_data* get_hist_data();
 	bool was_correct_event();
 

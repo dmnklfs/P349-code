@@ -30,7 +30,7 @@ class Start
 public:
 	Start();
 	~Start();
-	void fill_good_hits(const int _stage, single_gh_data _good_hit_data);
+	void fill_good_hits(single_gh_data _good_hit_data);
 	bool was_correct_event();
 	void check_hits();
 	start_hist_data* get_hist_data();

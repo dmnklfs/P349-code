@@ -12,36 +12,19 @@ TOF::~TOF()
 }
 
 
-void TOF::fill_good_hits(const int _stage, single_gh_data _good_hit_data)
+void TOF::fill_good_hits(single_gh_data _good_hit_data)
 {
-	if (1 ==_stage)  // input data before preselection
+	if ( 1 == _good_hit_data.layer)
 	{
-		if ( 1 == _good_hit_data.layer)
-		{
-			RoughEdgeUp.push_back(_good_hit_data.edge);
-			RoughTrealUp.push_back(_good_hit_data.treal);
-			RoughElementUp.push_back(_good_hit_data.element);
-		}
-		if ( 2 == _good_hit_data.layer)
-		{
-			RoughEdgeDown.push_back(_good_hit_data.edge);
-			RoughTrealDown.push_back(_good_hit_data.treal);
-			RoughElementDown.push_back(_good_hit_data.element);
-		}
+		RoughEdgeUp.push_back(_good_hit_data.edge);
+		RoughTrealUp.push_back(_good_hit_data.treal);
+		RoughElementUp.push_back(_good_hit_data.element);
 	}
-
-	if (2 ==_stage)  // input data after preselection
+	if ( 2 == _good_hit_data.layer)
 	{
-		if ( 1 == _good_hit_data.layer)
-		{
-			TrealUp.push_back(_good_hit_data.treal);
-			ElementUp.push_back(_good_hit_data.element);
-		}
-		if ( 2 == _good_hit_data.layer)
-		{
-			TrealDown.push_back(_good_hit_data.treal);
-			ElementDown.push_back(_good_hit_data.element);
-		}
+		RoughEdgeDown.push_back(_good_hit_data.edge);
+		RoughTrealDown.push_back(_good_hit_data.treal);
+		RoughElementDown.push_back(_good_hit_data.element);
 	}
 }
 
@@ -80,7 +63,7 @@ void TOF::choose_corr_leading_up()
 				ElementUp.push_back(RoughElementUp.at(i));
 			}
 		}
-		if (RoughEdgeUp.at(i)==RoughEdgeUp.at(i+1)) break;
+		//if (RoughEdgeUp.at(i)==RoughEdgeUp.at(i+1)) break;
 	}
 }
 
@@ -98,7 +81,7 @@ void TOF::choose_corr_leading_down()
 				ElementDown.push_back(RoughElementDown.at(i));
 			}
 		}
-		if (RoughEdgeDown.at(i)==RoughEdgeDown.at(i+1)) break;
+		//if (RoughEdgeDown.at(i)==RoughEdgeDown.at(i+1)) break;
 	}
 }
 

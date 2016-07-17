@@ -32,13 +32,13 @@ int main(int argc, char *argv[])
 			good_hit_data.treal = in_out -> Tree::get_treal();
 
 			// filling detectors variables
-		   	if (good_hit_data.detector == START) single_event -> Start::fill_good_hits(analysis_stage, good_hit_data);
-		   	if (good_hit_data.detector == NTOF) single_event -> TOF::fill_good_hits(analysis_stage, good_hit_data);	
-		   	if (good_hit_data.detector == ND1) single_event -> D1::fill_good_hits(analysis_stage, good_hit_data);
-		   	if (good_hit_data.detector == ND2) single_event -> D2::fill_good_hits(analysis_stage, good_hit_data);
-		   	if (good_hit_data.detector == NHEX) single_event -> HEX::fill_good_hits(analysis_stage, good_hit_data);
-		   	if (good_hit_data.detector == NINTER) single_event -> Intermediate::fill_good_hits(analysis_stage, good_hit_data);
-		   	if (good_hit_data.detector == NFIBER) single_event -> Fiber::fill_good_hits(analysis_stage, good_hit_data);		
+		   	if (good_hit_data.detector == START) single_event -> Start::fill_good_hits(good_hit_data);
+		   	if (good_hit_data.detector == NTOF) single_event -> TOF::fill_good_hits(good_hit_data);	
+		   	if (good_hit_data.detector == ND1) single_event -> D1::fill_good_hits(good_hit_data);
+		   	if (good_hit_data.detector == ND2) single_event -> D2::fill_good_hits(good_hit_data);
+		   	if (good_hit_data.detector == NHEX) single_event -> HEX::fill_good_hits(good_hit_data);
+		   	if (good_hit_data.detector == NINTER) single_event -> Intermediate::fill_good_hits(good_hit_data);
+		   	if (good_hit_data.detector == NFIBER) single_event -> Fiber::fill_good_hits(good_hit_data);		
 		} // end of loop over good hits
 
 		if (single_event -> SingleEvent::was_correct_event(analysis_stage))

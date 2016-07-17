@@ -25,7 +25,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	// event is ok if
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
-	if ( (start && tof && intermediate && D1andD2 && HEX) || stage == 2)
+	if ( (start && tof && D1andD2 && HEX && fiber) || stage == 2)
 	{
 		return true;
 	}
@@ -34,13 +34,13 @@ bool SingleEvent::was_correct_event(const int stage)
 
 void SingleEvent::fill_good_hits(const int _stage, single_gh_data _good_hit_data)
 {
-	Start::fill_good_hits(_stage, _good_hit_data);
-	TOF::fill_good_hits(_stage, _good_hit_data);
-	D1::fill_good_hits(_stage, _good_hit_data);
-	D2::fill_good_hits(_stage, _good_hit_data);
-	HEX::fill_good_hits(_stage, _good_hit_data);
-	Intermediate::fill_good_hits(_stage, _good_hit_data);
-	Fiber::fill_good_hits(_stage, _good_hit_data);
+	Start::fill_good_hits(_good_hit_data);
+	TOF::fill_good_hits(_good_hit_data);
+	D1::fill_good_hits(_good_hit_data);
+	D2::fill_good_hits(_good_hit_data);
+	HEX::fill_good_hits(_good_hit_data);
+	Intermediate::fill_good_hits(_good_hit_data);
+	Fiber::fill_good_hits(_good_hit_data);
 }
 
 hist_data SingleEvent::get_hist_data()

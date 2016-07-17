@@ -16,7 +16,7 @@ class HEX
 public:
 	HEX();
 	~HEX();
-	void fill_good_hits(const int _stage, single_gh_data _good_hit_data);
+	void fill_good_hits(single_gh_data _good_hit_data);
 	HEX_hist_data* get_hist_data();
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();

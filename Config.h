@@ -73,6 +73,9 @@ public:
 	int element_V_min, element_V_max;
 	int element_H_min, element_H_max;
 	int element_D_min, element_D_max;
+	int hit_V_min, hit_V_max;
+	int hit_H_min, hit_H_max;
+	int hit_D_min, hit_D_max;
 };
 
 #endif

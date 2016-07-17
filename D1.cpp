@@ -16,31 +16,16 @@ D1::~D1()
 	}
 }
 
-void D1::fill_good_hits(const int _stage, single_gh_data _good_hit_data)
+void D1::fill_good_hits(single_gh_data _good_hit_data)
 {
-	if (1 ==_stage)  // input data before preselection
-	{
-		if (ND1L1 == _good_hit_data.layer) Layer[0] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (ND1L2 == _good_hit_data.layer) Layer[1] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (ND1L3 == _good_hit_data.layer) Layer[2] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (ND1L4 == _good_hit_data.layer) Layer[3] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (ND1L5 == _good_hit_data.layer) Layer[4] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (ND1L6 == _good_hit_data.layer) Layer[5] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (ND1L7 == _good_hit_data.layer) Layer[6] -> DCLayer::fill_rough_data(_good_hit_data);
-		if (ND1L8 == _good_hit_data.layer) Layer[7] -> DCLayer::fill_rough_data(_good_hit_data);
-	}
-
-	if (2 ==_stage)  // input data after preselection
-	{
-		if (ND1L1 == _good_hit_data.layer) Layer[0] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (ND1L2 == _good_hit_data.layer) Layer[1] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (ND1L3 == _good_hit_data.layer) Layer[2] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (ND1L4 == _good_hit_data.layer) Layer[3] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (ND1L5 == _good_hit_data.layer) Layer[4] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (ND1L6 == _good_hit_data.layer) Layer[5] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (ND1L7 == _good_hit_data.layer) Layer[6] -> DCLayer::fill_preselected_data(_good_hit_data);
-		if (ND1L8 == _good_hit_data.layer) Layer[7] -> DCLayer::fill_preselected_data(_good_hit_data);
-	}
+	if (ND1L1 == _good_hit_data.layer) Layer[0] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (ND1L2 == _good_hit_data.layer) Layer[1] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (ND1L3 == _good_hit_data.layer) Layer[2] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (ND1L4 == _good_hit_data.layer) Layer[3] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (ND1L5 == _good_hit_data.layer) Layer[4] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (ND1L6 == _good_hit_data.layer) Layer[5] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (ND1L7 == _good_hit_data.layer) Layer[6] -> DCLayer::fill_rough_data(_good_hit_data);
+	if (ND1L8 == _good_hit_data.layer) Layer[7] -> DCLayer::fill_rough_data(_good_hit_data);
 }
 
 bool D1::was_correct_event()
