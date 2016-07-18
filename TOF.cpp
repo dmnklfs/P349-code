@@ -36,12 +36,13 @@ bool TOF::was_correct_event()
 
 void TOF::check_hits()
 {
+	// here the correct signals are chosen, do not remove it
 	TOF::choose_corr_leading_up();
 	TOF::choose_corr_leading_down();
 	bool size_up = check_size_up();
 	//bool size_down = check_size_down();
 	//bool coincidence = check_coincidence();
-	if (size_up)
+	if (size_up)	// condition only on the upper layer
 	{
 		correct_event = true;
 	}
@@ -49,6 +50,7 @@ void TOF::check_hits()
 }
 
 // makes a loop over edges vector and chooses trailing times from correct pairs of leading and trailing edges
+// (applies constraints on time range and elements range according to Config)
 void TOF::choose_corr_leading_up()
 {
 	int iterations = RoughEdgeUp.size()-1;
@@ -67,6 +69,8 @@ void TOF::choose_corr_leading_up()
 	}
 }
 
+// makes a loop over edges vector and chooses trailing times from correct pairs of leading and trailing edges
+// (applies constraints on time range and elements range according to Config)
 void TOF::choose_corr_leading_down()
 {
 	int iterations = RoughEdgeDown.size()-1;

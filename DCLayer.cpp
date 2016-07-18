@@ -36,7 +36,9 @@ bool DCLayer::was_correct_event()
 
 void DCLayer::check_hits()
 {
+	// here the correct signals are chosen, do not remove it
 	choose_corr_leading();
+	
 	if (check_size(Wire.size()))
 	{
 		correct_event = true;
@@ -45,6 +47,7 @@ void DCLayer::check_hits()
 }
 
 // makes a loop over edges vector and chooses trailing times from correct pairs of leading and trailing edges
+// (applies constraints on time range and elements range according to Config)
 void DCLayer::choose_corr_leading()
 {
 	int iterations = RoughEdge.size()-1;

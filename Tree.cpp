@@ -334,7 +334,7 @@ void Tree::save_preselected_histos()
 	}
 
 	make_hist_dir("HEX",2);;
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		Hist::HEX_Preselected_Elements[i] -> Write();
 		Hist::HEX_Preselected_Multiplicity[i] -> Write();

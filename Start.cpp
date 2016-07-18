@@ -35,11 +35,13 @@ bool Start::was_correct_event()
 
 void Start::check_hits()
 {
+	// here the correct signals are chosen, do not remove it
 	Start::choose_corr_leading_up();
 	Start::choose_corr_leading_down();
+
 	bool size_up = check_size_up();
-	bool size_down = check_size_down();
-	bool coincidence = check_coincidence();
+	bool size_down = check_size_down(); // checks if size is in agreement with config
+	bool coincidence = check_coincidence(); // checks if vectors are of the same size
 	if (size_up&&size_down&&coincidence)
 	{
 		correct_event = true;
@@ -48,6 +50,7 @@ void Start::check_hits()
 }
 
 // makes a loop over edges vector and chooses trailing times from correct pairs of leading and trailing edges
+// (applies constraints on time range according to Config)
 void Start::choose_corr_leading_up()
 {
 	int iterations = RoughEdgeUp.size()-1;
@@ -66,6 +69,8 @@ void Start::choose_corr_leading_up()
 	}
 }
 
+// makes a loop over edges vector and chooses trailing times from correct pairs of leading and trailing edges
+// (applies constraints on time range according to Config)
 void Start::choose_corr_leading_down()
 {
 	int iterations = RoughEdgeDown.size()-1;

@@ -2,17 +2,17 @@
 
 SingleEvent::SingleEvent()
 {
-	//std::cout << "Object created " << std::endl;
 
 }
 
 SingleEvent::~SingleEvent()
 {
-	//std::cout << "Object destructed " << std::endl;
+
 }
 
 bool SingleEvent::was_correct_event(const int stage)
 {
+	// do not remove functions below - they fill chose correct signals in each detector 
 	bool start = Start::was_correct_event();
 	bool tof = TOF::was_correct_event();
 	bool D1 = D1::was_correct_event();
@@ -20,6 +20,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	bool HEX = HEX::was_correct_event();
 	bool intermediate = Intermediate::was_correct_event();
 	bool fiber = Fiber::was_correct_event();
+
 	bool D1andD2 = false;
 	if ( D1::get_no_of_layers_with_hits() + D2::get_no_of_layers_with_hits() >= 4 ) D1andD2 = true;
 	// event is ok if

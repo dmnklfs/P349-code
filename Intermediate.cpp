@@ -36,12 +36,13 @@ bool Intermediate::was_correct_event()
 
 void Intermediate::check_hits()
 {
+	// here the correct signals are chosen, do not remove it
 	Intermediate::choose_corr_leading_up();
 	Intermediate::choose_corr_leading_down();
-	//bool size_up = check_size_up();
+	//bool size_up = check_size_up(); // checks if size is in agreement with config
 	//bool size_down = check_size_down();
 	bool coincidence = check_coincidence();
-	if (coincidence)
+	if (coincidence) // any number of hits is ok, privided coincidence between up and down
 	{
 		correct_event = true;
 	}
@@ -67,6 +68,8 @@ void Intermediate::choose_corr_leading_up()
 	}
 }
 
+// makes a loop over edges vector and chooses trailing times from correct pairs of leading and trailing edges
+// (applies constraints on time range and elements range according to Config)
 void Intermediate::choose_corr_leading_down()
 {
 	int iterations = RoughEdgeDown.size()-1;
@@ -85,6 +88,8 @@ void Intermediate::choose_corr_leading_down()
 	}
 }
 
+// makes a loop over edges vector and chooses trailing times from correct pairs of leading and trailing edges
+// (applies constraints on time range and elements range according to Config)
 bool Intermediate::check_elements_range(int element)
 {
 	if (element >= Config::Intermediate_element_min && element <= Config::Intermediate_element_max)

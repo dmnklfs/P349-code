@@ -1,5 +1,8 @@
 #include "Config.h"
 
+// in order to set the coincidence between detectors see SingleEvent::was_correct_event() in SingleEvent.cpp
+// in order to provide specific conditions for certain detector see function was_correct_event() in appropriate .cpp file
+
 Config::Config()
 {
 	// here hit = one correct singal (leading and trailing edge corresponding to TWO hits from easyparser)
@@ -7,13 +10,13 @@ Config::Config()
 	start_time_min = -1500;
 	start_time_max = 1500;
 
-	TOF_hits  = 1; // if -1 is set - any number of hits is accepted: NOT IMPLEMENTED YET
+	TOF_hits  = 1; // if -1 is set - any number of hits is accepted
 	TOF_time_min = -1500;
 	TOF_time_max = 1500;
 	TOF_element_min = 1;
 	TOF_element_max = 10;
 
-	Intermediate_hits  = 1; // if -1 is set - any number of hits is accepted: NOT IMPLEMENTED YET
+	Intermediate_hits  = -1; // if -1 is set - any number of hits is accepted
 	Intermediate_time_min = -1500;
 	Intermediate_time_max = 1500;
 	Intermediate_element_min = 1;
