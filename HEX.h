@@ -15,6 +15,7 @@ class HEX
 {
 public:
 	HEX();
+	HEX(Config &_config);
 	~HEX();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	HEX_hist_data* get_hist_data();
@@ -25,6 +26,9 @@ private:
 	DCLayer *Layer[7];
 	int no_of_layers_with_hits;
 	bool correct_event;
+
+	// config
+	Config config;
 };
 
 

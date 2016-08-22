@@ -1,9 +1,14 @@
 #include "Start.h"
 
 Start::Start()
-	: Config::Config()
 { 
 	correct_event = true;
+}
+
+Start::Start(Config &_config)
+{
+	correct_event = true;
+	config = _config;
 }
 
 Start::~Start()
@@ -92,8 +97,8 @@ void Start::choose_corr_leading_down()
 
 bool Start::check_size_up()
 {
-	if (Config::start_hits == -1) return true;
-	if ((unsigned int)Config::start_hits == ElementUp.size()) 
+	if (config.start_hits == -1) return true;
+	if ((unsigned int)config.start_hits == ElementUp.size()) 
 	{
 		return true;
 	}
@@ -102,8 +107,8 @@ bool Start::check_size_up()
 
 bool Start::check_size_down()
 {
-	if (Config::start_hits == -1) return true;
-	if ((unsigned int)Config::start_hits == ElementDown.size()) 
+	if (config.start_hits == -1) return true;
+	if ((unsigned int)config.start_hits == ElementDown.size()) 
 	{
 		return true;
 	}
@@ -112,7 +117,7 @@ bool Start::check_size_down()
 
 bool Start::check_time_range(double treal)
 {
-	if (treal > Config::start_time_min && treal < Config::start_time_max)
+	if (treal > config.start_time_min && treal < config.start_time_max)
 	{
 		return true;
 	}

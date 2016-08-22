@@ -4,7 +4,16 @@ D2::D2()
 {
 	for (int i = 0; i < 6; i++)
 	{
-		Layer[i] = new DCLayer(Config::D2_drift_time_min[i],Config::D2_drift_time_max[i],Config::D2_layer_min_hits[i],Config::D2_layer_max_hits[i]);
+		Layer[i] = new DCLayer(config.D2_drift_time_min[i],config.D2_drift_time_max[i],config.D2_layer_min_hits[i],config.D2_layer_max_hits[i]);
+	}
+}
+
+D2::D2(Config &_config)
+{
+	config = _config;
+	for (int i = 0; i < 6; i++)
+	{
+		Layer[i] = new DCLayer(config.D2_drift_time_min[i],config.D2_drift_time_max[i],config.D2_layer_min_hits[i],config.D2_layer_max_hits[i]);
 	}
 }
 

@@ -4,7 +4,16 @@ HEX::HEX()
 {
 	for (int i = 0; i < 8; i++)
 	{
-		Layer[i] = new DCLayer(Config::HEX_drift_time_min[i],Config::HEX_drift_time_max[i],Config::HEX_layer_min_hits[i],Config::HEX_layer_max_hits[i]);
+		Layer[i] = new DCLayer(config.HEX_drift_time_min[i],config.HEX_drift_time_max[i],config.HEX_layer_min_hits[i],config.HEX_layer_max_hits[i]);
+	}
+}
+
+HEX::HEX(Config &_config)
+{
+	config = _config;
+	for (int i = 0; i < 8; i++)
+	{
+		Layer[i] = new DCLayer(config.HEX_drift_time_min[i],config.HEX_drift_time_max[i],config.HEX_layer_min_hits[i],config.HEX_layer_max_hits[i]);
 	}
 }
 

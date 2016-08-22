@@ -8,6 +8,15 @@ DCLayer::DCLayer()
 	max_no = 20;
 }
 
+DCLayer::DCLayer(Config &_config)
+{
+	min_drift_time = -1500;
+	max_drift_time = 1500;
+	min_no = 0;
+	max_no = 20;
+	config = _config;
+}
+
 DCLayer::DCLayer(double _min_drift_time, double _max_drift_time, int _min_no, int _max_no)
 {
 	min_drift_time = _min_drift_time;

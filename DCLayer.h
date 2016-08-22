@@ -8,6 +8,7 @@ class DCLayer
 {
 public:
 	DCLayer();
+	DCLayer(Config &_config);
 	DCLayer(double _min_drift_time, double _max_drift_time, int _min_no, int _max_no);
 	~DCLayer();
 	void fill_rough_data(single_gh_data _good_hit_data);
@@ -33,6 +34,9 @@ public:
 	void choose_corr_leading();
 	bool check_time_range(double drift_time);
 	bool check_size(unsigned int preselected_data_size);
+
+	// config
+	Config config;
 
 	bool correct_event;
 

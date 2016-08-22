@@ -5,6 +5,8 @@ int main(int argc, char *argv[])
 {
 	TCanvas *dummy = new TCanvas();
 	delete dummy;
+	// object with config data is created
+	Config config = Config(); 
 	
 	if( false == check_input(argc, argv) ) return 0;
 	// opening input file(s), creating output file
@@ -19,7 +21,7 @@ int main(int argc, char *argv[])
 	std::cout << "* start of the loop over the events" << std::endl;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
   	{
-  		single_event = new SingleEvent();
+  		single_event = new SingleEvent(config);
   		if(0==entry%10000) std::cout << entry << std::endl;
   		in_out -> Tree::get_entry(entry);
   		// start of the loop over good hits in the single event

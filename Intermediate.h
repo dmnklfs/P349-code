@@ -29,6 +29,7 @@ class Intermediate
 {
 public:
 	Intermediate();
+	Intermediate(Config &_config);
 	~Intermediate();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	bool was_correct_event();
@@ -43,6 +44,9 @@ private:
 	bool check_time_range(double treal);
 	bool check_elements_range(int element);
 	bool check_coincidence();
+
+	// config
+	Config config;
 
 	// after preselection
 	std::vector<double> TrealUp;

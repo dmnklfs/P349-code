@@ -16,6 +16,7 @@ class D1
 {
 public:
 	D1();
+	D1(Config &_config);
 	~D1();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	D1_hist_data* get_hist_data();
@@ -26,6 +27,9 @@ private:
 	DCLayer *Layer[8];
 	int no_of_layers_with_hits;
 	bool correct_event;
+
+	// config
+	Config config;
 };
 
 

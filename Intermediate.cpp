@@ -1,9 +1,14 @@
 #include "Intermediate.h"
 
 Intermediate::Intermediate()
-	: Config::Config()
 { 
 	correct_event = true;
+}
+
+Intermediate::Intermediate(Config &_config)
+{
+	correct_event = true;
+	config = _config;
 }
 
 Intermediate::~Intermediate()
@@ -92,7 +97,7 @@ void Intermediate::choose_corr_leading_down()
 // (applies constraints on time range and elements range according to Config)
 bool Intermediate::check_elements_range(int element)
 {
-	if (element >= Config::Intermediate_element_min && element <= Config::Intermediate_element_max)
+	if (element >= config.Intermediate_element_min && element <= config.Intermediate_element_max)
 	{
 		return true;
 	}
@@ -101,8 +106,8 @@ bool Intermediate::check_elements_range(int element)
 
 bool Intermediate::check_size_up()
 {
-	if (Config::Intermediate_hits == -1) return true;
-	if ((unsigned int)Config::Intermediate_hits == ElementUp.size()) 
+	if (config.Intermediate_hits == -1) return true;
+	if ((unsigned int)config.Intermediate_hits == ElementUp.size()) 
 	{
 		return true;
 	}
@@ -111,8 +116,8 @@ bool Intermediate::check_size_up()
 
 bool Intermediate::check_size_down()
 {
-	if (Config::Intermediate_hits == -1) return true;
-	if ((unsigned int)Config::Intermediate_hits == ElementDown.size()) 
+	if (config.Intermediate_hits == -1) return true;
+	if ((unsigned int)config.Intermediate_hits == ElementDown.size()) 
 	{
 		return true;
 	}
@@ -121,7 +126,7 @@ bool Intermediate::check_size_down()
 
 bool Intermediate::check_time_range(double treal)
 {
-	if (treal > Config::Intermediate_time_min && treal < Config::Intermediate_time_max)
+	if (treal > config.Intermediate_time_min && treal < config.Intermediate_time_max)
 	{
 		return true;
 	}

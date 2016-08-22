@@ -13,6 +13,7 @@ class SingleEvent
 {
 public:
 	SingleEvent();
+	SingleEvent(Config &_config);
 	~SingleEvent();
 	void fill_good_hits(const int _stage, single_gh_data _good_hit_data); // 10.07: UNUSED NOW, -> if in main
 	bool was_correct_event(const int stage);
@@ -21,6 +22,7 @@ public:
 
 private:
 	bool correct_event;
+	Config config;
 };
 
 #endif

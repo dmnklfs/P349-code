@@ -25,6 +25,7 @@
 #include "struct.h"
 #include "Tree.h"
 #include "SingleEvent.h" 
+#include "Config.h"
 
 #define START 1
 #define NTOF 10

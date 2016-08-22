@@ -29,6 +29,7 @@ class Fiber
 {
 public:
 	Fiber();
+	Fiber(Config &_config);
 	~Fiber();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	bool was_correct_event();
@@ -45,6 +46,9 @@ private:
 	bool check_size_V();
 	bool check_size_H();
 	bool check_size_D();
+
+	// config
+	Config config;
 
 	// after preselection
 	std::vector<int> Fibers_V;
