@@ -12,7 +12,7 @@ SingleEvent::~SingleEvent()
 
 bool SingleEvent::was_correct_event(const int stage)
 {
-	// do not remove functions below - they fill chose correct signals in each detector 
+	// do not remove functions below - they chose correct signals in each detector 
 	bool start = Start::was_correct_event();
 	bool tof = TOF::was_correct_event();
 	bool D1 = D1::was_correct_event();
@@ -26,7 +26,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	// event is ok if
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
-	if ( (start && tof && D1andD2 && HEX && fiber) || stage == 2)
+	if ( (start && tof && fiber && HEX && D1andD2) || stage == 2)
 	{
 		return true;
 	}
@@ -55,4 +55,11 @@ hist_data SingleEvent::get_hist_data()
 	data_for_hists.intermediate_data = Intermediate::get_hist_data();
 	data_for_hists.fiber_data = Fiber::get_hist_data();
 	return data_for_hists;
+}
+
+double SingleEvent::getTOF()
+{
+	double tof;
+	tof = TOF::getTime() - Start::getTime();
+	return tof;
 }

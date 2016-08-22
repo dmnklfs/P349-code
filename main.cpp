@@ -12,6 +12,9 @@ int main(int argc, char *argv[])
 
 	const int analysis_stage = std::atoi(argv[2]); // we read rough (1) or preselected (2) data 
 
+	//-----------------------------------------------------------------------------------------------------
+	TH1F *tof = new TH1F("tof","TOF=0.5*[(TOF_Up+TOF_Down)-(Start_Up+Start_Down)];TOF [ns]; counts", 600, -800, 300);
+	//-----------------------------------------------------------------------------------------------------
 	SingleEvent *single_event;
 	std::cout << "* start of the loop over the events" << std::endl;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
@@ -46,7 +49,7 @@ int main(int argc, char *argv[])
   			// filling control histos for preselected data
   			// checking if preselected tree = 1/0 and filling the tree or not
   			in_out -> Tree::fill_preselected_data_tree(single_event -> SingleEvent::get_hist_data());
-  			// ...
+  			tof -> Fill(single_event -> SingleEvent::getTOF());
   			
   		} // end if correct event
 
@@ -56,6 +59,7 @@ int main(int argc, char *argv[])
   		delete single_event;
   	} // end of loop over events
 
+  	//tof -> Write();
   	in_out -> Tree::save_output_file();
 	std::cout << "\n" << std::endl;
 }

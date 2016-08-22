@@ -56,9 +56,9 @@ void DCLayer::choose_corr_leading()
 	{
 		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))
 		{
-			if (check_time_range(RoughDriftTime.at(i)))
-			{
-				DriftTime.push_back(RoughDriftTime.at(i));
+			if (check_time_range(RoughDriftTime.at(i) + WiresDriftTimeOffset[1+RoughWire.at(i)]))
+			{	
+				DriftTime.push_back(RoughDriftTime.at(i) + WiresDriftTimeOffset[1+RoughWire.at(i)]);
 				Wire.push_back(RoughWire.at(i));
 			}
 		}
@@ -86,3 +86,13 @@ DCLayer_hist_data* DCLayer::get_hist_data()
 	DCLayer_data -> preselected_multiplicity = Wire.size();
 	return DCLayer_data;
 }
+
+void DCLayer::set_drift_time_offset()
+{
+	// instead of that -> eg. reading from a file in the D1, D2, HEX classes and than setting this drift time offset there
+	for (int i = 0; i < 80; i++)
+	{
+		WiresDriftTimeOffset[i] = 225;
+	}
+}
+

@@ -25,16 +25,16 @@ Config::Config()
 	for (int i = 0; i < 8; i++)
 	{
 		D1_layer_min_hits[i] = 1;
-		D1_layer_max_hits[i] = 9;
-		D1_drift_time_min[i] = -1500;
-		D1_drift_time_max[i] = 1500;
+		D1_layer_max_hits[i] = 19;
+		D1_drift_time_min[i] = 0;
+		D1_drift_time_max[i] = 900;
 	}
 	
 	// ---DRIFT CHEMBER D2---
 	for (int i = 0; i < 6; i++)
 	{
 		D2_layer_min_hits[i] = 1;
-		D2_layer_max_hits[i] = 9;
+		D2_layer_max_hits[i] = 19;
 		D2_drift_time_min[i] = -1500;
 		D2_drift_time_max[i] = 1500;
 	}
@@ -43,7 +43,7 @@ Config::Config()
 	for (int i = 0; i < 7; i++)
 	{
 		HEX_layer_min_hits[i] = 1;
-		HEX_layer_max_hits[i] = 9;
+		HEX_layer_max_hits[i] = 19;
 		HEX_drift_time_min[i] = -1500;
 		HEX_drift_time_max[i] = 1500;
 	}
@@ -57,11 +57,11 @@ Config::Config()
 	element_D_min = 0;
 	element_D_max = 160;
 	hit_V_min = 1;
-	hit_V_max = 20;
+	hit_V_max = 100;
 	hit_H_min = 1;
-	hit_H_max = 20;
+	hit_H_max = 100;
 	hit_D_min = 1;
-	hit_D_max = 20;
+	hit_D_max = 100;
 }
 
 Config::~Config()

@@ -1,8 +1,7 @@
 *.[oa]
+*.so
 *~
 *.exe
-<<<<<<< HEAD
-=======
-# default directory with subdirectories containing results from single runs
->>>>>>> 61d2b842c581f2ccab2cf15b27ad776dd517e91a
 results/
+files/
+prezentacja_160729/

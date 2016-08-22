@@ -5,6 +5,7 @@ D1::D1()
 	for (int i = 0; i < 8; i++)
 	{
 		Layer[i] = new DCLayer(Config::D1_drift_time_min[i],Config::D1_drift_time_max[i],Config::D1_layer_min_hits[i],Config::D1_layer_max_hits[i]);
+		Layer[i] -> set_drift_time_offset();
 	}
 }
 

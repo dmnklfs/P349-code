@@ -40,10 +40,11 @@ void TOF::check_hits()
 	TOF::choose_corr_leading_up();
 	TOF::choose_corr_leading_down();
 	bool size_up = check_size_up();
-	//bool size_down = check_size_down();
-	//bool coincidence = check_coincidence();
-	if (size_up)	// condition only on the upper layer
+	bool size_down = check_size_down();
+	bool coincidence = check_coincidence();
+	if (size_up&&size_down&&coincidence)	// condition only on the upper layer
 	{
+		mean_time = 0.5*(TrealUp.at(0)+TrealDown.at(0));
 		correct_event = true;
 	}
 	else correct_event = false;
@@ -162,4 +163,9 @@ TOF_hist_data* TOF::get_hist_data()
 	TOF_data->preselected_elements_down = ElementDown;
 
 	return TOF_data;
+}
+
+double TOF::getTime()
+{
+	return mean_time;
 }

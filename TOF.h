@@ -34,6 +34,7 @@ public:
 	bool was_correct_event();
 	void check_hits();
 	TOF_hist_data* get_hist_data();
+	double getTime();
 
 private:
 	void choose_corr_leading_up();
@@ -59,7 +60,7 @@ private:
 	std::vector<int> RoughEdgeDown;
 
 	bool correct_event;  // was event correct?	
-
+	double mean_time;
 };
 
 #endif

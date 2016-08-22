@@ -102,7 +102,7 @@ void Fiber::choose_corr_leading_D()
 
 bool Fiber::check_elements_range_V(int element)
 {
-	if (element >= Config::element_V_min && element <= Config::element_V_max)
+	if (element >= Config::element_V_min && element <= Config::element_V_max)//&&element!=48)
 	{
 		return true;
 	}
@@ -111,7 +111,7 @@ bool Fiber::check_elements_range_V(int element)
 
 bool Fiber::check_elements_range_H(int element)
 {
-	if (element >= Config::element_H_min && element <= Config::element_H_max)
+	if (element >= Config::element_H_min && element <= Config::element_H_max)//&&element!=48)
 	{
 		return true;
 	}
