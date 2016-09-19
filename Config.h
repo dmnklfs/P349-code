@@ -1,6 +1,13 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <vector>
+
 class Config
 {
 public:
@@ -49,6 +56,13 @@ public:
 	// drift time range
 	double D1_drift_time_max[8];
 	double D1_drift_time_min[8];
+
+	// drift time offset ---> should be different for different layers
+	std::vector<double> D1_drift_time_offset;
+
+	// calibration ---> should be different for different layers
+	std::vector<double> D1_calibration_times;
+	std::vector<double> D1_calibration_distances;
 
 	// ---DRIFT CHEMBER D2---
 	// min and max number of hits in layers (if set to -1: any value is ok)

@@ -25,11 +25,10 @@
 #include "struct.h"
 
 class Fiber
-	: public Config
 {
 public:
 	Fiber();
-	Fiber(Config &_config);
+	Fiber(const Config &_config);
 	~Fiber();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	bool was_correct_event();
@@ -48,7 +47,18 @@ private:
 	bool check_size_D();
 
 	// config
-	Config config;
+	double element_V_min;
+	double element_V_max;
+	double element_H_min;
+	double element_H_max;
+	double element_D_min;
+	double element_D_max;
+	double hit_V_min;
+	double hit_V_max;
+	double hit_H_min;
+	double hit_H_max;
+	double hit_D_min;
+	double hit_D_max;
 
 	// after preselection
 	std::vector<int> Fibers_V;

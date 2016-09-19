@@ -1,19 +1,13 @@
 #include "HEX.h"
 
 HEX::HEX()
-{
-	for (int i = 0; i < 8; i++)
-	{
-		Layer[i] = new DCLayer(config.HEX_drift_time_min[i],config.HEX_drift_time_max[i],config.HEX_layer_min_hits[i],config.HEX_layer_max_hits[i]);
-	}
-}
+{ }
 
-HEX::HEX(Config &_config)
+HEX::HEX(const Config &_config)
 {
-	config = _config;
 	for (int i = 0; i < 8; i++)
 	{
-		Layer[i] = new DCLayer(config.HEX_drift_time_min[i],config.HEX_drift_time_max[i],config.HEX_layer_min_hits[i],config.HEX_layer_max_hits[i]);
+		Layer[i] = new DCLayer(_config.D1_drift_time_offset, _config.D1_calibration_times, _config.D1_calibration_distances, _config.D1_drift_time_min[i],_config.D1_drift_time_max[i],_config.D1_layer_min_hits[i],_config.D1_layer_max_hits[i]);
 	}
 }
 

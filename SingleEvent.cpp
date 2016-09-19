@@ -3,10 +3,10 @@
 SingleEvent::SingleEvent()
 { }
 
-SingleEvent::SingleEvent(Config &_config)
+SingleEvent::SingleEvent(const Config&_config)
 	: Start::Start(_config), TOF::TOF(_config), D1::D1(_config), D2::D2(_config), HEX::HEX(_config), Intermediate::Intermediate(_config), Fiber::Fiber(_config)
 {
-	config = _config;
+
 }
 
 SingleEvent::~SingleEvent()

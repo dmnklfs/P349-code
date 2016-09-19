@@ -1,21 +1,13 @@
 #include "D1.h"
 
 D1::D1()
-{
-	for (int i = 0; i < 8; i++)
-	{
-		Layer[i] = new DCLayer(config.D1_drift_time_min[i],config.D1_drift_time_max[i],config.D1_layer_min_hits[i],config.D1_layer_max_hits[i]);
-		Layer[i] -> set_drift_time_offset();
-	}
-}
+{ }
 
-D1::D1(Config &_config)
+D1::D1(const Config &_config)
 {
-	config = _config;
 	for (int i = 0; i < 8; i++)
 	{
-		Layer[i] = new DCLayer(config.D1_drift_time_min[i],config.D1_drift_time_max[i],config.D1_layer_min_hits[i],config.D1_layer_max_hits[i]);
-		Layer[i] -> set_drift_time_offset();
+		Layer[i] = new DCLayer(_config.D1_drift_time_offset, _config.D1_calibration_times, _config.D1_calibration_distances, _config.D1_drift_time_min[i],_config.D1_drift_time_max[i],_config.D1_layer_min_hits[i],_config.D1_layer_max_hits[i]);
 	}
 }
 

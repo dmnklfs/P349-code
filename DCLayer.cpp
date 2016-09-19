@@ -1,28 +1,15 @@
 #include "DCLayer.h"
 
 DCLayer::DCLayer()
-{
-	min_drift_time = -1500;
-	max_drift_time = 1500;
-	min_no = 0;
-	max_no = 20;
-}
+{ }
 
-DCLayer::DCLayer(Config &_config)
-{
-	min_drift_time = -1500;
-	max_drift_time = 1500;
-	min_no = 0;
-	max_no = 20;
-	config = _config;
-}
-
-DCLayer::DCLayer(double _min_drift_time, double _max_drift_time, int _min_no, int _max_no)
+DCLayer::DCLayer(const std::vector<double> &_drift_time_offset, const std::vector<double> &_calibration_times, const std::vector<double> &_calibration_distances, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no)
 {
 	min_drift_time = _min_drift_time;
 	max_drift_time = _max_drift_time;
 	min_no = _min_no;
 	max_no = _max_no;
+	drift_time_offset = _drift_time_offset;
 }
 
 DCLayer::~DCLayer()
@@ -59,6 +46,7 @@ void DCLayer::check_hits()
 // (applies constraints on time range and elements range according to Config)
 void DCLayer::choose_corr_leading()
 {
+	apply_drift_time_offset();
 	int iterations = RoughEdge.size()-1;
 	if (RoughEdge.size()-1 < 0) iterations = 0;
 	for (int i = 0; i < iterations; i++)
@@ -96,12 +84,11 @@ DCLayer_hist_data* DCLayer::get_hist_data()
 	return DCLayer_data;
 }
 
-void DCLayer::set_drift_time_offset()
+void DCLayer::apply_drift_time_offset()
 {
-	// instead of that -> eg. reading from a file in the D1, D2, HEX classes and than setting this drift time offset there
-	for (int i = 0; i < 80; i++)
+	for (unsigned int i = 0; i < DriftTime.size(); i++)
 	{
-		WiresDriftTimeOffset[i] = 225;
+		DriftTime.at(i) = DriftTime.at(i) + drift_time_offset.at(Wire.at(i));
 	}
 }
 

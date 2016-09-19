@@ -12,11 +12,10 @@
 #define ND1L8  1 // layer 8 is the closest one to TOF
 
 class D1
-	: public Config
 {
 public:
 	D1();
-	D1(Config &_config);
+	D1(const Config &_config);
 	~D1();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	D1_hist_data* get_hist_data();
@@ -29,7 +28,7 @@ private:
 	bool correct_event;
 
 	// config
-	Config config;
+
 };
 
 

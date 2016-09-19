@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 	delete dummy;
 	// object with config data is created
 	Config config = Config(); 
-	
+	std::cout << "f" << std::endl;
 	if( false == check_input(argc, argv) ) return 0;
 	// opening input file(s), creating output file
 	Tree *in_out = new Tree(argc, argv);

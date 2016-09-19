@@ -25,11 +25,10 @@
 #include "struct.h"
 
 class Start
-	: public Config
 {
 public:
 	Start();
-	Start(Config &_config);
+	Start(const Config &_config);
 	~Start();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	bool was_correct_event();
@@ -45,8 +44,10 @@ private:
 	bool check_time_range(double treal);
 	bool check_coincidence();
 
-	// config
-	Config config;
+	// config info
+	int start_hits;
+	double start_time_min;
+	double start_time_max;
 
 	// after preselection
 	std::vector<double> TrealUp;

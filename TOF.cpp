@@ -5,10 +5,14 @@ TOF::TOF()
 	correct_event = true;
 }
 
-TOF::TOF(Config &_config)
+TOF::TOF(const Config &_config)
 {
 	correct_event = true;
-	config = _config;
+	element_min = _config.TOF_element_min;
+	element_max = _config.TOF_element_max;
+	hits = _config.TOF_hits;
+	time_min = _config.TOF_time_min;
+	time_max = _config.TOF_time_max;
 }
 
 TOF::~TOF()
@@ -97,7 +101,7 @@ void TOF::choose_corr_leading_down()
 
 bool TOF::check_elements_range(int element)
 {
-	if (element >= config.TOF_element_min && element <= config.TOF_element_max)
+	if (element >= element_min && element <= element_max)
 	{
 		return true;
 	}
@@ -106,8 +110,8 @@ bool TOF::check_elements_range(int element)
 
 bool TOF::check_size_up()
 {
-	if (config.TOF_hits == -1) return true;
-	if ((unsigned int)config.TOF_hits == ElementUp.size()) 
+	if  (hits == -1) return true;
+	if ((unsigned int) hits == ElementUp.size()) 
 	{
 		return true;
 	}
@@ -116,8 +120,8 @@ bool TOF::check_size_up()
 
 bool TOF::check_size_down()
 {
-	if (config.TOF_hits == -1) return true;
-	if ((unsigned int)config.TOF_hits == ElementDown.size()) 
+	if  (hits == -1) return true;
+	if ((unsigned int) hits == ElementDown.size()) 
 	{
 		return true;
 	}
@@ -126,7 +130,7 @@ bool TOF::check_size_down()
 
 bool TOF::check_time_range(double treal)
 {
-	if (treal > config.TOF_time_min && treal < config.TOF_time_max)
+	if (treal > time_min && treal < time_max)
 	{
 		return true;
 	}

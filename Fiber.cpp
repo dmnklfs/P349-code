@@ -5,10 +5,21 @@ Fiber::Fiber()
 	correct_event = true;
 }
 
-Fiber::Fiber(Config &_config)
+Fiber::Fiber(const Config &_config)
 {
 	correct_event = true;
-	config = _config;
+	element_V_min = _config.element_V_min;
+	element_V_max = _config.element_V_max;
+	element_H_min = _config.element_H_min;
+	element_H_max = _config.element_H_max;
+	element_D_min = _config.element_D_min;
+	element_D_max = _config.element_D_max;
+	hit_V_min = _config.hit_V_min;
+	hit_V_max = _config.hit_V_max;
+	hit_H_min = _config.hit_H_min;
+	hit_H_max = _config.hit_H_max;
+	hit_D_min = _config.hit_D_min;
+	hit_D_max = _config.hit_D_max;
 }
 
 Fiber::~Fiber()
@@ -107,7 +118,7 @@ void Fiber::choose_corr_leading_D()
 
 bool Fiber::check_elements_range_V(int element)
 {
-	if (element >= config.element_V_min && element <= config.element_V_max)//&&element!=48)
+	if (element >= element_V_min && element <= element_V_max)//&&element!=48)
 	{
 		return true;
 	}
@@ -116,7 +127,7 @@ bool Fiber::check_elements_range_V(int element)
 
 bool Fiber::check_elements_range_H(int element)
 {
-	if (element >= config.element_H_min && element <= config.element_H_max)//&&element!=48)
+	if (element >= element_H_min && element <= element_H_max)//&&element!=48)
 	{
 		return true;
 	}
@@ -125,7 +136,7 @@ bool Fiber::check_elements_range_H(int element)
 
 bool Fiber::check_elements_range_D(int element)
 {
-	if (element >= config.element_D_min && element <= config.element_D_max)
+	if (element >= element_D_min && element <= element_D_max)
 	{
 		return true;
 	}
@@ -134,22 +145,22 @@ bool Fiber::check_elements_range_D(int element)
 
 bool Fiber::check_size_V()
 {
-	if (-1 == config.hit_V_min || -1 == config.hit_V_max) return true;
-	if (Fibers_V.size()>=(unsigned int)config.hit_V_min && Fibers_V.size()<=(unsigned int)config.hit_V_max) return true;
+	if (-1 == hit_V_min || -1 == hit_V_max) return true;
+	if (Fibers_V.size()>=(unsigned int)hit_V_min && Fibers_V.size()<=(unsigned int)hit_V_max) return true;
 	else return false;
 }
 
 bool Fiber::check_size_H()
 {
-	if (-1 == config.hit_H_min || -1 == config.hit_H_max) return true;
-	if (Fibers_H.size()>=(unsigned int)config.hit_H_min && Fibers_H.size()<=(unsigned int)config.hit_H_max) return true;
+	if (-1 == hit_H_min || -1 == hit_H_max) return true;
+	if (Fibers_H.size()>=(unsigned int)hit_H_min && Fibers_H.size()<=(unsigned int)hit_H_max) return true;
 	else return false;
 }
 
 bool Fiber::check_size_D()
 {
-	if (-1 == config.hit_D_min || -1 == config.hit_D_max) return true;
-	if (Fibers_D.size()>=(unsigned int)config.hit_D_min && Fibers_D.size()<=(unsigned int)config.hit_D_max) return true;
+	if (-1 == hit_D_min || -1 == hit_D_max) return true;
+	if (Fibers_D.size()>=(unsigned int)hit_D_min && Fibers_D.size()<=(unsigned int)hit_D_max) return true;
 	else return false;
 }
 

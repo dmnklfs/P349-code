@@ -10,11 +10,10 @@
 #define ND2L6  6	// layer 6 is the closest one to D1
 
 class D2
-	: public Config
 {
 public:
 	D2();
-	D2(Config &_config);
+	D2(const Config &_config);
 	~D2();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	D2_hist_data* get_hist_data();
@@ -25,9 +24,7 @@ private:
 	DCLayer *Layer[6];
 	int no_of_layers_with_hits;
 	bool correct_event;
-
-	// config
-	Config config;
+	
 };
 
 

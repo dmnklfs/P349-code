@@ -25,11 +25,10 @@
 #include "struct.h"
 
 class Intermediate
-	: public Config
 {
 public:
 	Intermediate();
-	Intermediate(Config &_config);
+	Intermediate(const Config &_config);
 	~Intermediate();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	bool was_correct_event();
@@ -46,7 +45,11 @@ private:
 	bool check_coincidence();
 
 	// config
-	Config config;
+	double element_min;
+	double element_max;
+	double hits;
+	double time_min;
+	double time_max;
 
 	// after preselection
 	std::vector<double> TrealUp;

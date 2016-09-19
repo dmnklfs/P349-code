@@ -11,11 +11,10 @@
 #define NHEXL7  1	// layer 7 is the closest one to D2
 
 class HEX
-	: public Config
 {
 public:
 	HEX();
-	HEX(Config &_config);
+	HEX(const Config &_config);
 	~HEX();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	HEX_hist_data* get_hist_data();
@@ -28,7 +27,7 @@ private:
 	bool correct_event;
 
 	// config
-	Config config;
+
 };
 
 

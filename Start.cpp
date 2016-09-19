@@ -5,10 +5,12 @@ Start::Start()
 	correct_event = true;
 }
 
-Start::Start(Config &_config)
+Start::Start(const Config &_config)
 {
 	correct_event = true;
-	config = _config;
+	start_hits = _config.start_hits;
+	start_time_min = _config.start_time_min;
+	start_time_max = _config.start_time_max;
 }
 
 Start::~Start()
@@ -97,8 +99,8 @@ void Start::choose_corr_leading_down()
 
 bool Start::check_size_up()
 {
-	if (config.start_hits == -1) return true;
-	if ((unsigned int)config.start_hits == ElementUp.size()) 
+	if (start_hits == -1) return true;
+	if ((unsigned int)start_hits == ElementUp.size()) 
 	{
 		return true;
 	}
@@ -107,8 +109,8 @@ bool Start::check_size_up()
 
 bool Start::check_size_down()
 {
-	if (config.start_hits == -1) return true;
-	if ((unsigned int)config.start_hits == ElementDown.size()) 
+	if (start_hits == -1) return true;
+	if ((unsigned int)start_hits == ElementDown.size()) 
 	{
 		return true;
 	}
@@ -117,7 +119,7 @@ bool Start::check_size_down()
 
 bool Start::check_time_range(double treal)
 {
-	if (treal > config.start_time_min && treal < config.start_time_max)
+	if (treal > start_time_min && treal < start_time_max)
 	{
 		return true;
 	}
