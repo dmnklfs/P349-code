@@ -53,9 +53,9 @@ void DCLayer::choose_corr_leading()
 	{
 		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))
 		{
-			if (check_time_range(RoughDriftTime.at(i) + WiresDriftTimeOffset[1+RoughWire.at(i)]))
+			if (check_time_range(RoughDriftTime.at(i) + drift_time_offset[1+RoughWire.at(i)]))
 			{	
-				DriftTime.push_back(RoughDriftTime.at(i) + WiresDriftTimeOffset[1+RoughWire.at(i)]);
+				DriftTime.push_back(RoughDriftTime.at(i) + drift_time_offset[1+RoughWire.at(i)]);
 				Wire.push_back(RoughWire.at(i));
 			}
 		}
@@ -92,3 +92,16 @@ void DCLayer::apply_drift_time_offset()
 	}
 }
 
+void DCLayer::calculate_distances_from_wire()
+{
+	// t(n) <= t < t(n+1)
+	// t1, t2 - times of the beginning and the end of the single bin
+	// w - width of the bin
+	// n = floor (t/w)
+	for (unsigned int i = 0; i < DriftTime.size(); i++)
+	{
+		double width = max_drift_time/2;
+		double bin_no = floor(DriftTime.at(i)/width);
+		HitsXPosition.push_back(1);
+	}
+}

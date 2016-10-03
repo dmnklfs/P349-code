@@ -22,7 +22,9 @@ public:
 	std::vector<double> DriftTime;
 	std::vector<int> Wire;
 
+	// vectors of distances from wire
 	std::vector<double> HitsXPosition;
+	//std::vector<double> HitsZPosition; // tutaj nie jest potrzebny wektor
 
 	private:
 	// rough data: before preselection
@@ -36,17 +38,15 @@ public:
 	bool check_size(unsigned int preselected_data_size);
 
 	void apply_drift_time_offset();
+
+	void calculate_distances_from_wire();
 	
-	// config
 	std::vector<double> drift_time_offset;
 
 	bool correct_event;
 
 	double min_drift_time, max_drift_time;
 	int min_no, max_no;
-
-	// offset
-	double WiresDriftTimeOffset[80];
 };
 
 #endif
