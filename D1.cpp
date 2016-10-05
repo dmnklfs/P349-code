@@ -9,6 +9,11 @@ D1::D1(const Config &_config)
 	{
 		Layer[i] = new DCLayer(_config.D1_drift_time_offset, _config.D1_calibration_times, _config.D1_calibration_distances, _config.D1_drift_time_min[i],_config.D1_drift_time_max[i],_config.D1_layer_min_hits[i],_config.D1_layer_max_hits[i]);
 	}
+	x_det_center = _config.D1_x_det_center;
+	z_det_center = _config.D1_z_det_center;
+	z_offset = _config.D1_z_offset;
+	x_offset = _config.D1_x_offset;
+	y_rotation_angle = _config.D1_y_rotation_angle;
 }
 
 D1::~D1()
@@ -62,3 +67,39 @@ int D1::get_no_of_layers_with_hits()
 {
 	return no_of_layers_with_hits;
 }
+
+void D1::calculate_distances_from_wires()
+{
+	for (int j = 0; j < 8; j++)
+	{
+		Layer[j] -> DCLayer::calculate_distances_from_wires();
+	}
+}
+
+void D1::calculate_absolute_positions()
+{
+	// for now: layers with straight layers
+	// LAYER 1
+	Layer[0] -> RelativeZPosition = 3.3 - z_det_center;
+	std::cout << Layer[0] -> RelativeZPosition << std::endl;
+	double x_prim;
+	double z_prim;
+	for (unsigned int i = 0; i < Layer[0] -> Wire.size(); i++)
+	{
+		Layer[0] -> RelativeXPosition.push_back( -x_det_center + 3 + 4*(41 - Layer[0] -> Wire.at(i)) );
+		//std::cout << "wire: " << Layer[0] -> Wire.at(i) << std::endl;
+		//std::cout << "after reverse: " << 41 - Layer[0] -> Wire.at(i) << std::endl;
+		std::cout << "calculated distance: " << 3 + 4*(41 - Layer[0] -> Wire.at(i)) << std::endl;
+		std::cout << "calculated distance with det_offset: " << -x_det_center + 3 + 4*(41 - Layer[0] -> Wire.at(i)) << std::endl;
+		x_prim = cos(y_rotation_angle)*(Layer[0] -> RelativeXPosition.back()) + sin(y_rotation_angle)*(Layer[0] -> RelativeZPosition);
+		z_prim = -sin(y_rotation_angle)*(Layer[0] -> RelativeXPosition.back()) + cos(y_rotation_angle)*(Layer[0] -> RelativeZPosition);;
+		std::cout << "calculated rotated pos x : " << x_prim << std::endl;
+		std::cout << "calculated rotated pos z : " << z_prim << std::endl;
+		Layer[0] -> AbsoluteXPosition.push_back( x_prim + x_offset );
+		Layer[0] -> AbsoluteZPosition.push_back( z_prim + z_offset );
+		std::cout << "calculated rotated pos x with global offset : " << x_offset + x_prim << std::endl;
+		std::cout << "calculated rotated pos z with global offset : " << z_offset + x_prim << std::endl;
+	}
+}
+
+

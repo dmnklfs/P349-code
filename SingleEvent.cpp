@@ -25,6 +25,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	bool intermediate = Intermediate::was_correct_event();
 	bool fiber = Fiber::was_correct_event();
 
+
 	bool D1andD2 = false;
 	if ( D1::get_no_of_layers_with_hits() + D2::get_no_of_layers_with_hits() >= 4 ) D1andD2 = true;
 	// event is ok if
@@ -66,4 +67,10 @@ double SingleEvent::getTOF()
 	double tof;
 	tof = TOF::getTime() - Start::getTime();
 	return tof;
+}
+
+void SingleEvent::test_calculate_distances()
+{
+	D1::calculate_distances_from_wires();
+	D1::calculate_absolute_positions();
 }

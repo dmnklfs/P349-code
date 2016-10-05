@@ -8,23 +8,31 @@ class DCLayer
 {
 public:
 	DCLayer();
-	DCLayer(const std::vector<double> &_drift_time_offset, const std::vector<double> &_calibration_times, const std::vector<double> &_calibration_distances, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no);
+	DCLayer(const std::vector<double> &_drift_time_offset, const std::vector<double> &_calib_time, const std::vector<double> &_calib_dist, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no);
 	~DCLayer();
 	void fill_rough_data(single_gh_data _good_hit_data);
 	DCLayer_hist_data* get_hist_data();
 	bool was_correct_event();
+	void calculate_distances_from_wires();
 
-	// calibration -> niepotrzebne?
+	// calibration -> niepotrzebne? potrzebne - 04.10.16
 	std::vector<double> CalibrationTimes;
 	std::vector<double> CalibrationDistances;
+
+	// vector of drift times offsets
+	std::vector<double> DriftTimeOffset;
 	
 	// after preselection
 	std::vector<double> DriftTime;
 	std::vector<int> Wire;
-
 	// vectors of distances from wire
-	std::vector<double> HitsXPosition;
-	//std::vector<double> HitsZPosition; // tutaj nie jest potrzebny wektor
+	std::vector<double> HitsDistancesFromWires;
+	// relative hits positions
+	std::vector<double> RelativeXPosition;
+	double RelativeZPosition;
+	// absolute hits positions
+	std::vector<double> AbsoluteXPosition;
+	std::vector<double> AbsoluteZPosition;
 
 	private:
 	// rough data: before preselection
@@ -38,10 +46,6 @@ public:
 	bool check_size(unsigned int preselected_data_size);
 
 	void apply_drift_time_offset();
-
-	void calculate_distances_from_wire();
-	
-	std::vector<double> drift_time_offset;
 
 	bool correct_event;
 

@@ -23,8 +23,14 @@ Config::Config()
 	Intermediate_element_max = 16;
 
 	// ---------DRIFT CHEMBER D1---------
+	// detector position (all in cm)
+	D1_x_det_center = 0.5*193.5; // 0.5 * detector dimensions
+	D1_z_det_center = 0.5*19.2;
+	D1_z_offset = 138.2; // up to the beginning of the detector (not: 1st layer)
+	D1_x_offset = 2;
+	D1_y_rotation_angle = 0;
 	// drift time offset
-	for (int i = 0; i < 41; i++)
+	for (int i = 0; i < 90; i++) // for now, later: different vectors for all layers
 	{
 		D1_drift_time_offset.push_back(-50); // for now constant value
 	}
@@ -66,12 +72,12 @@ Config::Config()
     };
     
     // calibration should be read from the file
-	std::vector<double> D1_calibration_times;
 	for (int i = 0; i < 200; i++)
 	{
 		D1_calibration_times.push_back(D1_drift_time[i]);
 		D1_calibration_distances.push_back(D1_distance[i]);
 	}
+	
 	
 	for (int i = 0; i < 8; i++)
 	{

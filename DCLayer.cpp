@@ -3,13 +3,15 @@
 DCLayer::DCLayer()
 { }
 
-DCLayer::DCLayer(const std::vector<double> &_drift_time_offset, const std::vector<double> &_calibration_times, const std::vector<double> &_calibration_distances, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no)
+DCLayer::DCLayer(const std::vector<double> &_drift_time_offset, const std::vector<double> &_calib_time, const std::vector<double> &_calib_dist, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no)
 {
+	DriftTimeOffset = _drift_time_offset;
+	CalibrationTimes = _calib_time;
+	CalibrationDistances = _calib_dist;
 	min_drift_time = _min_drift_time;
 	max_drift_time = _max_drift_time;
 	min_no = _min_no;
 	max_no = _max_no;
-	drift_time_offset = _drift_time_offset;
 }
 
 DCLayer::~DCLayer()
@@ -53,9 +55,9 @@ void DCLayer::choose_corr_leading()
 	{
 		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))
 		{
-			if (check_time_range(RoughDriftTime.at(i) + drift_time_offset[1+RoughWire.at(i)]))
+			if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(RoughWire.at(i))))
 			{	
-				DriftTime.push_back(RoughDriftTime.at(i) + drift_time_offset[1+RoughWire.at(i)]);
+				DriftTime.push_back(RoughDriftTime.at(i) + DriftTimeOffset.at(RoughWire.at(i)));
 				Wire.push_back(RoughWire.at(i));
 			}
 		}
@@ -88,20 +90,18 @@ void DCLayer::apply_drift_time_offset()
 {
 	for (unsigned int i = 0; i < DriftTime.size(); i++)
 	{
-		DriftTime.at(i) = DriftTime.at(i) + drift_time_offset.at(Wire.at(i));
+		DriftTime.at(i) = DriftTime.at(i) + DriftTimeOffset.at(Wire.at(i));
 	}
 }
 
-void DCLayer::calculate_distances_from_wire()
+void DCLayer::calculate_distances_from_wires()
 {
-	// t(n) <= t < t(n+1)
-	// t1, t2 - times of the beginning and the end of the single bin
-	// w - width of the bin
-	// n = floor (t/w)
 	for (unsigned int i = 0; i < DriftTime.size(); i++)
 	{
-		double width = max_drift_time/2;
-		double bin_no = floor(DriftTime.at(i)/width);
-		HitsXPosition.push_back(1);
+		double time_bin_width = max_drift_time/(CalibrationTimes.size());
+		double dist_bin_width = 2/(CalibrationTimes.size());
+		double bin_no = floor(DriftTime.at(i)/time_bin_width);
+		double distance = CalibrationDistances.at(bin_no) + dist_bin_width*(CalibrationDistances.at(bin_no+1) - CalibrationDistances.at(bin_no))/(CalibrationTimes.at(bin_no+1) - CalibrationTimes.at(bin_no));
+		HitsDistancesFromWires.push_back(distance);
 	}
 }

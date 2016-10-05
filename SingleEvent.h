@@ -1,5 +1,6 @@
 #ifndef SINGLE_EVENT_H
 #define SINGLE_EVENT_H
+
 #include "Start.h"
 #include "TOF.h"
 #include "D1.h"
@@ -19,6 +20,7 @@ public:
 	bool was_correct_event(const int stage);
 	hist_data get_hist_data();
 	double getTOF();
+	void test_calculate_distances();
 
 private:
 	bool correct_event;

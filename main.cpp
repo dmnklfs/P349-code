@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
   			// checking if preselected tree = 1/0 and filling the tree or not
   			in_out -> Tree::fill_preselected_data_tree(single_event -> SingleEvent::get_hist_data());
   			tof -> Fill(single_event -> SingleEvent::getTOF());
+  			single_event -> SingleEvent::test_calculate_distances();
   			
   		} // end if correct event
 
