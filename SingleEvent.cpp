@@ -3,7 +3,7 @@
 SingleEvent::SingleEvent()
 { }
 
-SingleEvent::SingleEvent(const Config&_config)
+SingleEvent::SingleEvent(const Config &_config)
 	: Start::Start(_config), TOF::TOF(_config), D1::D1(_config), D2::D2(_config), HEX::HEX(_config), Intermediate::Intermediate(_config), Fiber::Fiber(_config)
 {
 
@@ -60,6 +60,14 @@ hist_data SingleEvent::get_hist_data()
 	data_for_hists.intermediate_data = Intermediate::get_hist_data();
 	data_for_hists.fiber_data = Fiber::get_hist_data();
 	return data_for_hists;
+}
+
+event_to_display SingleEvent::get_event_to_display()
+{
+	event_to_display event;
+	event.D1_event_to_display = D1::get_event_to_display();
+
+	return event;
 }
 
 double SingleEvent::getTOF()

@@ -19,6 +19,7 @@ public:
 	void fill_good_hits(const int _stage, single_gh_data _good_hit_data); // 10.07: UNUSED NOW, -> if in main
 	bool was_correct_event(const int stage);
 	hist_data get_hist_data();
+	event_to_display get_event_to_display();
 	double getTOF();
 	void test_calculate_distances();
 

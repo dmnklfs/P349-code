@@ -28,7 +28,7 @@ Config::Config()
 	D1_z_det_center = 0.5*19.2;
 	D1_z_offset = 138.2; // up to the beginning of the detector (not: 1st layer)
 	D1_x_offset = 2;
-	D1_y_rotation_angle = 0;
+	D1_y_rotation_angle = 0*3.14/180; // rad
 	// drift time offset
 	for (int i = 0; i < 90; i++) // for now, later: different vectors for all layers
 	{

@@ -17,6 +17,22 @@ struct single_gh_data
 //  typeInner1 &one;
 //  typeInner2 &two;
 //}; 
+
+// STRUCT FOR EventDisplay CLASS
+struct XZ_positions
+{
+	XZ_positions(std::vector<double>& _XPositions, std::vector<double>& _ZPositions) 
+		: XPositions(_XPositions), ZPositions(_ZPositions){ }
+	std::vector<double> &XPositions;
+	std::vector<double> &ZPositions;
+};
+
+struct event_to_display
+{
+	XZ_positions *D1_event_to_display;
+};
+
+// STRUCTS USED IN Hist CLASS
 struct start_hist_data
 {
 	start_hist_data() { }

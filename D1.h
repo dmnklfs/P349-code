@@ -19,6 +19,7 @@ public:
 	~D1();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	D1_hist_data* get_hist_data();
+    XZ_positions* get_event_to_display();
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();
     void calculate_distances_from_wires();
@@ -35,6 +36,9 @@ private:
     double z_offset;
     double x_offset;
     double y_rotation_angle;
+
+    std::vector<double> AllHitsAbsolutePositionX;
+    std::vector<double> AllHitsAbsolutePositionZ;
 
 	// config
 

@@ -61,6 +61,22 @@ D1_hist_data* D1::get_hist_data()
 		d1_data -> layer_data[i] = Layer[i]-> DCLayer::get_hist_data();
 	}
 	return d1_data;
+	//delete d1_data;
+}
+
+XZ_positions* D1::get_event_to_display()
+{
+	// for now - only one layer
+	for (unsigned int i = 0; i < Layer[0] -> AbsoluteXPosition.size(); i++)
+	{
+		if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10
+		{
+			AllHitsAbsolutePositionX.push_back(Layer[0] -> AbsoluteXPosition.at(i));
+			AllHitsAbsolutePositionZ.push_back(Layer[0] -> AbsoluteZPosition.at(i));
+		}
+	}
+	XZ_positions* d1_all_hits = new XZ_positions(AllHitsAbsolutePositionX, AllHitsAbsolutePositionZ);
+	return d1_all_hits;
 }
 
 int D1::get_no_of_layers_with_hits()
@@ -80,25 +96,20 @@ void D1::calculate_absolute_positions()
 {
 	// for now: layers with straight layers
 	// LAYER 1
-	Layer[0] -> RelativeZPosition = 3.3 - z_det_center;
-	std::cout << Layer[0] -> RelativeZPosition << std::endl;
+	Layer[0] -> RelativeZPosition = 3.3 - z_det_center; // move z positions of layers to config - 04.10
+	// after rotation around the center of the detector
 	double x_prim;
 	double z_prim;
 	for (unsigned int i = 0; i < Layer[0] -> Wire.size(); i++)
 	{
-		Layer[0] -> RelativeXPosition.push_back( -x_det_center + 3 + 4*(41 - Layer[0] -> Wire.at(i)) );
-		//std::cout << "wire: " << Layer[0] -> Wire.at(i) << std::endl;
-		//std::cout << "after reverse: " << 41 - Layer[0] -> Wire.at(i) << std::endl;
-		std::cout << "calculated distance: " << 3 + 4*(41 - Layer[0] -> Wire.at(i)) << std::endl;
-		std::cout << "calculated distance with det_offset: " << -x_det_center + 3 + 4*(41 - Layer[0] -> Wire.at(i)) << std::endl;
-		x_prim = cos(y_rotation_angle)*(Layer[0] -> RelativeXPosition.back()) + sin(y_rotation_angle)*(Layer[0] -> RelativeZPosition);
+		// change reading so that orientation of the x axis 
+		// and direction of increasing of wires/elements were the same - 04.10
+
+		// positions 
+		Layer[0] -> RelativeXPosition.push_back( -x_det_center + 3 + 4*(41 - Layer[0] -> Wire.at(i)) );x_prim = cos(y_rotation_angle)*(Layer[0] -> RelativeXPosition.back()) + sin(y_rotation_angle)*(Layer[0] -> RelativeZPosition);
 		z_prim = -sin(y_rotation_angle)*(Layer[0] -> RelativeXPosition.back()) + cos(y_rotation_angle)*(Layer[0] -> RelativeZPosition);;
-		std::cout << "calculated rotated pos x : " << x_prim << std::endl;
-		std::cout << "calculated rotated pos z : " << z_prim << std::endl;
 		Layer[0] -> AbsoluteXPosition.push_back( x_prim + x_offset );
 		Layer[0] -> AbsoluteZPosition.push_back( z_prim + z_offset );
-		std::cout << "calculated rotated pos x with global offset : " << x_offset + x_prim << std::endl;
-		std::cout << "calculated rotated pos z with global offset : " << z_offset + x_prim << std::endl;
 	}
 }
 
