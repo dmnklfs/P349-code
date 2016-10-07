@@ -48,6 +48,7 @@ void DCLayer::check_hits()
 // (applies constraints on time range and elements range according to Config)
 void DCLayer::choose_corr_leading()
 {
+	//std::cout << "DCLayer::choose_corr_leading()" << std::endl;
 	apply_drift_time_offset();
 	int iterations = RoughEdge.size()-1;
 	if (RoughEdge.size()-1 < 0) iterations = 0;
@@ -96,10 +97,12 @@ void DCLayer::apply_drift_time_offset()
 
 void DCLayer::calculate_distances_from_wires()
 {
+	//std::cout << "DCLayer::calculate_distances_from_wires()" << std::endl;
+
 	for (unsigned int i = 0; i < DriftTime.size(); i++)
 	{
-		double time_bin_width = max_drift_time/(CalibrationTimes.size());
-		double dist_bin_width = 2/(CalibrationTimes.size());
+		double time_bin_width = max_drift_time/(CalibrationTimes.size()-1);
+		double dist_bin_width = 2/(CalibrationTimes.size()-1);
 		double bin_no = floor(DriftTime.at(i)/time_bin_width);
 		double distance = CalibrationDistances.at(bin_no) + dist_bin_width*(CalibrationDistances.at(bin_no+1) - CalibrationDistances.at(bin_no))/(CalibrationTimes.at(bin_no+1) - CalibrationTimes.at(bin_no));
 		HitsDistancesFromWires.push_back(distance);

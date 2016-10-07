@@ -24,6 +24,7 @@
 #include "Config.h"
 #include "struct.h"
 
+
 class EventDisplay
 {
 public:
@@ -32,12 +33,21 @@ public:
 	~EventDisplay();
 
 private:
-	// just test
-	double D1_x[5], D1_z[5], D1_x_rotated[5], D1_z_rotated[5];
-
+	void ReverseXAxis (TMultiGraph *h);
 	TCanvas *canv;
-	TGraph *graph;
+	TMultiGraph *AllHits;
+
+	double range_x_min, range_x_max;
+	double range_z_min, range_z_max;
+
+	bool draw;
+
+	// just test
 	TGraph *D1_scheme;
+	double D1_x[5], D1_z[5], D1_x_rotated[5], D1_z_rotated[5];
+	double D1_x_offset, D1_z_offset;
+	double D1_y_rotation_angle;
+	 // Redraw the new axis
 	
 };
 

@@ -28,15 +28,15 @@ Config::Config()
 	D1_z_det_center = 0.5*19.2;
 	D1_z_offset = 138.2; // up to the beginning of the detector (not: 1st layer)
 	D1_x_offset = 2;
-	D1_y_rotation_angle = 0*3.14/180; // rad
+	D1_y_rotation_angle = (0)*3.14/180; // rad
 	// drift time offset
-	for (int i = 0; i < 90; i++) // for now, later: different vectors for all layers
+	for (int i = 0; i < 120; i++) // for now, later: different vectors for all layers
 	{
 		D1_drift_time_offset.push_back(-50); // for now constant value
 	}
 
 	// time-space calibration
-	double D1_drift_time[200]=
+	double D1_drift_time[201]=
     {   0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 
     	60, 63, 66, 69, 72, 75, 78, 81, 84, 87, 90, 93, 96, 99, 102, 105, 108, 111, 
     	114, 117, 120, 123, 126, 129, 132, 135, 138, 141, 144, 147, 150, 153, 156, 159, 
@@ -48,11 +48,11 @@ Config::Config()
     	402, 405, 408, 411, 414, 417, 420, 423, 426, 429, 432, 435, 438, 441, 444, 447, 
     	450, 453, 456, 459, 462, 465, 468, 471, 474, 477, 480, 483, 486, 489, 492, 495, 
     	498, 501, 504, 507, 510, 513, 516, 519, 522, 525, 528, 531, 534, 537, 540, 543, 
-    	546, 549, 552, 555, 558, 561, 564, 567, 570, 573, 576, 579, 582, 585, 588, 591, 594, 597
+    	546, 549, 552, 555, 558, 561, 564, 567, 570, 573, 576, 579, 582, 585, 588, 591, 594, 597, 600
 
     };
 
-    double D1_distance[200]=
+    double D1_distance[201]=
     {   0.00, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12, 0.13, 
     	0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20, 0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 
     	0.28, 0.29, 0.30, 0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.40, 0.41, 
@@ -67,12 +67,12 @@ Config::Config()
     	1.54, 1.55, 1.56, 1.57, 1.58, 1.59, 1.60, 1.61, 1.62, 1.63, 1.64, 1.65, 1.66, 1.67, 
     	1.68, 1.69, 1.70, 1.71, 1.72, 1.73, 1.74, 1.75, 1.76, 1.77, 1.78, 1.79, 1.80, 1.81, 
     	1.82, 1.83, 1.84, 1.85, 1.86, 1.87, 1.88, 1.89, 1.90, 1.91, 1.92, 1.93, 1.94, 1.95, 
-    	1.96, 1.97, 1.98, 1.99
+    	1.96, 1.97, 1.98, 1.99, 2.0
 
     };
     
     // calibration should be read from the file
-	for (int i = 0; i < 200; i++)
+	for (int i = 0; i < 201; i++)
 	{
 		D1_calibration_times.push_back(D1_drift_time[i]);
 		D1_calibration_distances.push_back(D1_distance[i]);
@@ -84,7 +84,7 @@ Config::Config()
 		D1_layer_min_hits[i] = 1;
 		D1_layer_max_hits[i] = 19;
 		D1_drift_time_min[i] = 0;
-		D1_drift_time_max[i] = 600;
+		D1_drift_time_max[i] = 597;
 	}
 	
 	// ---DRIFT CHEMBER D2---

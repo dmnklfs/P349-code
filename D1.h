@@ -23,7 +23,8 @@ public:
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();
     void calculate_distances_from_wires();
-    void calculate_absolute_positions();
+    void calculate_relative_and_absolute_positions(); // now in the function collect_hits_from_all_layers!!
+    void collect_hits_from_all_layers();
 
 private:
 	DCLayer *Layer[8];
@@ -39,6 +40,9 @@ private:
 
     std::vector<double> AllHitsAbsolutePositionX;
     std::vector<double> AllHitsAbsolutePositionZ;
+
+    // just for the purpose of the event display - with reversed value of the x coordinate
+    std::vector<double> AllHitsAbsolutePositionXEventDisplay;
 
 	// config
 

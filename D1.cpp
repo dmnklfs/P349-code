@@ -67,15 +67,7 @@ D1_hist_data* D1::get_hist_data()
 XZ_positions* D1::get_event_to_display()
 {
 	// for now - only one layer
-	for (unsigned int i = 0; i < Layer[0] -> AbsoluteXPosition.size(); i++)
-	{
-		if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10
-		{
-			AllHitsAbsolutePositionX.push_back(Layer[0] -> AbsoluteXPosition.at(i));
-			AllHitsAbsolutePositionZ.push_back(Layer[0] -> AbsoluteZPosition.at(i));
-		}
-	}
-	XZ_positions* d1_all_hits = new XZ_positions(AllHitsAbsolutePositionX, AllHitsAbsolutePositionZ);
+	XZ_positions* d1_all_hits = new XZ_positions(AllHitsAbsolutePositionXEventDisplay, AllHitsAbsolutePositionZ);
 	return d1_all_hits;
 }
 
@@ -92,24 +84,46 @@ void D1::calculate_distances_from_wires()
 	}
 }
 
-void D1::calculate_absolute_positions()
+void D1::calculate_relative_and_absolute_positions()
 {
+	//std::cout << "D1::calculate_relative_and_absolute_positions" << std::endl;
+	double x_prim, z_prim;
+	double x, z, angle;
+	angle = y_rotation_angle;
 	// for now: layers with straight layers
 	// LAYER 1
 	Layer[0] -> RelativeZPosition = 3.3 - z_det_center; // move z positions of layers to config - 04.10
-	// after rotation around the center of the detector
-	double x_prim;
-	double z_prim;
-	for (unsigned int i = 0; i < Layer[0] -> Wire.size(); i++)
+	unsigned int no_of_hits_in_layer_1 = Layer[0] -> Wire.size();
+	for (unsigned int i = 0; i < no_of_hits_in_layer_1; i++)
 	{
-		// change reading so that orientation of the x axis 
+		// change READING so that orientation of the x axis 
 		// and direction of increasing of wires/elements were the same - 04.10
 
-		// positions 
-		Layer[0] -> RelativeXPosition.push_back( -x_det_center + 3 + 4*(41 - Layer[0] -> Wire.at(i)) );x_prim = cos(y_rotation_angle)*(Layer[0] -> RelativeXPosition.back()) + sin(y_rotation_angle)*(Layer[0] -> RelativeZPosition);
-		z_prim = -sin(y_rotation_angle)*(Layer[0] -> RelativeXPosition.back()) + cos(y_rotation_angle)*(Layer[0] -> RelativeZPosition);;
+		// RELATIVE position
+		Layer[0] -> RelativeXPosition.push_back( -x_det_center + 3 + 4*(41 - Layer[0] -> Wire.at(i)) );
+
+		x = Layer[0] -> RelativeXPosition.back();
+		z = Layer[0] -> RelativeZPosition;
+		
+		x_prim = get_x_after_rot_Y(x, z, angle);
+		z_prim = get_z_after_rot_Y(x, z, angle);
 		Layer[0] -> AbsoluteXPosition.push_back( x_prim + x_offset );
 		Layer[0] -> AbsoluteZPosition.push_back( z_prim + z_offset );
+	}
+}
+
+void D1::collect_hits_from_all_layers()
+{
+	// this function can be called somewhere else, not only in the event display class...
+	// loop over all entries in the certain layer
+	for (unsigned int i = 0; i < Layer[0] -> AbsoluteXPosition.size(); i++)
+	{
+		if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10
+		{
+			AllHitsAbsolutePositionX.push_back(Layer[0] -> AbsoluteXPosition.at(i));
+			AllHitsAbsolutePositionXEventDisplay.push_back( -(Layer[0] -> AbsoluteXPosition.at(i)) );
+			AllHitsAbsolutePositionZ.push_back(Layer[0] -> AbsoluteZPosition.at(i));
+		}
 	}
 }
 

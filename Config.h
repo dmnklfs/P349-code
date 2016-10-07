@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include "CommonFunctions.h"
 
 class Config
 {
@@ -95,6 +96,7 @@ public:
 	int hit_V_min, hit_V_max;
 	int hit_H_min, hit_H_max;
 	int hit_D_min, hit_D_max;
+
 };
 
 #endif

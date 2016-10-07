@@ -80,5 +80,6 @@ double SingleEvent::getTOF()
 void SingleEvent::test_calculate_distances()
 {
 	D1::calculate_distances_from_wires();
-	D1::calculate_absolute_positions();
+	D1::calculate_relative_and_absolute_positions();
+	D1::collect_hits_from_all_layers();
 }

@@ -33,7 +33,7 @@ public:
 	// absolute hits positions
 	std::vector<double> AbsoluteXPosition;
 	std::vector<double> AbsoluteZPosition;
-
+	
 	private:
 	// rough data: before preselection
 	std::vector<double> RoughDriftTime;
