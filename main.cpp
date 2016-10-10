@@ -5,6 +5,7 @@ int main(int argc, char *argv[])
 {
 	TCanvas *dummy = new TCanvas();
 	delete dummy;
+	TString name;
 	// object with config data is created
 	Config config = Config(); 
 	if( false == check_input(argc, argv) ) return 0;
@@ -51,10 +52,12 @@ int main(int argc, char *argv[])
   		{
   			// filling control histos for preselected data
   			// checking if preselected tree = 1/0 and filling the tree or not
+  			name = Form("Event_%ld", entry);
   			in_out -> Tree::fill_preselected_data_tree(single_event -> SingleEvent::get_hist_data());
   			tof -> Fill(single_event -> SingleEvent::getTOF());
   			single_event -> SingleEvent::test_calculate_distances();
   			event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
+  			//event_to_display -> get_canvas() -> Write(name);
   			delete event_to_display;
   			
   		} // end if correct event

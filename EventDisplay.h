@@ -31,9 +31,11 @@ public:
 	EventDisplay();
 	EventDisplay(int i, const Config&_config, event_to_display _event);
 	~EventDisplay();
+	TCanvas* get_canvas();
 
 private:
 	void ReverseXAxis (TMultiGraph *h);
+	void ReverseXAxis (TGraph *h);
 	TCanvas *canv;
 	TMultiGraph *AllHits;
 
@@ -42,8 +44,6 @@ private:
 
 	bool draw;
 
-	// just test
-	TGraph *D1_scheme;
 	double D1_x[5], D1_z[5], D1_x_rotated[5], D1_z_rotated[5];
 	double D1_x_offset, D1_z_offset;
 	double D1_y_rotation_angle;

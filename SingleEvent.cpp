@@ -66,7 +66,8 @@ event_to_display SingleEvent::get_event_to_display()
 {
 	event_to_display event;
 
-	event.HitsPlots.push_back(D1::get_all_hits_plot());
+	if (D1::plot_event()) event.HitsPlots.push_back(D1::get_all_hits_plot());
+	
 	event.DetectorPlots.push_back(D1::get_detector_plot());
 	//event.D1_event_to_display = D1::get_event_to_display();
 	return event;

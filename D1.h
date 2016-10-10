@@ -19,10 +19,9 @@ public:
 	~D1();
 	void fill_good_hits(single_gh_data _good_hit_data);
 	D1_hist_data* get_hist_data();
-    //XZ_positions* get_event_to_display();
-    single_detector_data_to_display* get_plots_to_display();
     TGraph* get_all_hits_plot();
     TGraph* get_detector_plot();
+    bool plot_event();
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();
     void calculate_distances_from_wires();

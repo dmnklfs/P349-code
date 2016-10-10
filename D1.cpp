@@ -75,12 +75,6 @@ D1_hist_data* D1::get_hist_data()
 	//delete d1_data;
 }
 
-//XZ_positions* D1::get_event_to_display()
-//{
-//	XZ_positions* d1_all_hits = new XZ_positions(AllHitsAbsolutePositionXEventDisplay, AllHitsAbsolutePositionZ);
-//	return d1_all_hits;
-//}
-
 int D1::get_no_of_layers_with_hits()
 {
 	return no_of_layers_with_hits;
@@ -117,16 +111,14 @@ void D1::calculate_relative_and_absolute_positions()
 		// CALCULATION OF POSITIONS IN THE DETECTOR
 		// Z COORDINATE
 		// calculate_position_in_detector(double element_no, double element_width, double offset_in_detector)
-		z = calc_position_in_detector(no_of_layer, distance_between_layers, distance_to_1st_layer);
-		Layer[no_of_layer]->RelativeZPosition 
-			= -half_z_dim + z;
+		z = calc_position_in_detector(no_of_layer, distance_between_layers, - half_z_dim + distance_to_1st_layer);
+		Layer[no_of_layer]->RelativeZPosition = z;
 		
 		// X COORDINATE
 		for (unsigned int ii = 0; ii < no_of_hits_in_layer; ii++)
 		{
 			// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10
-
-			x = calc_position_in_detector(41-Layer[no_of_layer]->Wire.at(ii), distance_between_wires, layer_wire_frame_offset[no_of_layer]);
+			x = calc_position_in_detector(41-(Layer[no_of_layer]->Wire.at(ii)), distance_between_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
 			Layer[no_of_layer]->RelativeXPosition.push_back(x);
 	
 			x = Layer[no_of_layer]->RelativeXPosition.back();
@@ -142,7 +134,6 @@ void D1::calculate_relative_and_absolute_positions()
 			// calc_position_in_lab(double position_in_detector, double detector_position, double detector_offset)
 			x = calc_position_in_lab(x_prim, x_lab_position, x_offset);
 			z = calc_position_in_lab(z_prim, z_lab_position, z_offset);
-			std::cout << z << std::endl;
 
 			Layer[no_of_layer]->AbsoluteXPosition.push_back(x);
 			Layer[no_of_layer]->AbsoluteZPosition.push_back(z);
@@ -179,13 +170,17 @@ void D1::collect_hits_from_all_layers()
 	}	
 }
 
+bool D1::plot_event()
+{
+	bool plot_event = false;
+	if (0!=AllHitsAbsolutePositionXEventDisplay.size()) plot_event = true;
+	return plot_event;
+}
+
 TGraph* D1::get_all_hits_plot()
 {
-	TGraph* all_hits;
-	if (0!=AllHitsAbsolutePositionXEventDisplay.size())
-	{
-		TGraph* all_hits = new TGraph(AllHitsAbsolutePositionXEventDisplay.size(), &AllHitsAbsolutePositionXEventDisplay.at(0), &AllHitsAbsolutePositionZ.at(0));
-	}
+	TGraph* all_hits = new TGraph(AllHitsAbsolutePositionXEventDisplay.size(), &AllHitsAbsolutePositionXEventDisplay.at(0), &AllHitsAbsolutePositionZ.at(0));
+	all_hits ->  SetMarkerStyle(20);
 	return all_hits;
 }
 
