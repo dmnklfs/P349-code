@@ -8,12 +8,19 @@ D1::D1(const Config &_config)
 	for (int i = 0; i < 8; i++)
 	{
 		Layer[i] = new DCLayer(_config.D1_drift_time_offset, _config.D1_calibration_times, _config.D1_calibration_distances, _config.D1_drift_time_min[i],_config.D1_drift_time_max[i],_config.D1_layer_min_hits[i],_config.D1_layer_max_hits[i]);
+		layer_wire_frame_offset[i] = _config.D1_layer_wire_frame_offset[i];
 	}
-	x_det_center = _config.D1_x_det_center;
-	z_det_center = _config.D1_z_det_center;
+
+	half_x_dim = _config.D1_half_x_dim;
+	half_z_dim = _config.D1_half_z_dim;
+	x_lab_position = _config.D1_x_lab_position;
+	z_lab_position = _config.D1_z_lab_position;
 	z_offset = _config.D1_z_offset;
 	x_offset = _config.D1_x_offset;
 	y_rotation_angle = _config.D1_y_rotation_angle;
+	distance_to_1st_layer = _config.distance_to_1st_layer;
+	distance_between_wires = _config.distance_between_wires;
+	distance_between_layers = _config.distance_between_layers;
 }
 
 D1::~D1()
@@ -45,8 +52,12 @@ bool D1::was_correct_event()
 	{
 		correct_in_layer[i] = Layer[i]-> DCLayer::was_correct_event();
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
-	}
+	}/*
 	if (no_of_layers_with_hits >= 4)
+	{
+		correct_event = true;
+	}*/
+	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
 	{
 		correct_event = true;
 	}
@@ -64,12 +75,11 @@ D1_hist_data* D1::get_hist_data()
 	//delete d1_data;
 }
 
-XZ_positions* D1::get_event_to_display()
-{
-	// for now - only one layer
-	XZ_positions* d1_all_hits = new XZ_positions(AllHitsAbsolutePositionXEventDisplay, AllHitsAbsolutePositionZ);
-	return d1_all_hits;
-}
+//XZ_positions* D1::get_event_to_display()
+//{
+//	XZ_positions* d1_all_hits = new XZ_positions(AllHitsAbsolutePositionXEventDisplay, AllHitsAbsolutePositionZ);
+//	return d1_all_hits;
+//}
 
 int D1::get_no_of_layers_with_hits()
 {
@@ -87,28 +97,56 @@ void D1::calculate_distances_from_wires()
 void D1::calculate_relative_and_absolute_positions()
 {
 	//std::cout << "D1::calculate_relative_and_absolute_positions" << std::endl;
-	double x_prim, z_prim;
-	double x, z, angle;
-	angle = y_rotation_angle;
-	// for now: layers with straight layers
-	// LAYER 1
-	Layer[0] -> RelativeZPosition = 3.3 - z_det_center; // move z positions of layers to config - 04.10
-	unsigned int no_of_hits_in_layer_1 = Layer[0] -> Wire.size();
-	for (unsigned int i = 0; i < no_of_hits_in_layer_1; i++)
+	unsigned int no_of_hits_in_layer;
+	double position, x_prim, z_prim;
+	double x, z;
+	int straight_layers[4];
+	straight_layers[0] =0;
+	straight_layers[1] =1;
+	straight_layers[2] =6;
+	straight_layers[3] =7;
+	
+	int no_of_layer;
+
+	// CALCULATIONS FOR THE STRAIGHT LAYERS
+	for (int i = 0; i < 4; i++)
 	{
-		// change READING so that orientation of the x axis 
-		// and direction of increasing of wires/elements were the same - 04.10
-
-		// RELATIVE position
-		Layer[0] -> RelativeXPosition.push_back( -x_det_center + 3 + 4*(41 - Layer[0] -> Wire.at(i)) );
-
-		x = Layer[0] -> RelativeXPosition.back();
-		z = Layer[0] -> RelativeZPosition;
+		no_of_layer = straight_layers[i];
+		no_of_hits_in_layer = Layer[no_of_layer] -> Wire.size();
 		
-		x_prim = get_x_after_rot_Y(x, z, angle);
-		z_prim = get_z_after_rot_Y(x, z, angle);
-		Layer[0] -> AbsoluteXPosition.push_back( x_prim + x_offset );
-		Layer[0] -> AbsoluteZPosition.push_back( z_prim + z_offset );
+		// CALCULATION OF POSITIONS IN THE DETECTOR
+		// Z COORDINATE
+		// calculate_position_in_detector(double element_no, double element_width, double offset_in_detector)
+		z = calc_position_in_detector(no_of_layer, distance_between_layers, distance_to_1st_layer);
+		Layer[no_of_layer]->RelativeZPosition 
+			= -half_z_dim + z;
+		
+		// X COORDINATE
+		for (unsigned int ii = 0; ii < no_of_hits_in_layer; ii++)
+		{
+			// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10
+
+			x = calc_position_in_detector(41-Layer[no_of_layer]->Wire.at(ii), distance_between_wires, layer_wire_frame_offset[no_of_layer]);
+			Layer[no_of_layer]->RelativeXPosition.push_back(x);
+	
+			x = Layer[no_of_layer]->RelativeXPosition.back();
+			z = Layer[no_of_layer]->RelativeZPosition;
+			
+			// CALCULATE POSITION IN THE LAB
+			// MAKE ROTATION AROUND Y AXIS
+			x_prim = get_x_after_rot_Y(x, z, y_rotation_angle);
+			z_prim = get_z_after_rot_Y(x, z, y_rotation_angle);
+
+			// !!! MAKE ROTATION AROUND X AXIS
+
+			// calc_position_in_lab(double position_in_detector, double detector_position, double detector_offset)
+			x = calc_position_in_lab(x_prim, x_lab_position, x_offset);
+			z = calc_position_in_lab(z_prim, z_lab_position, z_offset);
+			std::cout << z << std::endl;
+
+			Layer[no_of_layer]->AbsoluteXPosition.push_back(x);
+			Layer[no_of_layer]->AbsoluteZPosition.push_back(z);
+		}
 	}
 }
 
@@ -116,15 +154,69 @@ void D1::collect_hits_from_all_layers()
 {
 	// this function can be called somewhere else, not only in the event display class...
 	// loop over all entries in the certain layer
-	for (unsigned int i = 0; i < Layer[0] -> AbsoluteXPosition.size(); i++)
+	int straight_layers[4];
+	straight_layers[0] =0;
+	straight_layers[1] =1;
+	straight_layers[2] =7;
+	straight_layers[3] =6;
+	unsigned int no_of_entries; 
+
+	int no_of_layer;
+	for (int j = 0; j < 4; j++)
 	{
-		if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10
+		no_of_layer = straight_layers[j];
+		no_of_entries = Layer[ no_of_layer ] -> AbsoluteXPosition.size();
+		for (unsigned int i = 0; i < no_of_entries; i++)
 		{
-			AllHitsAbsolutePositionX.push_back(Layer[0] -> AbsoluteXPosition.at(i));
-			AllHitsAbsolutePositionXEventDisplay.push_back( -(Layer[0] -> AbsoluteXPosition.at(i)) );
-			AllHitsAbsolutePositionZ.push_back(Layer[0] -> AbsoluteZPosition.at(i));
+
+			if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10
+			{
+				AllHitsAbsolutePositionX.push_back(Layer[ no_of_layer ] -> AbsoluteXPosition.at(i));
+				AllHitsAbsolutePositionXEventDisplay.push_back( -(Layer[ no_of_layer ] -> AbsoluteXPosition.at(i)) );
+				AllHitsAbsolutePositionZ.push_back(Layer[ no_of_layer ] -> AbsoluteZPosition.at(i));
+			}
 		}
-	}
+	}	
 }
 
+TGraph* D1::get_all_hits_plot()
+{
+	TGraph* all_hits;
+	if (0!=AllHitsAbsolutePositionXEventDisplay.size())
+	{
+		TGraph* all_hits = new TGraph(AllHitsAbsolutePositionXEventDisplay.size(), &AllHitsAbsolutePositionXEventDisplay.at(0), &AllHitsAbsolutePositionZ.at(0));
+	}
+	return all_hits;
+}
 
+TGraph* D1::get_detector_plot()
+{
+	TGraph* detector_plot;
+	// coordinates of the corners of the detector
+	double x_detector[5], z_detector[5];
+	double x_lab[5], z_lab[5];
+	double x_prim, z_prim; // after rotation
+	x_detector[0] =(-half_x_dim);
+	x_detector[1] =( half_x_dim);
+	x_detector[2] =( half_x_dim);
+	x_detector[3] =(-half_x_dim);
+	x_detector[4] = x_detector[0];
+	z_detector[0] =(-half_z_dim);
+	z_detector[1] =(-half_z_dim);
+	z_detector[2] =( half_z_dim);
+	z_detector[3] =( half_z_dim);
+	z_detector[4] = z_detector[0];
+	for (int i = 0; i < 5; i++)
+	{
+		x_prim = get_x_after_rot_Y(x_detector[i], z_detector[i], y_rotation_angle);
+		z_prim = get_z_after_rot_Y(x_detector[i], z_detector[i], y_rotation_angle);
+		x_lab[i] = calc_position_in_lab(x_prim, x_lab_position, x_offset);
+		z_lab[i] = calc_position_in_lab(z_prim, z_lab_position, z_offset);
+	}
+	detector_plot = new TGraph(5, x_lab, z_lab);
+	detector_plot ->SetLineColor(4);
+	detector_plot ->SetLineWidth(4);
+	detector_plot ->SetFillStyle(0);
+
+	return detector_plot;
+}

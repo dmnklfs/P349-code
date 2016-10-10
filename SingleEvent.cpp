@@ -31,7 +31,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	// event is ok if
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
-	if ( (start && tof && fiber && HEX && D1andD2) || stage == 2)
+	if ( (start && tof && fiber && HEX && D1) || stage == 2)
 	{
 		return true;
 	}
@@ -65,8 +65,10 @@ hist_data SingleEvent::get_hist_data()
 event_to_display SingleEvent::get_event_to_display()
 {
 	event_to_display event;
-	event.D1_event_to_display = D1::get_event_to_display();
 
+	event.HitsPlots.push_back(D1::get_all_hits_plot());
+	event.DetectorPlots.push_back(D1::get_detector_plot());
+	//event.D1_event_to_display = D1::get_event_to_display();
 	return event;
 }
 

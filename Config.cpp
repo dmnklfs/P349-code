@@ -24,11 +24,26 @@ Config::Config()
 
 	// ---------DRIFT CHEMBER D1---------
 	// detector position (all in cm)
-	D1_x_det_center = 0.5*193.5; // 0.5 * detector dimensions
-	D1_z_det_center = 0.5*19.2;
-	D1_z_offset = 138.2; // up to the beginning of the detector (not: 1st layer)
-	D1_x_offset = 2;
+	D1_half_x_dim = 0.5*193.5; // 0.5 * detector dimensions
+	D1_half_z_dim = 0.5*19.2;
+	D1_x_lab_position = 2;
+    D1_z_lab_position = 138.2;
+	D1_z_offset = 0; // up to the beginning of the detector (not: 1st layer)
+	D1_x_offset = 0;
 	D1_y_rotation_angle = (0)*3.14/180; // rad
+	// layers "offsets" - distances drom the frame
+	D1_layer_wire_frame_offset[0] = 3;	// x
+	D1_layer_wire_frame_offset[1] = 5;
+	D1_layer_wire_frame_offset[2] = 0;
+	D1_layer_wire_frame_offset[3] = 0;
+	D1_layer_wire_frame_offset[4] = 0;
+	D1_layer_wire_frame_offset[5] = 0;
+	D1_layer_wire_frame_offset[6] = 3;
+	D1_layer_wire_frame_offset[7] = 5;
+	distance_to_1st_layer = 3.3;	// z
+	distance_between_wires = 4;		// x
+	distance_between_layers = 1.8;	// z
+
 	// drift time offset
 	for (int i = 0; i < 120; i++) // for now, later: different vectors for all layers
 	{

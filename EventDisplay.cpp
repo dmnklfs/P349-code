@@ -21,15 +21,15 @@ EventDisplay::EventDisplay(int i, const Config &_config, event_to_display _event
 
 	// reading the informations about the detector
 	// D1 - edge points
-	D1_x[0] =(-_config.D1_x_det_center);
-	D1_x[1] =( _config.D1_x_det_center);
-	D1_x[2] =( _config.D1_x_det_center);
-	D1_x[3] =(-_config.D1_x_det_center);
+	D1_x[0] =(-_config.D1_half_x_dim);
+	D1_x[1] =( _config.D1_half_x_dim);
+	D1_x[2] =( _config.D1_half_x_dim);
+	D1_x[3] =(-_config.D1_half_x_dim);
 	D1_x[4] =( D1_x[0]);
-	D1_z[0] =(-_config.D1_z_det_center);
-	D1_z[1] =(-_config.D1_z_det_center);
-	D1_z[2] =( _config.D1_z_det_center);
-	D1_z[3] =( _config.D1_z_det_center);
+	D1_z[0] =(-_config.D1_half_z_dim);
+	D1_z[1] =(-_config.D1_half_z_dim);
+	D1_z[2] =( _config.D1_half_z_dim);
+	D1_z[3] =( _config.D1_half_z_dim);
 	D1_z[4] =( D1_z[0]);
 	// D1 offsets
 	D1_x_offset = _config.D1_x_offset;

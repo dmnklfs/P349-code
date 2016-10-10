@@ -25,6 +25,8 @@ public:
 
 private:
 	bool correct_event;
+	std::vector<TGraph*> hit_plots;
+	std::vector<TGraph*> detector_plots;
 };
 
 #endif

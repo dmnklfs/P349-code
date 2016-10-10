@@ -19,17 +19,31 @@ struct single_gh_data
 //}; 
 
 // STRUCT FOR EventDisplay CLASS
-struct XZ_positions
+/*struct XZ_positions
 {
 	XZ_positions(std::vector<double>& _XPositions, std::vector<double>& _ZPositions) 
 		: XPositions(_XPositions), ZPositions(_ZPositions){ }
 	std::vector<double> &XPositions;
 	std::vector<double> &ZPositions;
+};*/
+
+struct single_detector_data_to_display
+{
+	TGraph* hits_plot;
+	TGraph* detector_plot;
 };
+
+//struct event_to_display
+//{
+//	XZ_positions *D1_event_to_display;
+//};
 
 struct event_to_display
 {
-	XZ_positions *D1_event_to_display;
+	//event_to_display(std::vector<TGraph*>& _HitPlots, std::vector<TGraph*>& _DetectorPlots) 
+	//	: HitsPlots(_HitPlots), DetectorPlots(_DetectorPlots){ }
+	std::vector<TGraph*> HitsPlots; // tu byly referencje
+	std::vector<TGraph*> DetectorPlots;
 };
 
 // STRUCTS USED IN Hist CLASS

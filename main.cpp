@@ -54,8 +54,8 @@ int main(int argc, char *argv[])
   			in_out -> Tree::fill_preselected_data_tree(single_event -> SingleEvent::get_hist_data());
   			tof -> Fill(single_event -> SingleEvent::getTOF());
   			single_event -> SingleEvent::test_calculate_distances();
-  			//event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
-  			//delete event_to_display;
+  			event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
+  			delete event_to_display;
   			
   		} // end if correct event
 

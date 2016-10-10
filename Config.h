@@ -8,6 +8,16 @@
 #include <sstream>
 #include <vector>
 #include "CommonFunctions.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TProfile.h"
+#include "TRandom.h"
+#include "TTree.h"
+#include "TClonesArray.h"
+#include <TMultiGraph.h>
+#include <TGraph.h>
+#include <TGaxis.h>
+#include <TF1.h>
 
 class Config
 {
@@ -53,11 +63,17 @@ public:
 	// min and max number of hits in layers (if set to -1: any value is ok)
 	int D1_layer_max_hits[8];
 	int D1_layer_min_hits[8];
-	double D1_x_det_center;
-    double D1_z_det_center;
+	double D1_half_x_dim;
+    double D1_half_z_dim;
+    double D1_x_lab_position;
+    double D1_z_lab_position;
     double D1_z_offset;
     double D1_x_offset;
     double D1_y_rotation_angle;
+    double D1_layer_wire_frame_offset[8];
+    double distance_to_1st_layer; // distance from the DC frame to the 1st layer (looking from the beam direction)
+    double distance_between_wires;
+    double distance_between_layers;
 
 	// drift time range
 	double D1_drift_time_max[8];
