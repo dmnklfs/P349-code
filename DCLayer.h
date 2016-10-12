@@ -33,6 +33,9 @@ public:
 	// absolute hits positions
 	std::vector<double> AbsoluteXPosition;
 	std::vector<double> AbsoluteZPosition;
+
+	// only for the simple calibration
+	std::vector<int> LeftRight;
 	
 	private:
 	// rough data: before preselection

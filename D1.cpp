@@ -52,15 +52,15 @@ bool D1::was_correct_event()
 	{
 		correct_in_layer[i] = Layer[i]-> DCLayer::was_correct_event();
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
-	}/*
-	if (no_of_layers_with_hits >= 4)
-	{
-		correct_event = true;
-	}*/
-	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
+	}
+	if (no_of_layers_with_hits == 8)
 	{
 		correct_event = true;
 	}
+	/*if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
+	{
+		correct_event = true;
+	}*/
 	return correct_event;
 }
 
@@ -92,7 +92,7 @@ void D1::calculate_relative_and_absolute_positions()
 {
 	//std::cout << "D1::calculate_relative_and_absolute_positions" << std::endl;
 	unsigned int no_of_hits_in_layer;
-	double position, x_prim, z_prim;
+	double x_prim, z_prim;
 	double x, z;
 	int straight_layers[4];
 	straight_layers[0] =0;
@@ -214,4 +214,26 @@ TGraph* D1::get_detector_plot()
 	detector_plot ->SetFillStyle(0);
 
 	return detector_plot;
+}
+
+// SIMPLIFIED CALIBRATION
+// !!! this function can only work with suitable preselection conditions
+data_for_D1_simple_calibration D1::get_data_for_simple_calibration()
+{
+	int straight_layers[4];
+	straight_layers[0] =0;
+	straight_layers[1] =1;
+	straight_layers[2] =6;
+	straight_layers[3] =7;
+
+	data_for_D1_simple_calibration data_for_calibration;
+	for (int i = 0; i < 4; i++)
+	{
+		data_for_calibration.positionsX[i]	= Layer[ straight_layers[i] ]->AbsoluteZPosition.at(0);
+		data_for_calibration.positionsZ[i]	= Layer[ straight_layers[i] ]->AbsoluteXPosition.at(0);
+		data_for_calibration.drift_times[i]	= Layer[ straight_layers[i] ]->DriftTime.at(0);
+		//data_for_calibration.left_right[i]	= Layer[ straight_layers[i] ]->LeftRight.at(0);
+	}
+
+	return data_for_calibration;
 }

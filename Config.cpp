@@ -96,11 +96,22 @@ Config::Config()
 	
 	for (int i = 0; i < 8; i++)
 	{
-		D1_layer_min_hits[i] = 1;
-		D1_layer_max_hits[i] = 19;
-		D1_drift_time_min[i] = 0;
-		D1_drift_time_max[i] = 597;
+		if (i==0||i==1||i==6||i==7)
+		{
+			D1_layer_min_hits[i] = 1;
+			D1_layer_max_hits[i] = 1;
+			D1_drift_time_min[i] = 0;
+			D1_drift_time_max[i] = 597;
+		}
+		else
+		{
+			D1_layer_min_hits[i] = -1;
+			D1_layer_max_hits[i] = -1;
+			D1_drift_time_min[i] = 0;
+			D1_drift_time_max[i] = 597;
+		}
 	}
+
 	
 	// ---DRIFT CHEMBER D2---
 	for (int i = 0; i < 6; i++)

@@ -25,6 +25,14 @@ struct event_to_display
 	std::vector<TGraph*> DetectorPlots;
 };
 
+struct data_for_D1_simple_calibration
+{
+	double positionsX[4]; // from wires
+	double positionsZ[4];
+	double drift_times[4];
+	int left_right[4]; // left - right information
+};
+
 // STRUCTS USED IN Hist CLASS
 struct start_hist_data
 {

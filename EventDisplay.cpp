@@ -22,7 +22,7 @@ EventDisplay::EventDisplay(int i, const Config &_config, event_to_display _event
 		AllHits -> Add(_event.HitsPlots.at(i));
 	}
 
-	for (int i = 0; i < _event.DetectorPlots.size(); i++)
+	for (unsigned int i = 0; i < _event.DetectorPlots.size(); i++)
 	{
 		_event.DetectorPlots.at(i) -> Draw("AL");
 		_event.DetectorPlots.at(i)->GetXaxis()->SetLimits(range_x_min,range_x_max);

@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 	//-----------------------------------------------------------------------------------------------------
 	SingleEvent *single_event;
 	EventDisplay *event_to_display;
+	SimpleCalibration *simple_calibration = new SimpleCalibration(config);
 	std::cout << "* start of the loop over the events" << std::endl;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
   	{
@@ -58,6 +59,11 @@ int main(int argc, char *argv[])
   			single_event -> SingleEvent::test_calculate_distances();
   			event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
   			//event_to_display -> get_canvas() -> Write(name);
+  			name = Form("results/Event_%ld.png", entry);
+  			event_to_display -> get_canvas() -> SaveAs(name);
+
+  			//data for the simple calibration
+  			simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
   			delete event_to_display;
   			
   		} // end if correct event
@@ -67,9 +73,8 @@ int main(int argc, char *argv[])
   		in_out -> Tree::fill_rough_data_tree(single_event -> SingleEvent::get_hist_data());
   		delete single_event;
   	} // end of loop over events
-
+  	simple_calibration -> tell_no_of_events();
   	//tof -> Write();
   	in_out -> Tree::save_output_file();
-  	std::cout << "In order to switch (on)off png files creation (un)comment out lines 56, 57 in main.cpp or change constructor of EventDisplay " << std::endl;
-	std::cout << "\n" << std::endl;
+  	std::cout << "\n" << std::endl;
 }
