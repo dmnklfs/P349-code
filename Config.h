@@ -25,6 +25,10 @@ public:
 	Config();
 	~Config();
 
+	// simple calibraton
+	int no_of_iterations_in_simple_calibration;
+	int no_of_bins_in_simple_calibration;
+
 	// configuration
 	// ---START---
 	// no of correct signals (leading & trailing edge) in up (down) layer

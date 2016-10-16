@@ -229,9 +229,10 @@ data_for_D1_simple_calibration D1::get_data_for_simple_calibration()
 	data_for_D1_simple_calibration data_for_calibration;
 	for (int i = 0; i < 4; i++)
 	{
-		data_for_calibration.positionsX[i]	= Layer[ straight_layers[i] ]->AbsoluteZPosition.at(0);
-		data_for_calibration.positionsZ[i]	= Layer[ straight_layers[i] ]->AbsoluteXPosition.at(0);
+		data_for_calibration.positionsX[i]	= Layer[ straight_layers[i] ]->AbsoluteXPosition.at(0);
+		data_for_calibration.positionsZ[i]	= Layer[ straight_layers[i] ]->AbsoluteZPosition.at(0);
 		data_for_calibration.drift_times[i]	= Layer[ straight_layers[i] ]->DriftTime.at(0);
+		data_for_calibration.distane_from_wire[4] = Layer[ straight_layers[i] ]->HitsDistancesFromWires.at(0);
 		//data_for_calibration.left_right[i]	= Layer[ straight_layers[i] ]->LeftRight.at(0);
 	}
 

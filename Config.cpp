@@ -5,6 +5,10 @@
 
 Config::Config()
 {
+	// simple calibration
+	no_of_iterations_in_simple_calibration = 1;
+	no_of_bins_in_simple_calibration = 200;
+
 	// here hit = one correct singal (leading and trailing edge corresponding to TWO hits from easyparser)
 	start_hits = 1;
 	start_time_min = -1500;
@@ -101,14 +105,14 @@ Config::Config()
 			D1_layer_min_hits[i] = 1;
 			D1_layer_max_hits[i] = 1;
 			D1_drift_time_min[i] = 0;
-			D1_drift_time_max[i] = 597;
+			D1_drift_time_max[i] = 600;
 		}
 		else
 		{
 			D1_layer_min_hits[i] = -1;
 			D1_layer_max_hits[i] = -1;
 			D1_drift_time_min[i] = 0;
-			D1_drift_time_max[i] = 597;
+			D1_drift_time_max[i] = 600;
 		}
 	}
 

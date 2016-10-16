@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
   			event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
   			//event_to_display -> get_canvas() -> Write(name);
   			name = Form("results/Event_%ld.png", entry);
-  			event_to_display -> get_canvas() -> SaveAs(name);
+  			//event_to_display -> get_canvas() -> SaveAs(name);
 
   			//data for the simple calibration
   			simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
@@ -74,6 +74,7 @@ int main(int argc, char *argv[])
   		delete single_event;
   	} // end of loop over events
   	simple_calibration -> tell_no_of_events();
+  	simple_calibration -> SingleIteration(1);
   	//tof -> Write();
   	in_out -> Tree::save_output_file();
   	std::cout << "\n" << std::endl;
