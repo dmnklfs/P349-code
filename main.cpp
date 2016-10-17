@@ -74,8 +74,12 @@ int main(int argc, char *argv[])
   		delete single_event;
   	} // end of loop over events
   	simple_calibration -> tell_no_of_events();
-  	simple_calibration -> SingleIteration(1);
-  	//tof -> Write();
+  	simple_calibration -> fit_events(2);
+  	simple_calibration -> plot_chi2() -> SaveAs("results/chi2.png");
+  	simple_calibration -> plot_delta() -> SaveAs("results/delta.png");
+  	simple_calibration -> plot_delta_cut() -> SaveAs("results/delta_cut.png");
+  	simple_calibration -> fit_delta_projections("result/Fit_0/");
+  	//tof -> Write();.png
   	in_out -> Tree::save_output_file();
   	std::cout << "\n" << std::endl;
 }
