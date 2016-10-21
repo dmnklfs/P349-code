@@ -65,10 +65,14 @@ public:
 	TCanvas* plot_chi2();
 	TCanvas* plot_delta();
 	TCanvas* plot_delta_cut();
+	TCanvas* plot_current_calibration();
 
 	void fit_events(double _chi2_cut);
 	void fit_delta_projections(const char* folder_name);
 
+	void apply_corrections();
+	void deletations();
+	void recalculate_positions();
 
 private:
 	void fill_chi2(double _chi2_cut);
@@ -97,9 +101,9 @@ private:
 	TH1F *chi2_cut;
 	TH2F *delta_cut;
 
-	std::vector<double> projection_constant;
-	std::vector<double> projection_sigma;
-	std::vector<double> projection_mean;
+	std::vector<double> ProjectionConstant;
+	std::vector<double> ProjectionSigma;
+	std::vector<double> ProjectionMean;
 
 };
 

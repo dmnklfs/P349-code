@@ -14,7 +14,7 @@ SimpleCalibration::SimpleCalibration(const Config &_config)
 	// from config
 	no_of_iterations = _config.no_of_iterations_in_simple_calibration; 
 	no_of_calib_bins = InitialDriftTimes.size()-1;
-	no_of_corr_bins = _config.no_of_bins_in_simple_calibration;
+	no_of_corr_bins = _config.no_of_bins_in_simple_calibration-1;
 	max_time_range =  _config.D1_drift_time_max[0];
 	calib_bin_width = max_time_range/no_of_calib_bins;
 	corr_bin_width = max_time_range/no_of_corr_bins;
@@ -135,10 +135,10 @@ void SimpleCalibration::fit_events(double _chi2_cut)
 			x_wire = CalibrationData.at(i).wires_positionsX[j];
 			wire_track = fabs((z - b)/a - x_wire);
 			wire_hit = fabs( x - x_wire);
-			if (wire_hit < wire_track) CalibrationData.at(i).delta[j] = fabs(wire_track - wire_hit);
-			if (wire_hit > wire_track) CalibrationData.at(i).delta[j] = -fabs(wire_track - wire_hit);
+			if (fabs(wire_hit) < fabs(wire_track)) CalibrationData.at(i).delta[j] = fabs(wire_track - wire_hit);
+			if (fabs(wire_hit) > fabs(wire_track)) CalibrationData.at(i).delta[j] = -fabs(wire_track - wire_hit);
 		}
-		std::cout << results.at(0) << " " << results.at(1) << " " << results.at(2) << std::endl;
+		//std::cout << wire_track - wire_hit << std::endl;
 		results.clear();
 		delete fit;
 	}
@@ -170,7 +170,7 @@ void SimpleCalibration::fill_delta(double _chi2_cut)
 
 TCanvas* SimpleCalibration::plot_chi2()
 {
-	TCanvas *c = new TCanvas("c","c");
+	TCanvas *c = new TCanvas("chi2","chi2");
 	gStyle -> SetOptStat(1111111);
 	gStyle->SetStatX(0.9);                
 	gStyle->SetStatW(0.2);
@@ -184,7 +184,7 @@ TCanvas* SimpleCalibration::plot_delta()
 	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
 	gStyle->SetStatX(0.9);                
 	gStyle->SetStatW(0.2);
-	TCanvas *c = new TCanvas("c","c2");
+	TCanvas *c = new TCanvas("c_delta","c_delta");
 	gStyle -> SetOptStat(1111111);
 	gPad -> SetLogz();
 	delta -> Draw("colz");
@@ -197,7 +197,7 @@ TCanvas* SimpleCalibration::plot_delta_cut()
 	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
 	gStyle->SetStatX(0.9);                
 	gStyle->SetStatW(0.2);
-	TCanvas *c = new TCanvas("c2","c2");
+	TCanvas *c = new TCanvas("c_delta_cut","c_delta_cut");
 	gStyle -> SetOptStat(1111111);
 	gPad -> SetLogz();
 	delta_cut -> Draw("colz");
@@ -205,11 +205,24 @@ TCanvas* SimpleCalibration::plot_delta_cut()
 	// delete c;
 }
 
+TCanvas* SimpleCalibration::plot_current_calibration()
+{
+	TGraph* current_calibration;
+	current_calibration = new TGraph(InitialDriftTimes.size(), &InitialDriftTimes.at(0), &InitialDistances.at(0));
+	TCanvas *c_current_calibration = new TCanvas("c_current_calibration","c_current_calibration");
+	current_calibration -> Draw("AL");
+   	current_calibration->SetMinimum(0);
+   	current_calibration->SetMaximum(2.5);
+	return c_current_calibration;
+	
+
+}
+
 void SimpleCalibration::fit_delta_projections(const char* folder_name)
 {
-	projection_constant.clear();
-	projection_mean.clear();
-	projection_sigma.clear();
+	ProjectionConstant.clear();
+	ProjectionMean.clear();
+	ProjectionSigma.clear();
 	// create directory for results
 	boost::filesystem::create_directories(folder_name);
 	TString ProjectionName;
@@ -218,7 +231,7 @@ void SimpleCalibration::fit_delta_projections(const char* folder_name)
 	TCanvas *c_delta_projection;
 	TF1 *gaussian = new TF1("gaussian","gaus", -1.5, 1.5);
 	double hist_center, hist_sigma;
-	for (int i = 0; i < no_of_corr_bins; i++)
+	for (int i = 0; i < no_of_corr_bins+1; i++)
 	{
 		delta_projection = delta_cut -> ProjectionY("",i,i+1);
 		no_of_entries_in_projection = delta_projection -> GetEntries();
@@ -237,60 +250,60 @@ void SimpleCalibration::fit_delta_projections(const char* folder_name)
 		{
 			gaussian -> SetParameters(delta_projection -> GetMaximum(), 0, 0.1);
 			delta_projection->Fit("gaussian","LLQ","",hist_center-3*hist_sigma,hist_center+3*hist_sigma);
-			projection_constant.push_back(gaussian->GetParameter(0));
-    		projection_mean.push_back(gaussian->GetParameter(1));
-    		projection_sigma.push_back(0.5*gaussian->GetParameter(2));
+			ProjectionConstant.push_back(gaussian->GetParameter(0));
+    		ProjectionMean.push_back(gaussian->GetParameter(1));
+    		ProjectionSigma.push_back(0.5*gaussian->GetParameter(2));
 
     		gStyle->SetOptFit(1111);
 			gPad->Modified();
 		}
 		else
 		{
-			projection_mean.push_back(-1);
-			projection_sigma.push_back(-1);
+			ProjectionMean.push_back(-1);
+			ProjectionSigma.push_back(-1);
 		}
 		c_delta_projection -> SaveAs(ProjectionName);
+		delete c_delta_projection;
+	}
+	delete gaussian;
+}
+
+void SimpleCalibration::apply_corrections()
+{
+	//if (InitialDistances.size()!=ProjectionMean.size()) std::cout << "ERROR in SimpleCalibration::apply_corrections(): incorrect sizes!!!" << std::endl;
+	int calib_bin;
+	for (unsigned int i = 0; i < InitialDistances.size(); i++)
+	{
+		calib_bin = floor(InitialDriftTimes.at(i)/corr_bin_width);
+		std::cout << "calib bin: " << calib_bin << std::endl;
+		std::cout << "before: " << InitialDistances.at(i) << std::endl;
+		std::cout << "proj value " << ProjectionMean.at(calib_bin) << std::endl;
+		if(-1!=ProjectionMean.at(calib_bin)) InitialDistances.at(i) = InitialDistances.at(i) + ProjectionMean.at(calib_bin);
+		std::cout << "after: " << InitialDistances.at(i) << std::endl;
+		//if (InitialDistances.at(i) > 2) InitialDistances.at(i) = 2;
+		if (InitialDistances.at(i) < 0) InitialDistances.at(i) = 0;
+	}	
+}
+
+void SimpleCalibration::deletations()
+{
+	ProjectionConstant.clear();
+	ProjectionSigma.clear();
+	ProjectionMean.clear();
+	chi2 -> Reset();
+	chi2_cut -> Reset();
+	delta -> Reset();
+	delta_cut -> Reset();
+}
+
+void SimpleCalibration::recalculate_positions()
+{
+	for (unsigned int i = 0; i < CalibrationData.size(); i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			CalibrationData.at(i).hits_positionsX[j] = CalibrationData.at(i).wires_positionsX[j]+(CalibrationData.at(i).left_right[j])*drift_time_to_distance(CalibrationData.at(i).drift_times[j]);
+		}
 	}
 }
 
-/*
-for (int j = 0; j < NOOFBINS; j++)
-{
-	sprintf(Cname,"%d",j);
-		NameHProjection = Form(TString("./results/")+argv[1]+"/0_Fits/"+Cname+TString("test.png"));
-		HDeltaProjection = HDelta->ProjectionY("",j,j+1);
-		NoOfEntriesHDeltaProjection = HDeltaProjection -> GetEntries();
-		HDeltaProjection->Draw();
-		if (NoOfEntriesHDeltaProjection > 10)
-		{
-			gaussian -> SetParameters(HDeltaProjection -> GetMaximum(), 0, 0.1);
-			HDeltaProjection->Fit("gaussian","LLQ","",-0.5,0.5);//(HDeltaProjection->GetBinCenter(HDeltaProjection->GetMaximumBin()))-0.15,(HDeltaProjection->GetBinCenter(HDeltaProjection->GetMaximumBin()))+0.15);
-			//TF1 *fit1 = (TF1*)HDeltaProjection->GetFunction("gaus");
-			constantTemp = gaussian->GetParameter(0);
-    		meanTemp = gaussian->GetParameter(1);
-    		sigmaTemp = gaussian->GetParameter(2);
-    		cout << "sigmaTemp " << sigmaTemp << endl;
-    		gStyle->SetOptFit(1111);
-			gPad->Modified();
-			Mean.push_back(meanTemp);
-			Sigma.push_back(0.5*sigmaTemp);
-		}
-		else
-		{
-			Mean.push_back(-1);
-			Sigma.push_back(-1);
-		}
-		cc ->Print(NameHProjection,"png");
-		if ( -1!=Mean.back() )
-		{
-			for (int k = 0; k < tempMap.size(); k++)
-			{
-				//cout << PositionsForCalibration.at( tempMap.at(k) ) << endl;
-				PositionsForCalibration.at( tempMap.at(k) ) = ApplyCorrection(Mean.back(), PositionsForCalibration.at( tempMap.at(k) ), (y[tempMap.at(k)%4] - CoeffB.at(floor(tempMap.at(k)/4)))/CoeffA.at(floor(tempMap.at(k)/4)), PositionsForCalibration.at(tempMap.at(k)), WiresForCalibration.at(tempMap.at(k)));
-				//cout << PositionsForCalibration.at( tempMap.at(k) ) << endl;
-				SigmaForCalibration.at( tempMap.at(k) ) = Sigma.back();
-			}
-			CalibrationZeroDistances.at(j) = CalibrationZeroDistances.at(j) + Mean.back();
-		}
-
-*/

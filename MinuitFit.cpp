@@ -22,7 +22,7 @@ void MinuitFit::set_values(double *_x, double *_y, double *_errors)
 		x[i] = _x[i];
 		y[i] = _y[i];
 		errors[i] = _errors[i];
-		std::cout << "x " << x[i] << " y " << y[i] << std::endl;
+		//std::cout << "x " << x[i] << " y " << y[i] << std::endl;
 	}
 }
 

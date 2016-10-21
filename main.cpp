@@ -78,7 +78,106 @@ int main(int argc, char *argv[])
   	simple_calibration -> plot_chi2() -> SaveAs("results/chi2.png");
   	simple_calibration -> plot_delta() -> SaveAs("results/delta.png");
   	simple_calibration -> plot_delta_cut() -> SaveAs("results/delta_cut.png");
-  	simple_calibration -> fit_delta_projections("result/Fit_0/");
+  	simple_calibration -> fit_delta_projections("results/Fit_0/");
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib.png");
+  	simple_calibration -> apply_corrections();
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr.png");
+
+  	simple_calibration -> deletations();
+
+  	simple_calibration -> recalculate_positions();
+  	simple_calibration -> fit_events(2);
+  	simple_calibration -> plot_chi2() -> SaveAs("results/chi2_1.png");
+  	simple_calibration -> plot_delta() -> SaveAs("results/delta_1.png");
+  	simple_calibration -> plot_delta_cut() -> SaveAs("results/delta_cut_1.png");
+  	simple_calibration -> fit_delta_projections("results/Fit_1/");
+  	//simple_calibration -> plot_current_calibration() -> SaveAs("results/calib.png");
+  	simple_calibration -> apply_corrections();
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_1.png");
+
+  	simple_calibration -> deletations();
+
+  	simple_calibration -> recalculate_positions();
+  	simple_calibration -> fit_events(2);
+  	simple_calibration -> plot_chi2() -> SaveAs("results/chi2_2.png");
+  	simple_calibration -> plot_delta() -> SaveAs("results/delta_2.png");
+  	simple_calibration -> plot_delta_cut() -> SaveAs("results/delta_cut_2.png");
+  	simple_calibration -> fit_delta_projections("results/Fit_2/");
+  	//simple_calibration -> plot_current_calibration() -> SaveAs("results/calib.png");
+  	simple_calibration -> apply_corrections();
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_2.png");
+
+  	simple_calibration -> deletations();
+
+  	simple_calibration -> recalculate_positions();
+  	simple_calibration -> fit_events(2);
+  	simple_calibration -> plot_chi2() -> SaveAs("results/chi2_3.png");
+  	simple_calibration -> plot_delta() -> SaveAs("results/delta_3.png");
+  	simple_calibration -> plot_delta_cut() -> SaveAs("results/delta_cut_3.png");
+  	simple_calibration -> fit_delta_projections("results/Fit_3/");
+  	//simple_calibration -> plot_current_calibration() -> SaveAs("results/calib.png");
+  	simple_calibration -> apply_corrections();
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_3.png");
+
+  	simple_calibration -> deletations();
+
+  	simple_calibration -> recalculate_positions();
+  	simple_calibration -> fit_events(2);
+  	simple_calibration -> plot_chi2() -> SaveAs("results/chi2_4.png");
+  	simple_calibration -> plot_delta() -> SaveAs("results/delta_4.png");
+  	simple_calibration -> plot_delta_cut() -> SaveAs("results/delta_cut_4.png");
+  	simple_calibration -> fit_delta_projections("results/Fit_4/");
+  	//simple_calibration -> plot_current_calibration() -> SaveAs("results/calib.png");
+  	simple_calibration -> apply_corrections();
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_4.png");
+
+  	simple_calibration -> deletations();
+
+  	simple_calibration -> recalculate_positions();
+  	simple_calibration -> fit_events(2);
+  	simple_calibration -> plot_chi2() -> SaveAs("results/chi2_5.png");
+  	simple_calibration -> plot_delta() -> SaveAs("results/delta_5.png");
+  	simple_calibration -> plot_delta_cut() -> SaveAs("results/delta_cut_5.png");
+  	simple_calibration -> fit_delta_projections("results/Fit_5/");
+  	//simple_calibration -> plot_current_calibration() -> SaveAs("results/calib.png");
+  	simple_calibration -> apply_corrections();
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_5.png");
+
+  	simple_calibration -> deletations();
+
+  	simple_calibration -> recalculate_positions();
+  	simple_calibration -> fit_events(2);
+  	simple_calibration -> plot_chi2() -> SaveAs("results/chi2_6.png");
+  	simple_calibration -> plot_delta() -> SaveAs("results/delta_6.png");
+  	simple_calibration -> plot_delta_cut() -> SaveAs("results/delta_cut_6.png");
+  	simple_calibration -> fit_delta_projections("results/Fit_6/");
+  	//simple_calibration -> plot_current_calibration() -> SaveAs("results/calib.png");
+  	simple_calibration -> apply_corrections();
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_6.png");
+
+  	simple_calibration -> deletations();
+
+  	simple_calibration -> recalculate_positions();
+  	simple_calibration -> fit_events(2);
+  	simple_calibration -> plot_chi2() -> SaveAs("results/chi2_7.png");
+  	simple_calibration -> plot_delta() -> SaveAs("results/delta_7.png");
+  	simple_calibration -> plot_delta_cut() -> SaveAs("results/delta_cut_7.png");
+  	simple_calibration -> fit_delta_projections("results/Fit_7/");
+  	//simple_calibration -> plot_current_calibration() -> SaveAs("results/calib.png");
+  	simple_calibration -> apply_corrections();
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_7.png");
+
+  	simple_calibration -> deletations();
+
+  	simple_calibration -> recalculate_positions();
+  	simple_calibration -> fit_events(2);
+  	simple_calibration -> plot_chi2() -> SaveAs("results/chi2_8.png");
+  	simple_calibration -> plot_delta() -> SaveAs("results/delta_8.png");
+  	simple_calibration -> plot_delta_cut() -> SaveAs("results/delta_cut_8.png");
+  	simple_calibration -> fit_delta_projections("results/Fit_8/");
+  	//simple_calibration -> plot_current_calibration() -> SaveAs("results/calib.png");
+  	simple_calibration -> apply_corrections();
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_8.png");
   	//tof -> Write();.png
   	in_out -> Tree::save_output_file();
   	std::cout << "\n" << std::endl;
