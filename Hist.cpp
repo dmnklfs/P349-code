@@ -48,6 +48,37 @@ Hist::Hist()
 		D1_Preselected_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
 		temp_name = Form("D1 preselected layer %d drift time;drift time [ns];counts", i+1);
 		D1_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
+		if (0==i) // correlations - now - only for layes 1-2 and 7-8
+		{
+			for (int j = 0; j < 42; j++) // wires from layer 1/7
+			{
+				for (int k = 0; k < 2; k++) // left/right in 2/8
+				{
+					temp_name = Form("D1L%dW%dL%dW%d", i+1, j+1, i+2, j+k+1);
+					D1_L1L2[j][k] = new TH2F(temp_name, temp_name, 100, -400, 800, 100, -400, 800);
+				}
+				// all layers initialized here
+				temp_name = Form("drift time vs ToT, layer %d, wire %d", i+1, j);
+				D1_L1[j] = new TH2F(temp_name, temp_name, 100,-400,800,25,0,300);
+				temp_name = Form("drift time vs ToT, layer %d, wire %d", i+2, j);
+				D1_L2[j] = new TH2F(temp_name, temp_name, 100,-400,800,25,0,300);
+				temp_name = Form("drift time vs ToT, layer %d, wire %d", i+7, j);
+				D1_L7[j] = new TH2F(temp_name, temp_name, 100,-400,800,25,0,300);
+				temp_name = Form("drift time vs ToT, layer %d, wire %d", i+8, j);
+				D1_L8[j] = new TH2F(temp_name, temp_name, 100,-400,800,25,0,300);
+			}
+		}
+		if (6==i)
+		{
+			for (int j = 0; j < 42; j++)
+			{
+				for (int k = 0; k < 2; k++)
+				{
+					temp_name = Form("D1L%dW%dL%dW%d", i+1, j+1, i+2, j+k+1);
+					D1_L7L8[j][k] = new TH2F(temp_name, temp_name, 100, -400, 800, 100, -400, 800);
+				}
+			}
+		}
 	}
 
 	// D2
@@ -174,6 +205,8 @@ void Hist::fill_D1_histos_rough(D1_hist_data* _d1_data)
 
 void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 {
+	int wire1, wire2;
+	Float_t time1, time2, tot;
 	for (int j = 0; j < 8; j++)
 	{
 		for (unsigned int i = 0; i < _d1_data->layer_data[j]->preselected_elements.size(); i++)
@@ -182,6 +215,81 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 			Hist::D1_Preselected_DriftTime[j] -> Fill(_d1_data->layer_data[j]->preselected_times.at(i));
 		}
 		Hist::D1_Preselected_Multiplicity[j] -> Fill(_d1_data->layer_data[j]->preselected_elements.size());
+
+	// correlation histograms are filled in
+		if (0==j)
+		{
+			for (unsigned int i = 0; i < _d1_data->layer_data[j]->preselected_elements.size(); i++)
+			{
+				wire1 = _d1_data->layer_data[j]->preselected_elements.at(i)-1;
+				time1 = _d1_data->layer_data[j]->preselected_times.at(i);
+				tot = _d1_data->layer_data[j]->tot.at(i);
+					D1_L1[wire1] -> Fill(time1, tot);				
+				for (unsigned int k = 0; k < _d1_data->layer_data[j+1]->preselected_elements.size(); k++)
+				{
+					wire2 = _d1_data->layer_data[j+1]->preselected_elements.at(k)-1;
+					time2 = _d1_data->layer_data[j+1]->preselected_times.at(k);	
+					if (wire1>=0&&wire1<42)
+					{
+						if (wire2 == wire1)
+						{
+							Hist::D1_L1L2[wire1][0] -> Fill(time1, time2);
+						}
+						if (wire2 == wire1+1)
+						{
+							Hist::D1_L1L2[wire1][1] -> Fill(time1, time2);
+						}
+					}
+				}
+			}
+		}
+		if (1==j)
+		{
+			for (unsigned int i = 0; i < _d1_data->layer_data[j]->preselected_elements.size(); i++)
+			{
+				wire1 = _d1_data->layer_data[j]->preselected_elements.at(i)-1;
+				time1 = _d1_data->layer_data[j]->preselected_times.at(i);
+				tot = _d1_data->layer_data[j]->tot.at(i);
+				D1_L2[wire1] -> Fill(time1, tot);				
+			}
+		}
+		if (6==j)
+		{
+			//std::cout << "poczatek" << std::endl;
+			for (unsigned int i = 0; i < _d1_data->layer_data[j]->preselected_elements.size(); i++)
+			{
+				wire1 = _d1_data->layer_data[j]->preselected_elements.at(i)-1;
+				time1 = _d1_data->layer_data[j]->preselected_times.at(i);
+				tot = _d1_data->layer_data[j]->tot.at(i);
+				D1_L7[wire1] -> Fill(time1, tot);
+				for (unsigned int k = 0; k < _d1_data->layer_data[j+1]->preselected_elements.size(); k++)
+				{
+					time2 = _d1_data->layer_data[j+1]->preselected_times.at(k);
+					wire2 = _d1_data->layer_data[j+1]->preselected_elements.at(k);					
+					if (wire1>=0&&wire1<42)
+					{
+						if (wire2 == wire1)
+						{
+							Hist::D1_L7L8[wire1][0] -> Fill(time1, time2);
+						}
+						if (wire2 == wire1+1)
+						{
+							Hist::D1_L7L8[wire1][1] -> Fill(time1, time2);
+						}
+					}
+				}
+			}
+		}
+		if (7==j)
+		{
+			for (unsigned int i = 0; i < _d1_data->layer_data[j]->preselected_elements.size(); i++)
+			{
+				wire1 = _d1_data->layer_data[j]->preselected_elements.at(i)-1;
+				time1 = _d1_data->layer_data[j]->preselected_times.at(i);
+				tot = _d1_data->layer_data[j]->tot.at(i);
+				D1_L8[wire1] -> Fill(time1, tot);				
+			}
+		}
 	}
 }
 

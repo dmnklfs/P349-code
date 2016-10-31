@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	//-----------------------------------------------------------------------------------------------------
 	SingleEvent *single_event;
 	EventDisplay *event_to_display;
-	SimpleCalibration *simple_calibration = new SimpleCalibration(config);
+	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
 	std::cout << "* start of the loop over the events" << std::endl;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
   	{
@@ -35,9 +35,9 @@ int main(int argc, char *argv[])
 		   	single_gh_data good_hit_data; // if more data needs to be read - modify single_gh_data struct
 		   	good_hit_data.detector = in_out -> Tree::get_det();
 		   	good_hit_data.layer = in_out -> Tree::get_layer();
-			good_hit_data.element = in_out -> Tree::get_element();
-			good_hit_data.edge = in_out -> Tree::get_edge();
-			good_hit_data.treal = in_out -> Tree::get_treal();
+  			good_hit_data.element = in_out -> Tree::get_element();
+  			good_hit_data.edge = in_out -> Tree::get_edge();
+  			good_hit_data.treal = in_out -> Tree::get_treal();
 
 			// filling detectors variables
 		   	if (good_hit_data.detector == START) single_event -> Start::fill_good_hits(good_hit_data);
@@ -56,14 +56,14 @@ int main(int argc, char *argv[])
   			name = Form("Event_%ld", entry);
   			in_out -> Tree::fill_preselected_data_tree(single_event -> SingleEvent::get_hist_data());
   			tof -> Fill(single_event -> SingleEvent::getTOF());
-  			single_event -> SingleEvent::test_calculate_distances();
+  			//single_event -> SingleEvent::test_calculate_distances();
   			event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
   			//event_to_display -> get_canvas() -> Write(name);
   			name = Form("results/Event_%ld.png", entry);
   			//event_to_display -> get_canvas() -> SaveAs(name);
 
   			//data for the simple calibration
-  			simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
+  			//simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
   			delete event_to_display;
   			
   		} // end if correct event
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
   		in_out -> Tree::fill_rough_data_tree(single_event -> SingleEvent::get_hist_data());
   		delete single_event;
   	} // end of loop over events
-  	simple_calibration -> tell_no_of_events();
+  	/*simple_calibration -> tell_no_of_events();
   	simple_calibration -> fit_events(2);
   	simple_calibration -> plot_chi2() -> SaveAs("results/chi2.png");
   	simple_calibration -> plot_delta() -> SaveAs("results/delta.png");
@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
   	simple_calibration -> fit_delta_projections("results/Fit_8/");
   	//simple_calibration -> plot_current_calibration() -> SaveAs("results/calib.png");
   	simple_calibration -> apply_corrections();
-  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_8.png");
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_8.png");*/
   	//tof -> Write();.png
   	in_out -> Tree::save_output_file();
   	std::cout << "\n" << std::endl;

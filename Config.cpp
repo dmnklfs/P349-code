@@ -104,15 +104,15 @@ Config::Config()
 		{
 			D1_layer_min_hits[i] = 1;
 			D1_layer_max_hits[i] = 1;
-			D1_drift_time_min[i] = 0;
-			D1_drift_time_max[i] = 600;
+			D1_drift_time_min[i] = -1500;
+			D1_drift_time_max[i] = 1500;
 		}
 		else
 		{
 			D1_layer_min_hits[i] = -1;
 			D1_layer_max_hits[i] = -1;
-			D1_drift_time_min[i] = 0;
-			D1_drift_time_max[i] = 600;
+			D1_drift_time_min[i] = -1500;
+			D1_drift_time_max[i] = 1500;
 		}
 	}
 

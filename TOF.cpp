@@ -51,9 +51,9 @@ void TOF::check_hits()
 	bool size_up = check_size_up();
 	bool size_down = check_size_down();
 	bool coincidence = check_coincidence();
-	if (size_up&&size_down&&coincidence)	// condition only on the upper layer
+	if (size_up)	// condition only on the upper layer
 	{
-		mean_time = 0.5*(TrealUp.at(0)+TrealDown.at(0));
+		//mean_time = 0.5*(TrealUp.at(0)+TrealDown.at(0));
 		correct_event = true;
 	}
 	else correct_event = false;

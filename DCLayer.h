@@ -25,6 +25,7 @@ public:
 	// after preselection
 	std::vector<double> DriftTime;
 	std::vector<int> Wire;
+	std::vector<double> TOT;
 	// vectors of distances from wire
 	std::vector<double> HitsDistancesFromWires;
 	// relative hits positions

@@ -86,6 +86,12 @@ public:
 	TH1F *D1_Preselected_Elements[8];
 	TH1F *D1_Preselected_Multiplicity[8];
 	TH1F *D1_Preselected_DriftTime[8];
+	TH2F *D1_L1L2[42][2]; // all wires, left - right
+	TH2F *D1_L7L8[42][2];
+	TH2F *D1_L1[42];
+	TH2F *D1_L2[42];
+	TH2F *D1_L7[42];
+	TH2F *D1_L8[42];
 
 	// D2
 	TH1F *D2_Rough_Elements[6];

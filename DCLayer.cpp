@@ -54,12 +54,14 @@ void DCLayer::choose_corr_leading()
 	if (RoughEdge.size()-1 < 0) iterations = 0;
 	for (int i = 0; i < iterations; i++)
 	{
-		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))
+		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1)&&RoughWire.at(i)>=10&&RoughWire.at(i)<=26)
 		{
 			if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(RoughWire.at(i))))
 			{	
 				DriftTime.push_back(RoughDriftTime.at(i) + DriftTimeOffset.at(RoughWire.at(i)));
 				Wire.push_back(RoughWire.at(i));
+				TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
+				break;
 			}
 		}
 		//if (RoughEdge.at(i)==RoughEdge.at(i+1)) break;
@@ -81,7 +83,7 @@ bool DCLayer::check_size(unsigned int preselected_data_size)
 
 DCLayer_hist_data* DCLayer::get_hist_data()
 {
-	DCLayer_hist_data *DCLayer_data = new DCLayer_hist_data(RoughWire, Wire, RoughDriftTime, DriftTime);
+	DCLayer_hist_data *DCLayer_data = new DCLayer_hist_data(RoughWire, Wire, RoughDriftTime, DriftTime, TOT);
 	DCLayer_data -> rough_multiplicity = RoughWire.size();
 	DCLayer_data -> preselected_multiplicity = Wire.size();
 	return DCLayer_data;
