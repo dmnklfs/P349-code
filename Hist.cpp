@@ -58,14 +58,14 @@ Hist::Hist()
 					D1_L1L2[j][k] = new TH2F(temp_name, temp_name, 100, -400, 800, 100, -400, 800);
 				}
 				// all layers initialized here
-				temp_name = Form("drift time vs ToT, layer %d, wire %d", i+1, j);
-				D1_L1[j] = new TH2F(temp_name, temp_name, 100,-400,800,25,0,300);
-				temp_name = Form("drift time vs ToT, layer %d, wire %d", i+2, j);
-				D1_L2[j] = new TH2F(temp_name, temp_name, 100,-400,800,25,0,300);
-				temp_name = Form("drift time vs ToT, layer %d, wire %d", i+7, j);
-				D1_L7[j] = new TH2F(temp_name, temp_name, 100,-400,800,25,0,300);
-				temp_name = Form("drift time vs ToT, layer %d, wire %d", i+8, j);
-				D1_L8[j] = new TH2F(temp_name, temp_name, 100,-400,800,25,0,300);
+				temp_name = Form("D1L%dW%d", i+1, j);
+				D1_L1[j] = new TH2F(temp_name, temp_name, 100,-400,800,100,0,300);
+				temp_name = Form("D1L%dW%d", i+2, j);
+				D1_L2[j] = new TH2F(temp_name, temp_name, 100,-400,800,100,0,300);
+				temp_name = Form("D1L%dW%d", i+7, j);
+				D1_L7[j] = new TH2F(temp_name, temp_name, 100,-400,800,100,0,300);
+				temp_name = Form("D1L%dW%d", i+8, j);
+				D1_L8[j] = new TH2F(temp_name, temp_name, 100,-400,800,100,0,300);
 			}
 		}
 		if (6==i)

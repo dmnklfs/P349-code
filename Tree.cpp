@@ -324,13 +324,9 @@ void Tree::save_preselected_histos()
 		Hist::D1_Preselected_Multiplicity[i] -> Write();
 		Hist::D1_Preselected_DriftTime[i] -> Write();
 	}
-	make_hist_dir("D1Correlations",2);
+	make_hist_dir("D1CorrWiresDriftTime",2);
 	for (int i = 0; i < 42; i++)
 	{
-		D1_L1[i] -> Write();
-		D1_L2[i] -> Write();
-		D1_L7[i] -> Write();
-		D1_L8[i] -> Write();
 		for (int j = 0; j < 2; j++)
 		{
 			D1_L1L2[i][j] -> Write();
@@ -347,7 +343,14 @@ void Tree::save_preselected_histos()
 			//D1_L7L8[i][j] -> ProjectionY("",0,-1)-> Write();
 		}
 	}
-
+	make_hist_dir("D1CorrToTDriftTime",2);
+	for (int i = 0; i < 42; i++)
+	{
+		D1_L1[i] -> Write();
+		D1_L2[i] -> Write();
+		D1_L7[i] -> Write();
+		D1_L8[i] -> Write();
+	}
 	make_hist_dir("D2",2);
 	for (int i = 0; i < 6; i++)
 	{
