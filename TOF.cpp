@@ -53,7 +53,7 @@ void TOF::check_hits()
 	bool coincidence = check_coincidence();
 	if (size_up)	// condition only on the upper layer
 	{
-		// comment the line below if no conditions on size down
+		// comment the line below if no conditions on size d
 		//mean_time = 0.5*(TrealUp.at(0)+TrealDown.at(0));
 		correct_event = true;
 	}

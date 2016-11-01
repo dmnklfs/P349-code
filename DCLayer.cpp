@@ -61,7 +61,7 @@ void DCLayer::choose_corr_leading()
 				DriftTime.push_back(RoughDriftTime.at(i) + DriftTimeOffset.at(RoughWire.at(i)));
 				Wire.push_back(RoughWire.at(i));
 				TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
-				//break;
+				break;
 			}
 		}
 		//if (RoughEdge.at(i)==RoughEdge.at(i+1)) break;
