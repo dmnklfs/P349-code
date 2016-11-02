@@ -53,14 +53,41 @@ bool D1::was_correct_event()
 		correct_in_layer[i] = Layer[i]-> DCLayer::was_correct_event();
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
 	}
-	/*if (no_of_layers_with_hits == 8)
-	{
-		correct_event = true;
-	}*/
-	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
-	{
-		correct_event = true;
-	}
+//	if (no_of_layers_with_hits == 8)
+//	{
+//		correct_event = true;
+//	}
+
+	// dell it, choice of coincidences if one wire parametrized
+//	double edge_val1, edge_val2, dtime1, dtime2;
+//	int wire1, wire2;
+//	bool was_in_range;
+//	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
+//	{
+//		dtime1 = Layer[0]->DriftTime.at(0);
+//		dtime2 = Layer[1]->DriftTime.at(0);
+//		wire1  = Layer[0]->Wire.at(0);
+//		wire2  = Layer[1]->Wire.at(0);
+//		if (wire2==wire1)
+//		{
+//			edge_val1 = -0.000000796867*(dtime1-45)*(dtime1-45)*(dtime1-45)+0.00190676*(dtime1-45)*(dtime1-45)-1.4683*(dtime1-45)+ 306.876;
+//			edge_val2 = -0.000000796867*(dtime1+45)*(dtime1+45)*(dtime1+45)+0.00190676*(dtime1+45)*(dtime1+45)-1.4683*(dtime1+45)+ 266.876;
+//			if (dtime2 >= edge_val2 && dtime2 <= edge_val1)
+//			{
+//				correct_event = true;
+//			}
+//		}
+//		if (wire2==wire1+1)
+//		{
+//			edge_val1 = 0.00000128478*(dtime1-35)*(dtime1-35)*(dtime1-35)+0.00030667*(dtime1-35)*(dtime1-35)-1.27552*(dtime1-35)+ 375.903;
+//			edge_val2 = 0.00000128478*(dtime1+35)*(dtime1+35)*(dtime1+35)+0.00030667*(dtime1+35)*(dtime1+35)-1.27552*(dtime1+35)+ 325.903;
+//			if (dtime2 >= edge_val2 && dtime2 <= edge_val1)
+//			{
+//				correct_event = true;
+//			}
+//		}
+//		//correct_event = true;
+//	}
 
 	int wire1;
 	int wire2;

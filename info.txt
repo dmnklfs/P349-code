@@ -1,0 +1,18 @@
+step0: START(up&down&coincidence), TOF(up&down&coincidence), D1(always true)
+step1: START(up&down&coincidence), TOF(up&down&coincidence), D1(at least one hit in layers with straight wires)
+step2: START(up&down&coincidence), TOF(up&down&coincidence), D1(at least one hit in layers with straight wires, break in pres after 1st)
+step3: START(up&down&coincidence), TOF(up&down&coincidence), D1( exactly one hit in layers with straight wires)
+step4: START(up&down&coincidence), TOF(up&down&coincidence), D1(at least one hit in layers with straight wires, l-r corr in 1-2 and 7-8)
+step5: START(up&down&coincidence), TOF(up&down&coincidence), D1( exactly one hit in layers with straight wires, l-r corr in 1-2 and 7-8)
+
+
+ 1. step0 na pliku xx15*.root			-> data_step0			xx15171015223.root
+ 2. step1 na data_step0.root (preselected) 	-> data_step1
+ 3. step2 na data_step1.root (preselected)	-> data_step2
+ 4. step3 na data_step1.root (preselected)	-> data_step3
+ 5. step4 na data_step1.root (preselected)	-> data_step4 
+ 6. step4 na data_step3.root (preselected) 	-> data_step5
+
+
+do zrobienia
+	- widma dla prof. Smyrskiego. krotność zliczeń w kanale / event

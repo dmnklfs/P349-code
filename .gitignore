@@ -3,6 +3,7 @@
 *~
 *.exe
 *.png
+*.sh
 results/
 results*/
 files/
