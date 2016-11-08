@@ -123,7 +123,15 @@ void Tree::create_rough_data_tree()
 }
 
 // --- filling trees ---
-void Tree::fill_rough_data_tree(hist_data _data_for_hists)
+void Tree::fill_rough_data_tree()
+{
+	if (rough_tree)
+	{
+		rough_data_tree -> Fill();
+	}
+}
+
+void Tree::fill_rough_histos(hist_data _data_for_hists)
 {
 	Hist::fill_start_histos_rough(_data_for_hists.start_data);
 	Hist::fill_TOF_histos_rough(_data_for_hists.tof_data);
@@ -132,13 +140,18 @@ void Tree::fill_rough_data_tree(hist_data _data_for_hists)
 	Hist::fill_HEX_histos_rough(_data_for_hists.hex_data);
 	Hist::fill_Intermediate_histos_rough(_data_for_hists.intermediate_data);
 	Hist::fill_Fiber_histos_rough(_data_for_hists.fiber_data);
-	if (rough_tree)
+}
+
+
+void Tree::fill_preselected_data_tree()
+{
+	if (preselected_tree)
 	{
-		rough_data_tree -> Fill();
+		preselected_data_tree -> Fill();
 	}
 }
 
-void Tree::fill_preselected_data_tree(hist_data _data_for_hists)
+void Tree::fill_preselected_histos(hist_data _data_for_hists)
 {
 	Hist::fill_start_histos_preselected(_data_for_hists.start_data);
 	Hist::fill_TOF_histos_preselected(_data_for_hists.tof_data);
@@ -147,11 +160,6 @@ void Tree::fill_preselected_data_tree(hist_data _data_for_hists)
 	Hist::fill_HEX_histos_preselected(_data_for_hists.hex_data);
 	Hist::fill_Intermediate_histos_preselected(_data_for_hists.intermediate_data);
 	Hist::fill_Fiber_histos_preselected(_data_for_hists.fiber_data);
-
-	if (preselected_tree)
-	{
-		preselected_data_tree -> Fill();
-	}
 }
 
 TFile* Tree::get_output_file()
@@ -251,129 +259,184 @@ Int_t Tree::get_edge()
 // ==========================================================================================================
 void Tree::save_rough_histos()
 {
-	make_hist_dir("START",1);
-	Hist::START_Rough_Layer_Up_Multiplicity -> Write();
-	Hist::START_Rough_Layer_Down_Multiplicity -> Write();
-
-	make_hist_dir("TOF",1);
-	Hist::TOF_Rough_Layer_Up_Multiplicity -> Write();
-	Hist::TOF_Rough_Layer_Down_Multiplicity -> Write();
-	Hist::TOF_Rough_Layer_Up_Elements -> Write();
-	Hist::TOF_Rough_Layer_Down_Element -> Write();
-
-	make_hist_dir("INTERMEDIATE",1);
-	Hist::Intermediate_Rough_Layer_Up_Multiplicity -> Write();
-	Hist::Intermediate_Rough_Layer_Down_Multiplicity -> Write();
-	Hist::Intermediate_Rough_Layer_Up_Elements -> Write();
-	Hist::Intermediate_Rough_Layer_Down_Element -> Write();
-
-	make_hist_dir("D1",1);
-	for (int i = 0; i < 8; i++)
+	if (Hist::start_histos_rough)
 	{
-		Hist::D1_Rough_Elements[i] -> Write();
-		Hist::D1_Rough_Multiplicity[i] -> Write();
-		Hist::D1_Rough_DriftTime[i] -> Write();
+		make_hist_dir("START",1);
+		Hist::START_Rough_Layer_Up_Multiplicity -> Write();
+		Hist::START_Rough_Layer_Down_Multiplicity -> Write();
 	}
 
-	make_hist_dir("D2",1);
-	for (int i = 0; i < 6; i++)
+	if (Hist::tof_histos_rough)
 	{
-		Hist::D2_Rough_Elements[i] -> Write();
-		Hist::D2_Rough_Multiplicity[i] -> Write();
-		Hist::D2_Rough_DriftTime[i] -> Write();
+		make_hist_dir("TOF",1);
+		Hist::TOF_Rough_Layer_Up_Multiplicity -> Write();
+		Hist::TOF_Rough_Layer_Down_Multiplicity -> Write();
+		Hist::TOF_Rough_Layer_Up_Elements -> Write();
+		Hist::TOF_Rough_Layer_Down_Element -> Write();
 	}
 
-	make_hist_dir("HEX",1);
-	for (int i = 0; i < 7; i++)
+	if (Hist::inter_histos_rough)
 	{
-		Hist::HEX_Rough_Elements[i] -> Write();
-		Hist::HEX_Rough_Multiplicity[i] -> Write();
-		Hist::HEX_Rough_DriftTime[i] -> Write();
+		make_hist_dir("INTERMEDIATE",1);
+		Hist::Intermediate_Rough_Layer_Up_Multiplicity -> Write();
+		Hist::Intermediate_Rough_Layer_Down_Multiplicity -> Write();
+		Hist::Intermediate_Rough_Layer_Up_Elements -> Write();
+		Hist::Intermediate_Rough_Layer_Down_Element -> Write();
 	}
 
-	make_hist_dir("FIBER",1);
-	for (int i = 0; i < 3; i++)
+	if (Hist::D1_histos_rough)
 	{
-		Hist::Fiber_Rough_Elements[i] -> Write();
-		Hist::Fiber_Rough_Multiplicity[i] -> Write();
+		make_hist_dir("D1",1);
+		for (int i = 0; i < 8; i++)
+		{
+			Hist::D1_Rough_Elements[i] -> Write();
+			Hist::D1_Rough_Multiplicity[i] -> Write();
+			Hist::D1_Rough_DriftTime[i] -> Write();
+		}
+	}
+
+	if (Hist::D2_histos_rough)
+	{
+		make_hist_dir("D2",1);
+		for (int i = 0; i < 6; i++)
+		{
+			Hist::D2_Rough_Elements[i] -> Write();
+			Hist::D2_Rough_Multiplicity[i] -> Write();
+			Hist::D2_Rough_DriftTime[i] -> Write();
+		}
+	}
+
+	if (Hist::HEX_histos_rough)
+	{
+		make_hist_dir("HEX",1);
+		for (int i = 0; i < 7; i++)
+		{
+			Hist::HEX_Rough_Elements[i] -> Write();
+			Hist::HEX_Rough_Multiplicity[i] -> Write();
+			Hist::HEX_Rough_DriftTime[i] -> Write();
+		}
+	}
+
+	if (Hist::fiber_histos_rough)
+	{
+		make_hist_dir("FIBER",1);
+		for (int i = 0; i < 3; i++)
+		{
+			Hist::Fiber_Rough_Elements[i] -> Write();
+			Hist::Fiber_Rough_Multiplicity[i] -> Write();
+		}
 	}
 }
 
 void Tree::save_preselected_histos()
 {
-	make_hist_dir("START",2);
-	Hist::START_Preselected_Layer_Up_Multiplicity -> Write();
-	Hist::START_Preselected_Layer_Down_Multiplicity -> Write();
-
-	make_hist_dir("TOF",2);
-	Hist::TOF_Preselected_Layer_Up_Multiplicity -> Write();
-	Hist::TOF_Preselected_Layer_Down_Multiplicity -> Write();
-	Hist::TOF_Preselected_Layer_Up_Element -> Write();
-	Hist::TOF_Preselected_Layer_Down_Element -> Write();
-
-	make_hist_dir("INTERMEDIATE",2);
-	Hist::Intermediate_Preselected_Layer_Up_Multiplicity -> Write();
-	Hist::Intermediate_Preselected_Layer_Down_Multiplicity -> Write();
-	Hist::Intermediate_Preselected_Layer_Up_Element -> Write();
-	Hist::Intermediate_Preselected_Layer_Down_Element -> Write();
-
-	make_hist_dir("D1",2);
-	for (int i = 0; i < 8; i++)
+	if (Hist::start_histos_preselected)
 	{
-		Hist::D1_Preselected_Elements[i] -> Write();
-		Hist::D1_Preselected_Multiplicity[i] -> Write();
-		Hist::D1_Preselected_DriftTime[i] -> Write();
+		make_hist_dir("START",2);
+		Hist::START_Preselected_Layer_Up_Multiplicity -> Write();
+		Hist::START_Preselected_Layer_Down_Multiplicity -> Write();
+		Hist::START_Mean_Time -> Write();
+		Hist::START_Time_Up -> Write();
+		Hist::START_Time_Down -> Write();
 	}
-	make_hist_dir("D1CorrWiresDriftTime",2);
-	for (int i = 0; i < 42; i++)
+
+	if (Hist::tof_histos_preselected)
 	{
-		for (int j = 0; j < 2; j++)
+		make_hist_dir("TOF",2);
+		Hist::TOF_Preselected_Layer_Up_Multiplicity -> Write();
+		Hist::TOF_Preselected_Layer_Down_Multiplicity -> Write();
+		Hist::TOF_Preselected_Layer_Up_Element -> Write();
+		Hist::TOF_Preselected_Layer_Down_Element -> Write();
+		Hist::TOF_Mean_Time -> Write();
+		Hist::TOF_Time_Up -> Write();
+		Hist::TOF_Time_Down -> Write();
+	}
+
+	if (Hist::inter_histos_preselected)
+	{
+		make_hist_dir("INTERMEDIATE",2);
+		Hist::Intermediate_Preselected_Layer_Up_Multiplicity -> Write();
+		Hist::Intermediate_Preselected_Layer_Down_Multiplicity -> Write();
+		Hist::Intermediate_Preselected_Layer_Up_Element -> Write();
+		Hist::Intermediate_Preselected_Layer_Down_Element -> Write();
+	}
+
+	if (Hist::D1_histos_preselected)
+	{
+		make_hist_dir("D1",2);
+		for (int i = 0; i < 8; i++)
 		{
-			D1_L1L2[i][j] -> Write();
-			//D1_L1L2[i][j] -> ProjectionX("",0,-1)-> Write();
-			//D1_L1L2[i][j] -> ProjectionY("",0,-1)-> Write();
+			Hist::D1_Preselected_Elements[i] -> Write();
+			Hist::D1_Preselected_Multiplicity[i] -> Write();
+			Hist::D1_Preselected_DriftTime[i] -> Write();
+		}
+		make_hist_dir("D1CorrWiresDriftTime",2);
+		for (int i = 0; i < 42; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				D1_L1L2[i][j] -> Write();
+				//D1_L1L2[i][j] -> ProjectionX("",0,-1)-> Write();
+				//D1_L1L2[i][j] -> ProjectionY("",0,-1)-> Write();
+			}
+		}
+		for (int i = 0; i < 42; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				D1_L7L8[i][j] -> Write();
+				//D1_L7L8[i][j] -> ProjectionX("",0,-1)-> Write();
+				//D1_L7L8[i][j] -> ProjectionY("",0,-1)-> Write();
+			}
+		}
+//		make_hist_dir("D1CorrToTDriftTime",2);
+//		for (int i = 0; i < 42; i++)
+//		{
+//			D1_L1[i] -> Write();
+//			D1_L2[i] -> Write();
+//			D1_L7[i] -> Write();
+//			D1_L8[i] -> Write();
+//		}
+//		make_hist_dir("D1ChannelMultiplicities",2);
+//		for (int i = 0; i < 8; i++)
+//		{
+//			for (int j = 0; j < 42; j++) D1_channel_multiplicities[i][j] -> Write();
+//		}
+	}
+		
+	if (Hist::D2_histos_preselected)
+	{
+		make_hist_dir("D2",2);
+		for (int i = 0; i < 6; i++)
+		{
+			Hist::D2_Preselected_Elements[i] -> Write();
+			Hist::D2_Preselected_Multiplicity[i] -> Write();
+			Hist::D2_Preselected_DriftTime[i] -> Write();
 		}
 	}
-	for (int i = 0; i < 42; i++)
+
+	if (Hist::HEX_histos_preselected)
 	{
-		for (int j = 0; j < 2; j++)
+		make_hist_dir("HEX",2);;
+		for (int i = 0; i < 7; i++)
 		{
-			D1_L7L8[i][j] -> Write();
-			//D1_L7L8[i][j] -> ProjectionX("",0,-1)-> Write();
-			//D1_L7L8[i][j] -> ProjectionY("",0,-1)-> Write();
+			Hist::HEX_Preselected_Elements[i] -> Write();
+			Hist::HEX_Preselected_Multiplicity[i] -> Write();
+			Hist::HEX_Preselected_DriftTime[i] -> Write();
 		}
 	}
-	make_hist_dir("D1CorrToTDriftTime",2);
-	for (int i = 0; i < 42; i++)
-	{
-		D1_L1[i] -> Write();
-		D1_L2[i] -> Write();
-		D1_L7[i] -> Write();
-		D1_L8[i] -> Write();
-	}
-	make_hist_dir("D2",2);
-	for (int i = 0; i < 6; i++)
-	{
-		Hist::D2_Preselected_Elements[i] -> Write();
-		Hist::D2_Preselected_Multiplicity[i] -> Write();
-		Hist::D2_Preselected_DriftTime[i] -> Write();
-	}
 
-	make_hist_dir("HEX",2);;
-	for (int i = 0; i < 7; i++)
+	if (Hist::fiber_histos_preselected)
 	{
-		Hist::HEX_Preselected_Elements[i] -> Write();
-		Hist::HEX_Preselected_Multiplicity[i] -> Write();
-		Hist::HEX_Preselected_DriftTime[i] -> Write();
+		make_hist_dir("FIBER",2);
+		for (int i = 0; i < 3; i++)
+		{
+			Hist::Fiber_Preselected_Elements[i] -> Write();
+			Hist::Fiber_Preselected_Multiplicity[i] -> Write();
+		}
+		Hist::V_vs_H -> Write();
 	}
-
-	make_hist_dir("FIBER",2);
-	for (int i = 0; i < 3; i++)
-	{
-		Hist::Fiber_Preselected_Elements[i] -> Write();
-		Hist::Fiber_Preselected_Multiplicity[i] -> Write();
-	}
-	Hist::V_vs_H -> Write();
+	
 }
 
 void Tree::make_hist_dir(const char* name, const int dir)

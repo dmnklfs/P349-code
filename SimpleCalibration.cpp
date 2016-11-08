@@ -24,22 +24,22 @@ SimpleCalibration::SimpleCalibration(const Config &_config)
 	//std::cout << "	- number of time bins: " << no_of_bins << ", width of the bin: " << bin_width << " ns" << std::endl;
 	std::cout << "	WARNING: You are probably trying to run a Simple Calibration metod. Note that it requires strict conditions on the number of events in the straight layers of the D1. In case of the problems: check the config/remove this objects/adjust methods of the SimpleCalibration class/check event selection criteria in the SingleEvent class. Note that the postion in D1 should be calculated FOR WIRES (now)." << std::endl;
 
-	chi2 = new TH1F("#chi^{2}", "#chi^{2}", 100, -1, 10);
+	chi2 = new TH1F("#chi^{2}", "#chi^{2}", 300, -1, 15);
 	chi2->GetXaxis()->SetTitle("#chi^{2}");
 	chi2->GetYaxis()->SetTitle("counts");
 	chi2->SetLineWidth(2);
 	chi2->SetLineColor(kBlue);
 
-	chi2_cut = new TH1F("#chi^{2} cut", "#chi^{2}", 100, -1, 10);
+	chi2_cut = new TH1F("#chi^{2} cut", "#chi^{2}", 300, -1, 15);
 	chi2_cut->GetXaxis()->SetTitle("#chi^{2}");
 	chi2_cut->GetYaxis()->SetTitle("counts");
 	chi2_cut->SetLineColor(kRed);
 
-	delta = new TH2F("#Delta", "#Delta", 125, 0, 610, 80, -2.0, 2.0);
+	delta = new TH2F("#Delta", "#Delta", no_of_corr_bins, 0, 610, 80, -2.0, 2.0);
 	delta->GetXaxis()->SetTitle("time [ns]");
 	delta->GetYaxis()->SetTitle("delta [cm]");
 
-	delta_cut = new TH2F("#Delta cut", "#Delta (#chi^{2} cut)", no_of_corr_bins, 0, 600, 80, -2.0, 2.0);
+	delta_cut = new TH2F("#Delta cut", "#Delta (#chi^{2} cut)", no_of_corr_bins, 0, 610, 80, -0.5, 0.5);
 	delta_cut->GetXaxis()->SetTitle("time [ns]");
 	delta_cut->GetYaxis()->SetTitle("delta [cm]");
 }
@@ -167,6 +167,17 @@ void SimpleCalibration::fill_delta(double _chi2_cut)
 	}
 }
 
+void SimpleCalibration::set_fit_errors()
+{
+	for (unsigned int i = 0; i < CalibrationData.size(); i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			CalibrationData.at(i).errors[j] = ProjectionSigma.at( floor(CalibrationData.at(i).drift_times[j])/corr_bin_width );
+		}
+	}
+}
+
 
 TCanvas* SimpleCalibration::plot_chi2()
 {
@@ -249,7 +260,7 @@ void SimpleCalibration::fit_delta_projections(const char* folder_name)
 		if (no_of_entries_in_projection > 10)
 		{
 			gaussian -> SetParameters(delta_projection -> GetMaximum(), 0, 0.1);
-			delta_projection->Fit("gaussian","LLQ","",hist_center-3*hist_sigma,hist_center+3*hist_sigma);
+			delta_projection->Fit("gaussian","LLQ","",hist_center-hist_sigma,hist_center+hist_sigma);
 			ProjectionConstant.push_back(gaussian->GetParameter(0));
     		ProjectionMean.push_back(gaussian->GetParameter(1));
     		ProjectionSigma.push_back(0.5*gaussian->GetParameter(2));

@@ -31,8 +31,9 @@ bool SingleEvent::was_correct_event(const int stage)
 	// event is ok if
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
-	if ( (start && tof && D1) || stage == 2)
+	if ( (start && tof && D1 && Start::getTimeUp()<10 && Start::getTimeDown()<10) || stage == 2)
 	{
+		//&& Start::getTimeUp()<10 && Start::getTimeDown()<10)
 		return true;
 	}
 	else return false;
@@ -82,7 +83,10 @@ double SingleEvent::getTOF()
 
 void SingleEvent::test_calculate_distances()
 {
+	//std::cout << "ok1" << std::endl;
 	D1::calculate_distances_from_wires();
+	//std::cout << "ok2" << std::endl;
 	D1::calculate_relative_and_absolute_positions();
+	//std::cout << "ok3" << std::endl;
 	D1::collect_hits_from_all_layers();
 }

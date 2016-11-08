@@ -49,13 +49,13 @@ void DCLayer::check_hits()
 void DCLayer::choose_corr_leading()
 {
 	//std::cout << "DCLayer::choose_corr_leading()" << std::endl;
-	apply_drift_time_offset();
 	int iterations = RoughEdge.size()-1;
 	if (RoughEdge.size()-1 < 0) iterations = 0;
 	for (int i = 0; i < iterations; i++)
 	{
 		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))//&&RoughWire.at(i)>=10&&RoughWire.at(i)<=26)
 		{
+			//std::cout << "time before check: " << RoughDriftTime.at(i) << std::endl;
 			if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(RoughWire.at(i))))
 			{	
 				DriftTime.push_back(RoughDriftTime.at(i) + DriftTimeOffset.at(RoughWire.at(i)));
@@ -105,7 +105,9 @@ void DCLayer::calculate_distances_from_wires()
 	{
 		double time_bin_width = max_drift_time/(CalibrationTimes.size()-1);
 		double dist_bin_width = 2/(CalibrationTimes.size()-1);
+		//std::cout << "drift time: " << DriftTime.at(i) << std::endl;
 		double bin_no = floor(DriftTime.at(i)/time_bin_width);
+		//std::cout << "bin no: " << bin_no << std::endl;
 		double distance = CalibrationDistances.at(bin_no) + dist_bin_width*(CalibrationDistances.at(bin_no+1) - CalibrationDistances.at(bin_no))/(CalibrationTimes.at(bin_no+1) - CalibrationTimes.at(bin_no));
 		HitsDistancesFromWires.push_back(distance);
 	}

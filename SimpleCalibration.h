@@ -69,6 +69,7 @@ public:
 
 	void fit_events(double _chi2_cut);
 	void fit_delta_projections(const char* folder_name);
+	void set_fit_errors();
 
 	void apply_corrections();
 	void deletations();

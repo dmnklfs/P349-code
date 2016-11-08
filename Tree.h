@@ -42,8 +42,10 @@ public:
 	void get_good_hit(int _hit);
 
 	// these functions also fill control histograms (histos are filled despite rough/preselected variable value)
-	void fill_rough_data_tree(hist_data _data_for_hists);
-	void fill_preselected_data_tree(hist_data _data_for_hists);
+	void fill_rough_data_tree();
+	void fill_preselected_data_tree();
+	void fill_rough_histos(hist_data _data_for_hists);
+	void fill_preselected_histos(hist_data _data_for_hists);
 
 	// get hits
 	Double_t get_treal();

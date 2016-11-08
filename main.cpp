@@ -15,11 +15,13 @@ int main(int argc, char *argv[])
 	const int analysis_stage = std::atoi(argv[2]); // we read rough (1) or preselected (2) data 
 
 	//-----------------------------------------------------------------------------------------------------
-	TH1F *tof = new TH1F("tof","TOF=0.5*[(TOF_Up+TOF_Down)-(Start_Up+Start_Down)];TOF [ns]; counts", 600, -800, 300);
+	TH1F *tof = new TH1F("tof","TOF=0.5*[(TOF_Up+TOF_Down)-(Start_Up+Start_Down)];TOF [ns]; counts", 40000, -800, 300);
+  TH1F *START_Mean_Time = new TH1F("start_mean", "START mean time 0.5*(timeUp-timeDown)", 40000, -100, 1200);
+  TH1F *TOF_Mean_Time = new TH1F("tof_mean", "TOF mean time 0.5*(timeUp-timeDown)", 40000, -400, 700);
 	//-----------------------------------------------------------------------------------------------------
 	SingleEvent *single_event;
 	EventDisplay *event_to_display;
-	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
+	SimpleCalibration *simple_calibration = new SimpleCalibration(config);
 	std::cout << "* start of the loop over the events" << std::endl;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
   	{
@@ -54,26 +56,30 @@ int main(int argc, char *argv[])
   			// filling control histos for preselected data
   			// checking if preselected tree = 1/0 and filling the tree or not
   			name = Form("Event_%ld", entry);
-  			in_out -> Tree::fill_preselected_data_tree(single_event -> SingleEvent::get_hist_data());
+  			in_out -> Tree::fill_preselected_data_tree();
+        in_out -> Tree::fill_preselected_histos(single_event -> SingleEvent::get_hist_data());
   			tof -> Fill(single_event -> SingleEvent::getTOF());
-  			//single_event -> SingleEvent::test_calculate_distances();
+        START_Mean_Time  -> Fill(single_event -> SingleEvent::Start::getTime());
+        TOF_Mean_Time  -> Fill(single_event -> SingleEvent::TOF::getTime());
+  			single_event -> SingleEvent::test_calculate_distances();
   			event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
   			//event_to_display -> get_canvas() -> Write(name);
   			name = Form("results/Event_%ld.png", entry);
   			//event_to_display -> get_canvas() -> SaveAs(name);
 
   			//data for the simple calibration
-  			//simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
+  			simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
   			delete event_to_display;
   			
   		} // end if correct event
 
   		// filling control histos for rough data
   		// checking if rough tree = 1/0 and filling the tree or not
-  		in_out -> Tree::fill_rough_data_tree(single_event -> SingleEvent::get_hist_data());
+  		in_out -> Tree::fill_rough_data_tree();
+      in_out -> Tree::fill_rough_histos(single_event -> SingleEvent::get_hist_data());
   		delete single_event;
   	} // end of loop over events
-  	/*simple_calibration -> tell_no_of_events();
+  	simple_calibration -> tell_no_of_events();
   	simple_calibration -> fit_events(2);
   	simple_calibration -> plot_chi2() -> SaveAs("results/chi2.png");
   	simple_calibration -> plot_delta() -> SaveAs("results/delta.png");
@@ -177,8 +183,10 @@ int main(int argc, char *argv[])
   	simple_calibration -> fit_delta_projections("results/Fit_8/");
   	//simple_calibration -> plot_current_calibration() -> SaveAs("results/calib.png");
   	simple_calibration -> apply_corrections();
-  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_8.png");*/
-  	//tof -> Write();.png
+  	simple_calibration -> plot_current_calibration() -> SaveAs("results/calib_corr_8.png");
+  	//tof -> Write();
+    //START_Mean_Time -> Write();
+    //TOF_Mean_Time -> Write();
   	in_out -> Tree::save_output_file();
   	std::cout << "\n" << std::endl;
 }

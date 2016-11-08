@@ -150,15 +150,28 @@ bool Start::check_coincidence()
 
 start_hist_data* Start::get_hist_data()
 {
-	start_hist_data *start_data = new start_hist_data();
+	start_hist_data *start_data = new start_hist_data(TrealUp, TrealDown);
 	start_data -> rough_multiplicity_up = RoughElementDown.size(); // RoughElementDown has all elements with leading and trailing edges
 	start_data -> rough_multiplicity_down = RoughElementUp.size();
 	start_data -> preselected_multiplicity_up = 2*ElementUp.size(); // ElementDown only single correct elements -> multiplicity = size*2
 	start_data -> preselected_multiplicity_down = 2*ElementDown.size();
+
 	return start_data;
 }
 
 double Start::getTime()
 {
 	return mean_time;
+}
+
+double Start::getTimeUp()
+{
+	if (TrealUp.size()!=0) return TrealUp.at(0);
+	else return 999;
+}
+
+double Start::getTimeDown()
+{
+	if (TrealDown.size()!=0) return TrealDown.at(0);
+	else return 999;
 }

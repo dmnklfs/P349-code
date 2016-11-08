@@ -53,10 +53,10 @@ bool D1::was_correct_event()
 		correct_in_layer[i] = Layer[i]-> DCLayer::was_correct_event();
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
 	}
-//	if (no_of_layers_with_hits == 8)
-//	{
-//		correct_event = true;
-//	}
+	if (no_of_layers_with_hits == 8)
+	{
+		correct_event = true;
+	}
 
 	// dell it, choice of coincidences if one wire parametrized
 //	double edge_val1, edge_val2, dtime1, dtime2;
@@ -89,21 +89,21 @@ bool D1::was_correct_event()
 //		//correct_event = true;
 //	}
 
-	int wire1;
-	int wire2;
-	int wire7;
-	int wire8;
-	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
-	{
-		wire1 = Layer[0] -> DCLayer::Wire.at(0);
-		wire2 = Layer[1] -> DCLayer::Wire.at(0);
-		wire7 = Layer[6] -> DCLayer::Wire.at(0);
-		wire8 = Layer[7] -> DCLayer::Wire.at(0);
-		if ((wire2==wire1||wire2==wire1+1)&&(wire8==wire7||wire8==wire7+1))
-		{
-			correct_event = true;
-		}
-	}
+//	int wire1;
+//	int wire2;
+//	int wire7;
+//	int wire8;
+//	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
+//	{
+//		wire1 = Layer[0] -> DCLayer::Wire.at(0);
+//		wire2 = Layer[1] -> DCLayer::Wire.at(0);
+//		wire7 = Layer[6] -> DCLayer::Wire.at(0);
+//		wire8 = Layer[7] -> DCLayer::Wire.at(0);
+//		if ((wire2==wire1||wire2==wire1+1)&&(wire8==wire7||wire8==wire7+1))
+//		{
+//			correct_event = true;
+//		}
+//	}
 	
 	return correct_event;
 }
@@ -128,7 +128,7 @@ void D1::calculate_distances_from_wires()
 {
 	for (int j = 0; j < 8; j++)
 	{
-		Layer[j] -> DCLayer::calculate_distances_from_wires();
+		if (j==0||j==1||j==6||j==7) Layer[j] -> DCLayer::calculate_distances_from_wires();
 	}
 }
 

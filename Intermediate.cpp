@@ -161,7 +161,7 @@ bool Intermediate::check_coincidence()
 
 TOF_hist_data* Intermediate::get_hist_data()
 {
-	TOF_hist_data *intermediate_data = new TOF_hist_data(RoughElementUp,RoughElementDown,ElementUp,ElementDown);
+	TOF_hist_data *intermediate_data = new TOF_hist_data(RoughElementUp,RoughElementDown,ElementUp,ElementDown,TrealUp,TrealDown);
 	intermediate_data->rough_multiplicity_up = RoughElementUp.size(); // RoughElementDown has all elements with leading and trailing edges
 	intermediate_data->rough_multiplicity_down = RoughElementDown.size();
 	intermediate_data->preselected_multiplicity_up = 2*ElementUp.size(); // ElementDown only single correct elements -> multiplicity = size*2
@@ -170,6 +170,8 @@ TOF_hist_data* Intermediate::get_hist_data()
 	intermediate_data->rough_elements_down = RoughElementDown;
 	intermediate_data->preselected_elements_up = ElementUp;
 	intermediate_data->preselected_elements_down = ElementDown;
+	intermediate_data->preselected_time_up = TrealUp;
+	intermediate_data->preselected_time_down = TrealDown;
 
 	return intermediate_data;
 }

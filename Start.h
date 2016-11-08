@@ -35,6 +35,8 @@ public:
 	void check_hits();
 	start_hist_data* get_hist_data();
 	double getTime();
+	double getTimeUp();
+	double getTimeDown();
 
 private:
 	void choose_corr_leading_up();
