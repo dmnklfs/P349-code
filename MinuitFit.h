@@ -35,10 +35,12 @@ public:
 	double GlobalFCN(const double * par);
 	std::vector<double> fit_with_minuit();
 	void set_values(double *_x, double *_y, double *_errors);
+	bool err_flag();
 
 private:
 	static MinuitFit * _this;
 	double x[4], y[4], errors[4];
+	bool errflag;
 	
 
 	

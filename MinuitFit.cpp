@@ -6,7 +6,6 @@ MinuitFit * MinuitFit::GetInstance(){
   if( _this == NULL ){
     _this = new MinuitFit();
   }
-
   return _this; 
 }
 
@@ -24,6 +23,11 @@ void MinuitFit::set_values(double *_x, double *_y, double *_errors)
 		errors[i] = _errors[i];
 		//std::cout << "x " << x[i] << " y " << y[i] << std::endl;
 	}
+}
+
+bool MinuitFit::err_flag()
+{
+	return errflag;
 }
 
 
@@ -51,6 +55,7 @@ void gfcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 
 std::vector<double> MinuitFit::fit_with_minuit()
 {
+	errflag = true;
 	std::vector<double> output;
 	TMinuit *gMinuit = new TMinuit(5);  //initialize TMinuit with a maximum of 5 params
 	gMinuit->SetFCN(gfcn);
@@ -74,6 +79,8 @@ std::vector<double> MinuitFit::fit_with_minuit()
 	arglist[0] = 500; //was 500
 	arglist[1] = 1.;
 	gMinuit->mnexcm("MINIMIZE", arglist ,2,ierflg);
+
+	errflag = ierflg; // IERFLG=0 if no problems
 
 	// acces the results
 	TString namea = "a";

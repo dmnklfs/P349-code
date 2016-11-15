@@ -389,6 +389,14 @@ void Tree::save_preselected_histos()
 				//D1_L7L8[i][j] -> ProjectionY("",0,-1)-> Write();
 			}
 		}
+		make_hist_dir("D1DriftTimes",2);
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 42; j++)
+			{
+				D1_wires_offsets[i][j] -> Write();
+			}
+		}
 //		make_hist_dir("D1CorrToTDriftTime",2);
 //		for (int i = 0; i < 42; i++)
 //		{

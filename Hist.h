@@ -101,6 +101,7 @@ public:
 	//TH2F *D1_L7[42];
 	//TH2F *D1_L8[42];
 	//TH1F *D1_channel_multiplicities[8][42];
+	TH1F *D1_wires_offsets[8][42];
 
 	// D2
 	TH1F *D2_Rough_Elements[6];

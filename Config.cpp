@@ -51,7 +51,7 @@ Config::Config()
 	// drift time offset
 	for (int i = 0; i < 120; i++) // for now, later: different vectors for all layers
 	{
-		D1_drift_time_offset.push_back(30); // for now constant value
+		D1_drift_time_offset.push_back(0); // for now constant value
 	}
 
 	// time-space calibration
@@ -101,12 +101,12 @@ Config::Config()
 	{
 		if (i==0||i==1||i==6||i==7)
 		//if (i==0||i==1)
-		//if (false)
+		//if (true)
 		{
 			D1_layer_min_hits[i] = 1;
 			D1_layer_max_hits[i] = 1;
-			D1_drift_time_min[i] = 0;
-			D1_drift_time_max[i] = 600;
+			D1_drift_time_min[i] = -1500;
+			D1_drift_time_max[i] = 1500;
 		}
 		else
 		{

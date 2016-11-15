@@ -114,11 +114,13 @@ void Hist::init_D1_histos_preselected()
 		temp_name = Form("D1 preselected layer %d drift time;drift time [ns];counts", i+1);
 		D1_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
 
-		//for (int j = 0; j < 42; j++)
-		//{
+		for (int j = 0; j < 42; j++)
+		{
 		//	temp_name = Form("D1ChannelMultiplicityL%dW%d", i,j);
 		//	D1_channel_multiplicities[i][j] = new TH1F(temp_name, temp_name, 11, -0.5, 10.5);
-		//}
+			temp_name = Form("D1DriftTimeL%dW%d", i+1,j+1);
+			D1_wires_offsets[i][j] = new TH1F(temp_name,temp_name,200,-400,800);
+		}
 
 		if (0==i) // correlations - now - only for layes 1-2 and 7-8
 		{
@@ -387,6 +389,10 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 			{
 				Hist::D1_Preselected_Elements[j] -> Fill(_d1_data->layer_data[j]->preselected_elements.at(i));
 				Hist::D1_Preselected_DriftTime[j] -> Fill(_d1_data->layer_data[j]->preselected_times.at(i));
+
+				wire1 = _d1_data->layer_data[j]->preselected_elements.at(i)-1;
+				time1 = _d1_data->layer_data[j]->preselected_times.at(i);
+				D1_wires_offsets[j][wire1] -> Fill(time1);
 			}
 			Hist::D1_Preselected_Multiplicity[j] -> Fill(_d1_data->layer_data[j]->preselected_elements.size());
 
@@ -449,7 +455,7 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 					for (unsigned int k = 0; k < _d1_data->layer_data[j+1]->preselected_elements.size(); k++)
 					{
 						time2 = _d1_data->layer_data[j+1]->preselected_times.at(k);
-						wire2 = _d1_data->layer_data[j+1]->preselected_elements.at(k);					
+						wire2 = _d1_data->layer_data[j+1]->preselected_elements.at(k)-1;					
 						if (wire1>=0&&wire1<42)
 						{
 							if (wire2 == wire1)

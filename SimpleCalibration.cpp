@@ -24,22 +24,22 @@ SimpleCalibration::SimpleCalibration(const Config &_config)
 	//std::cout << "	- number of time bins: " << no_of_bins << ", width of the bin: " << bin_width << " ns" << std::endl;
 	std::cout << "	WARNING: You are probably trying to run a Simple Calibration metod. Note that it requires strict conditions on the number of events in the straight layers of the D1. In case of the problems: check the config/remove this objects/adjust methods of the SimpleCalibration class/check event selection criteria in the SingleEvent class. Note that the postion in D1 should be calculated FOR WIRES (now)." << std::endl;
 
-	chi2 = new TH1F("#chi^{2}", "#chi^{2}", 300, -1, 15);
+	chi2 = new TH1F("#chi^{2}", "#chi^{2}", 400, -1, 5);
 	chi2->GetXaxis()->SetTitle("#chi^{2}");
 	chi2->GetYaxis()->SetTitle("counts");
 	chi2->SetLineWidth(2);
 	chi2->SetLineColor(kBlue);
 
-	chi2_cut = new TH1F("#chi^{2} cut", "#chi^{2}", 300, -1, 15);
+	chi2_cut = new TH1F("#chi^{2} cut", "#chi^{2}", 400, -1, 5);
 	chi2_cut->GetXaxis()->SetTitle("#chi^{2}");
 	chi2_cut->GetYaxis()->SetTitle("counts");
 	chi2_cut->SetLineColor(kRed);
 
-	delta = new TH2F("#Delta", "#Delta", no_of_corr_bins, 0, 610, 80, -2.0, 2.0);
+	delta = new TH2F("#Delta", "#Delta", no_of_corr_bins, 0, 610, 300, -2.0, 2.0);
 	delta->GetXaxis()->SetTitle("time [ns]");
 	delta->GetYaxis()->SetTitle("delta [cm]");
 
-	delta_cut = new TH2F("#Delta cut", "#Delta (#chi^{2} cut)", no_of_corr_bins, 0, 610, 80, -0.5, 0.5);
+	delta_cut = new TH2F("#Delta cut", "#Delta (#chi^{2} cut)", no_of_corr_bins, 0, 610, 300, -2.0, 2.0);
 	delta_cut->GetXaxis()->SetTitle("time [ns]");
 	delta_cut->GetYaxis()->SetTitle("delta [cm]");
 }
@@ -122,21 +122,25 @@ void SimpleCalibration::fit_events(double _chi2_cut)
 		MinuitFit * fit = MinuitFit::GetInstance();
 		fit -> MinuitFit::set_values(CalibrationData.at(i).hits_positionsX, CalibrationData.at(i).hits_positionsZ, CalibrationData.at(i).errors);
 		results = fit -> MinuitFit::fit_with_minuit();
-		CalibrationData.at(i).track_a = results.at(0);
-		CalibrationData.at(i).track_b = results.at(1);
-		CalibrationData.at(i).chi2 = results.at(2);
 
-		a = CalibrationData.at(i).track_a;
-		b = CalibrationData.at(i).track_b;
-		for (int j = 0; j < 4; j++)
+		if (!(fit -> err_flag()))
 		{
-			x = CalibrationData.at(i).hits_positionsX[j];
-			z = CalibrationData.at(i).hits_positionsZ[j];
-			x_wire = CalibrationData.at(i).wires_positionsX[j];
-			wire_track = fabs((z - b)/a - x_wire);
-			wire_hit = fabs( x - x_wire);
-			if (fabs(wire_hit) < fabs(wire_track)) CalibrationData.at(i).delta[j] = fabs(wire_track - wire_hit);
-			if (fabs(wire_hit) > fabs(wire_track)) CalibrationData.at(i).delta[j] = -fabs(wire_track - wire_hit);
+			CalibrationData.at(i).track_a = results.at(0);
+			CalibrationData.at(i).track_b = results.at(1);
+			CalibrationData.at(i).chi2 = results.at(2);
+	
+			a = CalibrationData.at(i).track_a;
+			b = CalibrationData.at(i).track_b;
+			for (int j = 0; j < 4; j++)
+			{
+				x = CalibrationData.at(i).hits_positionsX[j];
+				z = CalibrationData.at(i).hits_positionsZ[j];
+				x_wire = CalibrationData.at(i).wires_positionsX[j];
+				wire_track = fabs((z - b)/a - x_wire);
+				wire_hit = fabs( x - x_wire);
+				if (fabs(wire_hit) < fabs(wire_track)) CalibrationData.at(i).delta[j] = fabs(wire_track - wire_hit);
+				if (fabs(wire_hit) > fabs(wire_track)) CalibrationData.at(i).delta[j] = -fabs(wire_track - wire_hit);
+			}
 		}
 		//std::cout << wire_track - wire_hit << std::endl;
 		results.clear();
@@ -150,8 +154,11 @@ void SimpleCalibration::fill_chi2(double _chi2_cut)
 {
 	for (unsigned int i = 0; i < CalibrationData.size(); i++)
 	{
-		chi2 -> Fill(CalibrationData.at(i).chi2);
-		if (CalibrationData.at(i).chi2 < _chi2_cut) chi2_cut -> Fill(CalibrationData.at(i).chi2);
+		if (-1!=CalibrationData.at(i).chi2)
+		{
+			chi2 -> Fill(CalibrationData.at(i).chi2);
+			if (CalibrationData.at(i).chi2 < _chi2_cut) chi2_cut -> Fill(CalibrationData.at(i).chi2);
+		}
 	}
 }
 
@@ -161,8 +168,11 @@ void SimpleCalibration::fill_delta(double _chi2_cut)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			delta -> Fill(CalibrationData.at(i).drift_times[j], CalibrationData.at(i).delta[j]);
-			if (CalibrationData.at(i).chi2 < _chi2_cut) delta_cut -> Fill(CalibrationData.at(i).drift_times[j], CalibrationData.at(i).delta[j]);
+			if (-1!=CalibrationData.at(i).delta[j])
+			{
+				delta -> Fill(CalibrationData.at(i).drift_times[j], CalibrationData.at(i).delta[j]);
+				if (CalibrationData.at(i).chi2 < _chi2_cut) delta_cut -> Fill(CalibrationData.at(i).drift_times[j], CalibrationData.at(i).delta[j]);
+			}
 		}
 	}
 }
