@@ -34,6 +34,13 @@ struct data_for_D1_simple_calibration
 	int left_right[4]; // left - right information
 };
 
+struct data_for_D1_calibration
+{
+	double positionsX[8]; // from wires
+	double positionsZ[8];
+	double drift_times[8];
+};
+
 // STRUCTS USED IN Hist CLASS
 struct start_hist_data
 {

@@ -8,8 +8,8 @@ SimpleCalibration::SimpleCalibration()
 SimpleCalibration::SimpleCalibration(const Config &_config)
 {
 	// calibration
-	InitialDriftTimes 	= _config.D1_calibration_times;
-	InitialDistances 	= _config.D1_calibration_distances;
+	InitialDriftTimes 	= _config.D1_L1_calibration_times;
+	InitialDistances 	= _config.D1_L1_calibration_distances;
 
 	// from config
 	no_of_iterations = _config.no_of_iterations_in_simple_calibration; 
@@ -21,7 +21,6 @@ SimpleCalibration::SimpleCalibration(const Config &_config)
 
 	std::cout << "* simple calibration of the D1 will be done" << std::endl;
 	std::cout << "	- number of iterations: " << no_of_iterations << std::endl;
-	//std::cout << "	- number of time bins: " << no_of_bins << ", width of the bin: " << bin_width << " ns" << std::endl;
 	std::cout << "	WARNING: You are probably trying to run a Simple Calibration metod. Note that it requires strict conditions on the number of events in the straight layers of the D1. In case of the problems: check the config/remove this objects/adjust methods of the SimpleCalibration class/check event selection criteria in the SingleEvent class. Note that the postion in D1 should be calculated FOR WIRES (now)." << std::endl;
 
 	chi2 = new TH1F("#chi^{2}", "#chi^{2}", 400, -1, 5);
@@ -88,6 +87,10 @@ void SimpleCalibration::get_data(data_for_D1_simple_calibration _single_event_da
 		data.delta[i] = -1;
 	}
 
+	data.layer[0] = 0;
+	data.layer[1] = 1;
+	data.layer[2] = 6;
+	data.layer[3] = 7;	
 	data.track_a = -1;
 	data.track_b = -1;
 	data.chi2 = -1;
@@ -252,7 +255,7 @@ void SimpleCalibration::fit_delta_projections(const char* folder_name)
 	TCanvas *c_delta_projection;
 	TF1 *gaussian = new TF1("gaussian","gaus", -1.5, 1.5);
 	double hist_center, hist_sigma;
-	for (int i = 0; i < no_of_corr_bins+1; i++)
+	for (int i = 0; i < no_of_corr_bins; i++) // there was no_of_corr_bins + 1
 	{
 		delta_projection = delta_cut -> ProjectionY("",i,i+1);
 		no_of_entries_in_projection = delta_projection -> GetEntries();
@@ -270,7 +273,7 @@ void SimpleCalibration::fit_delta_projections(const char* folder_name)
 		if (no_of_entries_in_projection > 10)
 		{
 			gaussian -> SetParameters(delta_projection -> GetMaximum(), 0, 0.1);
-			delta_projection->Fit("gaussian","LLQ","",hist_center-hist_sigma,hist_center+hist_sigma);
+			delta_projection->Fit("gaussian","","",hist_center-hist_sigma,hist_center+hist_sigma);
 			ProjectionConstant.push_back(gaussian->GetParameter(0));
     		ProjectionMean.push_back(gaussian->GetParameter(1));
     		ProjectionSigma.push_back(0.5*gaussian->GetParameter(2));
@@ -280,6 +283,7 @@ void SimpleCalibration::fit_delta_projections(const char* folder_name)
 		}
 		else
 		{
+			ProjectionConstant.push_back(-1);
 			ProjectionMean.push_back(-1);
 			ProjectionSigma.push_back(-1);
 		}

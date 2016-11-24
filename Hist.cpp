@@ -119,7 +119,7 @@ void Hist::init_D1_histos_preselected()
 		//	temp_name = Form("D1ChannelMultiplicityL%dW%d", i,j);
 		//	D1_channel_multiplicities[i][j] = new TH1F(temp_name, temp_name, 11, -0.5, 10.5);
 			temp_name = Form("D1DriftTimeL%dW%d", i+1,j+1);
-			D1_wires_offsets[i][j] = new TH1F(temp_name,temp_name,200,-400,800);
+			D1_wires_offsets[i][j] = new TH1F(temp_name,temp_name,400,-400,800);
 		}
 
 		if (0==i) // correlations - now - only for layes 1-2 and 7-8

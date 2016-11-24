@@ -22,6 +22,7 @@ public:
     TGraph* get_all_hits_plot();
     TGraph* get_detector_plot();
     data_for_D1_simple_calibration get_data_for_simple_calibration();
+    data_for_D1_calibration get_data_for_calibration();
     bool plot_event();
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();

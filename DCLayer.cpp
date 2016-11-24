@@ -56,9 +56,9 @@ void DCLayer::choose_corr_leading()
 		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))//&&RoughWire.at(i)>=10&&RoughWire.at(i)<=26)
 		{
 			//std::cout << "time before check: " << RoughDriftTime.at(i) << std::endl;
-			if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(RoughWire.at(i))))
+			if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i))))
 			{	
-				DriftTime.push_back(RoughDriftTime.at(i) + DriftTimeOffset.at(RoughWire.at(i)));
+				DriftTime.push_back(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i)));
 				Wire.push_back(RoughWire.at(i));
 				TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
 				//break;
@@ -93,7 +93,10 @@ void DCLayer::apply_drift_time_offset()
 {
 	for (unsigned int i = 0; i < DriftTime.size(); i++)
 	{
-		DriftTime.at(i) = DriftTime.at(i) + DriftTimeOffset.at(Wire.at(i));
+		//std::cout << "apply_drift_time_offset" << std::endl;
+		//std::cout << Wire.at(i) << std::endl;
+		//std::cout << "apply_drift_time_offset" << std::endl;
+		DriftTime.at(i) = DriftTime.at(i) + DriftTimeOffset.at(Wire.at(i)-1);
 	}
 }
 

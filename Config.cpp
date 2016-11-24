@@ -51,10 +51,38 @@ Config::Config()
 	// drift time offset
 	for (int i = 0; i < 120; i++) // for now, later: different vectors for all layers
 	{
-		D1_drift_time_offset.push_back(0); // for now constant value
+		D2_drift_time_offset.push_back(0);
+		HEX_drift_time_offset.push_back(0);
 	}
 
-	// time-space calibration
+	// this should be bear from somewhere
+	double _D1_L1_drift_time_offset[41] =  {40, 40, 40, 46, 46, 46, 46, 46, 46, 46, 
+											46, 46, 46, 40, 40, 40, 40, 40, 40, 40,
+											34, 34, 34, 46, 40, 40, 40,  4, -2,  4,
+											16, 10, 16, 16,  4, 16, 10, 10, 10, 10, 10};
+	double _D1_L2_drift_time_offset[41] =  {28, 28, 28, 34, 28, 34, 34, 34, 34, 34,
+											28, 28, 28, 28, 40, 40, 40, 40, 40, 40,
+											40, 34, 34, 40, 46, 40, 40, 40, 16, 16,
+											16, 10, 16, 16,  4, 16, 10, 10, 10 ,10 ,10};
+	double _D1_L7_drift_time_offset[41] =  {28, 28, 46, 34, 28, 28, 28, 28, 28, 28,
+											28, 28, 28, 40, 40, 40, 40, 40, 34, 34,
+											34, 34, 34, 40, 40, 40, 40, 40, 40, 40,
+											40, 40, 40, 40, 34, 40, 34, 40, 34, 28, 28};
+	double _D1_L8_drift_time_offset[41] =  {28, 28, 28, 28, 28, 28, 28, 28, 28, 28,
+											28, 28, 28, 28, 34, 40, 40, 40, 34, 34,
+											40, 34, 34, 34, 34, 34, 40, 40 ,40, 40,
+											40, 40, 40, 40, 40, 40, 34, 40, 40, 40, 40};
+
+	for (int i = 0; i < 41; i++)
+	{
+		std::cout << i << std::endl;
+		D1_L1_drift_time_offset.push_back(_D1_L1_drift_time_offset[i]); // for now constant value
+		D1_L2_drift_time_offset.push_back(_D1_L2_drift_time_offset[i]);
+		D1_L7_drift_time_offset.push_back(_D1_L7_drift_time_offset[i]);
+		D1_L8_drift_time_offset.push_back(_D1_L8_drift_time_offset[i]);
+	}
+
+	// time-space calibration - shoul be read from somewhere
 	double D1_drift_time[201]=
     {   0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 
     	60, 63, 66, 69, 72, 75, 78, 81, 84, 87, 90, 93, 96, 99, 102, 105, 108, 111, 
@@ -92,8 +120,14 @@ Config::Config()
     // calibration should be read from the file
 	for (int i = 0; i < 201; i++)
 	{
-		D1_calibration_times.push_back(D1_drift_time[i]);
-		D1_calibration_distances.push_back(D1_distance[i]);
+		D1_L1_calibration_times.push_back(D1_drift_time[i]);
+		D1_L1_calibration_distances.push_back(D1_distance[i]);
+		D1_L2_calibration_times.push_back(D1_drift_time[i]);
+		D1_L2_calibration_distances.push_back(D1_distance[i]);
+		D1_L7_calibration_times.push_back(D1_drift_time[i]);
+		D1_L7_calibration_distances.push_back(D1_distance[i]);
+		D1_L8_calibration_times.push_back(D1_drift_time[i]);
+		D1_L8_calibration_distances.push_back(D1_distance[i]);
 	}
 	
 	
@@ -105,8 +139,8 @@ Config::Config()
 		{
 			D1_layer_min_hits[i] = 1;
 			D1_layer_max_hits[i] = 1;
-			D1_drift_time_min[i] = -1500;
-			D1_drift_time_max[i] = 1500;
+			D1_drift_time_min[i] = 0;
+			D1_drift_time_max[i] = 600;
 		}
 		else
 		{

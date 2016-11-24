@@ -5,12 +5,16 @@ D1::D1()
 
 D1::D1(const Config &_config)
 {
+	// constructors of the layers: drift time offset, calib times, calib dists, time min, time max, hits min, hits max
+	Layer[0] = new DCLayer(_config.D1_L1_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D1_drift_time_min[0],_config.D1_drift_time_max[0],_config.D1_layer_min_hits[0],_config.D1_layer_max_hits[0]);
+	Layer[1] = new DCLayer(_config.D1_L2_drift_time_offset, _config.D1_L2_calibration_times, _config.D1_L2_calibration_distances, _config.D1_drift_time_min[1],_config.D1_drift_time_max[1],_config.D1_layer_min_hits[1],_config.D1_layer_max_hits[1]);
+	Layer[6] = new DCLayer(_config.D1_L7_drift_time_offset, _config.D1_L7_calibration_times, _config.D1_L7_calibration_distances, _config.D1_drift_time_min[6],_config.D1_drift_time_max[6],_config.D1_layer_min_hits[6],_config.D1_layer_max_hits[6]);
+	Layer[7] = new DCLayer(_config.D1_L8_drift_time_offset, _config.D1_L8_calibration_times, _config.D1_L8_calibration_distances, _config.D1_drift_time_min[7],_config.D1_drift_time_max[7],_config.D1_layer_min_hits[7],_config.D1_layer_max_hits[7]);
 	for (int i = 0; i < 8; i++)
 	{
-		Layer[i] = new DCLayer(_config.D1_drift_time_offset, _config.D1_calibration_times, _config.D1_calibration_distances, _config.D1_drift_time_min[i],_config.D1_drift_time_max[i],_config.D1_layer_min_hits[i],_config.D1_layer_max_hits[i]);
+		if(2==i||3==i||4==i||5==i) Layer[i] = new DCLayer(_config.D2_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D1_drift_time_min[i],_config.D1_drift_time_max[i],_config.D1_layer_min_hits[i],_config.D1_layer_max_hits[i]);
 		layer_wire_frame_offset[i] = _config.D1_layer_wire_frame_offset[i];
 	}
-
 	half_x_dim = _config.D1_half_x_dim;
 	half_z_dim = _config.D1_half_z_dim;
 	x_lab_position = _config.D1_x_lab_position;
@@ -280,5 +284,32 @@ data_for_D1_simple_calibration D1::get_data_for_simple_calibration()
 		//data_for_calibration.left_right[i]	= Layer[ straight_layers[i] ]->LeftRight.at(0);
 	}
 
+	return data_for_calibration;
+}
+
+data_for_D1_calibration D1::get_data_for_calibration()
+{
+	int D1_layers[8];
+	D1_layers[0] =0;
+	D1_layers[1] =1;
+	D1_layers[2] =6;
+	D1_layers[3] =7;
+
+	data_for_D1_calibration data_for_calibration;
+	for (int i = 0; i < 8; i++)
+	{
+		if (0==i||1==i||6==i||7==i)
+		{
+			data_for_calibration.positionsX[i]	= Layer[i] -> AbsoluteXPosition.at(0);
+			data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
+			data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
+		}
+		else
+		{
+			data_for_calibration.positionsX[i] = -1;
+			data_for_calibration.positionsZ[i] = -1;
+			data_for_calibration.drift_times[i] = -1;
+		}
+	}
 	return data_for_calibration;
 }

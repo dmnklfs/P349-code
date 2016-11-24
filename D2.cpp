@@ -7,7 +7,7 @@ D2::D2(const Config &_config)
 {
 	for (int i = 0; i < 6; i++)
 	{
-		Layer[i] = new DCLayer(_config.D1_drift_time_offset, _config.D1_calibration_times, _config.D1_calibration_distances, _config.D1_drift_time_min[i],_config.D1_drift_time_max[i],_config.D1_layer_min_hits[i],_config.D1_layer_max_hits[i]);
+		Layer[i] = new DCLayer(_config.D2_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D1_drift_time_min[i],_config.D1_drift_time_max[i],_config.D1_layer_min_hits[i],_config.D1_layer_max_hits[i]);
 	}
 }
 
