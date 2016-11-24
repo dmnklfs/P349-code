@@ -28,6 +28,7 @@
 #include "Config.h"
 #include "EventDisplay.h"
 #include "SimpleCalibration.h"
+#include "Calibration.h"
 
 #define START 1
 #define NTOF 10

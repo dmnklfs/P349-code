@@ -24,7 +24,7 @@
 #include <string>
 #include <sstream>
 
-struct single_event_data
+struct D1_single_event_data
 {
 	double wire_pos_X;
 	double wire_pos_Z;
@@ -42,7 +42,7 @@ struct single_event_data
 	int calib_bin;
 	int corr_bin;
 
-	single_event_data()
+	D1_single_event_data()
 	{
 		calib_bin= -1;
 		corr_bin = -1;
@@ -58,7 +58,7 @@ public:
 	CalibrationLayer(int _layer_no, const std::vector<double> &_CalibTimes, const std::vector<double> &_CalibDistances);
 	~CalibrationLayer();
 
-	// in general
+	// in general - for constructor
 	void set_max_time_range(double _max_time_range);
 	void set_no_of_corr_bins(double _no_of_corr_bins);
 
@@ -89,7 +89,7 @@ public:
 	void recalculate_positions();
 
 	// this should not be like that...
-	std::vector<single_event_data> CalibrationData;
+	std::vector<D1_single_event_data> CalibrationData;
 
 private:
 	// calibration data: starting calibration

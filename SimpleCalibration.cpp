@@ -54,7 +54,9 @@ void SimpleCalibration::get_data(data_for_D1_simple_calibration _single_event_da
 	{
 		data.wires_positionsX[i] 	= _single_event_data.positionsX[i];
 		data.wires_positionsZ[i] 	= _single_event_data.positionsZ[i];
+		//std::cout << i << " _single_event_data.drift_times[i]: " << _single_event_data.drift_times[i] << std::endl;
 		data.drift_times[i] = _single_event_data.drift_times[i];
+		//std::cout << i << "data.drift_times[i]: " << data.drift_times[i] << std::endl;
 		data.errors[i] = 1;
 	}
 
@@ -82,6 +84,7 @@ void SimpleCalibration::get_data(data_for_D1_simple_calibration _single_event_da
 
 	for (int i = 0; i < 4; i++)
 	{
+		//std::cout << i << "data.drift_times[i]: " << data.drift_times[i] << std::endl;
 		data.hits_positionsX[i] = data.wires_positionsX[i]+(data.left_right[i])*drift_time_to_distance(data.drift_times[i]);
 		data.hits_positionsZ[i] = data.wires_positionsZ[i];
 		data.delta[i] = -1;
@@ -95,6 +98,7 @@ void SimpleCalibration::get_data(data_for_D1_simple_calibration _single_event_da
 	data.track_b = -1;
 	data.chi2 = -1;
 	CalibrationData.push_back(data);
+	//std::cout << 0 << "CalibrationData.back(): " << CalibrationData.back().drift_times[0] << std::endl;
 }
 
 void SimpleCalibration::tell_no_of_events()
@@ -107,6 +111,8 @@ double SimpleCalibration::drift_time_to_distance(double drift_time)
 {
 	double distance;
 	int calib_bin = floor(drift_time/calib_bin_width);
+	//std::cout << "drift_time: " << drift_time << std::endl;
+	//std::cout << "calib_bin: " << calib_bin << std::endl;
 	double t1 = InitialDriftTimes.at(calib_bin);
 	double t2 = InitialDriftTimes.at(calib_bin+1);
 	double x1 = InitialDistances.at(calib_bin);
@@ -255,7 +261,7 @@ void SimpleCalibration::fit_delta_projections(const char* folder_name)
 	TCanvas *c_delta_projection;
 	TF1 *gaussian = new TF1("gaussian","gaus", -1.5, 1.5);
 	double hist_center, hist_sigma;
-	for (int i = 0; i < no_of_corr_bins; i++) // there was no_of_corr_bins + 1
+	for (int i = 0; i < no_of_corr_bins+1; i++) // there was no_of_corr_bins + 1
 	{
 		delta_projection = delta_cut -> ProjectionY("",i,i+1);
 		no_of_entries_in_projection = delta_projection -> GetEntries();
@@ -300,11 +306,11 @@ void SimpleCalibration::apply_corrections()
 	for (unsigned int i = 0; i < InitialDistances.size(); i++)
 	{
 		calib_bin = floor(InitialDriftTimes.at(i)/corr_bin_width);
-		std::cout << "calib bin: " << calib_bin << std::endl;
-		std::cout << "before: " << InitialDistances.at(i) << std::endl;
-		std::cout << "proj value " << ProjectionMean.at(calib_bin) << std::endl;
+		//std::cout << "calib bin: " << calib_bin << std::endl;
+		//std::cout << "before: " << InitialDistances.at(i) << std::endl;
+		//std::cout << "proj value " << ProjectionMean.at(calib_bin) << std::endl;
 		if(-1!=ProjectionMean.at(calib_bin)) InitialDistances.at(i) = InitialDistances.at(i) + ProjectionMean.at(calib_bin);
-		std::cout << "after: " << InitialDistances.at(i) << std::endl;
+		//std::cout << "after: " << InitialDistances.at(i) << std::endl;
 		//if (InitialDistances.at(i) > 2) InitialDistances.at(i) = 2;
 		if (InitialDistances.at(i) < 0) InitialDistances.at(i) = 0;
 	}	
@@ -327,7 +333,19 @@ void SimpleCalibration::recalculate_positions()
 	{
 		for (int j = 0; j < 4; j++)
 		{
+			//std::cout << "CalibrationData.at(i).drift_times[j]: " << CalibrationData.at(i).drift_times[j] << std::endl;
 			CalibrationData.at(i).hits_positionsX[j] = CalibrationData.at(i).wires_positionsX[j]+(CalibrationData.at(i).left_right[j])*drift_time_to_distance(CalibrationData.at(i).drift_times[j]);
+		}
+	}
+}
+
+void SimpleCalibration::show_drift_times()
+{
+	for (unsigned int i = 0; i < CalibrationData.size(); i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			std::cout << CalibrationData.at(i).drift_times[j] << std::endl;
 		}
 	}
 }

@@ -41,6 +41,18 @@ Calibration::Calibration(const Config &_config)
 	}
 }
 
+Calibration::~Calibration()
+{
+
+}
+
+void Calibration::tell_no_of_events()
+{
+	unsigned int no_of_chosen_events;
+	no_of_chosen_events = Layer[0] -> CalibrationData.size();
+	std::cout << no_of_chosen_events << std::endl;
+}
+
 void Calibration::get_data(data_for_D1_calibration _single_event_data)
 {
 	double wirepos1[4], wirepos2[4];
@@ -161,8 +173,22 @@ void Calibration::set_values_of_track_projections_params()
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			Layer[straight_layers_numbers[j]] -> CalibrationData.track_a = StraightLayersTracks_apar.at(i);
-			Layer[straight_layers_numbers[j]] -> CalibrationData.track_b = StraightLayersTracks_bpar.at(i);
+			Layer[straight_layers_numbers[j]] -> CalibrationData.at(i).track_a = StraightLayersTracks_apar.at(i);
+			Layer[straight_layers_numbers[j]] -> CalibrationData.at(i).track_b = StraightLayersTracks_bpar.at(i);
 		}
 	}
+}
+
+void Calibration::deletations()
+{
+	for (int i = 0; i < 8; i++)
+	{
+		Layer[i] -> CalibrationLayer::deletations();
+	}
+	StraightLayersTracks_apar.clear();
+	StraightLayersTracks_bpar.clear();
+	InclinedLayersPlTracks_apar.clear();
+	InclinedLayersPlTracks_bpar.clear();
+	InclinedLayersMTracks_apar.clear();
+	InclinedLayersMTracks_bpar.clear();
 }

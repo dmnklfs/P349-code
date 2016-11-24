@@ -69,7 +69,7 @@ void CalibrationLayer::set_max_time_range(double _max_time_range)
 
 void CalibrationLayer::get_data(double _wire_pos_X, double _wire_pos_Z, double _drift_time, int _lr)
 {
-	single_event_data data;
+	D1_single_event_data data;
 	data.wire_pos_X = _wire_pos_X;
 	data.wire_pos_Z = _wire_pos_Z;
 	data.drift_time = _drift_time;
@@ -283,19 +283,9 @@ void CalibrationLayer::calculate_deltas()
 		x = CalibrationData.at(i).hit_pos_X;
 		z = CalibrationData.at(i).hit_pos_Z;
 		x_wire = CalibrationData.at(i).wire_pos_X;
-		CalibrationData.at(i).wire_track 	= fabs((z - b)/a - x_wire);
-		CalibrationData.at(i).wire_hit		= fabs( x - x_wire);
 		wire_track = fabs((z - b)/a - x_wire);
 		wire_hit = fabs( x - x_wire);
-		if (fabs(wire_hit) < fabs(wire_track)) CalibrationData.at(i).delta[j] = fabs(wire_track - wire_hit);
-		if (fabs(wire_hit) > fabs(wire_track)) CalibrationData.at(i).delta[j] = -fabs(wire_track - wire_hit);
+		if (fabs(wire_hit) < fabs(wire_track)) CalibrationData.at(i).delta = fabs(wire_track - wire_hit);
+		if (fabs(wire_hit) > fabs(wire_track)) CalibrationData.at(i).delta = -fabs(wire_track - wire_hit);
 	}
 }
-
-x = CalibrationData.at(i).hits_positionsX[j];
-z = CalibrationData.at(i).hits_positionsZ[j];
-x_wire = CalibrationData.at(i).wires_positionsX[j];
-wire_track = fabs((z - b)/a - x_wire);
-wire_hit = fabs( x - x_wire);
-if (fabs(wire_hit) < fabs(wire_track)) CalibrationData.at(i).delta[j] = fabs(wire_track - wire_hit);
-if (fabs(wire_hit) > fabs(wire_track)) CalibrationData.at(i).delta[j] = -fabs(wire_track - wire_hit);

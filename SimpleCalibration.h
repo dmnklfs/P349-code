@@ -76,11 +76,15 @@ public:
 	void deletations();
 	void recalculate_positions();
 
+	void show_drift_times();
+
+	std::vector<single_event_data> CalibrationData;
+
 private:
 	void fill_chi2(double _chi2_cut);
 	void fill_delta(double _chi2_cut);
 
-	std::vector<single_event_data> CalibrationData; // all data in one vector
+	 // all data in one vector
 
 	// calibration data: starting calibration
 	std::vector<double> InitialDriftTimes;

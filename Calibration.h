@@ -42,6 +42,7 @@ public:
 	void fill_histograms(double _chi2_cut);
 	void fit_events_in_straight_layers();
 	void set_values_of_track_projections_params();
+	void deletations();
 
 private:
 	CalibrationLayer *Layer[8];
