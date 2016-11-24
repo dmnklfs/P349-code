@@ -39,6 +39,9 @@ public:
 	void tell_no_of_events();
 	void solve_lr_ambiguity(const CalibrationLayer &layer1, const CalibrationLayer &layer2);
 	void calculate_hit_position();
+	void fill_histograms(double _chi2_cut);
+	void fit_events_in_straight_layers();
+	void set_values_of_track_projections_params();
 
 private:
 	CalibrationLayer *Layer[8];
@@ -48,6 +51,15 @@ private:
 	double max_time_range;
 	double calib_bin_width;
 	double corr_bin_width;
+
+	// a, b track parameters in the frames of each set of layers (straight, Pl - +31, M - -31)
+	std::vector<double> StraightLayersTracks_apar;
+	std::vector<double> StraightLayersTracks_bpar;
+	std::vector<double> InclinedLayersPlTracks_apar;
+	std::vector<double> InclinedLayersPlTracks_bpar;
+	std::vector<double> InclinedLayersMTracks_apar;
+	std::vector<double> InclinedLayersMTracks_bpar;
+
 	
 };
 

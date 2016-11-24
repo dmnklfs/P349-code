@@ -188,3 +188,114 @@ void CalibrationLayer::recalculate_positions()
 		CalibrationData.at(i).hit_pos_X = CalibrationData.at(i).wire_pos_X+(CalibrationData.at(i).left_right)*drift_time_to_distance(CalibrationData.at(i).drift_time);
 	}
 }
+
+void CalibrationLayer::fill_chi2(double _chi2_cut)
+{
+	for (unsigned int i = 0; i < CalibrationData.size(); i++)
+	{
+		if (-1!=CalibrationData.at(i).chi2)
+		{
+			chi2 -> Fill(CalibrationData.at(i).chi2);
+			if (CalibrationData.at(i).chi2 < _chi2_cut) chi2_cut -> Fill(CalibrationData.at(i).chi2);
+		}
+	}
+}
+
+void CalibrationLayer::fill_delta(double _chi2_cut)
+{
+	for (unsigned int i = 0; i < CalibrationData.size(); i++)
+	{
+		if (-1!=CalibrationData.at(i).delta)
+		{
+			delta -> Fill(CalibrationData.at(i).drift_time, CalibrationData.at(i).delta);
+			if (CalibrationData.at(i).chi2 < _chi2_cut) delta_cut -> Fill(CalibrationData.at(i).drift_time, CalibrationData.at(i).delta);
+		}
+	}
+}
+
+TCanvas* CalibrationLayer::plot_chi2()
+{
+	TString name;
+	name = Form("c layer%d #chi^{2}",layer_no);
+	TCanvas *c = new TCanvas(name,name);
+	gStyle -> SetOptStat(1111111);
+	gStyle->SetStatX(0.9);                
+	gStyle->SetStatW(0.2);
+	chi2 -> Draw();
+	chi2_cut -> Draw("same");
+	return c;
+}
+
+TCanvas* CalibrationLayer::plot_delta()
+{
+	TString name;
+	name = Form("c layer%d #Delta",layer_no);
+	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
+	gStyle->SetStatX(0.9);                
+	gStyle->SetStatW(0.2);
+	TCanvas *c = new TCanvas(name,name);
+	gStyle -> SetOptStat(1111111);
+	gPad -> SetLogz();
+	delta -> Draw("colz");
+	return c;
+}
+
+TCanvas* CalibrationLayer::plot_delta_cut()
+{
+	TString name;
+	name = Form("c layer%d #Delta cut",layer_no);
+	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
+	gStyle->SetStatX(0.9);                
+	gStyle->SetStatW(0.2);
+	TCanvas *c = new TCanvas(name,name);
+	gStyle -> SetOptStat(1111111);
+	gPad -> SetLogz();
+	delta_cut -> Draw("colz");
+	return c;
+}
+
+TCanvas* CalibrationLayer::plot_current_calibration()
+{
+	TString name;
+	name = Form("c layer%d current calibration",layer_no);
+	TGraph* current_calibration;
+	TGraph* initial_calibration;
+	current_calibration = new TGraph(DriftTimes.size(), &DriftTimes.at(0), &Distances.at(0));
+	current_calibration -> SetLineColor(kRed);
+	initial_calibration = new TGraph(InitialDriftTimes.size(), &InitialDriftTimes.at(0), &InitialDistances.at(0));
+	initial_calibration -> SetLineColor(kBlue);
+	TCanvas *c_current_calibration = new TCanvas(name,name);
+	current_calibration -> Draw("AL");
+   	current_calibration->SetMinimum(0);
+   	current_calibration->SetMaximum(2.5);
+   	initial_calibration -> Draw("same");
+	return c_current_calibration;
+}
+
+void CalibrationLayer::calculate_deltas()
+{
+	double x, z, a, b, x_wire;
+	double wire_track, wire_hit;
+	for (unsigned int i = 0; i < CalibrationData.size(); i++)
+	{
+		a = CalibrationData.at(i).track_a;
+		b = CalibrationData.at(i).track_b;
+		x = CalibrationData.at(i).hit_pos_X;
+		z = CalibrationData.at(i).hit_pos_Z;
+		x_wire = CalibrationData.at(i).wire_pos_X;
+		CalibrationData.at(i).wire_track 	= fabs((z - b)/a - x_wire);
+		CalibrationData.at(i).wire_hit		= fabs( x - x_wire);
+		wire_track = fabs((z - b)/a - x_wire);
+		wire_hit = fabs( x - x_wire);
+		if (fabs(wire_hit) < fabs(wire_track)) CalibrationData.at(i).delta[j] = fabs(wire_track - wire_hit);
+		if (fabs(wire_hit) > fabs(wire_track)) CalibrationData.at(i).delta[j] = -fabs(wire_track - wire_hit);
+	}
+}
+
+x = CalibrationData.at(i).hits_positionsX[j];
+z = CalibrationData.at(i).hits_positionsZ[j];
+x_wire = CalibrationData.at(i).wires_positionsX[j];
+wire_track = fabs((z - b)/a - x_wire);
+wire_hit = fabs( x - x_wire);
+if (fabs(wire_hit) < fabs(wire_track)) CalibrationData.at(i).delta[j] = fabs(wire_track - wire_hit);
+if (fabs(wire_hit) > fabs(wire_track)) CalibrationData.at(i).delta[j] = -fabs(wire_track - wire_hit);

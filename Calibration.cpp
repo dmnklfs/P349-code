@@ -86,3 +86,83 @@ void Calibration::calculate_hit_position()
 	}
 }
 
+void Calibration::fill_histograms(double _chi2_cut)
+{
+	TString name;
+	for (int i = 0; i < 8; i++)
+	{
+		if (0==i||1==i||6==i||7==i)
+		{
+			Layer[i] -> CalibrationLayer::fill_chi2(_chi2_cut);
+			Layer[i] -> CalibrationLayer::fill_delta(_chi2_cut);
+			name = Form("results/layer%d_chi2.png",i+1);
+			Layer[i] -> CalibrationLayer::plot_chi2() -> SaveAs(name);
+			name = Form("results/layer%d_delta.png",i+1);
+			Layer[i] -> CalibrationLayer::plot_delta() -> SaveAs(name);
+			name = Form("results/layer%d_delta_cut.png",i+1);
+			Layer[i] -> CalibrationLayer::plot_delta_cut() -> SaveAs(name);			
+		}
+	}
+}
+
+void Calibration::fit_events_in_straight_layers()
+{
+	std::vector<double> results;
+	unsigned int no_of_chosen_events;
+	no_of_chosen_events = Layer[0] -> CalibrationData.size();
+	double hits_positionsX[4];
+	double hits_positionsZ[4];
+	double errors[4];
+	int layers_numbers[4];
+	layers_numbers[0] = 0;
+	layers_numbers[1] = 1;
+	layers_numbers[2] = 6;
+	layers_numbers[3] = 7;
+	for (unsigned int i = 0; i < no_of_chosen_events; i++)
+	{
+		// take the single event data
+		for (int j = 0; j < 4; j++)
+		{
+			hits_positionsX[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_X;
+			hits_positionsZ[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_Z;
+			errors[j] = 1;
+		}
+		MinuitFit * fit = MinuitFit::GetInstance();		
+		fit -> MinuitFit::set_values(hits_positionsX, hits_positionsZ, errors);
+		results = fit -> MinuitFit::fit_with_minuit();
+
+		if (!(fit -> err_flag()))
+		{
+			StraightLayersTracks_apar.push_back(results.at(0));
+			StraightLayersTracks_bpar.push_back(results.at(1));
+		}
+		else // needed. StraightLayersTracks* have to have the same length as the CalibrationData in certain layers
+		{
+			StraightLayersTracks_apar.push_back(-1);
+			StraightLayersTracks_bpar.push_back(-1);
+		}
+		results.clear();
+		delete fit;
+	}
+}
+
+void Calibration::set_values_of_track_projections_params()
+{
+	// there should be an additional step before: combination of informations from different angle-planes
+	// into one 3d track and then projecting these parameters into the planes
+	unsigned int no_of_chosen_events;
+	no_of_chosen_events = Layer[0] -> CalibrationData.size();
+	int straight_layers_numbers[4];
+	straight_layers_numbers[0] = 0;
+	straight_layers_numbers[1] = 1;
+	straight_layers_numbers[2] = 6;
+	straight_layers_numbers[3] = 7;
+	for (unsigned int i = 0; i < no_of_chosen_events; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			Layer[straight_layers_numbers[j]] -> CalibrationData.track_a = StraightLayersTracks_apar.at(i);
+			Layer[straight_layers_numbers[j]] -> CalibrationData.track_b = StraightLayersTracks_bpar.at(i);
+		}
+	}
+}

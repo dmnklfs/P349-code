@@ -68,6 +68,9 @@ public:
 	// in loop over all events
 	double drift_time_to_distance(double drift_time);
 	void calculate_hit_position();
+	void calculate_deltas();
+	void fill_chi2(double _chi2_cut);
+	void fill_delta(double _chi2_cut);
 	
 	// in each iteration
 	// for all corr bins
@@ -75,7 +78,7 @@ public:
 	void set_fit_errors();
 
 	// plotting
-	TCanvas* plot_chi2();
+	TCanvas* plot_chi2();		// w kazdej iteracji mozna dodawac histogramy do wektora, pozniej zwracac wektor do main
 	TCanvas* plot_delta();
 	TCanvas* plot_delta_cut();
 	TCanvas* plot_current_calibration();
@@ -85,12 +88,10 @@ public:
 	void deletations();
 	void recalculate_positions();
 
-private:
-	void fill_chi2(double _chi2_cut);
-	void fill_delta(double _chi2_cut);
-
+	// this should not be like that...
 	std::vector<single_event_data> CalibrationData;
 
+private:
 	// calibration data: starting calibration
 	std::vector<double> InitialDriftTimes;
 	std::vector<double> InitialDistances;
