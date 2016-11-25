@@ -28,17 +28,30 @@ Calibration::Calibration(const Config &_config)
 	{
 		if (0==i||1==i||6==i||7==i)
 		{
-			Layer[i] -> CalibrationLayer::set_no_of_corr_bins(corr_bin_width);
+			Layer[i] -> CalibrationLayer::set_no_of_corr_bins(no_of_corr_bins);
 			Layer[i] -> CalibrationLayer::set_max_time_range(max_time_range);
 		}
 		else 
 		{
 			// layers with inclined wires *somehow* initialized - for now, 24.11.2016
 			Layer[i] = new CalibrationLayer(i+1, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances);
-			Layer[i] -> CalibrationLayer::set_no_of_corr_bins(corr_bin_width);
+			Layer[i] -> CalibrationLayer::set_no_of_corr_bins(no_of_corr_bins);
 			Layer[i] -> CalibrationLayer::set_max_time_range(max_time_range);
 		}
 	}
+	TString name;
+	name = Form("#chi^{2}",1);
+	chi2 = new TH1F(name, name, 400, -1, 5);
+	chi2->GetXaxis()->SetTitle("#chi^{2}");
+	chi2->GetYaxis()->SetTitle("counts");
+	chi2->SetLineWidth(2);
+	chi2->SetLineColor(kBlue);
+
+	name = Form("#chi^{2} cut", 1);
+	chi2_cut = new TH1F(name, name, 400, -1, 5);
+	chi2_cut->GetXaxis()->SetTitle("#chi^{2}");
+	chi2_cut->GetYaxis()->SetTitle("counts");
+	chi2_cut->SetLineColor(kRed);
 }
 
 Calibration::~Calibration()
@@ -50,27 +63,36 @@ void Calibration::tell_no_of_events()
 {
 	unsigned int no_of_chosen_events;
 	no_of_chosen_events = Layer[0] -> CalibrationData.size();
-	std::cout << no_of_chosen_events << std::endl;
+	std::cout << "NO OF EVENTS FOR CALIBRATION (in each layer): " << no_of_chosen_events << std::endl;
 }
 
 void Calibration::get_data(data_for_D1_calibration _single_event_data)
 {
-	double wirepos1[4], wirepos2[4];
+	double wirepos1, wirepos2;
 	int left_right[8];
-	for (int i = 0; i < 4; i++)
+	wirepos1 = _single_event_data.positionsX[0];
+	wirepos2 = _single_event_data.positionsX[1];
+	if (wirepos1 > wirepos2)
 	{
-		wirepos1[i] = _single_event_data.positionsX[i];
-		wirepos2[i] = _single_event_data.positionsX[i+1];
-		if (wirepos1 > wirepos2)
-		{
-			left_right[i] 		= -1;
-			left_right[i+1] 	= +1;
-		}
-		else
-		{
-			left_right[i] 		= +1;
-			left_right[i+1] 	= -1;
-		}
+		left_right[0] 	= -1;
+		left_right[1] 	= +1;
+	}
+	else
+	{
+		left_right[0] 	= +1;
+		left_right[1] 	= -1;
+	}
+	wirepos1 = _single_event_data.positionsX[6];
+	wirepos2 = _single_event_data.positionsX[7];
+	if (wirepos1 > wirepos2)
+	{
+		left_right[6] 	= -1;
+		left_right[7] 	= +1;
+	}
+	else
+	{
+		left_right[6] 	= +1;
+		left_right[7] 	= -1;
 	}
 
 	for (int i = 0; i < 8; i++)
@@ -101,14 +123,14 @@ void Calibration::calculate_hit_position()
 void Calibration::fill_histograms(double _chi2_cut)
 {
 	TString name;
+	fill_chi2(_chi2_cut);
+	name = Form("results/_chi2.png",1);
+	plot_chi2() -> SaveAs(name);
 	for (int i = 0; i < 8; i++)
 	{
 		if (0==i||1==i||6==i||7==i)
 		{
-			Layer[i] -> CalibrationLayer::fill_chi2(_chi2_cut);
 			Layer[i] -> CalibrationLayer::fill_delta(_chi2_cut);
-			name = Form("results/layer%d_chi2.png",i+1);
-			Layer[i] -> CalibrationLayer::plot_chi2() -> SaveAs(name);
 			name = Form("results/layer%d_delta.png",i+1);
 			Layer[i] -> CalibrationLayer::plot_delta() -> SaveAs(name);
 			name = Form("results/layer%d_delta_cut.png",i+1);
@@ -147,11 +169,13 @@ void Calibration::fit_events_in_straight_layers()
 		{
 			StraightLayersTracks_apar.push_back(results.at(0));
 			StraightLayersTracks_bpar.push_back(results.at(1));
+			Chi2.push_back(results.at(2));
 		}
 		else // needed. StraightLayersTracks* have to have the same length as the CalibrationData in certain layers
 		{
 			StraightLayersTracks_apar.push_back(-1);
 			StraightLayersTracks_bpar.push_back(-1);
+			Chi2.push_back(-1);
 		}
 		results.clear();
 		delete fit;
@@ -179,6 +203,24 @@ void Calibration::set_values_of_track_projections_params()
 	}
 }
 
+void Calibration::calculate_deltas()
+{
+	unsigned int no_of_chosen_events;
+	no_of_chosen_events = Layer[0] -> CalibrationData.size();
+	int straight_layers_numbers[4];
+	straight_layers_numbers[0] = 0;
+	straight_layers_numbers[1] = 1;
+	straight_layers_numbers[2] = 6;
+	straight_layers_numbers[3] = 7;
+	for (unsigned int i = 0; i < no_of_chosen_events; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			Layer[straight_layers_numbers[j]] -> calculate_deltas();
+		}
+	}
+}
+
 void Calibration::deletations()
 {
 	for (int i = 0; i < 8; i++)
@@ -191,4 +233,56 @@ void Calibration::deletations()
 	InclinedLayersPlTracks_bpar.clear();
 	InclinedLayersMTracks_apar.clear();
 	InclinedLayersMTracks_bpar.clear();
+	Chi2.clear();
+	chi2 -> Reset();
+	chi2_cut -> Reset();
+}
+
+void Calibration::fill_chi2(double _chi2_cut)
+{
+	for (unsigned int i = 0; i < Chi2.size(); i++)
+	{
+		if (-1!=Chi2.at(i))
+		{
+			chi2 -> Fill(Chi2.at(i));
+			if (Chi2.at(i) < _chi2_cut) chi2_cut -> Fill(Chi2.at(i));
+		}
+	}
+}
+
+TCanvas* Calibration::plot_chi2()
+{
+	TString name;
+	name = "c_#chi^{2}";
+	TCanvas *c = new TCanvas(name,name);
+	gStyle -> SetOptStat(1111111);
+	gStyle->SetStatX(0.9);                
+	gStyle->SetStatW(0.2);
+	chi2 -> Draw();
+	chi2_cut -> Draw("same");
+	return c;
+}
+
+void Calibration::fit_delta_projections()
+{
+	Layer[0] -> fit_delta_projections("results/DeltaProjections1/");
+	Layer[1] -> fit_delta_projections("results/DeltaProjections2/");
+	Layer[6] -> fit_delta_projections("results/DeltaProjections6/");
+	Layer[7] -> fit_delta_projections("results/DeltaProjections7/");
+}
+
+void Calibration::apply_corrections()
+{
+	Layer[0] -> apply_corrections();
+	Layer[1] -> apply_corrections();
+	Layer[6] -> apply_corrections();
+	Layer[7] -> apply_corrections();
+}
+
+TCanvas* Calibration::plot_current_calibration()
+{
+	Layer[0] -> plot_current_calibration() -> SaveAs("results/layer1_calibration.png");
+	Layer[1] -> plot_current_calibration() -> SaveAs("results/layer2_calibration.png");
+	Layer[6] -> plot_current_calibration() -> SaveAs("results/layer7_calibration.png");
+	Layer[7] -> plot_current_calibration() -> SaveAs("results/layer8_calibration.png");
 }

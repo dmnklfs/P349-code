@@ -69,7 +69,6 @@ public:
 	double drift_time_to_distance(double drift_time);
 	void calculate_hit_position();
 	void calculate_deltas();
-	void fill_chi2(double _chi2_cut);
 	void fill_delta(double _chi2_cut);
 	
 	// in each iteration
@@ -78,7 +77,6 @@ public:
 	void set_fit_errors();
 
 	// plotting
-	TCanvas* plot_chi2();		// w kazdej iteracji mozna dodawac histogramy do wektora, pozniej zwracac wektor do main
 	TCanvas* plot_delta();
 	TCanvas* plot_delta_cut();
 	TCanvas* plot_current_calibration();
@@ -107,9 +105,7 @@ private:
 	double corr_bin_width;
 	double max_time_range;
 
-	TH1F *chi2;
 	TH2F *delta;
-	TH1F *chi2_cut;
 	TH2F *delta_cut;
 
 	std::vector<double> ProjectionConstant;

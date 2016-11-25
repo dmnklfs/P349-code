@@ -41,8 +41,15 @@ public:
 	void calculate_hit_position();
 	void fill_histograms(double _chi2_cut);
 	void fit_events_in_straight_layers();
+	void calculate_deltas();
 	void set_values_of_track_projections_params();
 	void deletations();
+	void fill_chi2(double _chi2_cut);
+	TCanvas* plot_chi2();		// w kazdej iteracji mozna dodawac histogramy do wektora, pozniej zwracac wektor do main
+	TCanvas* plot_delta();
+	void fit_delta_projections();
+	void apply_corrections();
+	TCanvas* plot_current_calibration();
 
 private:
 	CalibrationLayer *Layer[8];
@@ -52,6 +59,8 @@ private:
 	double max_time_range;
 	double calib_bin_width;
 	double corr_bin_width;
+	TH1F *chi2;
+	TH1F *chi2_cut;
 
 	// a, b track parameters in the frames of each set of layers (straight, Pl - +31, M - -31)
 	std::vector<double> StraightLayersTracks_apar;
@@ -61,7 +70,7 @@ private:
 	std::vector<double> InclinedLayersMTracks_apar;
 	std::vector<double> InclinedLayersMTracks_bpar;
 
-	
+	std::vector<double> Chi2;
 };
 
 #endif

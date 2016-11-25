@@ -21,7 +21,8 @@ int main(int argc, char *argv[])
 	//-----------------------------------------------------------------------------------------------------
 	SingleEvent *single_event;
 	EventDisplay *event_to_display;
-	SimpleCalibration *simple_calibration = new SimpleCalibration(config);
+	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
+  Calibration *calibration = new Calibration(config);
 	std::cout << "* start of the loop over the events" << std::endl;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
   	{
@@ -68,8 +69,9 @@ int main(int argc, char *argv[])
   			//event_to_display -> get_canvas() -> SaveAs(name);
 
   			//data for the simple calibration
-  			simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
-  			//delete event_to_display;
+  			//simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
+  			calibration -> get_data( single_event -> SingleEvent::D1::get_data_for_calibration() ); 
+        //delete event_to_display;
   			
   		} // end if correct event
 
@@ -79,6 +81,16 @@ int main(int argc, char *argv[])
       in_out -> Tree::fill_rough_histos(single_event -> SingleEvent::get_hist_data());
   		delete single_event;
   	} // end of loop over events
+    calibration -> tell_no_of_events();
+    calibration -> calculate_hit_position();
+    calibration -> fit_events_in_straight_layers();
+    calibration -> set_values_of_track_projections_params();
+    calibration -> calculate_deltas();
+    calibration -> fill_histograms(1000);
+    calibration -> fit_delta_projections();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    /*
     simple_calibration -> show_drift_times();
   	simple_calibration -> tell_no_of_events();
     //simple_calibration -> show_drift_times();
@@ -94,7 +106,7 @@ int main(int argc, char *argv[])
   	simple_calibration -> plot_current_calibration() -> Write(); //SaveAs("results/calib_corr.png");
 
   	simple_calibration -> deletations();
-    
+
     std::cout << "1st it was ok " << std::endl;
   	simple_calibration -> recalculate_positions();
     std::cout << "1st it was ok " << std::endl;
@@ -120,7 +132,7 @@ int main(int argc, char *argv[])
   	simple_calibration -> plot_current_calibration() -> Write(); //SaveAs("results/calib_corr_2.png");
 
   	simple_calibration -> deletations();
-    /*
+
   	simple_calibration -> recalculate_positions();
   	simple_calibration -> fit_events(2);
   	simple_calibration -> plot_chi2() -> Write(); //SaveAs("results/chi2_3.png");
