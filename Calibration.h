@@ -39,21 +39,24 @@ public:
 	void tell_no_of_events();
 	void solve_lr_ambiguity(const CalibrationLayer &layer1, const CalibrationLayer &layer2);
 	void calculate_hit_position();
-	void fill_histograms(double _chi2_cut);
-	void fit_events_in_straight_layers();
+	void save_histograms();
+	void fit_events_in_straight_layers(double _chi2_cut);
 	void calculate_deltas();
 	void set_values_of_track_projections_params();
 	void deletations();
 	void fill_chi2(double _chi2_cut);
 	TCanvas* plot_chi2();		// w kazdej iteracji mozna dodawac histogramy do wektora, pozniej zwracac wektor do main
+	TCanvas* plot_chi2_cut();
 	TCanvas* plot_delta();
 	void fit_delta_projections();
 	void apply_corrections();
-	TCanvas* plot_current_calibration();
+	void plot_current_calibration();
+	void set_no_of_iteration(double _no_of_iteration);
+	void set_no_of_bin_in_event();
 
 private:
 	CalibrationLayer *Layer[8];
-	int no_of_iterations;
+	int no_of_iteration;
 	int no_of_calib_bins;
 	int no_of_corr_bins;
 	double max_time_range;

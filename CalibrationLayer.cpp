@@ -30,17 +30,17 @@ void CalibrationLayer::set_no_of_corr_bins(double _no_of_corr_bins)
 	if (-1!=max_time_range)
 	{
 		corr_bin_width = max_time_range/no_of_corr_bins;
-	}
-	TString name;
-	name = Form("layer%d #Delta", layer_no);
-	delta = new TH2F(name, name, no_of_corr_bins, 0, 610, 300, -2.0, 2.0);
-	delta->GetXaxis()->SetTitle("time [ns]");
-	delta->GetYaxis()->SetTitle("delta [cm]");
+		TString name;
+		name = Form("layer%d #Delta", layer_no);
+		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 300, -2.0, 2.0);
+		delta->GetXaxis()->SetTitle("time [ns]");
+		delta->GetYaxis()->SetTitle("delta [cm]");
 
-	name = Form("layer%d #Delta cut", layer_no);
-	delta_cut = new TH2F(name, name, no_of_corr_bins, 0, 610, 300, -2.0, 2.0);
-	delta_cut->GetXaxis()->SetTitle("time [ns]");
-	delta_cut->GetYaxis()->SetTitle("delta [cm]");
+		name = Form("layer%d #Delta cut", layer_no);
+		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 300, -2.0, 2.0);
+		delta_cut->GetXaxis()->SetTitle("time [ns]");
+		delta_cut->GetYaxis()->SetTitle("delta [cm]");
+	}
 }
 
 void CalibrationLayer::set_max_time_range(double _max_time_range)
@@ -50,7 +50,65 @@ void CalibrationLayer::set_max_time_range(double _max_time_range)
 	{
 		calib_bin_width = max_time_range/no_of_calib_bins;
 		corr_bin_width = max_time_range/no_of_corr_bins;
+		TString name;
+		name = Form("layer%d #Delta", layer_no);
+		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 300, -2.0, 2.0);
+		delta->GetXaxis()->SetTitle("time [ns]");
+		delta->GetYaxis()->SetTitle("delta [cm]");
+
+		name = Form("layer%d #Delta cut", layer_no);
+		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 300, -2.0, 2.0);
+		delta_cut->GetXaxis()->SetTitle("time [ns]");
+		delta_cut->GetYaxis()->SetTitle("delta [cm]");
 	}
+}
+
+void CalibrationLayer::set_no_of_bin_in_event()
+{
+	double dtime;
+	for (unsigned int i = 0; i < CalibrationData.size(); i++)
+	{
+		dtime = CalibrationData.at(i).drift_time;
+		for (int j = 0; j < no_of_calib_bins; j++)
+		{
+			if (dtime >= DriftTimes.at(j) && dtime < DriftTimes.at(j+1))
+			{
+				CalibrationData.at(i).calib_bin = j;
+				break;
+			}
+		}
+
+		for (int j = 0; j < no_of_corr_bins; j++)
+		{
+			if (dtime >= j*corr_bin_width && dtime < (j+1)*corr_bin_width)
+			{
+				CalibrationData.at(i).corr_bin = j;
+				break;
+			}
+		}
+	}
+}
+
+void CalibrationLayer::set_no_of_bin_in_calib()
+{
+	double dtime;
+	for (unsigned int i = 0; i < DriftTimes.size(); i++)
+	{
+		dtime = DriftTimes.at(i);
+		for (int j = 0; j < no_of_corr_bins; j++)
+		{
+			if (dtime >= j*corr_bin_width && dtime < (j+1)*corr_bin_width)
+			{
+				Bins.push_back(j);
+				break;
+			}
+		}
+	}
+}
+
+void CalibrationLayer::set_no_of_iteration(double _no_of_iteration)
+{
+	no_of_iteration = _no_of_iteration;
 }
 
 void CalibrationLayer::get_data(double _wire_pos_X, double _wire_pos_Z, double _drift_time, int _lr)
@@ -59,8 +117,6 @@ void CalibrationLayer::get_data(double _wire_pos_X, double _wire_pos_Z, double _
 	data.wire_pos_X = _wire_pos_X;
 	data.wire_pos_Z = _wire_pos_Z;
 	data.drift_time = _drift_time;
-	data.calib_bin = floor(data.drift_time/calib_bin_width);
-	data.corr_bin = floor(data.drift_time/corr_bin_width);
 	data.left_right = _lr;
 	CalibrationData.push_back(data);
 }
@@ -75,21 +131,21 @@ void CalibrationLayer::calculate_hit_position()
 		wirez = CalibrationData.at(i).wire_pos_Z;
 		lr = CalibrationData.at(i).left_right;
 		drifttime = CalibrationData.at(i).drift_time;
-		CalibrationData.at(i).hit_pos_X = wirex+lr*drift_time_to_distance(drifttime);
+		CalibrationData.at(i).hit_pos_X = wirex+lr*drift_time_to_distance(CalibrationData.at(i).calib_bin, drifttime);
 		CalibrationData.at(i).hit_pos_Z = wirez;
 	}
 }
 
-double CalibrationLayer::drift_time_to_distance(double drift_time)
+double CalibrationLayer::drift_time_to_distance(int i, double drift_time) // i - calib bin
 {
 	double distance;
-	int calib_bin = floor(drift_time/calib_bin_width);
+	int calib_bin = i;
 	double t1 = DriftTimes.at(calib_bin);
 	double t2 = DriftTimes.at(calib_bin+1);
 	double x1 = Distances.at(calib_bin);
 	double x2 = Distances.at(calib_bin+1);
 	// linear approximation between t1 and t2: t1   x  t2
-	distance = Distances.at(calib_bin) + (x2 - x1)*(drift_time - t1)/(t2 - t1);
+	distance = x1 + (x2 - x1)*(drift_time - t1)/(t2 - t1);
 	return distance;
 }
 
@@ -105,14 +161,22 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 	int no_of_entries_in_projection;
 	TCanvas *c_delta_projection;
 	TF1 *gaussian = new TF1("gaussian","gaus", -1.5, 1.5);
-	double hist_center, hist_sigma;
+	double hist_center, hist_sigma, hist_max_bin, bin_min, bin_max, bin_width;
 	for (int i = 0; i < no_of_corr_bins+1; i++) // there was no_of_corr_bins + 1, removed 22.11.16
 	{
-		delta_projection = delta_cut -> ProjectionY("",i,i+1);
+		delta_projection = delta -> ProjectionY("",i,i+1);
+		bin_width = delta_projection -> GetBinWidth(1);
 		no_of_entries_in_projection = delta_projection -> GetEntries();
 		hist_center = delta_projection -> GetMean();
 		hist_sigma = delta_projection -> GetRMS();
-
+		delta_projection->GetXaxis()->SetRangeUser(hist_center - 0.5*hist_sigma,hist_center + 0.5*hist_sigma);
+		hist_max_bin = delta_projection -> GetBinCenter(delta_projection -> GetMaximumBin());
+		hist_center = hist_max_bin;	
+		delta_projection->GetXaxis()->SetRangeUser(-1.5,1.5);
+//		if ( hist_max_bin > (hist_center - hist_sigma) && hist_max_bin < (hist_center + hist_sigma) )
+//		{
+//			hist_center = hist_max_bin;			
+//		}
 		ProjectionName = Form("projection_%d",i);
 		c_delta_projection = new TCanvas(ProjectionName);
 		gStyle->SetStatW(0.15);
@@ -121,10 +185,10 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 		gStyle->SetStatY(0.9);             
 		ProjectionName = Form(folder_name + TString("projection_%d.png"),i);
 		delta_projection -> Draw();
-		if (no_of_entries_in_projection > 10)
+		if (no_of_entries_in_projection > 40)
 		{
-			gaussian -> SetParameters(delta_projection -> GetMaximum(), 0, 0.1);
-			delta_projection->Fit("gaussian","","",hist_center-hist_sigma,hist_center+hist_sigma);
+			gaussian -> SetParameters(delta_projection -> GetMaximum(), hist_center, 0.1);
+			delta_projection->Fit("gaussian","QEMI","",hist_center-0.15,hist_center+0.15);//hist_center-hist_sigma,hist_center+hist_sigma);
 			ProjectionConstant.push_back(gaussian->GetParameter(0));
     		ProjectionMean.push_back(gaussian->GetParameter(1));
     		ProjectionSigma.push_back(0.5*gaussian->GetParameter(2));
@@ -146,11 +210,10 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 
 void CalibrationLayer::apply_corrections()
 {
-	//if (Distances.size()!=ProjectionMean.size()) std::cout << "ERROR in SimpleCalibration::apply_corrections(): incorrect sizes!!!" << std::endl;
 	int corr_bin;
-	for (unsigned int i = 0; i < Distances.size(); i++)
+	for (unsigned int i = 0; i < no_of_corr_bins; i++)
 	{
-		corr_bin = floor(DriftTimes.at(i)/corr_bin_width);
+		corr_bin = Bins.at(i);
 		if(-1!=ProjectionMean.at(corr_bin)) Distances.at(i) = Distances.at(i) + ProjectionMean.at(corr_bin);
 		if (Distances.at(i) < 0) Distances.at(i) = 0;
 	}
@@ -165,30 +228,10 @@ void CalibrationLayer::deletations()
 	delta_cut -> Reset();
 }
 
-void CalibrationLayer::recalculate_positions()
-{
-	for (unsigned int i = 0; i < CalibrationData.size(); i++)
-	{
-		CalibrationData.at(i).hit_pos_X = CalibrationData.at(i).wire_pos_X+(CalibrationData.at(i).left_right)*drift_time_to_distance(CalibrationData.at(i).drift_time);
-	}
-}
-
-void CalibrationLayer::fill_delta(double _chi2_cut)
-{
-	for (unsigned int i = 0; i < CalibrationData.size(); i++)
-	{
-		if (-1!=CalibrationData.at(i).delta)
-		{
-			delta -> Fill(CalibrationData.at(i).drift_time, CalibrationData.at(i).delta);
-			if (CalibrationData.at(i).chi2 < _chi2_cut) delta_cut -> Fill(CalibrationData.at(i).drift_time, CalibrationData.at(i).delta);
-		}
-	}
-}
-
 TCanvas* CalibrationLayer::plot_delta()
 {
 	TString name;
-	name = Form("c layer%d #Delta",layer_no);
+	name = Form("c layer%d #Delta iteration %d",layer_no, no_of_iteration);
 	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
 	gStyle->SetStatX(0.9);                
 	gStyle->SetStatW(0.2);
@@ -202,7 +245,7 @@ TCanvas* CalibrationLayer::plot_delta()
 TCanvas* CalibrationLayer::plot_delta_cut()
 {
 	TString name;
-	name = Form("c layer%d #Delta cut",layer_no);
+	name = Form("c layer%d #Delta cut iteration %d",layer_no, no_of_iteration);
 	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
 	gStyle->SetStatX(0.9);                
 	gStyle->SetStatW(0.2);
@@ -215,36 +258,46 @@ TCanvas* CalibrationLayer::plot_delta_cut()
 
 TCanvas* CalibrationLayer::plot_current_calibration()
 {
+	std::cout << "CALIBRATION" << std::endl;
+	for (int i = 0; i < DriftTimes.size(); i++)
+	{
+		std::cout << DriftTimes.at(i) << " " << Distances.at(i) << std::endl;
+	}
+
 	TString name;
-	name = Form("c layer%d current calibration",layer_no);
+	name = Form("c layer%d current calibration iteration %d", layer_no, no_of_iteration);
 	TGraph* current_calibration;
 	TGraph* initial_calibration;
 	current_calibration = new TGraph(DriftTimes.size(), &DriftTimes.at(0), &Distances.at(0));
 	current_calibration -> SetLineColor(kRed);
+	current_calibration -> SetMarkerColor(kRed);
+	current_calibration -> SetMarkerStyle(7);
+	current_calibration -> SetLineWidth(3);
 	initial_calibration = new TGraph(InitialDriftTimes.size(), &InitialDriftTimes.at(0), &InitialDistances.at(0));
 	initial_calibration -> SetLineColor(kBlue);
 	TCanvas *c_current_calibration = new TCanvas(name,name);
-	current_calibration -> Draw("AL");
+	current_calibration -> Draw("AP");
    	current_calibration->SetMinimum(0);
    	current_calibration->SetMaximum(2.5);
    	initial_calibration -> Draw("same");
 	return c_current_calibration;
 }
 
-void CalibrationLayer::calculate_deltas()
+void CalibrationLayer::calculate_deltas(int i)
 {
 	double x, z, a, b, x_wire;
 	double wire_track, wire_hit;
-	for (unsigned int i = 0; i < CalibrationData.size(); i++)
-	{
-		a = CalibrationData.at(i).track_a;
-		b = CalibrationData.at(i).track_b;
-		x = CalibrationData.at(i).hit_pos_X;
-		z = CalibrationData.at(i).hit_pos_Z;
-		x_wire = CalibrationData.at(i).wire_pos_X;
-		wire_track = fabs((z - b)/a - x_wire);
-		wire_hit = fabs( x - x_wire);
-		if (fabs(wire_hit) < fabs(wire_track)) CalibrationData.at(i).delta = fabs(wire_track - wire_hit);
-		if (fabs(wire_hit) > fabs(wire_track)) CalibrationData.at(i).delta = -fabs(wire_track - wire_hit);
-	}
+	a = CalibrationData.at(i).track_a;
+	b = CalibrationData.at(i).track_b;
+	x = CalibrationData.at(i).hit_pos_X;
+	z = CalibrationData.at(i).hit_pos_Z;
+	x_wire = CalibrationData.at(i).wire_pos_X;
+	wire_track = fabs((z - b)/a - x_wire);
+	wire_hit = fabs( x - x_wire);
+	double delta_val;
+	if (fabs(wire_hit) < fabs(wire_track)) delta_val = fabs(wire_track - wire_hit);
+	if (fabs(wire_hit) > fabs(wire_track)) delta_val = -fabs(wire_track - wire_hit);
+	CalibrationData.at(i).delta = delta_val;
+
+	delta -> Fill(CalibrationData.at(i).drift_time, delta_val);
 }

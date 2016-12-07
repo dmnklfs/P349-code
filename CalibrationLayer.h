@@ -61,14 +61,16 @@ public:
 	// in general - for constructor
 	void set_max_time_range(double _max_time_range);
 	void set_no_of_corr_bins(double _no_of_corr_bins);
+	void set_no_of_bin_in_event();
+	void set_no_of_bin_in_calib();
 
 	// in each event
 	void get_data(double _wire_pos_X, double _wire_pos_Z, double _drift_time, int _lr);
 
 	// in loop over all events
-	double drift_time_to_distance(double drift_time);
+	double drift_time_to_distance(int i, double drift_time);
 	void calculate_hit_position();
-	void calculate_deltas();
+	void calculate_deltas(int i);
 	void fill_delta(double _chi2_cut);
 	
 	// in each iteration
@@ -86,10 +88,14 @@ public:
 	void deletations();
 	void recalculate_positions();
 
+	void set_no_of_iteration(double _no_of_iteration);
+
 	// this should not be like that...
 	std::vector<D1_single_event_data> CalibrationData;
 
 private:
+	int no_of_iteration;
+
 	// calibration data: starting calibration
 	std::vector<double> InitialDriftTimes;
 	std::vector<double> InitialDistances;
@@ -97,6 +103,7 @@ private:
 	// calibration after non-zero no of iterations
 	std::vector<double> DriftTimes;
 	std::vector<double> Distances;
+	std::vector<double> Bins;
 
 	int layer_no;
 	int no_of_calib_bins;	// connected with the size of the calibration vector

@@ -8,7 +8,7 @@ Calibration::Calibration()
 Calibration::Calibration(const Config &_config)
 {
 	
-	no_of_iterations = _config.no_of_iterations_in_simple_calibration; 
+	no_of_iteration = 1; 
 	no_of_calib_bins = 201-1;
 	no_of_corr_bins = _config.no_of_bins_in_simple_calibration-1;
 	max_time_range =  _config.D1_drift_time_max[0];
@@ -16,7 +16,6 @@ Calibration::Calibration(const Config &_config)
 	corr_bin_width = max_time_range/no_of_corr_bins;
 
 	std::cout << "* simple calibration of the D1 will be done" << std::endl;
-	std::cout << "	- number of iterations: " << no_of_iterations << std::endl;
 	std::cout << "	WARNING: You are probably trying to run a Simple Calibration metod. Note that it requires strict conditions on the number of events in the straight layers of the D1. In case of the problems: check the config/remove this objects/adjust methods of the Calibration class/check event selection criteria in the SingleEvent class. Note that the postion in D1 should be calculated FOR WIRES (now)." << std::endl;
 
 	// initialization of the layers
@@ -30,6 +29,7 @@ Calibration::Calibration(const Config &_config)
 		{
 			Layer[i] -> CalibrationLayer::set_no_of_corr_bins(no_of_corr_bins);
 			Layer[i] -> CalibrationLayer::set_max_time_range(max_time_range);
+			Layer[i] -> CalibrationLayer::set_no_of_bin_in_calib();
 		}
 		else 
 		{
@@ -41,17 +41,17 @@ Calibration::Calibration(const Config &_config)
 	}
 	TString name;
 	name = Form("#chi^{2}",1);
-	chi2 = new TH1F(name, name, 400, -1, 5);
+	chi2 = new TH1F(name, name, 400, -0.25, 3);
 	chi2->GetXaxis()->SetTitle("#chi^{2}");
 	chi2->GetYaxis()->SetTitle("counts");
 	chi2->SetLineWidth(2);
-	chi2->SetLineColor(kBlue);
+	//chi2->SetLineColor(kBlue);
 
 	name = Form("#chi^{2} cut", 1);
-	chi2_cut = new TH1F(name, name, 400, -1, 5);
+	chi2_cut = new TH1F(name, name, 400, -0.1, 0.5);
 	chi2_cut->GetXaxis()->SetTitle("#chi^{2}");
 	chi2_cut->GetYaxis()->SetTitle("counts");
-	chi2_cut->SetLineColor(kRed);
+	//chi2_cut->SetLineColor(kRed);
 }
 
 Calibration::~Calibration()
@@ -109,6 +109,18 @@ void Calibration::get_data(data_for_D1_calibration _single_event_data)
 	}
 }
 
+void Calibration::set_no_of_iteration(double _no_of_iteration)
+{
+	no_of_iteration = _no_of_iteration;
+	for (int i = 0; i < 8; i++)
+	{
+		if (0==i||1==i||6==i||7==i)
+		{
+			Layer[i] -> CalibrationLayer::set_no_of_iteration(_no_of_iteration);
+		}
+	}
+}
+
 void Calibration::calculate_hit_position()
 {
 	for (int i = 0; i < 8; i++)
@@ -120,30 +132,37 @@ void Calibration::calculate_hit_position()
 	}
 }
 
-void Calibration::fill_histograms(double _chi2_cut)
+void Calibration::set_no_of_bin_in_event()
 {
-	TString name;
-	fill_chi2(_chi2_cut);
-	name = Form("results/_chi2.png",1);
-	plot_chi2() -> SaveAs(name);
 	for (int i = 0; i < 8; i++)
 	{
 		if (0==i||1==i||6==i||7==i)
 		{
-			Layer[i] -> CalibrationLayer::fill_delta(_chi2_cut);
-			name = Form("results/layer%d_delta.png",i+1);
-			Layer[i] -> CalibrationLayer::plot_delta() -> SaveAs(name);
-			name = Form("results/layer%d_delta_cut.png",i+1);
-			Layer[i] -> CalibrationLayer::plot_delta_cut() -> SaveAs(name);			
+			Layer[i] -> CalibrationLayer::set_no_of_bin_in_event();
 		}
 	}
 }
 
-void Calibration::fit_events_in_straight_layers()
+void Calibration::save_histograms()
+{
+	TString name;
+	name = Form("results/chi2_iteration_%d.png",no_of_iteration);
+	plot_chi2() -> SaveAs(name);
+	name = Form("results/chi2_range_iteration_%d.png",no_of_iteration);
+	plot_chi2_cut() -> SaveAs(name);
+	for (int i = 0; i < 8; i++)
+	{
+		if (0==i||1==i||6==i||7==i)
+		{
+			name = Form("results/layer%d_delta_iteration_%d.png",i+1, no_of_iteration);
+			Layer[i] -> CalibrationLayer::plot_delta() -> SaveAs(name);		
+		}
+	}
+}
+
+void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 {
 	std::vector<double> results;
-	unsigned int no_of_chosen_events;
-	no_of_chosen_events = Layer[0] -> CalibrationData.size();
 	double hits_positionsX[4];
 	double hits_positionsZ[4];
 	double errors[4];
@@ -152,6 +171,11 @@ void Calibration::fit_events_in_straight_layers()
 	layers_numbers[1] = 1;
 	layers_numbers[2] = 6;
 	layers_numbers[3] = 7;
+
+	double aSt, bSt, chi2St;
+
+	unsigned int no_of_chosen_events;
+	no_of_chosen_events = Layer[0] -> CalibrationData.size();
 	for (unsigned int i = 0; i < no_of_chosen_events; i++)
 	{
 		// take the single event data
@@ -161,64 +185,40 @@ void Calibration::fit_events_in_straight_layers()
 			hits_positionsZ[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_Z;
 			errors[j] = 1;
 		}
+		// fit for the straight layers
 		MinuitFit * fit = MinuitFit::GetInstance();		
 		fit -> MinuitFit::set_values(hits_positionsX, hits_positionsZ, errors);
 		results = fit -> MinuitFit::fit_with_minuit();
-
 		if (!(fit -> err_flag()))
 		{
-			StraightLayersTracks_apar.push_back(results.at(0));
-			StraightLayersTracks_bpar.push_back(results.at(1));
-			Chi2.push_back(results.at(2));
+			aSt = results.at(0);
+			bSt = results.at(1);
+			chi2St = results.at(2);
+			chi2 -> Fill(chi2St);
+			if (chi2St < _chi2_cut) chi2_cut -> Fill(chi2St);
+			if (chi2St < _chi2_cut) chi2 -> Fill(chi2St);
 		}
 		else // needed. StraightLayersTracks* have to have the same length as the CalibrationData in certain layers
 		{
-			StraightLayersTracks_apar.push_back(-1);
-			StraightLayersTracks_bpar.push_back(-1);
-			Chi2.push_back(-1);
+			aSt = -1;
+			bSt = -1;
 		}
+
 		results.clear();
 		delete fit;
-	}
-}
 
-void Calibration::set_values_of_track_projections_params()
-{
-	// there should be an additional step before: combination of informations from different angle-planes
-	// into one 3d track and then projecting these parameters into the planes
-	unsigned int no_of_chosen_events;
-	no_of_chosen_events = Layer[0] -> CalibrationData.size();
-	int straight_layers_numbers[4];
-	straight_layers_numbers[0] = 0;
-	straight_layers_numbers[1] = 1;
-	straight_layers_numbers[2] = 6;
-	straight_layers_numbers[3] = 7;
-	for (unsigned int i = 0; i < no_of_chosen_events; i++)
-	{
+		// there should be fit in inclined layers
+		// there should be some 3d fitting
+
+		// set values is straight layers
 		for (int j = 0; j < 4; j++)
 		{
-			Layer[straight_layers_numbers[j]] -> CalibrationData.at(i).track_a = StraightLayersTracks_apar.at(i);
-			Layer[straight_layers_numbers[j]] -> CalibrationData.at(i).track_b = StraightLayersTracks_bpar.at(i);
+			Layer[layers_numbers[j]] -> CalibrationData.at(i).track_a = aSt;
+			Layer[layers_numbers[j]] -> CalibrationData.at(i).track_b = bSt;
+			Layer[layers_numbers[j]] -> calculate_deltas(i);
 		}
-	}
-}
 
-void Calibration::calculate_deltas()
-{
-	unsigned int no_of_chosen_events;
-	no_of_chosen_events = Layer[0] -> CalibrationData.size();
-	int straight_layers_numbers[4];
-	straight_layers_numbers[0] = 0;
-	straight_layers_numbers[1] = 1;
-	straight_layers_numbers[2] = 6;
-	straight_layers_numbers[3] = 7;
-	for (unsigned int i = 0; i < no_of_chosen_events; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			Layer[straight_layers_numbers[j]] -> calculate_deltas();
-		}
-	}
+	}// end of loop over all calib events
 }
 
 void Calibration::deletations()
@@ -238,37 +238,41 @@ void Calibration::deletations()
 	chi2_cut -> Reset();
 }
 
-void Calibration::fill_chi2(double _chi2_cut)
-{
-	for (unsigned int i = 0; i < Chi2.size(); i++)
-	{
-		if (-1!=Chi2.at(i))
-		{
-			chi2 -> Fill(Chi2.at(i));
-			if (Chi2.at(i) < _chi2_cut) chi2_cut -> Fill(Chi2.at(i));
-		}
-	}
-}
-
 TCanvas* Calibration::plot_chi2()
 {
 	TString name;
-	name = "c_#chi^{2}";
+	name = "c_#chi^{2}_1";
 	TCanvas *c = new TCanvas(name,name);
 	gStyle -> SetOptStat(1111111);
 	gStyle->SetStatX(0.9);                
 	gStyle->SetStatW(0.2);
 	chi2 -> Draw();
-	chi2_cut -> Draw("same");
 	return c;
+}
+
+TCanvas* Calibration::plot_chi2_cut()
+{
+	TString name;
+	name = "c_#chi^{2}_2";
+	TCanvas *c2 = new TCanvas(name,name);
+	gStyle -> SetOptStat(1111111);
+	gStyle->SetStatX(0.9);                
+	gStyle->SetStatW(0.2);
+	chi2_cut -> Draw();
+	return c2;
 }
 
 void Calibration::fit_delta_projections()
 {
-	Layer[0] -> fit_delta_projections("results/DeltaProjections1/");
-	Layer[1] -> fit_delta_projections("results/DeltaProjections2/");
-	Layer[6] -> fit_delta_projections("results/DeltaProjections6/");
-	Layer[7] -> fit_delta_projections("results/DeltaProjections7/");
+	TString name;
+	name = Form("results/DeltaProjections1_iteration_%d/",no_of_iteration);
+	Layer[0] -> fit_delta_projections(name);
+	name = Form("results/DeltaProjections2_iteration_%d/",no_of_iteration);
+	Layer[1] -> fit_delta_projections(name);
+	name = Form("results/DeltaProjections6_iteration_%d/",no_of_iteration);
+	Layer[6] -> fit_delta_projections(name);
+	name = Form("results/DeltaProjections7_iteration_%d/",no_of_iteration);
+	Layer[7] -> fit_delta_projections(name);
 }
 
 void Calibration::apply_corrections()
@@ -279,10 +283,15 @@ void Calibration::apply_corrections()
 	Layer[7] -> apply_corrections();
 }
 
-TCanvas* Calibration::plot_current_calibration()
+void Calibration::plot_current_calibration()
 {
-	Layer[0] -> plot_current_calibration() -> SaveAs("results/layer1_calibration.png");
-	Layer[1] -> plot_current_calibration() -> SaveAs("results/layer2_calibration.png");
-	Layer[6] -> plot_current_calibration() -> SaveAs("results/layer7_calibration.png");
-	Layer[7] -> plot_current_calibration() -> SaveAs("results/layer8_calibration.png");
+	TString name;
+	name = Form("results/layer1_calibration_iteration_%d.png",no_of_iteration);
+	Layer[0] -> plot_current_calibration() -> SaveAs(name);
+	name = Form("results/layer2_calibration_iteration_%d.png",no_of_iteration);
+	Layer[1] -> plot_current_calibration() -> SaveAs(name);
+	name = Form("results/layer7_calibration_iteration_%d.png",no_of_iteration);
+	Layer[6] -> plot_current_calibration() -> SaveAs(name);
+	name = Form("results/layer8_calibration_iteration_%d.png",no_of_iteration);
+	Layer[7] -> plot_current_calibration() -> SaveAs(name);
 }

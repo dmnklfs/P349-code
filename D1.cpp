@@ -299,11 +299,15 @@ data_for_D1_calibration D1::get_data_for_calibration()
 	data_for_D1_calibration data_for_calibration;
 	for (int i = 0; i < 8; i++)
 	{
+		//std::cout << i+1 << " wire: " << Layer[i] -> Wire.at(0) << std::endl;
+		//std::cout << i+1 << " time: " << Layer[i] -> DriftTime.at(0) << std::endl;
 		if (0==i||1==i||6==i||7==i)
 		{
 			data_for_calibration.positionsX[i]	= Layer[i] -> AbsoluteXPosition.at(0);
 			data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
 			data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
+			//std::cout << i << ": " << Layer[i] -> AbsoluteXPosition.at(0) << std::endl;
+			//std::cout << i << ": " << Layer[i] -> DriftTime.at(0)*2*pow(600,-1) << std::endl;
 		}
 		else
 		{

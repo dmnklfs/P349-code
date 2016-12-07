@@ -82,14 +82,30 @@ int main(int argc, char *argv[])
   		delete single_event;
   	} // end of loop over events
     calibration -> tell_no_of_events();
+    calibration -> set_no_of_bin_in_event();
+    
+    calibration -> set_no_of_iteration(0);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers();
-    calibration -> set_values_of_track_projections_params();
-    calibration -> calculate_deltas();
-    calibration -> fill_histograms(1000);
+    calibration -> fit_events_in_straight_layers(1000);
+    // add: make a 3d track, make projections
+
+    calibration -> save_histograms();
     calibration -> fit_delta_projections();
     calibration -> apply_corrections();
     calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(1);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events_in_straight_layers(1000);
+    // add: make a 3d track, make projections
+
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
     /*
     simple_calibration -> show_drift_times();
   	simple_calibration -> tell_no_of_events();
