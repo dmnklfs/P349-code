@@ -37,6 +37,7 @@ struct D1_single_event_data
 	double delta;
 	double track_a; // projections of 3d track on a given axis
 	double track_b; // projections of 3d track on a given axis
+	double track_angle;
 	double chi2;
 	bool errflag;
 	int calib_bin;

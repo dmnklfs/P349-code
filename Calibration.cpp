@@ -52,6 +52,8 @@ Calibration::Calibration(const Config &_config)
 	chi2_cut->GetXaxis()->SetTitle("#chi^{2}");
 	chi2_cut->GetYaxis()->SetTitle("counts");
 	//chi2_cut->SetLineColor(kRed);
+
+	angle_distribution = new TH1F("track angles", "track angles", 2000, 72, 92);
 }
 
 Calibration::~Calibration()
@@ -150,12 +152,14 @@ void Calibration::save_histograms()
 	plot_chi2() -> SaveAs(name);
 	name = Form("results/chi2_range_iteration_%d.png",no_of_iteration);
 	plot_chi2_cut() -> SaveAs(name);
+	name = Form("results/tracks_anglular_distribution_iteration_%d.png",no_of_iteration);
+	plot_angle_distribution() -> SaveAs(name);
 	for (int i = 0; i < 8; i++)
 	{
 		if (0==i||1==i||6==i||7==i)
 		{
 			name = Form("results/layer%d_delta_iteration_%d.png",i+1, no_of_iteration);
-			Layer[i] -> CalibrationLayer::plot_delta() -> SaveAs(name);		
+			Layer[i] -> CalibrationLayer::plot_delta() -> SaveAs(name);	
 		}
 	}
 }
@@ -214,6 +218,11 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 		for (int j = 0; j < 4; j++)
 		{
 			Layer[layers_numbers[j]] -> CalibrationData.at(i).track_a = aSt;
+			Layer[layers_numbers[j]] -> CalibrationData.at(i).track_angle = atan(aSt)*180*pow(3.14,-1);
+			//if (Layer[layers_numbers[0]] -> CalibrationData.at(i).track_angle <= 89.5)
+			//{
+				angle_distribution -> Fill(atan(aSt)*180*pow(3.14,-1));
+			//}
 			Layer[layers_numbers[j]] -> CalibrationData.at(i).track_b = bSt;
 			Layer[layers_numbers[j]] -> calculate_deltas(i);
 		}
@@ -236,6 +245,7 @@ void Calibration::deletations()
 	Chi2.clear();
 	chi2 -> Reset();
 	chi2_cut -> Reset();
+	angle_distribution -> Reset();
 }
 
 TCanvas* Calibration::plot_chi2()
@@ -246,6 +256,8 @@ TCanvas* Calibration::plot_chi2()
 	gStyle -> SetOptStat(1111111);
 	gStyle->SetStatX(0.9);                
 	gStyle->SetStatW(0.2);
+	gStyle->SetStatH(0.1);
+	gStyle->SetStatY(0.9);
 	chi2 -> Draw();
 	return c;
 }
@@ -258,6 +270,8 @@ TCanvas* Calibration::plot_chi2_cut()
 	gStyle -> SetOptStat(1111111);
 	gStyle->SetStatX(0.9);                
 	gStyle->SetStatW(0.2);
+	gStyle->SetStatH(0.1);
+	gStyle->SetStatY(0.9);
 	chi2_cut -> Draw();
 	return c2;
 }
@@ -294,4 +308,20 @@ void Calibration::plot_current_calibration()
 	Layer[6] -> plot_current_calibration() -> SaveAs(name);
 	name = Form("results/layer8_calibration_iteration_%d.png",no_of_iteration);
 	Layer[7] -> plot_current_calibration() -> SaveAs(name);
+}
+
+TCanvas* Calibration::plot_angle_distribution()
+{
+	TString name;
+	name = Form("Track angles distribution iteration %d", no_of_iteration);
+	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
+	gStyle->SetStatX(0.4);                
+	gStyle->SetStatW(0.2);
+	gStyle->SetStatH(0.1);
+	gStyle->SetStatY(0.9);
+	TCanvas *c = new TCanvas(name,name);
+	gStyle -> SetOptStat(1111111);
+	gPad -> SetLogy();
+	angle_distribution -> Draw();
+	return c;
 }

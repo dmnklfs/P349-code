@@ -179,16 +179,16 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 //		}
 		ProjectionName = Form("projection_%d",i);
 		c_delta_projection = new TCanvas(ProjectionName);
-		gStyle->SetStatW(0.15);
-		gStyle->SetStatH(0.1);
+		gStyle->SetStatW(0.3);
+		gStyle->SetStatH(0.2);
 		gStyle->SetStatX(0.4);   
 		gStyle->SetStatY(0.9);             
 		ProjectionName = Form(folder_name + TString("projection_%d.png"),i);
 		delta_projection -> Draw();
-		if (no_of_entries_in_projection > 40)
+		if (no_of_entries_in_projection > 10)
 		{
 			gaussian -> SetParameters(delta_projection -> GetMaximum(), hist_center, 0.1);
-			delta_projection->Fit("gaussian","QEMI","",hist_center-0.15,hist_center+0.15);//hist_center-hist_sigma,hist_center+hist_sigma);
+			delta_projection->Fit("gaussian","WWQEMI","",hist_center-0.15,hist_center+0.15);//hist_center-hist_sigma,hist_center+hist_sigma);
 			ProjectionConstant.push_back(gaussian->GetParameter(0));
     		ProjectionMean.push_back(gaussian->GetParameter(1));
     		ProjectionSigma.push_back(0.5*gaussian->GetParameter(2));
@@ -235,6 +235,8 @@ TCanvas* CalibrationLayer::plot_delta()
 	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
 	gStyle->SetStatX(0.9);                
 	gStyle->SetStatW(0.2);
+	gStyle->SetStatH(0.1);
+	gStyle->SetStatY(0.9);
 	TCanvas *c = new TCanvas(name,name);
 	gStyle -> SetOptStat(1111111);
 	gPad -> SetLogz();
@@ -249,6 +251,8 @@ TCanvas* CalibrationLayer::plot_delta_cut()
 	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
 	gStyle->SetStatX(0.9);                
 	gStyle->SetStatW(0.2);
+	gStyle->SetStatH(0.1);
+	gStyle->SetStatY(0.9);
 	TCanvas *c = new TCanvas(name,name);
 	gStyle -> SetOptStat(1111111);
 	gPad -> SetLogz();
@@ -258,11 +262,11 @@ TCanvas* CalibrationLayer::plot_delta_cut()
 
 TCanvas* CalibrationLayer::plot_current_calibration()
 {
-	std::cout << "CALIBRATION" << std::endl;
-	for (int i = 0; i < DriftTimes.size(); i++)
-	{
-		std::cout << DriftTimes.at(i) << " " << Distances.at(i) << std::endl;
-	}
+//	std::cout << "CALIBRATION" << std::endl;
+//	for (int i = 0; i < DriftTimes.size(); i++)
+//	{
+//		std::cout << DriftTimes.at(i) << " " << Distances.at(i) << std::endl;
+//	}
 
 	TString name;
 	name = Form("c layer%d current calibration iteration %d", layer_no, no_of_iteration);
@@ -299,5 +303,8 @@ void CalibrationLayer::calculate_deltas(int i)
 	if (fabs(wire_hit) > fabs(wire_track)) delta_val = -fabs(wire_track - wire_hit);
 	CalibrationData.at(i).delta = delta_val;
 
-	delta -> Fill(CalibrationData.at(i).drift_time, delta_val);
+	if (CalibrationData.at(i).track_angle <= 89.5)
+	{
+		delta -> Fill(CalibrationData.at(i).drift_time, delta_val);
+	}
 }

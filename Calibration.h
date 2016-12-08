@@ -53,6 +53,8 @@ public:
 	void plot_current_calibration();
 	void set_no_of_iteration(double _no_of_iteration);
 	void set_no_of_bin_in_event();
+	void fill_angle_distribution();
+	TCanvas* plot_angle_distribution();
 
 private:
 	CalibrationLayer *Layer[8];
@@ -64,6 +66,7 @@ private:
 	double corr_bin_width;
 	TH1F *chi2;
 	TH1F *chi2_cut;
+	TH1F *angle_distribution;
 
 	// a, b track parameters in the frames of each set of layers (straight, Pl - +31, M - -31)
 	std::vector<double> StraightLayersTracks_apar;
