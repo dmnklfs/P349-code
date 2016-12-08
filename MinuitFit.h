@@ -19,9 +19,11 @@
 #include <numeric>
 #include <boost/filesystem.hpp>
 #include <cmath>
+#include <math.h> 
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <TMath.h>
 
 
 

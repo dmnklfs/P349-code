@@ -14,6 +14,8 @@ Calibration::Calibration(const Config &_config)
 	max_time_range =  _config.D1_drift_time_max[0];
 	calib_bin_width = max_time_range/no_of_calib_bins;
 	corr_bin_width = max_time_range/no_of_corr_bins;
+	track_angle_min = _config.track_angle_min;
+	track_angle_max = _config.track_angle_max;
 
 	std::cout << "* simple calibration of the D1 will be done" << std::endl;
 	std::cout << "	WARNING: You are probably trying to run a Simple Calibration metod. Note that it requires strict conditions on the number of events in the straight layers of the D1. In case of the problems: check the config/remove this objects/adjust methods of the Calibration class/check event selection criteria in the SingleEvent class. Note that the postion in D1 should be calculated FOR WIRES (now)." << std::endl;
@@ -48,12 +50,20 @@ Calibration::Calibration(const Config &_config)
 	//chi2->SetLineColor(kBlue);
 
 	name = Form("#chi^{2} cut", 1);
-	chi2_cut = new TH1F(name, name, 400, -0.1, 0.5);
+	chi2_cut = new TH1F(name, name, 400, -0.01, 0.1);
 	chi2_cut->GetXaxis()->SetTitle("#chi^{2}");
 	chi2_cut->GetYaxis()->SetTitle("counts");
 	//chi2_cut->SetLineColor(kRed);
 
-	angle_distribution = new TH1F("track angles", "track angles", 2000, 72, 92);
+	//angle_distribution = new TH1F("track angles", "track angles", 2000, 72, 92);
+	angle_distribution = new TH1F("track angles", "track angles", 2000, 89, 91);
+	angle_distribution->GetXaxis()->SetTitle("track angle (deg)");
+	angle_distribution->GetYaxis()->SetTitle("counts");
+	//angle_distribution_no_cut = new TH1F("track angles no cut", "track angles no cut", 2000, 72, 92);
+	angle_distribution_no_cut = new TH1F("track angles no cut", "track angles no cut", 2000, 89, 91);
+	angle_distribution_no_cut->GetXaxis()->SetTitle("track angle (deg)");
+	angle_distribution_no_cut->GetYaxis()->SetTitle("counts");
+	angle_distribution_no_cut->SetLineColor(kRed);
 }
 
 Calibration::~Calibration()
@@ -176,16 +186,18 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 	layers_numbers[2] = 6;
 	layers_numbers[3] = 7;
 
-	double aSt, bSt, chi2St;
+	double aSt, track_angle, bSt, chi2St;
 
 	unsigned int no_of_chosen_events;
 	no_of_chosen_events = Layer[0] -> CalibrationData.size();
 	for (unsigned int i = 0; i < no_of_chosen_events; i++)
 	{
 		// take the single event data
+		std::cout << "----- hits positions -----" << std::endl;
 		for (int j = 0; j < 4; j++)
 		{
 			hits_positionsX[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_X;
+			std::cout << hits_positionsX[j] << std::endl;
 			hits_positionsZ[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_Z;
 			errors[j] = 1;
 		}
@@ -196,11 +208,26 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 		if (!(fit -> err_flag()))
 		{
 			aSt = results.at(0);
+			std::cout << aSt << std::endl;
 			bSt = results.at(1);
+			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
+			std::cout << track_angle << std::endl;
 			chi2St = results.at(2);
-			chi2 -> Fill(chi2St);
-			if (chi2St < _chi2_cut) chi2_cut -> Fill(chi2St);
-			if (chi2St < _chi2_cut) chi2 -> Fill(chi2St);
+			angle_distribution_no_cut -> Fill(track_angle);
+			if ( was_correct_angle(track_angle) )
+			{
+				angle_distribution -> Fill(track_angle);
+				chi2_cut -> Fill(chi2St);
+				chi2 -> Fill(chi2St);
+				// set values is straight layers
+				for (int j = 0; j < 4; j++)
+				{
+					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_a = aSt;
+					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_b = bSt;
+					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_angle = track_angle;
+					Layer[layers_numbers[j]] -> calculate_deltas(i);
+				}
+			}
 		}
 		else // needed. StraightLayersTracks* have to have the same length as the CalibrationData in certain layers
 		{
@@ -213,20 +240,6 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 
 		// there should be fit in inclined layers
 		// there should be some 3d fitting
-
-		// set values is straight layers
-		for (int j = 0; j < 4; j++)
-		{
-			Layer[layers_numbers[j]] -> CalibrationData.at(i).track_a = aSt;
-			Layer[layers_numbers[j]] -> CalibrationData.at(i).track_angle = atan(aSt)*180*pow(3.14,-1);
-			//if (Layer[layers_numbers[0]] -> CalibrationData.at(i).track_angle <= 89.5)
-			//{
-				angle_distribution -> Fill(atan(aSt)*180*pow(3.14,-1));
-			//}
-			Layer[layers_numbers[j]] -> CalibrationData.at(i).track_b = bSt;
-			Layer[layers_numbers[j]] -> calculate_deltas(i);
-		}
-
 	}// end of loop over all calib events
 }
 
@@ -246,6 +259,7 @@ void Calibration::deletations()
 	chi2 -> Reset();
 	chi2_cut -> Reset();
 	angle_distribution -> Reset();
+	angle_distribution_no_cut -> Reset();
 }
 
 TCanvas* Calibration::plot_chi2()
@@ -310,7 +324,7 @@ void Calibration::plot_current_calibration()
 	Layer[7] -> plot_current_calibration() -> SaveAs(name);
 }
 
-TCanvas* Calibration::plot_angle_distribution()
+TCanvas* Calibration::Calibration::plot_angle_distribution()
 {
 	TString name;
 	name = Form("Track angles distribution iteration %d", no_of_iteration);
@@ -322,6 +336,13 @@ TCanvas* Calibration::plot_angle_distribution()
 	TCanvas *c = new TCanvas(name,name);
 	gStyle -> SetOptStat(1111111);
 	gPad -> SetLogy();
-	angle_distribution -> Draw();
+	angle_distribution_no_cut -> Draw();
+	angle_distribution -> Draw("same");
 	return c;
+}
+
+bool Calibration::was_correct_angle(double track_angle)
+{
+	if (track_angle >= track_angle_min && track_angle <= track_angle_max) return true;
+	else return false;
 }

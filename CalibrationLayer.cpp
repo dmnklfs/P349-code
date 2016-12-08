@@ -161,11 +161,10 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 	int no_of_entries_in_projection;
 	TCanvas *c_delta_projection;
 	TF1 *gaussian = new TF1("gaussian","gaus", -1.5, 1.5);
-	double hist_center, hist_sigma, hist_max_bin, bin_min, bin_max, bin_width;
+	double hist_center, hist_sigma, hist_max_bin;
 	for (int i = 0; i < no_of_corr_bins+1; i++) // there was no_of_corr_bins + 1, removed 22.11.16
 	{
 		delta_projection = delta -> ProjectionY("",i,i+1);
-		bin_width = delta_projection -> GetBinWidth(1);
 		no_of_entries_in_projection = delta_projection -> GetEntries();
 		hist_center = delta_projection -> GetMean();
 		hist_sigma = delta_projection -> GetRMS();
@@ -179,10 +178,10 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 //		}
 		ProjectionName = Form("projection_%d",i);
 		c_delta_projection = new TCanvas(ProjectionName);
-		gStyle->SetStatW(0.3);
-		gStyle->SetStatH(0.2);
 		gStyle->SetStatX(0.4);   
-		gStyle->SetStatY(0.9);             
+		gStyle->SetStatY(0.9);
+		gStyle->SetStatW(0.15);
+		gStyle->SetStatH(0.2);           
 		ProjectionName = Form(folder_name + TString("projection_%d.png"),i);
 		delta_projection -> Draw();
 		if (no_of_entries_in_projection > 10)
@@ -262,11 +261,11 @@ TCanvas* CalibrationLayer::plot_delta_cut()
 
 TCanvas* CalibrationLayer::plot_current_calibration()
 {
-//	std::cout << "CALIBRATION" << std::endl;
-//	for (int i = 0; i < DriftTimes.size(); i++)
-//	{
-//		std::cout << DriftTimes.at(i) << " " << Distances.at(i) << std::endl;
-//	}
+	std::cout << "CALIBRATION" << std::endl;
+	for (int i = 0; i < DriftTimes.size(); i++)
+	{
+		std::cout << DriftTimes.at(i) << " " << Distances.at(i) << std::endl;
+	}
 
 	TString name;
 	name = Form("c layer%d current calibration iteration %d", layer_no, no_of_iteration);
@@ -303,7 +302,7 @@ void CalibrationLayer::calculate_deltas(int i)
 	if (fabs(wire_hit) > fabs(wire_track)) delta_val = -fabs(wire_track - wire_hit);
 	CalibrationData.at(i).delta = delta_val;
 
-	if (CalibrationData.at(i).track_angle <= 89.5)
+	if (CalibrationData.at(i).track_angle <= 89.5) // change
 	{
 		delta -> Fill(CalibrationData.at(i).drift_time, delta_val);
 	}

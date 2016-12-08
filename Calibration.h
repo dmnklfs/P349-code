@@ -26,6 +26,7 @@
 #include "Config.h"
 #include "MinuitFit.h"
 #include "CalibrationLayer.h"
+#include <TMath.h>
 
 class Calibration
 {
@@ -55,6 +56,7 @@ public:
 	void set_no_of_bin_in_event();
 	void fill_angle_distribution();
 	TCanvas* plot_angle_distribution();
+	bool was_correct_angle(double track_angle);
 
 private:
 	CalibrationLayer *Layer[8];
@@ -67,6 +69,9 @@ private:
 	TH1F *chi2;
 	TH1F *chi2_cut;
 	TH1F *angle_distribution;
+	TH1F *angle_distribution_no_cut;
+	double track_angle_min;
+	double track_angle_max;
 
 	// a, b track parameters in the frames of each set of layers (straight, Pl - +31, M - -31)
 	std::vector<double> StraightLayersTracks_apar;

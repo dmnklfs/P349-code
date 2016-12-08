@@ -63,6 +63,10 @@ public:
 	// detector position
 	// ...
 
+	// tracks angles
+	double track_angle_min;
+	double track_angle_max;
+
 	// ---DRIFT CHAMBER D1---
 	// min and max number of hits in layers (if set to -1: any value is ok)
 	int D1_layer_max_hits[8];

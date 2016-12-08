@@ -177,6 +177,8 @@ Config::Config()
 			D1_drift_time_max[i] = 1500;
 		}
 	}
+	track_angle_min = 84.0;
+	track_angle_max = 89.5;
 
 	
 	// ---DRIFT CHEMBER D2---
