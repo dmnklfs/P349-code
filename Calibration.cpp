@@ -56,11 +56,11 @@ Calibration::Calibration(const Config &_config)
 	//chi2_cut->SetLineColor(kRed);
 
 	//angle_distribution = new TH1F("track angles", "track angles", 2000, 72, 92);
-	angle_distribution = new TH1F("track angles", "track angles", 2000, 89, 91);
+	angle_distribution = new TH1F("track angles", "track angles", 2000, -91, 91);
 	angle_distribution->GetXaxis()->SetTitle("track angle (deg)");
 	angle_distribution->GetYaxis()->SetTitle("counts");
 	//angle_distribution_no_cut = new TH1F("track angles no cut", "track angles no cut", 2000, 72, 92);
-	angle_distribution_no_cut = new TH1F("track angles no cut", "track angles no cut", 2000, 89, 91);
+	angle_distribution_no_cut = new TH1F("track angles no cut", "track angles no cut", 2000, -91, 91);
 	angle_distribution_no_cut->GetXaxis()->SetTitle("track angle (deg)");
 	angle_distribution_no_cut->GetYaxis()->SetTitle("counts");
 	angle_distribution_no_cut->SetLineColor(kRed);
@@ -204,6 +204,7 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 		// fit for the straight layers
 		MinuitFit * fit = MinuitFit::GetInstance();		
 		fit -> MinuitFit::set_values(hits_positionsX, hits_positionsZ, errors);
+		fit -> MinuitFit::perform_simplified_fit();
 		results = fit -> MinuitFit::fit_with_minuit();
 		if (!(fit -> err_flag()))
 		{

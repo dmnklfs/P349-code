@@ -71,7 +71,9 @@ std::vector<double> MinuitFit::fit_with_minuit()
 	gMinuit->mnexcm("SET ERR", arglist ,1,ierflg);
 
 	// Set starting values and step sizes for parameters
-	double vstart[2] = {0.5, 1};
+	
+	//double vstart[2] = {0.5, 1};
+	double vstart[2] = {a_start, b_start};
 	double step[2] = {0.1 , 0.1};
 	gMinuit->mnparm(0, "a", vstart[0], step[0], 0, 0, ierflg);
 	gMinuit->mnparm(1, "b", vstart[1], step[1], 0, 0, ierflg);
@@ -112,6 +114,20 @@ std::vector<double> MinuitFit::fit_with_minuit()
 	delete gMinuit;
 
 	return output;
+}
+
+void MinuitFit::perform_simplified_fit()
+{
+	TF1 *linear_fit = new TF1("linear_fit","[0]*x + [1]",x[0]-10,x[10]+10);
+	linear_fit -> SetParameter(0,0.5);
+	linear_fit -> SetParameter(1,1.0);
+	linear_fit -> SetParName(0,"a");
+	linear_fit -> SetParName(1,"b");
+	TGraph *linear_fit_graph = new TGraph(4,x,y);
+	linear_fit_graph -> Fit(linear_fit);
+	std::cout << "a simplified fit: " << linear_fit -> GetParameter(0) << std::endl;
+	a_start = linear_fit -> GetParameter(0);
+	b_start = linear_fit -> GetParameter(1);
 }
 
 

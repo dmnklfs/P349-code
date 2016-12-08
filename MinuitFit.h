@@ -38,11 +38,13 @@ public:
 	std::vector<double> fit_with_minuit();
 	void set_values(double *_x, double *_y, double *_errors);
 	bool err_flag();
+	void perform_simplified_fit();
 
 private:
 	static MinuitFit * _this;
 	double x[4], y[4], errors[4];
 	bool errflag;
+	double a_start, b_start;
 	
 
 	
