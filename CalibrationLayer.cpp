@@ -17,6 +17,8 @@ CalibrationLayer::CalibrationLayer(int _layer_no, const std::vector<double> &_Ca
 	Distances = _CalibDistances;
 
 	no_of_calib_bins = DriftTimes.size() - 1; // t1 bin1 t2 bin2 t3
+	// vector of x errors is just needed for the tgrapherrors plot.
+	for (int i = 0; i < DriftTimes.size(); i++) XErrors.push_back(0);
 }
 
 CalibrationLayer::~CalibrationLayer()
@@ -190,7 +192,7 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 			delta_projection->Fit("gaussian","WWQEMI","",hist_center-0.15,hist_center+0.15);//hist_center-hist_sigma,hist_center+hist_sigma);
 			ProjectionConstant.push_back(gaussian->GetParameter(0));
     		ProjectionMean.push_back(gaussian->GetParameter(1));
-    		ProjectionSigma.push_back(0.5*gaussian->GetParameter(2));
+    		ProjectionSigma.push_back(gaussian->GetParameter(2));
 
     		gStyle->SetOptFit(1111);
 			gPad->Modified();
@@ -199,7 +201,7 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 		{
 			ProjectionConstant.push_back(-1);
 			ProjectionMean.push_back(-1);
-			ProjectionSigma.push_back(-1);
+			ProjectionSigma.push_back(0);
 		}
 		c_delta_projection -> SaveAs(ProjectionName);
 		delete c_delta_projection;
@@ -269,9 +271,10 @@ TCanvas* CalibrationLayer::plot_current_calibration()
 
 	TString name;
 	name = Form("c layer%d current calibration iteration %d", layer_no, no_of_iteration);
-	TGraph* current_calibration;
+	//TGraph* current_calibration;
+	TGraphErrors* current_calibration;
 	TGraph* initial_calibration;
-	current_calibration = new TGraph(DriftTimes.size(), &DriftTimes.at(0), &Distances.at(0));
+	current_calibration = new TGraphErrors(DriftTimes.size(), &DriftTimes.at(0), &Distances.at(0), &XErrors.at(0), &ProjectionSigma.at(0));
 	current_calibration -> SetLineColor(kRed);
 	current_calibration -> SetMarkerColor(kRed);
 	current_calibration -> SetMarkerStyle(7);

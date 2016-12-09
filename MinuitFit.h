@@ -45,6 +45,8 @@ private:
 	double x[4], y[4], errors[4];
 	bool errflag;
 	double a_start, b_start;
+	TF1 *linear_fit;
+	TGraph *linear_fit_graph;
 	
 
 	

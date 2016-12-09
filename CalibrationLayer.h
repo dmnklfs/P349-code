@@ -23,6 +23,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <TGraphErrors.h>
 
 struct D1_single_event_data
 {
@@ -119,6 +120,7 @@ private:
 	std::vector<double> ProjectionConstant;
 	std::vector<double> ProjectionSigma;
 	std::vector<double> ProjectionMean;
+	std::vector<double> XErrors;
 };
 
 #endif

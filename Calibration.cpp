@@ -56,11 +56,11 @@ Calibration::Calibration(const Config &_config)
 	//chi2_cut->SetLineColor(kRed);
 
 	//angle_distribution = new TH1F("track angles", "track angles", 2000, 72, 92);
-	angle_distribution = new TH1F("track angles", "track angles", 2000, -91, 91);
+	angle_distribution = new TH1F("track angles", "track angles", 2000, -10, 190);
 	angle_distribution->GetXaxis()->SetTitle("track angle (deg)");
 	angle_distribution->GetYaxis()->SetTitle("counts");
 	//angle_distribution_no_cut = new TH1F("track angles no cut", "track angles no cut", 2000, 72, 92);
-	angle_distribution_no_cut = new TH1F("track angles no cut", "track angles no cut", 2000, -91, 91);
+	angle_distribution_no_cut = new TH1F("track angles no cut", "track angles no cut", 2000, -10, 190);
 	angle_distribution_no_cut->GetXaxis()->SetTitle("track angle (deg)");
 	angle_distribution_no_cut->GetYaxis()->SetTitle("counts");
 	angle_distribution_no_cut->SetLineColor(kRed);
@@ -193,7 +193,6 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 	for (unsigned int i = 0; i < no_of_chosen_events; i++)
 	{
 		// take the single event data
-		std::cout << "----- hits positions -----" << std::endl;
 		for (int j = 0; j < 4; j++)
 		{
 			hits_positionsX[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_X;
@@ -209,10 +208,9 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 		if (!(fit -> err_flag()))
 		{
 			aSt = results.at(0);
-			std::cout << aSt << std::endl;
 			bSt = results.at(1);
 			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
-			std::cout << track_angle << std::endl;
+			if (track_angle < 0) track_angle = 180+track_angle;
 			chi2St = results.at(2);
 			angle_distribution_no_cut -> Fill(track_angle);
 			if ( was_correct_angle(track_angle) )
@@ -344,6 +342,6 @@ TCanvas* Calibration::Calibration::plot_angle_distribution()
 
 bool Calibration::was_correct_angle(double track_angle)
 {
-	if (track_angle >= track_angle_min && track_angle <= track_angle_max) return true;
+	if (track_angle > track_angle_min && track_angle < track_angle_max) return true;
 	else return false;
 }
