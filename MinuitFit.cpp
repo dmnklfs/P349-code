@@ -21,7 +21,6 @@ void MinuitFit::set_values(double *_x, double *_y, double *_errors)
 		x[i] = _x[i];
 		y[i] = _y[i];
 		errors[i] = _errors[i];
-		//std::cout << "x " << x[i] << " y " << y[i] << std::endl;
 	}
 }
 
@@ -40,6 +39,7 @@ double MinuitFit::GlobalFCN(const double * par)
 	double delta;
 	for (i=0;i<points; i++)
 	{
+		//std::cout << errors[i] << std::endl;
 		delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
 		chisq += delta*delta;
 	}

@@ -43,14 +43,14 @@ Calibration::Calibration(const Config &_config)
 	}
 	TString name;
 	name = Form("#chi^{2}",1);
-	chi2 = new TH1F(name, name, 400, -0.25, 3);
+	chi2 = new TH1F(name, name, 2000, -0.25, 25);
 	chi2->GetXaxis()->SetTitle("#chi^{2}");
 	chi2->GetYaxis()->SetTitle("counts");
 	chi2->SetLineWidth(2);
 	//chi2->SetLineColor(kBlue);
 
 	name = Form("#chi^{2} cut", 1);
-	chi2_cut = new TH1F(name, name, 400, -0.01, 0.1);
+	chi2_cut = new TH1F(name, name, 400, -0.01, 15);
 	chi2_cut->GetXaxis()->SetTitle("#chi^{2}");
 	chi2_cut->GetYaxis()->SetTitle("counts");
 	//chi2_cut->SetLineColor(kRed);
@@ -196,9 +196,8 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 		for (int j = 0; j < 4; j++)
 		{
 			hits_positionsX[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_X;
-			std::cout << hits_positionsX[j] << std::endl;
 			hits_positionsZ[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_Z;
-			errors[j] = 1;
+			errors[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_Xerr;
 		}
 		// fit for the straight layers
 		MinuitFit * fit = MinuitFit::GetInstance();		
@@ -310,6 +309,13 @@ void Calibration::apply_corrections()
 	Layer[7] -> apply_corrections();
 }
 
+void Calibration::set_pos_Xerr()
+{
+	Layer[0] -> set_pos_Xerr();
+	Layer[1] -> set_pos_Xerr();
+	Layer[6] -> set_pos_Xerr();
+	Layer[7] -> set_pos_Xerr();
+}
 void Calibration::plot_current_calibration()
 {
 	TString name;

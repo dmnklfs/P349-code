@@ -30,6 +30,7 @@ struct D1_single_event_data
 	double wire_pos_X;
 	double wire_pos_Z;
 	double hit_pos_X;
+	double hit_pos_Xerr;
 	double hit_pos_Z;
 	int left_right; // left - right information
 	double drift_time;
@@ -49,6 +50,7 @@ struct D1_single_event_data
 		calib_bin= -1;
 		corr_bin = -1;
 		chi2 = -1;
+		hit_pos_Xerr = 1;
 	}
 };
 
@@ -71,6 +73,7 @@ public:
 
 	// in loop over all events
 	double drift_time_to_distance(int i, double drift_time);
+	double set_pos_Xerr();
 	void calculate_hit_position();
 	void calculate_deltas(int i);
 	void fill_delta(double _chi2_cut);

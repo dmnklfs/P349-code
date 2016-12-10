@@ -34,12 +34,12 @@ void CalibrationLayer::set_no_of_corr_bins(double _no_of_corr_bins)
 		corr_bin_width = max_time_range/no_of_corr_bins;
 		TString name;
 		name = Form("layer%d #Delta", layer_no);
-		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 300, -2.0, 2.0);
+		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);
 		delta->GetXaxis()->SetTitle("time [ns]");
 		delta->GetYaxis()->SetTitle("delta [cm]");
 
 		name = Form("layer%d #Delta cut", layer_no);
-		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 300, -2.0, 2.0);
+		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);
 		delta_cut->GetXaxis()->SetTitle("time [ns]");
 		delta_cut->GetYaxis()->SetTitle("delta [cm]");
 	}
@@ -54,12 +54,12 @@ void CalibrationLayer::set_max_time_range(double _max_time_range)
 		corr_bin_width = max_time_range/no_of_corr_bins;
 		TString name;
 		name = Form("layer%d #Delta", layer_no);
-		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 300, -2.0, 2.0);
+		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);
 		delta->GetXaxis()->SetTitle("time [ns]");
 		delta->GetYaxis()->SetTitle("delta [cm]");
 
 		name = Form("layer%d #Delta cut", layer_no);
-		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 300, -2.0, 2.0);
+		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);
 		delta_cut->GetXaxis()->SetTitle("time [ns]");
 		delta_cut->GetYaxis()->SetTitle("delta [cm]");
 	}
@@ -151,6 +151,23 @@ double CalibrationLayer::drift_time_to_distance(int i, double drift_time) // i -
 	return distance;
 }
 
+double CalibrationLayer::set_pos_Xerr()
+{
+	int corr_bin;
+	double error;
+	for (unsigned int i = 0; i < CalibrationData.size(); i++)
+	{
+		corr_bin = CalibrationData.at(i).corr_bin;
+//		if (no_of_iteration == 0) error = 1;
+//		else
+//		{
+			if (ProjectionSigma.at(corr_bin) == 0.0) error = 1;
+			else error = ProjectionSigma.at(corr_bin);
+//		}
+		CalibrationData.at(i).hit_pos_Xerr = error;
+	}
+}
+
 void CalibrationLayer::fit_delta_projections(const char* folder_name)
 {
 	ProjectionConstant.clear();
@@ -173,7 +190,7 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 		delta_projection->GetXaxis()->SetRangeUser(hist_center - 0.5*hist_sigma,hist_center + 0.5*hist_sigma);
 		hist_max_bin = delta_projection -> GetBinCenter(delta_projection -> GetMaximumBin());
 		hist_center = hist_max_bin;	
-		delta_projection->GetXaxis()->SetRangeUser(-1.5,1.5);
+		delta_projection->GetXaxis()->SetRangeUser(-0.4, 0.4);
 //		if ( hist_max_bin > (hist_center - hist_sigma) && hist_max_bin < (hist_center + hist_sigma) )
 //		{
 //			hist_center = hist_max_bin;			
@@ -201,7 +218,7 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 		{
 			ProjectionConstant.push_back(-1);
 			ProjectionMean.push_back(-1);
-			ProjectionSigma.push_back(0);
+			ProjectionSigma.push_back(0.0);
 		}
 		c_delta_projection -> SaveAs(ProjectionName);
 		delete c_delta_projection;
@@ -263,11 +280,11 @@ TCanvas* CalibrationLayer::plot_delta_cut()
 
 TCanvas* CalibrationLayer::plot_current_calibration()
 {
-	std::cout << "CALIBRATION" << std::endl;
-	for (int i = 0; i < DriftTimes.size(); i++)
-	{
-		std::cout << DriftTimes.at(i) << " " << Distances.at(i) << std::endl;
-	}
+//	std::cout << "CALIBRATION" << std::endl;
+//	for (int i = 0; i < DriftTimes.size(); i++)
+//	{
+//		std::cout << DriftTimes.at(i) << " " << Distances.at(i) << std::endl;
+//	}
 
 	TString name;
 	name = Form("c layer%d current calibration iteration %d", layer_no, no_of_iteration);
@@ -277,15 +294,16 @@ TCanvas* CalibrationLayer::plot_current_calibration()
 	current_calibration = new TGraphErrors(DriftTimes.size(), &DriftTimes.at(0), &Distances.at(0), &XErrors.at(0), &ProjectionSigma.at(0));
 	current_calibration -> SetLineColor(kRed);
 	current_calibration -> SetMarkerColor(kRed);
-	current_calibration -> SetMarkerStyle(7);
-	current_calibration -> SetLineWidth(3);
+	current_calibration -> SetMarkerStyle(6);
+	current_calibration -> SetLineWidth(1);
 	initial_calibration = new TGraph(InitialDriftTimes.size(), &InitialDriftTimes.at(0), &InitialDistances.at(0));
 	initial_calibration -> SetLineColor(kBlue);
+	initial_calibration -> SetLineWidth(3);
 	TCanvas *c_current_calibration = new TCanvas(name,name);
-	current_calibration -> Draw("AP");
+	initial_calibration -> Draw("AL");
+	current_calibration -> Draw("sameP");
    	current_calibration->SetMinimum(0);
    	current_calibration->SetMaximum(2.5);
-   	initial_calibration -> Draw("same");
 	return c_current_calibration;
 }
 

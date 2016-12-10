@@ -57,6 +57,7 @@ public:
 	void fill_angle_distribution();
 	TCanvas* plot_angle_distribution();
 	bool was_correct_angle(double track_angle);
+	void set_pos_Xerr();
 
 private:
 	CalibrationLayer *Layer[8];
