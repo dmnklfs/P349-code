@@ -5,6 +5,7 @@
 *.png
 *.sh
 *.txt
+h_irr_C.d
 results/
 results*/
 files/
