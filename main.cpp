@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
     calibration -> plot_current_calibration();
     calibration -> deletations();
 
-    calibration -> set_no_of_iteration(3);
+    /*calibration -> set_no_of_iteration(3);
     calibration -> calculate_hit_position();
     calibration -> fit_events_in_straight_layers(100000);
     // add: make a 3d track, make projections
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
     calibration -> set_pos_Xerr();
     calibration -> apply_corrections();
     calibration -> plot_current_calibration();
-    calibration -> deletations();
+    calibration -> deletations();*/
 
     /*
     simple_calibration -> show_drift_times();

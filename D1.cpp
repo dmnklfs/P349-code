@@ -6,13 +6,13 @@ D1::D1()
 D1::D1(const Config &_config)
 {
 	// constructors of the layers: drift time offset, calib times, calib dists, time min, time max, hits min, hits max
-	Layer[0] = new DCLayer(_config.D1_L1_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D1_drift_time_min[0],_config.D1_drift_time_max[0],_config.D1_layer_min_hits[0],_config.D1_layer_max_hits[0]);
-	Layer[1] = new DCLayer(_config.D1_L2_drift_time_offset, _config.D1_L2_calibration_times, _config.D1_L2_calibration_distances, _config.D1_drift_time_min[1],_config.D1_drift_time_max[1],_config.D1_layer_min_hits[1],_config.D1_layer_max_hits[1]);
-	Layer[6] = new DCLayer(_config.D1_L7_drift_time_offset, _config.D1_L7_calibration_times, _config.D1_L7_calibration_distances, _config.D1_drift_time_min[6],_config.D1_drift_time_max[6],_config.D1_layer_min_hits[6],_config.D1_layer_max_hits[6]);
-	Layer[7] = new DCLayer(_config.D1_L8_drift_time_offset, _config.D1_L8_calibration_times, _config.D1_L8_calibration_distances, _config.D1_drift_time_min[7],_config.D1_drift_time_max[7],_config.D1_layer_min_hits[7],_config.D1_layer_max_hits[7]);
+	Layer[0] = new DCLayer(0, _config.D1_L1_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D1_drift_time_min[0],_config.D1_drift_time_max[0],_config.D1_layer_min_hits[0],_config.D1_layer_max_hits[0]);
+	Layer[1] = new DCLayer(1, _config.D1_L2_drift_time_offset, _config.D1_L2_calibration_times, _config.D1_L2_calibration_distances, _config.D1_drift_time_min[1],_config.D1_drift_time_max[1],_config.D1_layer_min_hits[1],_config.D1_layer_max_hits[1]);
+	Layer[6] = new DCLayer(7, _config.D1_L7_drift_time_offset, _config.D1_L7_calibration_times, _config.D1_L7_calibration_distances, _config.D1_drift_time_min[6],_config.D1_drift_time_max[6],_config.D1_layer_min_hits[6],_config.D1_layer_max_hits[6]);
+	Layer[7] = new DCLayer(8, _config.D1_L8_drift_time_offset, _config.D1_L8_calibration_times, _config.D1_L8_calibration_distances, _config.D1_drift_time_min[7],_config.D1_drift_time_max[7],_config.D1_layer_min_hits[7],_config.D1_layer_max_hits[7]);
 	for (int i = 0; i < 8; i++)
 	{
-		if(2==i||3==i||4==i||5==i) Layer[i] = new DCLayer(_config.D2_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D1_drift_time_min[i],_config.D1_drift_time_max[i],_config.D1_layer_min_hits[i],_config.D1_layer_max_hits[i]);
+		if(2==i||3==i||4==i||5==i) Layer[i] = new DCLayer(i+1,_config.D2_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D1_drift_time_min[i],_config.D1_drift_time_max[i],_config.D1_layer_min_hits[i],_config.D1_layer_max_hits[i]);
 		layer_wire_frame_offset[i] = _config.D1_layer_wire_frame_offset[i];
 	}
 	half_x_dim = _config.D1_half_x_dim;

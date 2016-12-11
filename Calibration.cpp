@@ -9,8 +9,8 @@ Calibration::Calibration(const Config &_config)
 {
 	
 	no_of_iteration = 1; 
-	no_of_calib_bins = 201-1;
-	no_of_corr_bins = _config.no_of_bins_in_simple_calibration-1;
+	no_of_calib_bins = _config.D1_L1_calibration_times.size()-1;
+	no_of_corr_bins = no_of_calib_bins;
 	max_time_range =  _config.D1_drift_time_max[0];
 	calib_bin_width = max_time_range/no_of_calib_bins;
 	corr_bin_width = max_time_range/no_of_corr_bins;

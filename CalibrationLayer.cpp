@@ -203,7 +203,7 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 		gStyle->SetStatH(0.2);           
 		ProjectionName = Form(folder_name + TString("projection_%d.png"),i);
 		delta_projection -> Draw();
-		if (no_of_entries_in_projection > 10)
+		if (no_of_entries_in_projection > 20)
 		{
 			gaussian -> SetParameters(delta_projection -> GetMaximum(), hist_center, 0.1);
 			delta_projection->Fit("gaussian","WWQEMI","",hist_center-0.15,hist_center+0.15);//hist_center-hist_sigma,hist_center+hist_sigma);
@@ -287,6 +287,16 @@ TCanvas* CalibrationLayer::plot_current_calibration()
 //	}
 
 	TString name;
+	name = Form("results/layer%d_calibration_iteration_%d.txt", layer_no, no_of_iteration);
+	ofstream calibdata;
+	calibdata.open(name);
+	for (int i = 0; i < DriftTimes.size()-1; i++)
+	{
+		calibdata << DriftTimes.at(i) << " " << Distances.at(i) << " " << XErrors.at(i) << " " << ProjectionSigma.at(i) << std::endl;
+	}
+
+	calibdata.close();
+
 	name = Form("c layer%d current calibration iteration %d", layer_no, no_of_iteration);
 	//TGraph* current_calibration;
 	TGraphErrors* current_calibration;

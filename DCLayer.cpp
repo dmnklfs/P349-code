@@ -3,7 +3,7 @@
 DCLayer::DCLayer()
 { }
 
-DCLayer::DCLayer(const std::vector<double> &_drift_time_offset, const std::vector<double> &_calib_time, const std::vector<double> &_calib_dist, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no)
+DCLayer::DCLayer(int _layer_no, const std::vector<double> &_drift_time_offset, const std::vector<double> &_calib_time, const std::vector<double> &_calib_dist, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no)
 {
 	DriftTimeOffset = _drift_time_offset;
 	CalibrationTimes = _calib_time;
@@ -12,6 +12,7 @@ DCLayer::DCLayer(const std::vector<double> &_drift_time_offset, const std::vecto
 	max_drift_time = _max_drift_time;
 	min_no = _min_no;
 	max_no = _max_no;
+	layer_no = _layer_no;
 }
 
 DCLayer::~DCLayer()
@@ -91,12 +92,15 @@ DCLayer_hist_data* DCLayer::get_hist_data()
 
 void DCLayer::apply_drift_time_offset()
 {
+	double time;
 	for (unsigned int i = 0; i < DriftTime.size(); i++)
 	{
 		//std::cout << "apply_drift_time_offset" << std::endl;
 		//std::cout << Wire.at(i) << std::endl;
 		//std::cout << "apply_drift_time_offset" << std::endl;
-		DriftTime.at(i) = DriftTime.at(i) + DriftTimeOffset.at(Wire.at(i)-1);
+		time = DriftTime.at(i) + DriftTimeOffset.at(Wire.at(i)-1);
+		DriftTime.at(i) = time;
+		//drift_time_in_layer -> Fill(time);
 	}
 }
 

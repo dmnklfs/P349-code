@@ -4,6 +4,7 @@
 *.exe
 *.png
 *.sh
+*.txt
 results/
 results*/
 files/

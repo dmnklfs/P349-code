@@ -8,7 +8,7 @@ class DCLayer
 {
 public:
 	DCLayer();
-	DCLayer(const std::vector<double> &_drift_time_offset, const std::vector<double> &_calib_time, const std::vector<double> &_calib_dist, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no);
+	DCLayer(int _layer_no, const std::vector<double> &_drift_time_offset, const std::vector<double> &_calib_time, const std::vector<double> &_calib_dist, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no);
 	~DCLayer();
 	void fill_rough_data(single_gh_data _good_hit_data);
 	DCLayer_hist_data* get_hist_data();
@@ -51,10 +51,15 @@ public:
 
 	void apply_drift_time_offset();
 
+	void set_layer_number();
+
 	bool correct_event;
 
 	double min_drift_time, max_drift_time;
 	int min_no, max_no;
+
+	int layer_no;
+
 };
 
 #endif
