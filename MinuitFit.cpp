@@ -20,7 +20,7 @@ void MinuitFit::set_values(double *_x, double *_y, double *_errors)
 	{
 		x[i] = _x[i];
 		y[i] = _y[i];
-		errors[i] = _errors[i];
+		errors[i] = 1; //_errors[i];
 	}
 }
 

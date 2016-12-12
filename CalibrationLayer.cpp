@@ -309,11 +309,12 @@ TCanvas* CalibrationLayer::plot_current_calibration()
 	initial_calibration = new TGraph(InitialDriftTimes.size(), &InitialDriftTimes.at(0), &InitialDistances.at(0));
 	initial_calibration -> SetLineColor(kBlue);
 	initial_calibration -> SetLineWidth(3);
+	initial_calibration->SetMinimum(0);
+   	initial_calibration->SetMaximum(2.5);
 	TCanvas *c_current_calibration = new TCanvas(name,name);
 	initial_calibration -> Draw("AL");
 	current_calibration -> Draw("sameP");
-   	current_calibration->SetMinimum(0);
-   	current_calibration->SetMaximum(2.5);
+  ;
 	return c_current_calibration;
 }
 
