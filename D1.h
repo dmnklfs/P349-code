@@ -29,6 +29,7 @@ public:
     void calculate_distances_from_wires();
     void calculate_relative_and_absolute_positions(); // now in the function collect_hits_from_all_layers!!
     void collect_hits_from_all_layers();
+    double test_get_chosen_position(int _no_of_layer, int _add_in_layer);
 
 private:
     void calculate_distances_from_wires_in_layer();

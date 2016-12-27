@@ -18,12 +18,14 @@ int main(int argc, char *argv[])
 	TH1F *tof = new TH1F("tof","TOF=0.5*[(TOF_Up+TOF_Down)-(Start_Up+Start_Down)];TOF [ns]; counts", 40000, -800, 300);
   TH1F *START_Mean_Time = new TH1F("start_mean", "START mean time 0.5*(timeUp-timeDown)", 40000, -100, 1200);
   TH1F *TOF_Mean_Time = new TH1F("tof_mean", "TOF mean time 0.5*(timeUp-timeDown)", 40000, -400, 700);
+  TH1F *D1_HEX_pos_diff = new TH1F("D1_HEX_pos_diff","D1_HEX_pos_diff", 150, 0, 45);
 	//-----------------------------------------------------------------------------------------------------
 	SingleEvent *single_event;
 	EventDisplay *event_to_display;
 	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
-  Calibration *calibration = new Calibration(config);
+  //Calibration *calibration = new Calibration(config);
 	std::cout << "* start of the loop over the events" << std::endl;
+  int delme_iter = 0;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
   	{
   		//std::cout << entry << std::endl;
@@ -54,6 +56,7 @@ int main(int argc, char *argv[])
 
 		if (single_event -> SingleEvent::was_correct_event(analysis_stage))
   		{
+        delme_iter++;
   			// filling control histos for preselected data
   			// checking if preselected tree = 1/0 and filling the tree or not
   			name = Form("Event_%ld", entry);
@@ -63,15 +66,16 @@ int main(int argc, char *argv[])
         START_Mean_Time  -> Fill(single_event -> SingleEvent::Start::getTime());
         TOF_Mean_Time  -> Fill(single_event -> SingleEvent::TOF::getTime());
   			single_event -> SingleEvent::test_calculate_distances();
-  			//event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
-  			//event_to_display -> get_canvas() -> Write(name);
+        D1_HEX_pos_diff -> Fill(single_event -> SingleEvent::test_positions_histogram());
+  			event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
+  			event_to_display -> get_canvas() -> Write(name);
   			name = Form("results/Event_%ld.png", entry);
-  			//event_to_display -> get_canvas() -> SaveAs(name);
+  			event_to_display -> get_canvas() -> SaveAs(name);
 
   			//data for the simple calibration
   			//simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
-  			calibration -> get_data( single_event -> SingleEvent::D1::get_data_for_calibration() ); 
-        //delete event_to_display;
+  			//calibration -> get_data( single_event -> SingleEvent::D1::get_data_for_calibration() ); 
+        delete event_to_display;
   			
   		} // end if correct event
 
@@ -81,6 +85,10 @@ int main(int argc, char *argv[])
       in_out -> Tree::fill_rough_histos(single_event -> SingleEvent::get_hist_data());
   		delete single_event;
   	} // end of loop over events
+    std::cout << "iter " << delme_iter << std::endl;
+
+    //CALIBRATION
+    /*
     calibration -> tell_no_of_events();
     calibration -> set_no_of_bin_in_event();
     
@@ -120,7 +128,7 @@ int main(int argc, char *argv[])
     calibration -> plot_current_calibration();
     calibration -> deletations();
 
-    /*calibration -> set_no_of_iteration(3);
+    calibration -> set_no_of_iteration(3);
     calibration -> calculate_hit_position();
     calibration -> fit_events_in_straight_layers(100000);
     // add: make a 3d track, make projections
@@ -130,8 +138,10 @@ int main(int argc, char *argv[])
     calibration -> set_pos_Xerr();
     calibration -> apply_corrections();
     calibration -> plot_current_calibration();
-    calibration -> deletations();*/
+    calibration -> deletations();
+    */
 
+    // SIMPLE CALIBRATION
     /*
     simple_calibration -> show_drift_times();
   	simple_calibration -> tell_no_of_events();
@@ -248,6 +258,9 @@ int main(int argc, char *argv[])
     //START_Mean_Time -> Write();
     //TOF_Mean_Time -> Write();
     */
+    TCanvas *ctemp = new TCanvas("ctemp","ctemp");
+    D1_HEX_pos_diff -> Draw();
+    ctemp -> Print("unequal.png");
   	in_out -> Tree::save_output_file();
   	std::cout << "\n" << std::endl;
 }

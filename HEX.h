@@ -20,6 +20,14 @@ public:
 	HEX_hist_data* get_hist_data();
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();
+    void calculate_relative_and_absolute_positions();
+    double test_get_chosen_position(int _no_of_layer); // dell it 24.12.16
+
+    // for event display
+    bool plot_event();
+    TGraph* get_all_hits_plot();
+    TGraph* get_detector_plot();
+    void collect_hits_from_all_layers();
 
 private:
 	DCLayer *Layer[7];
@@ -27,6 +35,23 @@ private:
 	bool correct_event;
 
 	// config
+    double half_x_dim;
+    double half_z_dim;
+    double x_lab_position;
+    double z_lab_position;
+    double z_offset;
+    double x_offset;
+    double y_rotation_angle;
+    double layer_wire_frame_offset[8];
+    double distance_to_1st_layer;
+    double distance_between_wires;
+    double distance_between_layers;
+
+    std::vector<double> AllHitsAbsolutePositionX;
+    std::vector<double> AllHitsAbsolutePositionZ;
+
+    // just for the purpose of the event display - with reversed value of the x coordinate
+    std::vector<double> AllHitsAbsolutePositionXEventDisplay;
 
 };
 

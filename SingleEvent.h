@@ -22,6 +22,7 @@ public:
 	event_to_display get_event_to_display();
 	double getTOF();
 	void test_calculate_distances();
+	double test_positions_histogram();
 
 private:
 	bool correct_event;

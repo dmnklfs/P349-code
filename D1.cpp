@@ -12,7 +12,9 @@ D1::D1(const Config &_config)
 	Layer[7] = new DCLayer(8, _config.D1_L8_drift_time_offset, _config.D1_L8_calibration_times, _config.D1_L8_calibration_distances, _config.D1_drift_time_min[7],_config.D1_drift_time_max[7],_config.D1_layer_min_hits[7],_config.D1_layer_max_hits[7]);
 	for (int i = 0; i < 8; i++)
 	{
+		// init for inclined wires
 		if(2==i||3==i||4==i||5==i) Layer[i] = new DCLayer(i+1,_config.D2_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D1_drift_time_min[i],_config.D1_drift_time_max[i],_config.D1_layer_min_hits[i],_config.D1_layer_max_hits[i]);
+		// for all layers
 		layer_wire_frame_offset[i] = _config.D1_layer_wire_frame_offset[i];
 	}
 	half_x_dim = _config.D1_half_x_dim;
@@ -22,9 +24,9 @@ D1::D1(const Config &_config)
 	z_offset = _config.D1_z_offset;
 	x_offset = _config.D1_x_offset;
 	y_rotation_angle = _config.D1_y_rotation_angle;
-	distance_to_1st_layer = _config.distance_to_1st_layer;
-	distance_between_wires = _config.distance_between_wires;
-	distance_between_layers = _config.distance_between_layers;
+	distance_to_1st_layer = _config.D1_distance_to_1st_layer;
+	distance_between_wires = _config.D1_distance_between_wires;
+	distance_between_layers = _config.D1_distance_between_layers;
 }
 
 D1::~D1()
@@ -57,10 +59,10 @@ bool D1::was_correct_event()
 		correct_in_layer[i] = Layer[i]-> DCLayer::was_correct_event();
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
 	}
-	if (no_of_layers_with_hits == 8)
-	{
-		correct_event = true;
-	}
+//	if (no_of_layers_with_hits == 8)
+//	{
+//		correct_event = true;
+//	}
 
 	// dell it, choice of coincidences if one wire parametrized
 //	double edge_val1, edge_val2, dtime1, dtime2;
@@ -93,21 +95,22 @@ bool D1::was_correct_event()
 //		//correct_event = true;
 //	}
 
-//	int wire1;
-//	int wire2;
-//	int wire7;
-//	int wire8;
-//	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
-//	{
-//		wire1 = Layer[0] -> DCLayer::Wire.at(0);
-//		wire2 = Layer[1] -> DCLayer::Wire.at(0);
-//		wire7 = Layer[6] -> DCLayer::Wire.at(0);
-//		wire8 = Layer[7] -> DCLayer::Wire.at(0);
-//		if ((wire2==wire1||wire2==wire1+1)&&(wire8==wire7||wire8==wire7+1))
-//		{
-//			correct_event = true;
-//		}
-//	}
+	int wire1;
+	int wire2;
+	int wire7;
+	int wire8;
+	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
+	{
+		wire1 = Layer[0] -> DCLayer::Wire.at(0);
+		wire2 = Layer[1] -> DCLayer::Wire.at(0);
+		wire7 = Layer[6] -> DCLayer::Wire.at(0);
+		wire8 = Layer[7] -> DCLayer::Wire.at(0);
+		//std::cout << wire1 << " " << wire2 << " " << wire7 << " " << wire8 << std::endl;
+		if ((wire2==wire1||wire2==wire1+1)&&(wire8==wire7||wire8==wire7+1)) // ||wire2==wire1+1 ||wire8==wire7+1
+		{
+			correct_event = true;
+		}
+	}
 	
 	return correct_event;
 }
@@ -224,7 +227,7 @@ bool D1::plot_event()
 	bool plot_event = false;
 	if (0!=AllHitsAbsolutePositionXEventDisplay.size()) plot_event = true;
 	return plot_event;
-}
+} 
 
 TGraph* D1::get_all_hits_plot()
 {
@@ -254,7 +257,7 @@ TGraph* D1::get_detector_plot()
 	{
 		x_prim = get_x_after_rot_Y(x_detector[i], z_detector[i], y_rotation_angle);
 		z_prim = get_z_after_rot_Y(x_detector[i], z_detector[i], y_rotation_angle);
-		x_lab[i] = calc_position_in_lab(x_prim, x_lab_position, x_offset);
+		x_lab[i] = -calc_position_in_lab(x_prim, x_lab_position, x_offset);
 		z_lab[i] = calc_position_in_lab(z_prim, z_lab_position, z_offset);
 	}
 	detector_plot = new TGraph(5, x_lab, z_lab);
@@ -318,4 +321,11 @@ data_for_D1_calibration D1::get_data_for_calibration()
 		}
 	}
 	return data_for_calibration;
+}
+
+double D1::test_get_chosen_position(int _no_of_layer, int _add_in_layer)
+{
+	double res = (Layer[_no_of_layer]->AbsoluteXPosition.at(0)) + _add_in_layer*2*pow(600,-1)*(Layer[_no_of_layer] -> DriftTime.at(0));
+	std::cout << res << std::endl;
+	return res;
 }

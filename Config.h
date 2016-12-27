@@ -79,9 +79,9 @@ public:
     double D1_x_offset;
     double D1_y_rotation_angle;
     double D1_layer_wire_frame_offset[8];
-    double distance_to_1st_layer; // distance from the DC frame to the 1st layer (looking from the beam direction)
-    double distance_between_wires;
-    double distance_between_layers;
+    double D1_distance_to_1st_layer; // distance from the DC frame to the 1st layer (looking from the beam direction)
+    double D1_distance_between_wires;
+    double D1_distance_between_layers;
 
 	// drift time range
 	double D1_drift_time_max[8];
@@ -124,6 +124,19 @@ public:
 	double D2_drift_time_max[6];
 	double D2_drift_time_min[6];
 
+	// dimensions
+	double D2_half_x_dim;
+    double D2_half_z_dim;
+    double D2_x_lab_position;
+    double D2_z_lab_position;
+    double D2_z_offset;
+    double D2_x_offset;
+    double D2_y_rotation_angle;
+    double D2_layer_wire_frame_offset[7];
+    double D2_distance_to_1st_layer; // distance from the DC frame to the 1st layer (looking from the beam direction)
+    double D2_distance_between_wires;
+    double D2_distance_between_layers;
+
 	// ---HEX---
 	// min and max number of hits in layers (if set to -1: any value is ok)
 	std::vector<double> HEX_drift_time_offset;
@@ -133,6 +146,19 @@ public:
 	// drift time range
 	double HEX_drift_time_max[7];
 	double HEX_drift_time_min[7];
+
+	// dimessions
+	double HEX_half_x_dim;
+    double HEX_half_z_dim;
+    double HEX_x_lab_position;
+    double HEX_z_lab_position;
+    double HEX_z_offset;
+    double HEX_x_offset;
+    double HEX_y_rotation_angle;
+    double HEX_layer_wire_frame_offset[7];
+    double HEX_distance_to_1st_layer; // distance from the DC frame to the 1st layer (looking from the beam direction)
+    double HEX_distance_between_wires;
+    double HEX_distance_between_layers;
 
 	// ---FIBER HODOSCOPE---
 	// ranges of elements

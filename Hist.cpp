@@ -20,16 +20,16 @@ Hist::Hist()
 	init_start_histos_rough();
 	init_tof_histos_rough();
 	init_D1_histos_rough();
-	//init_D2_histos_rough();
-	//init_HEX_histos_rough();
+	init_D2_histos_rough();
+	init_HEX_histos_rough();
 	//init_fiber_histos_rough();
 	//init_inter_histos_rough();
 
 	init_start_histos_preselected();
 	init_tof_histos_preselected();
 	init_D1_histos_preselected();
-	//init_D2_histos_preselected();
-	//init_HEX_histos_preselected();
+	init_D2_histos_preselected();
+	init_HEX_histos_preselected();
 	//init_fiber_histos_preselected();
 	//init_inter_histos_preselected();
 }
