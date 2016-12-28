@@ -39,6 +39,12 @@ EventDisplay::EventDisplay(int i, const Config &_config, event_to_display _event
    		_event.HitsPlots.at(i)-> Draw("P");
    		ReverseXAxis(_event.DetectorPlots.at(i));
 	}
+
+	_event.track->GetXaxis()->SetLimits(range_x_min,range_x_max);
+   	_event.track->GetHistogram()->SetMinimum(range_z_min);
+   	_event.track->GetHistogram()->SetMaximum(range_z_max);
+   	_event.track-> Draw("L");
+   	ReverseXAxis(_event.track);
 }
 
 EventDisplay::~EventDisplay()

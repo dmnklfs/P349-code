@@ -104,8 +104,8 @@ void DCLayer::apply_drift_time_offset()
 	}
 }
 
-void DCLayer::calculate_distances_from_wires()
-{
+//void DCLayer::calculate_distances_from_wires()
+/*{
 	//std::cout << "DCLayer::calculate_distances_from_wires()" << std::endl;
 
 	for (unsigned int i = 0; i < DriftTime.size(); i++)
@@ -116,6 +116,36 @@ void DCLayer::calculate_distances_from_wires()
 		double bin_no = floor(DriftTime.at(i)/time_bin_width);
 		//std::cout << "bin no: " << bin_no << std::endl;
 		double distance = CalibrationDistances.at(bin_no) + dist_bin_width*(CalibrationDistances.at(bin_no+1) - CalibrationDistances.at(bin_no))/(CalibrationTimes.at(bin_no+1) - CalibrationTimes.at(bin_no));
+		HitsDistancesFromWires.push_back(distance);
+	}
+}*/
+
+void DCLayer::calculate_distances_from_wires()
+{
+	int calib_bin;
+	double distance;
+	double drift_time;
+	double t1;
+	double t2;
+	double x1;
+	double x2;
+	int no_of_calib_bins = CalibrationTimes.size() - 1; 
+	for (unsigned int i = 0; i < DriftTime.size(); i++)
+	{
+		drift_time = DriftTime.at(i);
+		for (int j = 0; j < no_of_calib_bins; j++)
+		{
+			if (drift_time >= CalibrationTimes.at(j) && drift_time < CalibrationTimes.at(j+1))
+			{
+				calib_bin = j;
+				break;
+			}
+		}
+		t1 = CalibrationTimes.at(calib_bin);
+		t2 = CalibrationTimes.at(calib_bin+1);
+		x1 = CalibrationDistances.at(calib_bin);
+		x2 = CalibrationDistances.at(calib_bin+1);
+		distance = x1 + (x2 - x1)*(drift_time - t1)/(t2 - t1);
 		HitsDistancesFromWires.push_back(distance);
 	}
 }

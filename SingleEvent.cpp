@@ -69,6 +69,8 @@ event_to_display SingleEvent::get_event_to_display()
 
 	if (D1::plot_event()) event.HitsPlots.push_back(D1::get_all_hits_plot());
 	event.DetectorPlots.push_back(D1::get_detector_plot());
+	//event.track = D1::plot_track_in_D1();
+	event.track = plot_track_in_D1_D2();
 
 	if (D2::plot_event()) event.HitsPlots.push_back(D2::get_all_hits_plot());
 	event.DetectorPlots.push_back(D2::get_detector_plot());
@@ -76,9 +78,6 @@ event_to_display SingleEvent::get_event_to_display()
 	if (HEX::plot_event()) event.HitsPlots.push_back(HEX::get_all_hits_plot());
 	event.DetectorPlots.push_back(HEX::get_detector_plot());
 
-
-
-	//event.D1_event_to_display = D1::get_event_to_display();
 	return event;
 }
 
@@ -91,15 +90,15 @@ double SingleEvent::getTOF()
 
 void SingleEvent::test_calculate_distances()
 {
-	//std::cout << "ok1" << std::endl;
 	D1::calculate_distances_from_wires();
-	//std::cout << "ok2" << std::endl;
 	D1::calculate_relative_and_absolute_positions();
-	//std::cout << "ok3" << std::endl;
 	D1::collect_hits_from_all_layers();
+	D1::set_hits_absolute_positions(); // delme 28.12.16
 
+	D2::calculate_distances_from_wires();
 	D2::calculate_relative_and_absolute_positions();
 	D2::collect_hits_from_all_layers();
+	D2::set_hits_absolute_positions();
 
 	HEX::calculate_relative_and_absolute_positions();
 	HEX::collect_hits_from_all_layers();
@@ -130,4 +129,42 @@ double SingleEvent::test_positions_histogram()
 
 	double diff = layersD1pos[3] - layersHEXpos[1];
 	return diff;
+}
+
+TGraph* SingleEvent::plot_track_in_D1_D2()
+{
+	double posX[6];
+	double posZ[6];
+	posX[0] = D1::AllHitsAbsolutePositionX.at(0);
+	posX[1] = D1::AllHitsAbsolutePositionX.at(1);
+	posX[2] = D1::AllHitsAbsolutePositionX.at(2);
+	posX[3] = D1::AllHitsAbsolutePositionX.at(3);
+	posX[4] = D2::AllHitsAbsolutePositionX.at(0);
+	posX[5] = D2::AllHitsAbsolutePositionX.at(1);
+
+	posZ[0] = D1::AllHitsAbsolutePositionZ.at(0);
+	posZ[1] = D1::AllHitsAbsolutePositionZ.at(1);
+	posZ[2] = D1::AllHitsAbsolutePositionZ.at(2);
+	posZ[3] = D1::AllHitsAbsolutePositionZ.at(3);
+	posZ[4] = D2::AllHitsAbsolutePositionZ.at(0);
+	posZ[5] = D2::AllHitsAbsolutePositionZ.at(1);
+
+	TF1 *linear_fit = new TF1("linear_fit","[0]*x + [1]",posX[0]-10,posX[0]+10);
+	linear_fit -> SetParameter(0,0.5);
+	linear_fit -> SetParameter(1,1.0);
+	linear_fit -> SetParName(0,"a");
+	linear_fit -> SetParName(1,"b");
+	TGraph *linear_fit_graph = new TGraph(6,posX,posZ);
+	linear_fit_graph -> Fit(linear_fit, "Q");
+	double a = -(linear_fit -> GetParameter(0));
+	double b = linear_fit -> GetParameter(1);
+
+	TF1* fcn = new TF1("straight_track", "[0]*x+[1]", -100, 100);
+	fcn -> SetParameter(0, a);
+	fcn -> SetParameter(1, b);
+	TGraph* track_plot = new TGraph(fcn);;
+
+	delete linear_fit;
+	delete linear_fit_graph;
+	return track_plot;
 }

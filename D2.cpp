@@ -7,7 +7,12 @@ D2::D2(const Config &_config)
 {
 	for (int i = 0; i < 6; i++)
 	{
-		Layer[i] = new DCLayer(i, _config.D2_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D2_drift_time_min[i],_config.D2_drift_time_max[i],_config.D2_layer_min_hits[i],_config.D2_layer_max_hits[i]);
+		if(i==4||i==5)
+		{
+			if (i==4) Layer[i] = new DCLayer(i, _config.D2_L5_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D2_drift_time_min[i],_config.D2_drift_time_max[i],_config.D2_layer_min_hits[i],_config.D2_layer_max_hits[i]);
+			if (i==5) Layer[i] = new DCLayer(i, _config.D2_L6_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D2_drift_time_min[i],_config.D2_drift_time_max[i],_config.D2_layer_min_hits[i],_config.D2_layer_max_hits[i]);
+		}
+		else Layer[i] = new DCLayer(i, _config.D2_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D2_drift_time_min[i],_config.D2_drift_time_max[i],_config.D2_layer_min_hits[i],_config.D2_layer_max_hits[i]);
 		layer_wire_frame_offset[i] = _config.D2_layer_wire_frame_offset[i];
 	}
 	half_x_dim = _config.D2_half_x_dim;
@@ -50,10 +55,25 @@ bool D2::was_correct_event()
 		correct_in_layer[i] = Layer[i]-> DCLayer::was_correct_event();
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
 	}
-	if (no_of_layers_with_hits == 6)
+
+//	if (no_of_layers_with_hits == 6)
+//	{
+//		correct_event = true;
+//	}
+
+	int wire1;
+	int wire2;
+	if (correct_in_layer[4]&&correct_in_layer[5])
 	{
-		correct_event = true;
+		wire1 = Layer[4] -> DCLayer::Wire.at(0);
+		wire2 = Layer[5] -> DCLayer::Wire.at(0);
+		//std::cout << wire1 << " " << wire2 << " " << wire7 << " " << wire8 << std::endl;
+		if (wire1==15&&wire2==15)//(wire2==wire1||wire2==wire1+1)) // ||wire2==wire1+1 ||wire8==wire7+1
+		{
+			correct_event = true;
+		}
 	}
+
 	return correct_event;
 }
 
@@ -197,10 +217,43 @@ void D2::collect_hits_from_all_layers()
 		{
 			if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10
 			{
-				AllHitsAbsolutePositionX.push_back(Layer[ no_of_layer ] -> AbsoluteXPosition.at(i));
+				AllWiresAbsolutePositionX.push_back(Layer[ no_of_layer ] -> AbsoluteXPosition.at(i));
 				AllHitsAbsolutePositionXEventDisplay.push_back( -(Layer[ no_of_layer ] -> AbsoluteXPosition.at(i)) );
-				AllHitsAbsolutePositionZ.push_back(Layer[ no_of_layer ] -> AbsoluteZPosition.at(i));
+				AllWiresAbsolutePositionZ.push_back(Layer[ no_of_layer ] -> AbsoluteZPosition.at(i));
 			}
 		}
 	}	
+}
+
+void D2::calculate_distances_from_wires()
+{
+	for (int j = 0; j < 6; j++)
+	{
+		if (j==4||j==5) Layer[j] -> DCLayer::calculate_distances_from_wires();
+	}
+}
+
+
+void D2::set_hits_absolute_positions()
+{
+	double wirepos1, wirepos2; 
+	int left_right[2];
+	wirepos1 = Layer[4] -> AbsoluteXPosition.at(0);
+	wirepos2 = Layer[5] -> AbsoluteXPosition.at(0); 
+	if (wirepos1 > wirepos2)
+	{
+		left_right[0] 	= -1;
+		left_right[1] 	= +1;
+	}
+	else
+	{
+		left_right[0] 	= +1;
+		left_right[1] 	= -1;
+	}
+	AllHitsAbsolutePositionX.push_back(wirepos1 + left_right[0]*(Layer[4] -> HitsDistancesFromWires.at(0)));
+	AllHitsAbsolutePositionX.push_back(wirepos2 + left_right[1]*(Layer[5] -> HitsDistancesFromWires.at(0)));
+
+	// Z positions - for wires. --- what if there are rotations - check?? 28.12.16
+	AllHitsAbsolutePositionZ.push_back(Layer[4] -> AbsoluteZPosition.at(0));
+	AllHitsAbsolutePositionZ.push_back(Layer[5] -> AbsoluteZPosition.at(0));
 }

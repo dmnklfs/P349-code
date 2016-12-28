@@ -106,7 +106,7 @@ bool D1::was_correct_event()
 		wire7 = Layer[6] -> DCLayer::Wire.at(0);
 		wire8 = Layer[7] -> DCLayer::Wire.at(0);
 		//std::cout << wire1 << " " << wire2 << " " << wire7 << " " << wire8 << std::endl;
-		if ((wire2==wire1||wire2==wire1+1)&&(wire8==wire7||wire8==wire7+1)) // ||wire2==wire1+1 ||wire8==wire7+1
+		if (wire1==19&&wire7==19&&wire2==20&&wire8==20)//(wire2==wire1||wire2==wire1+1)&&(wire8==wire7||wire8==wire7+1)) // ||wire2==wire1+1 ||wire8==wire7+1
 		{
 			correct_event = true;
 		}
@@ -211,15 +211,114 @@ void D1::collect_hits_from_all_layers()
 		no_of_entries = Layer[ no_of_layer ] -> AbsoluteXPosition.size();
 		for (unsigned int i = 0; i < no_of_entries; i++)
 		{
-
+			// now positions of wires are plotted
 			if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10
 			{
-				AllHitsAbsolutePositionX.push_back(Layer[ no_of_layer ] -> AbsoluteXPosition.at(i));
+				AllWiresAbsolutePositionX.push_back(Layer[ no_of_layer ] -> AbsoluteXPosition.at(i));
 				AllHitsAbsolutePositionXEventDisplay.push_back( -(Layer[ no_of_layer ] -> AbsoluteXPosition.at(i)) );
-				AllHitsAbsolutePositionZ.push_back(Layer[ no_of_layer ] -> AbsoluteZPosition.at(i));
+				AllWiresAbsolutePositionZ.push_back(Layer[ no_of_layer ] -> AbsoluteZPosition.at(i));
 			}
 		}
 	}	
+}
+
+// simple calculation --ONLY-- if there are single hits in all layers
+TGraph* D1::plot_track_in_D1()
+{
+	double wirepos1, wirepos2; 
+	int left_right[4];
+	double pos_X[4], pos_Z[4], err[4];
+	wirepos1 = Layer[0] -> AbsoluteXPosition.at(0);
+	wirepos2 = Layer[1] -> AbsoluteXPosition.at(0); 
+	if (wirepos1 > wirepos2)
+	{
+		left_right[0] 	= -1;
+		left_right[1] 	= +1;
+	}
+	else
+	{
+		left_right[0] 	= +1;
+		left_right[1] 	= -1;
+	}
+	pos_X[0] =wirepos1 + left_right[0]*(Layer[0] -> HitsDistancesFromWires.at(0));
+	pos_X[1] =wirepos2 + left_right[1]*(Layer[1] -> HitsDistancesFromWires.at(0));
+
+	wirepos1 = wirepos1 = Layer[6] -> AbsoluteXPosition.at(0);
+	wirepos2 = wirepos2 = Layer[7] -> AbsoluteXPosition.at(0);
+	if (wirepos1 > wirepos2)
+	{
+		left_right[2] 	= -1;
+		left_right[3] 	= +1;
+	}
+	else
+	{
+		left_right[2] 	= +1;
+		left_right[3] 	= -1;
+	}
+	pos_X[2] =wirepos1 + left_right[0]*(Layer[0] -> HitsDistancesFromWires.at(0));
+	pos_X[3] =wirepos2 + left_right[1]*(Layer[1] -> HitsDistancesFromWires.at(0));
+	// Z positions - for wires. --- what if there are rotations - check?? 28.12.16
+	pos_Z[0] = Layer[0] -> AbsoluteZPosition.at(0);
+	pos_Z[1] = Layer[1] -> AbsoluteZPosition.at(0);
+	pos_Z[2] = Layer[6] -> AbsoluteZPosition.at(0);
+	pos_Z[3] = Layer[7] -> AbsoluteZPosition.at(0);
+	err[0] = 1;
+	err[1] = 1;
+	err[2] = 1;
+	err[3] = 1;
+	MinuitFit * fit = MinuitFit::GetInstance();		
+	fit -> MinuitFit::set_values(pos_X, pos_Z, err);
+	fit -> MinuitFit::perform_simplified_fit();
+	std::vector<double> results;
+	results = fit -> MinuitFit::fit_with_minuit();
+
+	double a = -results.at(0);
+	double b = results.at(1);
+	TF1* fcn = new TF1("straight_track", "[0]*x+[1]", -100, 100);
+	fcn -> SetParameter(0, a);
+	fcn -> SetParameter(1, b);
+	TGraph* track_plot = new TGraph(fcn);
+	return track_plot;
+}
+
+void D1::set_hits_absolute_positions()
+{
+	double wirepos1, wirepos2; 
+	int left_right[4];
+	wirepos1 = Layer[0] -> AbsoluteXPosition.at(0);
+	wirepos2 = Layer[1] -> AbsoluteXPosition.at(0); 
+	if (wirepos1 > wirepos2)
+	{
+		left_right[0] 	= -1;
+		left_right[1] 	= +1;
+	}
+	else
+	{
+		left_right[0] 	= +1;
+		left_right[1] 	= -1;
+	}
+	AllHitsAbsolutePositionX.push_back(wirepos1 + left_right[0]*(Layer[0] -> HitsDistancesFromWires.at(0)));
+	AllHitsAbsolutePositionX.push_back(wirepos2 + left_right[1]*(Layer[1] -> HitsDistancesFromWires.at(0)));
+
+	wirepos1 = wirepos1 = Layer[6] -> AbsoluteXPosition.at(0);
+	wirepos2 = wirepos2 = Layer[7] -> AbsoluteXPosition.at(0);
+	if (wirepos1 > wirepos2)
+	{
+		left_right[2] 	= -1;
+		left_right[3] 	= +1;
+	}
+	else
+	{
+		left_right[2] 	= +1;
+		left_right[3] 	= -1;
+	}
+	AllHitsAbsolutePositionX.push_back(wirepos1 + left_right[0]*(Layer[6] -> HitsDistancesFromWires.at(0)));
+	AllHitsAbsolutePositionX.push_back(wirepos2 + left_right[1]*(Layer[7] -> HitsDistancesFromWires.at(0)));
+	// Z positions - for wires. --- what if there are rotations - check?? 28.12.16
+	AllHitsAbsolutePositionZ.push_back(Layer[0] -> AbsoluteZPosition.at(0));
+	AllHitsAbsolutePositionZ.push_back(Layer[1] -> AbsoluteZPosition.at(0));
+	AllHitsAbsolutePositionZ.push_back(Layer[6] -> AbsoluteZPosition.at(0));
+	AllHitsAbsolutePositionZ.push_back(Layer[7] -> AbsoluteZPosition.at(0));
 }
 
 bool D1::plot_event()
@@ -231,7 +330,7 @@ bool D1::plot_event()
 
 TGraph* D1::get_all_hits_plot()
 {
-	TGraph* all_hits = new TGraph(AllHitsAbsolutePositionXEventDisplay.size(), &AllHitsAbsolutePositionXEventDisplay.at(0), &AllHitsAbsolutePositionZ.at(0));
+	TGraph* all_hits = new TGraph(AllHitsAbsolutePositionXEventDisplay.size(), &AllHitsAbsolutePositionXEventDisplay.at(0), &AllWiresAbsolutePositionZ.at(0));
 	all_hits ->  SetMarkerStyle(20);
 	return all_hits;
 }
@@ -292,7 +391,7 @@ data_for_D1_simple_calibration D1::get_data_for_simple_calibration()
 	return data_for_calibration;
 }
 
-data_for_D1_calibration D1::get_data_for_calibration()
+data_for_D1_calibration D1::get_data_for_calibration() // i need here only informations about wires and distances
 {
 	int D1_layers[8];
 	D1_layers[0] =0;
@@ -326,6 +425,6 @@ data_for_D1_calibration D1::get_data_for_calibration()
 double D1::test_get_chosen_position(int _no_of_layer, int _add_in_layer)
 {
 	double res = (Layer[_no_of_layer]->AbsoluteXPosition.at(0)) + _add_in_layer*2*pow(600,-1)*(Layer[_no_of_layer] -> DriftTime.at(0));
-	std::cout << res << std::endl;
+	//std::cout << res << std::endl;
 	return res;
 }

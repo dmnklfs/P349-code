@@ -110,6 +110,7 @@ public:
 	TH1F *D2_Preselected_Elements[6];
 	TH1F *D2_Preselected_Multiplicity[6];
 	TH1F *D2_Preselected_DriftTime[6];
+	TH1F *D2_wires_offsets[6][42];
 
 	// HEX
 	TH1F *HEX_Rough_Elements[7];

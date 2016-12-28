@@ -79,7 +79,7 @@ Config::Config()
 	HEX_x_lab_position = -7.3;
     HEX_z_lab_position = -139.85;
 	HEX_z_offset = 0; // up to the beginning of the detector (not: 1st layer)
-	HEX_x_offset = 30;
+	HEX_x_offset = 40;
 	HEX_y_rotation_angle = (0)*3.14/180; // rad
 	HEX_layer_wire_frame_offset[0] = 3.45;	// x
 	HEX_layer_wire_frame_offset[1] = 10.65;
@@ -109,6 +109,15 @@ Config::Config()
 											28, 28, 28, 28, 34, 40, 40, 40, 34, 34,
 											40, 34, 34, 34, 34, 34, 40, 40 ,40, 40,
 											40, 40, 40, 40, 40, 40, 34, 40, 40, 40, 40};
+	double _D2_L5_drift_time_offset[41] =  {46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 
+											46, 46, 46, 46, 46, 46, 46, 46, 46, 43, 
+											43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 
+											43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43};
+	double _D2_L6_drift_time_offset[41] =  {43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 
+											43, 43, 43, 43, 46, 46, 46, 46, 46, 46, 
+											46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 
+											46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46};
+
 
 	for (int i = 0; i < 41; i++)
 	{
@@ -117,6 +126,8 @@ Config::Config()
 		D1_L2_drift_time_offset.push_back(_D1_L2_drift_time_offset[i]);
 		D1_L7_drift_time_offset.push_back(_D1_L7_drift_time_offset[i]);
 		D1_L8_drift_time_offset.push_back(_D1_L8_drift_time_offset[i]);
+		D2_L5_drift_time_offset.push_back(_D2_L5_drift_time_offset[i]);
+		D2_L6_drift_time_offset.push_back(_D2_L6_drift_time_offset[i]);
 	}
 
 	// LINEAR CALIBRATION
@@ -194,8 +205,8 @@ Config::Config()
 		{
 			D2_layer_min_hits[i] = 1;
 			D2_layer_max_hits[i] = 1;
-			D2_drift_time_min[i] = -1500;
-			D2_drift_time_max[i] = 1500;
+			D2_drift_time_min[i] = 0;
+			D2_drift_time_max[i] = 609;
 		}
 		else
 		{

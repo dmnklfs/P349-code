@@ -23,6 +23,7 @@ struct event_to_display
 {
 	std::vector<TGraph*> HitsPlots; // tu byly referencje
 	std::vector<TGraph*> DetectorPlots;
+	TGraph* track;
 };
 
 struct data_for_D1_simple_calibration

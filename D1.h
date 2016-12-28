@@ -1,6 +1,7 @@
 #ifndef D1_H
 #define D1_H
 #include "DCLayer.h"
+#include "MinuitFit.h"
 
 #define ND1L1  8	// layer 1 is the closest one to D1
 #define ND1L2  7
@@ -30,6 +31,14 @@ public:
     void calculate_relative_and_absolute_positions(); // now in the function collect_hits_from_all_layers!!
     void collect_hits_from_all_layers();
     double test_get_chosen_position(int _no_of_layer, int _add_in_layer);
+    TGraph* plot_track_in_D1();
+    void set_hits_absolute_positions();
+
+    std::vector<double> AllWiresAbsolutePositionX;
+    std::vector<double> AllWiresAbsolutePositionZ;
+
+    std::vector<double> AllHitsAbsolutePositionX;
+    std::vector<double> AllHitsAbsolutePositionZ;
 
 private:
     void calculate_distances_from_wires_in_layer();
@@ -49,9 +58,6 @@ private:
     double distance_to_1st_layer;
     double distance_between_wires;
     double distance_between_layers;
-
-    std::vector<double> AllHitsAbsolutePositionX;
-    std::vector<double> AllHitsAbsolutePositionZ;
 
     // just for the purpose of the event display - with reversed value of the x coordinate
     std::vector<double> AllHitsAbsolutePositionXEventDisplay;

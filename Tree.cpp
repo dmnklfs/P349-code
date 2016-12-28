@@ -421,6 +421,14 @@ void Tree::save_preselected_histos()
 			Hist::D2_Preselected_Multiplicity[i] -> Write();
 			Hist::D2_Preselected_DriftTime[i] -> Write();
 		}
+		make_hist_dir("D2DriftTimes",2);
+		for (int i = 0; i < 6; i++)
+		{
+			for (int j = 0; j < 42; j++)
+			{
+				D2_wires_offsets[i][j] -> Write();
+			}
+		}
 	}
 
 	if (Hist::HEX_histos_preselected)

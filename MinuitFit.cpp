@@ -106,7 +106,6 @@ std::vector<double> MinuitFit::fit_with_minuit()
 		chisq += delta*delta;
 	}
 	
-	//cout << "chisq: " << chisq << endl;
 	output.push_back(params[0]);
 	output.push_back(params[1]);
 	output.push_back(chisq);
@@ -118,20 +117,15 @@ std::vector<double> MinuitFit::fit_with_minuit()
 
 void MinuitFit::perform_simplified_fit()
 {
-	linear_fit = new TF1("linear_fit","[0]*x + [1]",x[0]-10,x[10]+10);
+	linear_fit = new TF1("linear_fit","[0]*x + [1]",x[0]-10,x[1]+10); // was x[10]
 	linear_fit -> SetParameter(0,0.5);
 	linear_fit -> SetParameter(1,1.0);
 	linear_fit -> SetParName(0,"a");
 	linear_fit -> SetParName(1,"b");
 	linear_fit_graph = new TGraph(4,x,y);
 	linear_fit_graph -> Fit(linear_fit, "Q");
-	//std::cout << "a simplified fit: " << linear_fit -> GetParameter(0) << std::endl;
 	a_start = linear_fit -> GetParameter(0);
 	b_start = linear_fit -> GetParameter(1);
 	delete linear_fit;
 	delete linear_fit_graph;
-
 }
-
-
-

@@ -20,6 +20,7 @@ public:
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();
     void calculate_relative_and_absolute_positions();
+    void calculate_distances_from_wires();
     double test_get_chosen_position(int _no_of_layer); // dell it 24.12.16
 
     // for event display
@@ -27,6 +28,13 @@ public:
     TGraph* get_all_hits_plot();
     TGraph* get_detector_plot();
     void collect_hits_from_all_layers();
+    void set_hits_absolute_positions();
+
+    std::vector<double> AllWiresAbsolutePositionX;
+    std::vector<double> AllWiresAbsolutePositionZ;
+
+    std::vector<double> AllHitsAbsolutePositionX;
+    std::vector<double> AllHitsAbsolutePositionZ;
 
 private:
 	DCLayer *Layer[6];
@@ -45,9 +53,6 @@ private:
     double distance_to_1st_layer;
     double distance_between_wires;
     double distance_between_layers;
-
-    std::vector<double> AllHitsAbsolutePositionX;
-    std::vector<double> AllHitsAbsolutePositionZ;
 
     // just for the purpose of the event display - with reversed value of the x coordinate
     std::vector<double> AllHitsAbsolutePositionXEventDisplay;

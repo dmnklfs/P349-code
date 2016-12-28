@@ -23,6 +23,7 @@ public:
 	double getTOF();
 	void test_calculate_distances();
 	double test_positions_histogram();
+	TGraph* plot_track_in_D1_D2();
 
 private:
 	bool correct_event;
