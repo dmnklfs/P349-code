@@ -95,13 +95,13 @@ void SingleEvent::test_calculate_distances()
 	D1::collect_hits_from_all_layers();
 	D1::set_hits_absolute_positions(); // delme 28.12.16
 
-	D2::calculate_distances_from_wires();
-	D2::calculate_relative_and_absolute_positions();
-	D2::collect_hits_from_all_layers();
-	D2::set_hits_absolute_positions();
+	//D2::calculate_distances_from_wires();
+	//D2::calculate_relative_and_absolute_positions();
+	//D2::collect_hits_from_all_layers();
+	//D2::set_hits_absolute_positions();
 
-	HEX::calculate_relative_and_absolute_positions();
-	HEX::collect_hits_from_all_layers();
+	//HEX::calculate_relative_and_absolute_positions();
+	//HEX::collect_hits_from_all_layers();
 }
 
 double SingleEvent::test_positions_histogram()

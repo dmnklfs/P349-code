@@ -97,6 +97,8 @@ struct DCLayer_hist_data
 struct D1_hist_data
 {
 	DCLayer_hist_data* layer_data[8];
+	int D1_no_of_cells_with_hits;
+	int D1_no_of_planes_with_hits;
 };
 
 struct D2_hist_data

@@ -17,6 +17,8 @@ D1::D1(const Config &_config)
 		// for all layers
 		layer_wire_frame_offset[i] = _config.D1_layer_wire_frame_offset[i];
 	}
+	D1_no_of_planes_with_hits = 0;
+	D1_no_of_cells_with_hits = 0;
 	half_x_dim = _config.D1_half_x_dim;
 	half_z_dim = _config.D1_half_z_dim;
 	x_lab_position = _config.D1_x_lab_position;
@@ -54,15 +56,22 @@ bool D1::was_correct_event()
 	correct_event = false;
 	no_of_layers_with_hits = 0;
 	bool correct_in_layer[8];
+	D1_no_of_planes_with_hits = 0;
+	D1_no_of_cells_with_hits = 0;
 	for (int i = 0; i < 8; i++)
 	{
 		correct_in_layer[i] = Layer[i]-> DCLayer::was_correct_event();
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
+		if (0!= Layer[i]-> Wire.size())
+		{
+			D1_no_of_planes_with_hits++;
+			D1_no_of_cells_with_hits = D1_no_of_cells_with_hits + Layer[i]-> Wire.size();
+		}
 	}
-//	if (no_of_layers_with_hits == 8)
-//	{
-//		correct_event = true;
-//	}
+	if (no_of_layers_with_hits == 8)
+	{
+		correct_event = true;
+	}
 
 	// dell it, choice of coincidences if one wire parametrized
 //	double edge_val1, edge_val2, dtime1, dtime2;
@@ -95,22 +104,22 @@ bool D1::was_correct_event()
 //		//correct_event = true;
 //	}
 
-	int wire1;
-	int wire2;
-	int wire7;
-	int wire8;
-	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
-	{
-		wire1 = Layer[0] -> DCLayer::Wire.at(0);
-		wire2 = Layer[1] -> DCLayer::Wire.at(0);
-		wire7 = Layer[6] -> DCLayer::Wire.at(0);
-		wire8 = Layer[7] -> DCLayer::Wire.at(0);
-		//std::cout << wire1 << " " << wire2 << " " << wire7 << " " << wire8 << std::endl;
-		if (wire1==19&&wire7==19&&wire2==20&&wire8==20)//(wire2==wire1||wire2==wire1+1)&&(wire8==wire7||wire8==wire7+1)) // ||wire2==wire1+1 ||wire8==wire7+1
-		{
-			correct_event = true;
-		}
-	}
+//	int wire1;
+//	int wire2;
+//	int wire7;
+//	int wire8;
+//	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
+//	{
+//		wire1 = Layer[0] -> DCLayer::Wire.at(0);
+//		wire2 = Layer[1] -> DCLayer::Wire.at(0);
+//		wire7 = Layer[6] -> DCLayer::Wire.at(0);
+//		wire8 = Layer[7] -> DCLayer::Wire.at(0);
+//		//std::cout << wire1 << " " << wire2 << " " << wire7 << " " << wire8 << std::endl;
+//		if ((wire2==wire1||wire2==wire1+1)&&(wire8==wire7||wire8==wire7+1))// wire1==19&&wire7==19&&wire2==20&&wire8==20) // ||wire2==wire1+1 ||wire8==wire7+1
+//		{
+//			correct_event = true;
+//		}
+//	}
 	
 	return correct_event;
 }
@@ -122,6 +131,8 @@ D1_hist_data* D1::get_hist_data()
 	{
 		d1_data -> layer_data[i] = Layer[i]-> DCLayer::get_hist_data();
 	}
+	d1_data -> D1_no_of_cells_with_hits = D1_no_of_cells_with_hits;
+	d1_data -> D1_no_of_planes_with_hits = D1_no_of_planes_with_hits;
 	return d1_data;
 	//delete d1_data;
 }

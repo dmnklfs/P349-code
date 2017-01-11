@@ -46,6 +46,8 @@ private:
 	int no_of_layers_with_hits;
 	bool correct_event;
     double D1_max_time;
+    int D1_no_of_planes_with_hits;
+    int D1_no_of_cells_with_hits;
 
     double half_x_dim;
     double half_z_dim;

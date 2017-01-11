@@ -39,14 +39,17 @@ public:
 	void set_values(double *_x, double *_y, double *_errors);
 	bool err_flag();
 	void perform_simplified_fit();
+	void set_no_of_points(int npoints);
 
 private:
+	int no_of_points;
 	static MinuitFit * _this;
 	double x[4], y[4], errors[4];
 	bool errflag;
 	double a_start, b_start;
 	TF1 *linear_fit;
 	TGraph *linear_fit_graph;
+	
 	
 
 	

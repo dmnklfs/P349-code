@@ -364,6 +364,9 @@ void Tree::save_preselected_histos()
 	if (Hist::D1_histos_preselected)
 	{
 		make_hist_dir("D1",2);
+		D1_no_of_planes -> Write();
+		D1_no_of_cells -> Write();
+		D1_no_planes_vs_cells -> Write();
 		for (int i = 0; i < 8; i++)
 		{
 			Hist::D1_Preselected_Elements[i] -> Write();

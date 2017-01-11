@@ -11,12 +11,18 @@ MinuitFit * MinuitFit::GetInstance(){
 
 MinuitFit::MinuitFit()
 {
-
+	no_of_points = 4;
 }
+
+void MinuitFit::set_no_of_points(int npoints)
+{
+	no_of_points = npoints;
+}
+
 
 void MinuitFit::set_values(double *_x, double *_y, double *_errors)
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < no_of_points; i++)
 	{
 		x[i] = _x[i];
 		y[i] = _y[i];
@@ -32,7 +38,7 @@ bool MinuitFit::err_flag()
 
 double MinuitFit::GlobalFCN(const double * par)
 {
-	const int points = 4;
+	const int points = no_of_points;
 	int i;
 	//calculate chisquare
 	double chisq = 0;
@@ -98,7 +104,7 @@ std::vector<double> MinuitFit::fit_with_minuit()
 	double chisq=0;
 	double delta=0;
 	int i;
-	int points =4;
+	int points =no_of_points;
 
 	for (i=0;i<points; i++)
 	{
@@ -122,7 +128,7 @@ void MinuitFit::perform_simplified_fit()
 	linear_fit -> SetParameter(1,1.0);
 	linear_fit -> SetParName(0,"a");
 	linear_fit -> SetParName(1,"b");
-	linear_fit_graph = new TGraph(4,x,y);
+	linear_fit_graph = new TGraph(no_of_points,x,y);
 	linear_fit_graph -> Fit(linear_fit, "Q");
 	a_start = linear_fit -> GetParameter(0);
 	b_start = linear_fit -> GetParameter(1);

@@ -56,23 +56,23 @@ bool D2::was_correct_event()
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
 	}
 
-//	if (no_of_layers_with_hits == 6)
-//	{
-//		correct_event = true;
-//	}
-
-	int wire1;
-	int wire2;
-	if (correct_in_layer[4]&&correct_in_layer[5])
+	if (no_of_layers_with_hits == 6)
 	{
-		wire1 = Layer[4] -> DCLayer::Wire.at(0);
-		wire2 = Layer[5] -> DCLayer::Wire.at(0);
-		//std::cout << wire1 << " " << wire2 << " " << wire7 << " " << wire8 << std::endl;
-		if (wire1==15&&wire2==15)//(wire2==wire1||wire2==wire1+1)) // ||wire2==wire1+1 ||wire8==wire7+1
-		{
-			correct_event = true;
-		}
+		correct_event = true;
 	}
+
+//	int wire1;
+//	int wire2;
+//	if (correct_in_layer[4]&&correct_in_layer[5])
+//	{
+//		wire1 = Layer[4] -> DCLayer::Wire.at(0);
+//		wire2 = Layer[5] -> DCLayer::Wire.at(0);
+//		//std::cout << wire1 << " " << wire2 << " " << wire7 << " " << wire8 << std::endl;
+//		if (wire1==15&&wire2==15)//(wire2==wire1||wire2==wire1+1)) // ||wire2==wire1+1 ||wire8==wire7+1
+//		{
+//			correct_event = true;
+//		}
+//	}
 
 	return correct_event;
 }

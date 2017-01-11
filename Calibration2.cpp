@@ -186,28 +186,6 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 	layers_numbers[2] = 6;
 	layers_numbers[3] = 7;
 
-	// for tests - added 05.01.17
-	double hits_positionsX_noL1[3];
-	double hits_positionsZ_noL1[3];
-	double errors_noL1[3];
-
-	double hits_positionsX_noL2[3];
-	double hits_positionsZ_noL2[3];
-	double errors_noL2[3];
-
-	double hits_positionsX_noL7[3];
-	double hits_positionsZ_noL7[3];
-	double errors_noL7[3];
-
-	double hits_positionsX_noL8[3];
-	double hits_positionsZ_noL8[3];
-	double errors_noL8[3];
-
-	std::vector<double> results_L1;
-	std::vector<double> results_L2;
-	std::vector<double> results_L7;
-	std::vector<double> results_L8;
-
 	double aSt, track_angle, bSt, chi2St;
 
 	unsigned int no_of_chosen_events;
@@ -221,139 +199,33 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 			hits_positionsZ[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_Z;
 			errors[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_Xerr;
 		}
-		// bez L1 - bez 0
-		hits_positionsX_noL1[0] = hits_positionsX[1];
-		hits_positionsZ_noL1[0] = hits_positionsZ[1];
-		errors_noL1[0] 			= errors[1];
-		hits_positionsX_noL1[1] = hits_positionsX[2];
-		hits_positionsZ_noL1[1] = hits_positionsZ[2];
-		errors_noL1[1] 			= errors[2];
-		hits_positionsX_noL1[2] = hits_positionsX[3];
-		hits_positionsZ_noL1[2] = hits_positionsZ[3];
-		errors_noL1[2] 			= errors[3];
-
-		// bez L1 - bez 1
-		hits_positionsX_noL2[0] = hits_positionsX[0];
-		hits_positionsZ_noL2[0] = hits_positionsZ[0];
-		errors_noL2[0] 			= errors[0];
-		hits_positionsX_noL2[1] = hits_positionsX[2];
-		hits_positionsZ_noL2[1] = hits_positionsZ[2];
-		errors_noL2[1] 			= errors[2];
-		hits_positionsX_noL2[2] = hits_positionsX[3];
-		hits_positionsZ_noL2[2] = hits_positionsZ[3];
-		errors_noL2[2] 			= errors[3];
-
-		// bez L1 - bez 2
-		hits_positionsX_noL7[0] = hits_positionsX[0];
-		hits_positionsZ_noL7[0] = hits_positionsZ[0];
-		errors_noL7[0] 			= errors[0];
-		hits_positionsX_noL7[1] = hits_positionsX[1];
-		hits_positionsZ_noL7[1] = hits_positionsZ[1];
-		errors_noL7[1] 			= errors[1];
-		hits_positionsX_noL7[2] = hits_positionsX[3];
-		hits_positionsZ_noL7[2] = hits_positionsZ[3];
-		errors_noL7[2] 			= errors[3];
-
-		// bez L1 - bez 3
-		hits_positionsX_noL8[0] = hits_positionsX[0];
-		hits_positionsZ_noL8[0] = hits_positionsZ[0];
-		errors_noL8[0] 			= errors[0];
-		hits_positionsX_noL8[1] = hits_positionsX[1];
-		hits_positionsZ_noL8[1] = hits_positionsZ[1];
-		errors_noL8[1] 			= errors[1];
-		hits_positionsX_noL8[2] = hits_positionsX[2];
-		hits_positionsZ_noL8[2] = hits_positionsZ[2];
-		errors_noL8[2] 			= errors[2];
-
-		// fit for the straight layers - commented out on 05.01.17
-		//MinuitFit * fit = MinuitFit::GetInstance();
-		//fit -> set_no_of_points(4);		
-		//fit -> MinuitFit::set_values(hits_positionsX, hits_positionsZ, errors);
-		//fit -> MinuitFit::perform_simplified_fit();
-		//results = fit -> MinuitFit::fit_with_minuit();
-		//if (!(fit -> err_flag()))
-
-		MinuitFit * fit_L1 = MinuitFit::GetInstance();
-		fit_L1 -> set_no_of_points(3);		
-		fit_L1 -> MinuitFit::set_values(hits_positionsX_noL1, hits_positionsZ_noL1, errors_noL1);
-		fit_L1 -> MinuitFit::perform_simplified_fit();
-		results_L1 = fit_L1 -> MinuitFit::fit_with_minuit();
-
-		MinuitFit * fit_L2 = MinuitFit::GetInstance();
-		fit_L2 -> set_no_of_points(3);		
-		fit_L2 -> MinuitFit::set_values(hits_positionsX_noL2, hits_positionsZ_noL2, errors_noL2);
-		fit_L2 -> MinuitFit::perform_simplified_fit();
-		results_L2 = fit_L2 -> MinuitFit::fit_with_minuit();
-
-		MinuitFit * fit_L7 = MinuitFit::GetInstance();
-		fit_L7 -> set_no_of_points(3);		
-		fit_L7 -> MinuitFit::set_values(hits_positionsX_noL7, hits_positionsZ_noL7, errors_noL7);
-		fit_L7 -> MinuitFit::perform_simplified_fit();
-		results_L7 = fit_L7 -> MinuitFit::fit_with_minuit();
-
-		MinuitFit * fit_L8 = MinuitFit::GetInstance();
-		fit_L8 -> set_no_of_points(3);		
-		fit_L8 -> MinuitFit::set_values(hits_positionsX_noL8, hits_positionsZ_noL8, errors_noL8);
-		fit_L8 -> MinuitFit::perform_simplified_fit();
-		results_L8 = fit_L8 -> MinuitFit::fit_with_minuit();
-
-		if ((!(fit_L1 -> err_flag())) && (!(fit_L2 -> err_flag())) && !(fit_L7 -> err_flag()) &&!(fit_L8 -> err_flag())) //  && 
+		// fit for the straight layers
+		MinuitFit * fit = MinuitFit::GetInstance();		
+		fit -> MinuitFit::set_values(hits_positionsX, hits_positionsZ, errors);
+		fit -> MinuitFit::perform_simplified_fit();
+		results = fit -> MinuitFit::fit_with_minuit();
+		if (!(fit -> err_flag()))
 		{
-			aSt = results_L1.at(0);
-			bSt = results_L1.at(1);
+			aSt = results.at(0);
+			bSt = results.at(1);
 			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
 			if (track_angle < 0) track_angle = 180+track_angle;
-			Layer[0] -> CalibrationData.at(i).track_a = aSt;
-			Layer[0] -> CalibrationData.at(i).track_b = bSt;
-			Layer[0] -> CalibrationData.at(i).track_angle = track_angle;
-			Layer[0] -> calculate_deltas(i);
-
-			aSt = results_L2.at(0);
-			bSt = results_L2.at(1);
-			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
-			if (track_angle < 0) track_angle = 180+track_angle;
-			Layer[1] -> CalibrationData.at(i).track_a = aSt;
-			Layer[1] -> CalibrationData.at(i).track_b = bSt;
-			Layer[1] -> CalibrationData.at(i).track_angle = track_angle;
-			Layer[1] -> calculate_deltas(i);
-
-			aSt = results_L7.at(0);
-			bSt = results_L7.at(1);
-			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
-			if (track_angle < 0) track_angle = 180+track_angle;
-			Layer[6] -> CalibrationData.at(i).track_a = aSt;
-			Layer[6] -> CalibrationData.at(i).track_b = bSt;
-			Layer[6] -> CalibrationData.at(i).track_angle = track_angle;
-			Layer[6] -> calculate_deltas(i);
-
-			aSt = results_L8.at(0);
-			bSt = results_L8.at(1);
-			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
-			if (track_angle < 0) track_angle = 180+track_angle;
-			Layer[7] -> CalibrationData.at(i).track_a = aSt;
-			Layer[7] -> CalibrationData.at(i).track_b = bSt;
-			Layer[7] -> CalibrationData.at(i).track_angle = track_angle;
-			Layer[7] -> calculate_deltas(i);
-//			aSt = results.at(0);
-//			bSt = results.at(1);
-//			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
-//			if (track_angle < 0) track_angle = 180+track_angle;
-//			chi2St = results.at(2);
-//			angle_distribution_no_cut -> Fill(track_angle);
-//			if ( was_correct_angle(track_angle) )
-//			{
-//				angle_distribution -> Fill(track_angle);
-//				chi2_cut -> Fill(chi2St);
-//				chi2 -> Fill(chi2St);
-//				// set values is straight layers
-//				for (int j = 0; j < 4; j++)
-//				{
-//					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_a = aSt;
-//					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_b = bSt;
-//					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_angle = track_angle;
-//					Layer[layers_numbers[j]] -> calculate_deltas(i);
-//				}
-//			}
+			chi2St = results.at(2);
+			angle_distribution_no_cut -> Fill(track_angle);
+			if ( was_correct_angle(track_angle) )
+			{
+				angle_distribution -> Fill(track_angle);
+				chi2_cut -> Fill(chi2St);
+				chi2 -> Fill(chi2St);
+				// set values is straight layers
+				for (int j = 0; j < 4; j++)
+				{
+					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_a = aSt;
+					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_b = bSt;
+					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_angle = track_angle;
+					Layer[layers_numbers[j]] -> calculate_deltas(i);
+				}
+			}
 		}
 		else // needed. StraightLayersTracks* have to have the same length as the CalibrationData in certain layers
 		{
@@ -361,12 +233,8 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 			bSt = -1;
 		}
 
-		//delete fit_L1;
-		//delete fit_L2;
-		//delete fit_L7;
-		//delete fit_L8;
-		//results.clear();
-		//delete fit;
+		results.clear();
+		delete fit;
 
 		// there should be fit in inclined layers
 		// there should be some 3d fitting

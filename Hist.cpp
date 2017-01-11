@@ -103,6 +103,12 @@ void Hist::init_D1_histos_preselected()
 {
 	D1_histos_preselected = true;
 	TString temp_name;
+	temp_name = Form("D1 #mu_{planes};counts;#mu_{planes}",0);
+	D1_no_of_planes = new TH1F(temp_name, temp_name, 10, -0.5, 9.5);
+	temp_name = Form("D1 #mu_{cells};counts;#mu_{cells}",0);
+	D1_no_of_cells = new TH1F(temp_name, temp_name, 36, -0.5, 35.5);
+	temp_name = Form("D1 #mu_{cells} vs. #mu_{planes};#mu_{cells};#mu_{planes}",0);
+	D1_no_planes_vs_cells = new TH2F(temp_name, temp_name, 36, -0.5, 35.5, 10, -0.5, 9.5);
 	// D1
 	for (int i = 0; i < 8; i++)
 	{
@@ -390,6 +396,9 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 		int wire1, wire2;
 		Float_t time1, time2, tot;
 		double multiplicities[42];
+		D1_no_of_planes -> Fill(_d1_data->D1_no_of_planes_with_hits);
+		D1_no_of_cells -> Fill(_d1_data->D1_no_of_cells_with_hits);
+		D1_no_planes_vs_cells -> Fill(_d1_data->D1_no_of_cells_with_hits,_d1_data->D1_no_of_planes_with_hits);
 		for (int j = 0; j < 8; j++)
 		{
 			for (unsigned int i = 0; i < _d1_data->layer_data[j]->preselected_elements.size(); i++)
