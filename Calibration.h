@@ -41,7 +41,8 @@ public:
 	void solve_lr_ambiguity(const CalibrationLayer &layer1, const CalibrationLayer &layer2);
 	void calculate_hit_position();
 	void save_histograms();
-	void fit_events_in_straight_layers(double _chi2_cut);
+	void fit_events_in_straight_layers_biased(double _chi2_cut);
+	void fit_events_in_straight_layers_unbiased(double _chi2_cut);
 	void calculate_deltas();
 	void set_values_of_track_projections_params();
 	void deletations();

@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
   TH1F *D1_HEX_pos_diff = new TH1F("D1_HEX_pos_diff","D1_HEX_pos_diff", 150, 0, 45);
 	//-----------------------------------------------------------------------------------------------------
 	SingleEvent *single_event;
-	EventDisplay *event_to_display;
+	//EventDisplay *event_to_display;
 	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
   Calibration *calibration = new Calibration(config);
 	std::cout << "* start of the loop over the events" << std::endl;
@@ -67,10 +67,10 @@ int main(int argc, char *argv[])
         TOF_Mean_Time  -> Fill(single_event -> SingleEvent::TOF::getTime());
   			single_event -> SingleEvent::test_calculate_distances();
         //D1_HEX_pos_diff -> Fill(single_event -> SingleEvent::test_positions_histogram());
-  			event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
+  			//event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
   			//event_to_display -> get_canvas() -> Write(name);
   			name = Form("results/Event_%ld.png", entry);
-  			event_to_display -> get_canvas() -> SaveAs(name);
+  			//event_to_display -> get_canvas() -> SaveAs(name);
 
   			//data for the simple calibration
   			//simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     
     calibration -> set_no_of_iteration(0);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers(100000);
+    calibration -> fit_events_in_straight_layers_biased(100000);
     // add: make a 3d track, make projections
 
     calibration -> save_histograms();
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 
     /*calibration -> set_no_of_iteration(1);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers(100000);
+    calibration -> fit_events_in_straight_layers_biased(100000);
     // add: make a 3d track, make projections
 
     calibration -> save_histograms();
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 
     calibration -> set_no_of_iteration(2);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers(100000);
+    calibration -> fit_events_in_straight_layers_biased(100000);
     // add: make a 3d track, make projections
 
     calibration -> save_histograms();
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 
     calibration -> set_no_of_iteration(3);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers(100000);
+    calibration -> fit_events_in_straight_layers_biased(100000);
     // add: make a 3d track, make projections
 
     calibration -> save_histograms();
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
 
     calibration -> set_no_of_iteration(4);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers(100000);
+    calibration -> fit_events_in_straight_layers_biased(100000);
     // add: make a 3d track, make projections
 
     calibration -> save_histograms();
@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
 
     calibration -> set_no_of_iteration(5);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers(100000);
+    calibration -> fit_events_in_straight_layers_biased(100000);
     // add: make a 3d track, make projections
 
     calibration -> save_histograms();

@@ -23,24 +23,23 @@ Calibration::Calibration(const Config &_config)
 	// initialization of the layers
 	Layer[0] = new CalibrationLayer(1, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances);
 	Layer[1] = new CalibrationLayer(2, _config.D1_L2_calibration_times, _config.D1_L2_calibration_distances);
+	Layer[2] = new CalibrationLayer(3, _config.D1_L3_calibration_times, _config.D1_L3_calibration_distances);
+	Layer[3] = new CalibrationLayer(4, _config.D1_L4_calibration_times, _config.D1_L4_calibration_distances);
+	Layer[4] = new CalibrationLayer(5, _config.D1_L5_calibration_times, _config.D1_L5_calibration_distances);
+	Layer[5] = new CalibrationLayer(6, _config.D1_L6_calibration_times, _config.D1_L6_calibration_distances);
 	Layer[6] = new CalibrationLayer(7, _config.D1_L7_calibration_times, _config.D1_L7_calibration_distances);
 	Layer[7] = new CalibrationLayer(8, _config.D1_L8_calibration_times, _config.D1_L8_calibration_distances);
 	for (int i = 0; i < 8; i++)
 	{
-		if (0==i||1==i||6==i||7==i)
+		//if (0==i||1==i||6==i||7==i)
+		if (true)
 		{
 			Layer[i] -> CalibrationLayer::set_no_of_corr_bins(no_of_corr_bins);
 			Layer[i] -> CalibrationLayer::set_max_time_range(max_time_range);
 			Layer[i] -> CalibrationLayer::set_no_of_bin_in_calib();
 		}
-		else 
-		{
-			// layers with inclined wires *somehow* initialized - for now, 24.11.2016
-			Layer[i] = new CalibrationLayer(i+1, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances);
-			Layer[i] -> CalibrationLayer::set_no_of_corr_bins(no_of_corr_bins);
-			Layer[i] -> CalibrationLayer::set_max_time_range(max_time_range);
-		}
 	}
+
 	TString name;
 	name = Form("#chi^{2}",1);
 	chi2 = new TH1F(name, name, 2000, -0.25, 25);
@@ -87,42 +86,25 @@ void Calibration::get_data(data_for_D1_calibration _single_event_data)
 {
 	double wirepos1, wirepos2;
 	int left_right[8];
-	wirepos1 = _single_event_data.positionsX[0];
-	wirepos2 = _single_event_data.positionsX[1];
-	if (wirepos1 > wirepos2)
+	for (int i = 0; i < 4; i++)
 	{
-		left_right[0] 	= -1;
-		left_right[1] 	= +1;
-	}
-	else
-	{
-		left_right[0] 	= +1;
-		left_right[1] 	= -1;
-	}
-	wirepos1 = _single_event_data.positionsX[6];
-	wirepos2 = _single_event_data.positionsX[7];
-	if (wirepos1 > wirepos2)
-	{
-		left_right[6] 	= -1;
-		left_right[7] 	= +1;
-	}
-	else
-	{
-		left_right[6] 	= +1;
-		left_right[7] 	= -1;
+		wirepos1 = _single_event_data.positionsX[2*i];
+		wirepos2 = _single_event_data.positionsX[2*i+1];
+		if (wirepos1 > wirepos2)
+		{
+			left_right[2*i] 	= -1;
+			left_right[2*i+1] 	= +1;
+		}
+		else
+		{
+			left_right[2*i] 	= +1;
+			left_right[2*i+1] 	= -1;
+		}
 	}
 
 	for (int i = 0; i < 8; i++)
 	{
-		if (0==i||1==i||6==i||7==i)
-		{
-			Layer[i] -> CalibrationLayer::get_data(_single_event_data.positionsX[i], _single_event_data.positionsZ[i], _single_event_data.drift_times[i], left_right[i]);
-		}
-		else 
-		{
-			// layers with inclined wires *somehow* initialized - for now, 24.11.2016
-			Layer[i] -> CalibrationLayer::get_data(_single_event_data.positionsX[0], _single_event_data.positionsZ[0], _single_event_data.drift_times[0], left_right[0]);;
-		}
+		Layer[i] -> CalibrationLayer::get_data(_single_event_data.positionsX[i], _single_event_data.positionsZ[i], _single_event_data.drift_times[i], left_right[i]);
 	}
 }
 
@@ -131,7 +113,8 @@ void Calibration::set_no_of_iteration(double _no_of_iteration)
 	no_of_iteration = _no_of_iteration;
 	for (int i = 0; i < 8; i++)
 	{
-		if (0==i||1==i||6==i||7==i)
+		//if (0==i||1==i||6==i||7==i)
+		if (true)
 		{
 			Layer[i] -> CalibrationLayer::set_no_of_iteration(_no_of_iteration);
 		}
@@ -142,7 +125,8 @@ void Calibration::calculate_hit_position()
 {
 	for (int i = 0; i < 8; i++)
 	{
-		if (0==i||1==i||6==i||7==i)
+		//if (0==i||1==i||6==i||7==i)
+		if (true)
 		{
 			Layer[i] -> CalibrationLayer::calculate_hit_position();
 		}
@@ -153,7 +137,8 @@ void Calibration::set_no_of_bin_in_event()
 {
 	for (int i = 0; i < 8; i++)
 	{
-		if (0==i||1==i||6==i||7==i)
+		//if (0==i||1==i||6==i||7==i)
+		if (true)
 		{
 			Layer[i] -> CalibrationLayer::set_no_of_bin_in_event();
 		}
@@ -179,7 +164,77 @@ void Calibration::save_histograms()
 	}
 }
 
-void Calibration::fit_events_in_straight_layers(double _chi2_cut)
+void Calibration::fit_events_in_inclined_layers(double _chi2_cut)
+{
+	
+}
+
+void Calibration::fit_events_in_straight_layers_biased(double _chi2_cut)
+{
+	std::vector<double> results;
+	double hits_positionsX[4];
+	double hits_positionsZ[4];
+	double errors[4];
+	int layers_numbers[4];
+	layers_numbers[0] = 0;
+	layers_numbers[1] = 1;
+	layers_numbers[2] = 6;
+	layers_numbers[3] = 7;
+
+	double aSt, track_angle, bSt, chi2St;
+	unsigned int no_of_chosen_events;
+	no_of_chosen_events = Layer[0] -> CalibrationData.size();
+	for (unsigned int i = 0; i < no_of_chosen_events; i++)
+	{
+		// take the single event data
+		for (int j = 0; j < 4; j++)
+		{
+			hits_positionsX[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_X;
+			hits_positionsZ[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_Z;
+			errors[j] = Layer[layers_numbers[j]]->CalibrationData.at(i).hit_pos_Xerr;
+		}
+
+		MinuitFit * fit = MinuitFit::GetInstance();
+		fit -> set_no_of_points(4);		
+		fit -> MinuitFit::set_values(hits_positionsX, hits_positionsZ, errors);
+		fit -> MinuitFit::perform_simplified_fit();
+		results = fit -> MinuitFit::fit_with_minuit();
+		if (!(fit -> err_flag()))
+		{
+			aSt = results.at(0);
+			bSt = results.at(1);
+			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
+			if (track_angle < 0) track_angle = 180+track_angle;
+			chi2St = results.at(2);
+			angle_distribution_no_cut[0] -> Fill(track_angle);
+			if ( was_correct_angle(track_angle) )
+			{
+				angle_distribution[0] -> Fill(track_angle);
+				chi2_cut -> Fill(chi2St);
+				chi2 -> Fill(chi2St);
+				// set values is straight layers
+				for (int j = 0; j < 4; j++)
+				{
+					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_a = aSt;
+					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_b = bSt;
+					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_angle = track_angle;
+					Layer[layers_numbers[j]] -> calculate_deltas(i);
+				}
+			}
+		}
+		else // needed. StraightLayersTracks* have to have the same length as the CalibrationData in certain layers
+		{
+			aSt = -1;
+			bSt = -1;
+		}
+		results.clear();
+		delete fit;
+		// there should be fit in inclined layers
+		// there should be some 3d fitting
+	}
+}
+
+void Calibration::fit_events_in_straight_layers_unbiased(double _chi2_cut)
 {
 	std::vector<double> results;
 	double hits_positionsX[4];
@@ -270,14 +325,6 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 		hits_positionsZ_noL8[2] = hits_positionsZ[2];
 		errors_noL8[2] 			= errors[2];
 
-		// fit for the straight layers - commented out on 05.01.17
-		//MinuitFit * fit = MinuitFit::GetInstance();
-		//fit -> set_no_of_points(4);		
-		//fit -> MinuitFit::set_values(hits_positionsX, hits_positionsZ, errors);
-		//fit -> MinuitFit::perform_simplified_fit();
-		//results = fit -> MinuitFit::fit_with_minuit();
-		//if (!(fit -> err_flag()))
-
 		MinuitFit * fit_L1 = MinuitFit::GetInstance();
 		fit_L1 -> set_no_of_points(3);		
 		fit_L1 -> MinuitFit::set_values(hits_positionsX_noL1, hits_positionsZ_noL1, errors_noL1);
@@ -347,26 +394,6 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 			Layer[7] -> CalibrationData.at(i).track_b = bSt;
 			Layer[7] -> CalibrationData.at(i).track_angle = track_angle;
 			Layer[7] -> calculate_deltas(i);
-//			aSt = results.at(0);
-//			bSt = results.at(1);
-//			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
-//			if (track_angle < 0) track_angle = 180+track_angle;
-//			chi2St = results.at(2);
-//			angle_distribution_no_cut -> Fill(track_angle);
-//			if ( was_correct_angle(track_angle) )
-//			{
-//				angle_distribution -> Fill(track_angle);
-//				chi2_cut -> Fill(chi2St);
-//				chi2 -> Fill(chi2St);
-//				// set values is straight layers
-//				for (int j = 0; j < 4; j++)
-//				{
-//					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_a = aSt;
-//					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_b = bSt;
-//					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_angle = track_angle;
-//					Layer[layers_numbers[j]] -> calculate_deltas(i);
-//				}
-//			}
 		}
 		else // needed. StraightLayersTracks* have to have the same length as the CalibrationData in certain layers
 		{
@@ -374,10 +401,6 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 			bSt = -1;
 		}
 
-		//delete fit_L1;
-		//delete fit_L2;
-		//delete fit_L7;
-		//delete fit_L8;
 		//results.clear();
 		//delete fit;
 
@@ -468,14 +491,14 @@ void Calibration::set_pos_Xerr()
 void Calibration::plot_current_calibration()
 {
 	TString name;
-	name = Form("results/layer1_calibration_iteration_%d.png",no_of_iteration);
-	Layer[0] -> plot_current_calibration() -> SaveAs(name);
-	name = Form("results/layer2_calibration_iteration_%d.png",no_of_iteration);
-	Layer[1] -> plot_current_calibration() -> SaveAs(name);
-	name = Form("results/layer7_calibration_iteration_%d.png",no_of_iteration);
-	Layer[6] -> plot_current_calibration() -> SaveAs(name);
-	name = Form("results/layer8_calibration_iteration_%d.png",no_of_iteration);
-	Layer[7] -> plot_current_calibration() -> SaveAs(name);
+	for (int i = 0; i < 8; i++)
+	{
+		if (i==0||i==1||i==6||i==7)
+		{
+			name = Form("results/layer%d_calibration_iteration_%d.png",i+1, no_of_iteration);
+			Layer[i] -> plot_current_calibration() -> SaveAs(name);
+		}
+	}
 }
 
 TCanvas* Calibration::Calibration::plot_angle_distribution()

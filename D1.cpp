@@ -153,7 +153,8 @@ void D1::calculate_distances_from_wires()
 {
 	for (int j = 0; j < 8; j++)
 	{
-		if (j==0||j==1||j==6||j==7) Layer[j] -> DCLayer::calculate_distances_from_wires();
+		// if (j==0||j==1||j==6||j==7) Layer[j] -> DCLayer::calculate_distances_from_wires();
+		Layer[j] -> DCLayer::calculate_distances_from_wires();
 	}
 }
 
@@ -484,6 +485,7 @@ data_for_D1_calibration D1::get_data_for_calibration() // i need here only infor
 		data_for_calibration.positionsX[i]	= Layer[i] -> AbsoluteXPosition.at(0);
 		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
 		data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
+		//std::cout << i << " " << Layer[i] -> AbsoluteXPosition.at(0) << " " << Layer[i] -> AbsoluteZPosition.at(0) << " " << Layer[i] -> DriftTime.at(0) << std::endl;
 	}
 	return data_for_calibration;
 }
