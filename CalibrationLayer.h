@@ -52,6 +52,9 @@ struct D1_single_event_data
 		corr_bin = -1;
 		chi2 = -1;
 		hit_pos_Xerr = 1;
+		track_a = -1;
+		track_b = -1;
+		track_angle = -1;
 	}
 };
 

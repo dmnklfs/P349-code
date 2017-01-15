@@ -1,5 +1,5 @@
-#ifndef MINUITFIT_H
-#define MINUITFIT_H 
+#ifndef FIT3D_H
+#define FIT3D_H 
 
 #include "TFile.h"
 #include "TH1.h"
@@ -24,35 +24,25 @@
 #include <string>
 #include <sstream>
 #include <TMath.h>
+#include "MinuitFit.h"
 
-
-
-class MinuitFit
+class Fit3d
 {
 public:
-	MinuitFit();
-	static MinuitFit * GetInstance();
-	~MinuitFit(){ _this = NULL; }
-	double GlobalFCN(const double * par);
-	std::vector<double> fit_with_minuit();
+	Fit3d();
+	~Fit3d();
 	void set_values(double *_x, double *_y, double *_errors);
-	bool err_flag();
-	void perform_simplified_fit();
-	void perform_simplified_fit_calc_coeff();
-	void set_no_of_points(int npoints);
+	void fit_straight_layer();
+	void fit_inclined_layers();
 
 private:
-	int no_of_points;
-	static MinuitFit * _this;
-	double x[4], y[4], errors[4];
-	bool errflag;
-	double a_start, b_start;
-	TF1 *linear_fit;
-	TGraph *linear_fit_graph;
+	double x_straight[4],  z_straight[4],  errors_straight[4];
+	double x_inclined1[2], z_inclined1[2], errors_inclined1[2];
+	double x_inclined2[2], z_inclined2[2], errors_inclined2[2];
 	
-	
-
+	double z_x_a[3], z_x_b[3]; // 0 - straight, 1 - inclined \, 2 - inclined /
 	
 };
+
 
 #endif

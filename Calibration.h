@@ -25,6 +25,7 @@
 #include "struct.h"
 #include "Config.h"
 #include "MinuitFit.h"
+#include "Fit3d.h"
 #include "CalibrationLayer.h"
 #include <TMath.h>
 
@@ -59,6 +60,7 @@ public:
 	TCanvas* plot_angle_distribution();
 	bool was_correct_angle(double track_angle);
 	void set_pos_Xerr();
+	void fit_in_3d();
 
 private:
 	CalibrationLayer *Layer[8];

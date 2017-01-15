@@ -164,9 +164,27 @@ void Calibration::save_histograms()
 	}
 }
 
-void Calibration::fit_events_in_inclined_layers(double _chi2_cut)
+void Calibration::fit_in_3d()
 {
-	
+	double hits_positionsX_all[8];
+	double hits_positionsZ_all[8];
+	double errors_all[8];
+	unsigned int no_of_chosen_events;
+	no_of_chosen_events = Layer[0] -> CalibrationData.size();
+	for (unsigned int i = 0; i < no_of_chosen_events; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			hits_positionsX_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_X;
+			hits_positionsZ_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Z;
+			errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
+		}
+		
+		Fit3d *fit3d = new Fit3d();
+		fit3d -> Fit3d::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all);
+		fit3d -> Fit3d::fit_straight_layer();
+	}
+
 }
 
 void Calibration::fit_events_in_straight_layers_biased(double _chi2_cut)
@@ -203,6 +221,7 @@ void Calibration::fit_events_in_straight_layers_biased(double _chi2_cut)
 		{
 			aSt = results.at(0);
 			bSt = results.at(1);
+			//std::cout << "fit: " << aSt << " " << bSt << std::endl;
 			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
 			if (track_angle < 0) track_angle = 180+track_angle;
 			chi2St = results.at(2);
