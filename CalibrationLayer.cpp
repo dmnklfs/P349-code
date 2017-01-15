@@ -229,12 +229,18 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 void CalibrationLayer::apply_corrections()
 {
 	int corr_bin;
-	for (unsigned int i = 0; i < no_of_corr_bins; i++)
+	for (unsigned int i = 0; i < no_of_calib_bins; i++)
 	{
 		corr_bin = Bins.at(i);
-		if(-1!=ProjectionMean.at(corr_bin)) Distances.at(i) = Distances.at(i) + ProjectionMean.at(corr_bin);
+		if(-1!=ProjectionMean.at(corr_bin))
+		{
+			Distances.at(i) = Distances.at(i) + ProjectionMean.at(corr_bin);
+			SigmaForCalibration.push_back(ProjectionSigma.at(corr_bin));
+		}
+		else SigmaForCalibration.push_back(0);
 		if (Distances.at(i) < 0) Distances.at(i) = 0;
 	}
+	SigmaForCalibration.push_back(0);
 }
 
 void CalibrationLayer::deletations()
@@ -242,6 +248,7 @@ void CalibrationLayer::deletations()
 	ProjectionConstant.clear();
 	ProjectionSigma.clear();
 	ProjectionMean.clear();
+	SigmaForCalibration.clear();
 	delta -> Reset();
 	delta_cut -> Reset();
 }
@@ -292,7 +299,7 @@ TCanvas* CalibrationLayer::plot_current_calibration()
 	calibdata.open(name);
 	for (int i = 0; i < DriftTimes.size()-1; i++)
 	{
-		calibdata << DriftTimes.at(i) << " " << Distances.at(i) << " " << XErrors.at(i) << " " << ProjectionSigma.at(i) << std::endl;
+		calibdata << DriftTimes.at(i) << " " << Distances.at(i) << " " << XErrors.at(i) << " " << SigmaForCalibration.at(i) << std::endl;
 	}
 
 	calibdata.close();
@@ -301,7 +308,7 @@ TCanvas* CalibrationLayer::plot_current_calibration()
 	//TGraph* current_calibration;
 	TGraphErrors* current_calibration;
 	TGraph* initial_calibration;
-	current_calibration = new TGraphErrors(DriftTimes.size(), &DriftTimes.at(0), &Distances.at(0), &XErrors.at(0), &ProjectionSigma.at(0));
+	current_calibration = new TGraphErrors(DriftTimes.size(), &DriftTimes.at(0), &Distances.at(0), &XErrors.at(0), &SigmaForCalibration.at(0));
 	current_calibration -> SetLineColor(kRed);
 	current_calibration -> SetMarkerColor(kRed);
 	current_calibration -> SetMarkerStyle(6);

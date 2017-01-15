@@ -55,15 +55,20 @@ Calibration::Calibration(const Config &_config)
 	chi2_cut->GetYaxis()->SetTitle("counts");
 	//chi2_cut->SetLineColor(kRed);
 
-	//angle_distribution = new TH1F("track angles", "track angles", 2000, 72, 92);
-	angle_distribution = new TH1F("track angles", "track angles", 2000, -10, 190);
-	angle_distribution->GetXaxis()->SetTitle("track angle (deg)");
-	angle_distribution->GetYaxis()->SetTitle("counts");
-	//angle_distribution_no_cut = new TH1F("track angles no cut", "track angles no cut", 2000, 72, 92);
-	angle_distribution_no_cut = new TH1F("track angles no cut", "track angles no cut", 2000, -10, 190);
-	angle_distribution_no_cut->GetXaxis()->SetTitle("track angle (deg)");
-	angle_distribution_no_cut->GetYaxis()->SetTitle("counts");
-	angle_distribution_no_cut->SetLineColor(kRed);
+	for (int i = 0; i < 4; i++)
+	{
+		name = Form("track angles layer %d",i+1);
+		angle_distribution[i] = new TH1F(name, name, 2000, -10, 190);
+		angle_distribution[i]->GetXaxis()->SetTitle("track angle (deg)");
+		angle_distribution[i]->GetYaxis()->SetTitle("counts");
+		angle_distribution[i]->SetLineColor(kBlue);
+		
+		name = Form("track angles no cut layer %d",i+1);
+		angle_distribution_no_cut[i] = new TH1F(name, name, 2000, -10, 190);
+		angle_distribution_no_cut[i]->GetXaxis()->SetTitle("track angle (deg)");
+		angle_distribution_no_cut[i]->GetYaxis()->SetTitle("counts");
+		angle_distribution_no_cut[i]->SetLineColor(kRed);
+	}
 }
 
 Calibration::~Calibration()
@@ -276,25 +281,25 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 		MinuitFit * fit_L1 = MinuitFit::GetInstance();
 		fit_L1 -> set_no_of_points(3);		
 		fit_L1 -> MinuitFit::set_values(hits_positionsX_noL1, hits_positionsZ_noL1, errors_noL1);
-		fit_L1 -> MinuitFit::perform_simplified_fit();
+		fit_L1 -> MinuitFit::perform_simplified_fit_calc_coeff();
 		results_L1 = fit_L1 -> MinuitFit::fit_with_minuit();
 
 		MinuitFit * fit_L2 = MinuitFit::GetInstance();
 		fit_L2 -> set_no_of_points(3);		
 		fit_L2 -> MinuitFit::set_values(hits_positionsX_noL2, hits_positionsZ_noL2, errors_noL2);
-		fit_L2 -> MinuitFit::perform_simplified_fit();
+		fit_L2 -> MinuitFit::perform_simplified_fit_calc_coeff();
 		results_L2 = fit_L2 -> MinuitFit::fit_with_minuit();
 
 		MinuitFit * fit_L7 = MinuitFit::GetInstance();
 		fit_L7 -> set_no_of_points(3);		
 		fit_L7 -> MinuitFit::set_values(hits_positionsX_noL7, hits_positionsZ_noL7, errors_noL7);
-		fit_L7 -> MinuitFit::perform_simplified_fit();
+		fit_L7 -> MinuitFit::perform_simplified_fit_calc_coeff();
 		results_L7 = fit_L7 -> MinuitFit::fit_with_minuit();
 
 		MinuitFit * fit_L8 = MinuitFit::GetInstance();
 		fit_L8 -> set_no_of_points(3);		
 		fit_L8 -> MinuitFit::set_values(hits_positionsX_noL8, hits_positionsZ_noL8, errors_noL8);
-		fit_L8 -> MinuitFit::perform_simplified_fit();
+		fit_L8 -> MinuitFit::perform_simplified_fit_calc_coeff();
 		results_L8 = fit_L8 -> MinuitFit::fit_with_minuit();
 
 		if ((!(fit_L1 -> err_flag())) && (!(fit_L2 -> err_flag())) && !(fit_L7 -> err_flag()) &&!(fit_L8 -> err_flag())) //  && 
@@ -303,6 +308,8 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 			bSt = results_L1.at(1);
 			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
 			if (track_angle < 0) track_angle = 180+track_angle;
+			angle_distribution_no_cut[0] -> Fill(track_angle);
+			if ( was_correct_angle(track_angle) ) angle_distribution[0] -> Fill(track_angle);
 			Layer[0] -> CalibrationData.at(i).track_a = aSt;
 			Layer[0] -> CalibrationData.at(i).track_b = bSt;
 			Layer[0] -> CalibrationData.at(i).track_angle = track_angle;
@@ -312,6 +319,8 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 			bSt = results_L2.at(1);
 			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
 			if (track_angle < 0) track_angle = 180+track_angle;
+			angle_distribution_no_cut[1] -> Fill(track_angle);
+			if ( was_correct_angle(track_angle) ) angle_distribution[1] -> Fill(track_angle);
 			Layer[1] -> CalibrationData.at(i).track_a = aSt;
 			Layer[1] -> CalibrationData.at(i).track_b = bSt;
 			Layer[1] -> CalibrationData.at(i).track_angle = track_angle;
@@ -321,6 +330,8 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 			bSt = results_L7.at(1);
 			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
 			if (track_angle < 0) track_angle = 180+track_angle;
+			angle_distribution_no_cut[2] -> Fill(track_angle);
+			if ( was_correct_angle(track_angle) ) angle_distribution[2] -> Fill(track_angle);
 			Layer[6] -> CalibrationData.at(i).track_a = aSt;
 			Layer[6] -> CalibrationData.at(i).track_b = bSt;
 			Layer[6] -> CalibrationData.at(i).track_angle = track_angle;
@@ -330,6 +341,8 @@ void Calibration::fit_events_in_straight_layers(double _chi2_cut)
 			bSt = results_L8.at(1);
 			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
 			if (track_angle < 0) track_angle = 180+track_angle;
+			angle_distribution_no_cut[3] -> Fill(track_angle);
+			if ( was_correct_angle(track_angle) ) angle_distribution[3] -> Fill(track_angle);
 			Layer[7] -> CalibrationData.at(i).track_a = aSt;
 			Layer[7] -> CalibrationData.at(i).track_b = bSt;
 			Layer[7] -> CalibrationData.at(i).track_angle = track_angle;
@@ -388,8 +401,12 @@ void Calibration::deletations()
 	Chi2.clear();
 	chi2 -> Reset();
 	chi2_cut -> Reset();
-	angle_distribution -> Reset();
-	angle_distribution_no_cut -> Reset();
+	for (int i = 0; i < 4; i++)
+	{
+		angle_distribution[i] -> Reset();
+		angle_distribution_no_cut[i] -> Reset();
+	}
+	
 }
 
 TCanvas* Calibration::plot_chi2()
@@ -427,9 +444,9 @@ void Calibration::fit_delta_projections()
 	Layer[0] -> fit_delta_projections(name);
 	name = Form("results/DeltaProjections2_iteration_%d/",no_of_iteration);
 	Layer[1] -> fit_delta_projections(name);
-	name = Form("results/DeltaProjections6_iteration_%d/",no_of_iteration);
-	Layer[6] -> fit_delta_projections(name);
 	name = Form("results/DeltaProjections7_iteration_%d/",no_of_iteration);
+	Layer[6] -> fit_delta_projections(name);
+	name = Form("results/DeltaProjections8_iteration_%d/",no_of_iteration);
 	Layer[7] -> fit_delta_projections(name);
 }
 
@@ -465,16 +482,22 @@ TCanvas* Calibration::Calibration::plot_angle_distribution()
 {
 	TString name;
 	name = Form("Track angles distribution iteration %d", no_of_iteration);
-	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
-	gStyle->SetStatX(0.4);                
-	gStyle->SetStatW(0.2);
-	gStyle->SetStatH(0.1);
-	gStyle->SetStatY(0.9);
-	TCanvas *c = new TCanvas(name,name);
-	gStyle -> SetOptStat(1111111);
-	gPad -> SetLogy();
-	angle_distribution_no_cut -> Draw();
-	angle_distribution -> Draw("same");
+	TCanvas *c = new TCanvas(name,name,2000,500);
+	c->Divide(4,1);
+	for (int i = 0; i < 4; i++)
+	{
+		c->cd(i+1);
+		name = Form("Track angles distribution iteration %d", no_of_iteration);
+		gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
+		gStyle->SetStatX(0.4);                
+		gStyle->SetStatW(0.2);
+		gStyle->SetStatH(0.1);
+		gStyle->SetStatY(0.9);
+		gStyle -> SetOptStat(1111111);
+		gPad -> SetLogy();
+		angle_distribution_no_cut[i] -> Draw();
+		angle_distribution[i] -> Draw("same");
+	}
 	return c;
 }
 

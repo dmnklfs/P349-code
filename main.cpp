@@ -67,10 +67,10 @@ int main(int argc, char *argv[])
         TOF_Mean_Time  -> Fill(single_event -> SingleEvent::TOF::getTime());
   			single_event -> SingleEvent::test_calculate_distances();
         //D1_HEX_pos_diff -> Fill(single_event -> SingleEvent::test_positions_histogram());
-  			//event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
+  			event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
   			//event_to_display -> get_canvas() -> Write(name);
   			name = Form("results/Event_%ld.png", entry);
-  			//event_to_display -> get_canvas() -> SaveAs(name);
+  			event_to_display -> get_canvas() -> SaveAs(name);
 
   			//data for the simple calibration
   			//simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());

@@ -110,6 +110,7 @@ private:
 	std::vector<double> DriftTimes;
 	std::vector<double> Distances;
 	std::vector<double> Bins;
+	std::vector<double> SigmaForCalibration; // if bin widths are not equal
 
 	int layer_no;
 	int no_of_calib_bins;	// connected with the size of the calibration vector

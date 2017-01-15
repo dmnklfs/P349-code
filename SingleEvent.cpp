@@ -69,14 +69,14 @@ event_to_display SingleEvent::get_event_to_display()
 
 	if (D1::plot_event()) event.HitsPlots.push_back(D1::get_all_hits_plot());
 	event.DetectorPlots.push_back(D1::get_detector_plot());
-	//event.track = D1::plot_track_in_D1();
-	event.track = plot_track_in_D1_D2();
+	event.track = D1::plot_track_in_D1();
+	//event.track = plot_track_in_D1_D2();
 
-	if (D2::plot_event()) event.HitsPlots.push_back(D2::get_all_hits_plot());
-	event.DetectorPlots.push_back(D2::get_detector_plot());
-
-	if (HEX::plot_event()) event.HitsPlots.push_back(HEX::get_all_hits_plot());
-	event.DetectorPlots.push_back(HEX::get_detector_plot());
+//	if (D2::plot_event()) event.HitsPlots.push_back(D2::get_all_hits_plot());
+//	event.DetectorPlots.push_back(D2::get_detector_plot());
+//
+//	if (HEX::plot_event()) event.HitsPlots.push_back(HEX::get_all_hits_plot());
+//	event.DetectorPlots.push_back(HEX::get_detector_plot());
 
 	return event;
 }
@@ -91,7 +91,8 @@ double SingleEvent::getTOF()
 void SingleEvent::test_calculate_distances()
 {
 	D1::calculate_distances_from_wires();
-	D1::calculate_relative_and_absolute_positions();
+	D1::calculate_relative_and_absolute_positions_straight();
+	D1::calculate_relative_and_absolute_positions_inclined();
 	D1::collect_hits_from_all_layers();
 	D1::set_hits_absolute_positions(); // delme 28.12.16
 

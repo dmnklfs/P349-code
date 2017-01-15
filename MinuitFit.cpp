@@ -135,3 +135,21 @@ void MinuitFit::perform_simplified_fit()
 	delete linear_fit;
 	delete linear_fit_graph;
 }
+
+void MinuitFit::perform_simplified_fit_calc_coeff()
+{
+	double sx = 0;
+	double sy = 0; 
+	double sx2 = 0;
+	double sxy = 0;
+	for (int i = 0; i < no_of_points; i++)
+	{
+		sx  = sx  + x[i];
+		sx2 = sx2 + x[i]*x[i];
+		sy  = sy  + y[i];
+		sxy = sxy + x[i]*y[i];
+	}
+	a_start = (no_of_points*sxy - sx*sy)*pow(no_of_points*sx2 - sx*sx ,-1);
+	b_start = (sy - a_start*sx)*pow(no_of_points,-1);
+
+}

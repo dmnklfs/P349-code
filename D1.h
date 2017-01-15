@@ -28,7 +28,8 @@ public:
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();
     void calculate_distances_from_wires();
-    void calculate_relative_and_absolute_positions(); // now in the function collect_hits_from_all_layers!!
+    void calculate_relative_and_absolute_positions_straight(); // now in the function collect_hits_from_all_layers!!
+    void calculate_relative_and_absolute_positions_inclined();
     void collect_hits_from_all_layers();
     double test_get_chosen_position(int _no_of_layer, int _add_in_layer);
     TGraph* plot_track_in_D1();
@@ -57,8 +58,11 @@ private:
     double x_offset;
     double y_rotation_angle;
     double layer_wire_frame_offset[8];
+    double layer_angle[8];
+    int    no_of_wires[8];
     double distance_to_1st_layer;
-    double distance_between_wires;
+    double distance_between_straight_wires;
+    double distance_between_inclined_wires;
     double distance_between_layers;
 
     // just for the purpose of the event display - with reversed value of the x coordinate

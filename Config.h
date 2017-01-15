@@ -80,8 +80,11 @@ public:
     double D1_y_rotation_angle;
     double D1_layer_wire_frame_offset[8];
     double D1_distance_to_1st_layer; // distance from the DC frame to the 1st layer (looking from the beam direction)
-    double D1_distance_between_wires;
+    double D1_distance_between_straight_wires;
+    double D1_distance_between_inclined_wires;
     double D1_distance_between_layers;
+    double D1_layer_angle[8]; // (measured with respect to the y axis) ---- change, 13.01.17
+    int    D1_no_of_wires[8];
 
 	// drift time range
 	double D1_drift_time_max[8];

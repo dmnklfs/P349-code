@@ -39,6 +39,7 @@ public:
 	void set_values(double *_x, double *_y, double *_errors);
 	bool err_flag();
 	void perform_simplified_fit();
+	void perform_simplified_fit_calc_coeff();
 	void set_no_of_points(int npoints);
 
 private:

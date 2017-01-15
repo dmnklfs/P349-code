@@ -69,8 +69,8 @@ private:
 	double corr_bin_width;
 	TH1F *chi2;
 	TH1F *chi2_cut;
-	TH1F *angle_distribution;
-	TH1F *angle_distribution_no_cut;
+	TH1F *angle_distribution[4];
+	TH1F *angle_distribution_no_cut[4];
 	double track_angle_min;
 	double track_angle_max;
 
