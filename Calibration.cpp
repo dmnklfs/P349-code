@@ -7,6 +7,12 @@ Calibration::Calibration()
 
 Calibration::Calibration(const Config &_config)
 {
+	// for drawing
+	half_x_dim = _config.D1_half_x_dim;
+	half_z_dim = _config.D1_half_z_dim;
+	x_lab_position = _config.D1_x_lab_position;
+	z_lab_position = _config.D1_z_lab_position;
+	distance_to_1st_layer = _config.D1_distance_to_1st_layer;
 	
 	no_of_iteration = 1; 
 	no_of_calib_bins = _config.D1_L1_calibration_times.size()-1;
@@ -180,9 +186,18 @@ void Calibration::fit_in_3d()
 			errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
 		}
 		
-		Fit3d *fit3d = new Fit3d();
+		Fit3d *fit3d = new Fit3d(i);
 		fit3d -> Fit3d::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all);
 		fit3d -> Fit3d::fit_straight_layer();
+		fit3d -> Fit3d::fit_inclined_layers();
+		fit3d -> Fit3d::set_hit_planes_vectors();
+		fit3d -> Fit3d::calculate_normal_to_hit_planes();
+		fit3d -> Fit3d::calculate_hit_planes_eq();
+		fit3d -> Fit3d::calculate_intersection_vectors();
+		fit3d -> Fit3d::calculate_intersection_points();
+		fit3d -> Fit3d::calculate_3d_track_parameters();
+		fit3d -> Fit3d::set_detector_position(x_lab_position, z_lab_position, half_x_dim, half_z_dim, distance_to_1st_layer);
+		fit3d -> Fit3d::draw_event();
 	}
 
 }

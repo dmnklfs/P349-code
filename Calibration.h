@@ -86,6 +86,13 @@ private:
 	std::vector<double> InclinedLayersMTracks_bpar;
 
 	std::vector<double> Chi2;
+
+	// for plotting
+	double half_x_dim;
+	double half_z_dim;
+	double x_lab_position;
+	double z_lab_position;
+	double distance_to_1st_layer;
 };
 
 #endif
