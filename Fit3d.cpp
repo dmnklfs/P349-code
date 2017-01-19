@@ -217,17 +217,84 @@ void Fit3d::set_detector_position(double _x_lab_position, double _z_lab_position
 
 void Fit3d::draw_event()
 {
-	TString name = Form("test_%d.png", event_no);
+	TFile f3("file3.root","UPDATE");
+	TString name = Form("test_%d", event_no);
 	TCanvas *test = new TCanvas(name,name);
+	test->SetFillColor(0);
+	test->SetBorderMode(0);
+	test->SetBorderSize(2);
+	test->SetFrameBorderMode(0);
+	TView3D *view = (TView3D*) TView::CreateView(1);
+	//TView *view = new TView::CreateView(1);
+	view->SetRange(x_lab_position-half_x_dim, -100, z_lab_position-half_z_dim, x_lab_position+half_x_dim, +100, z_lab_position+half_z_dim);
+	view->ShowAxis();
+	TAxis3D *axis = TAxis3D::GetPadAxis(); // Get pointer to axis
+    if(axis) {
+        axis->SetLabelSize(0.02);
+        axis->SetLabelOffset(-0.02, "z");
+        axis->SetLabelColor(1);
+        axis->SetAxisColor(1);
+        axis->SetXTitle("X");
+        axis->SetYTitle("Y");
+        axis->SetZTitle("Z");
+    }
 	// chamber
-	TMarker3DBox *drift_chamber = new TMarker3DBox (x_lab_position, 0, z_lab_position, half_x_dim, 150, half_z_dim, 0, 0);
+	double dc_height = 150;
+	double dc_half_height = 0.5*dc_height;
+	TMarker3DBox *drift_chamber = new TMarker3DBox (x_lab_position, 0, z_lab_position, half_x_dim, dc_half_height, half_z_dim, 0, 0);
 	drift_chamber -> Draw();
-	// inclined wire
-	TPolyLine3D *yx_fcn_i1 = new TPolyLine3D(2);
-	yx_fcn_i1->SetPoint(0, (-75 - y_x_b[1])/y_x_a[1], -75, 0);
-	yx_fcn_i1->SetPoint(1, ( 75 - y_x_b[1])/y_x_a[1],  75, 0);
-	yx_fcn_i1->Draw();
+	// straight hit plane 1
+	// wire1
+	TPolyLine3D *yx_fcn_straight_w1 = new TPolyLine3D(2);
+	yx_fcn_straight_w1->SetPoint(0, x_straight[0], -dc_half_height, z_straight[0]);
+	yx_fcn_straight_w1->SetPoint(1, x_straight[0],  dc_half_height, z_straight[0]);
+	yx_fcn_straight_w1->Draw();
 
-	
-	test -> SaveAs(name, name);
+	// wire2
+	TPolyLine3D *yx_fcn_straight_w2 = new TPolyLine3D(2);
+	yx_fcn_straight_w2->SetPoint(0, x_straight[1], -dc_half_height, z_straight[1]);
+	yx_fcn_straight_w2->SetPoint(1, x_straight[1],  dc_half_height, z_straight[1]);
+	yx_fcn_straight_w2->Draw();
+
+	// wire3
+	TPolyLine3D *yx_fcn_straight_w3 = new TPolyLine3D(2);
+	yx_fcn_straight_w3->SetPoint(0, x_straight[2], -dc_half_height, z_straight[2]);
+	yx_fcn_straight_w3->SetPoint(1, x_straight[2],  dc_half_height, z_straight[2]);
+	yx_fcn_straight_w3->Draw();
+
+	// wire4
+	TPolyLine3D *yx_fcn_straight_w4 = new TPolyLine3D(2);
+	yx_fcn_straight_w4->SetPoint(0, x_straight[3], -dc_half_height, z_straight[3]);
+	yx_fcn_straight_w4->SetPoint(1, x_straight[3],  dc_half_height, z_straight[3]);
+	yx_fcn_straight_w4->Draw();
+
+	// inclined hit plane 1
+	// wire1
+	TPolyLine3D *yx_fcn_inclined1_w1 = new TPolyLine3D(2);
+	yx_fcn_inclined1_w1->SetPoint(0, (-dc_half_height - y_x_b[1])/y_x_a[1], -dc_half_height, z_inclined1[0]);
+	yx_fcn_inclined1_w1->SetPoint(1, ( dc_half_height - y_x_b[1])/y_x_a[1],  dc_half_height, z_inclined1[0]);
+	yx_fcn_inclined1_w1->Draw();
+
+	// wire2
+	TPolyLine3D *yx_fcn_inclined1_w2 = new TPolyLine3D(2);
+	yx_fcn_inclined1_w2->SetPoint(0, (-dc_half_height - y_x_b[1])/y_x_a[1], -dc_half_height, z_inclined1[1]);
+	yx_fcn_inclined1_w2->SetPoint(1, ( dc_half_height - y_x_b[1])/y_x_a[1],  dc_half_height, z_inclined1[1]);
+	yx_fcn_inclined1_w2->Draw();
+
+	// inclined hit plane 2
+	// wire1
+	TPolyLine3D *yx_fcn_inclined2_w1 = new TPolyLine3D(2);
+	yx_fcn_inclined2_w1->SetPoint(0, (-dc_half_height - y_x_b[2])/y_x_a[2], -dc_half_height, z_inclined2[0]);
+	yx_fcn_inclined2_w1->SetPoint(1, ( dc_half_height - y_x_b[2])/y_x_a[2],  dc_half_height, z_inclined2[0]);
+	yx_fcn_inclined2_w1->Draw();
+
+	// wire2
+	TPolyLine3D *yx_fcn_inclined2_w2 = new TPolyLine3D(2);
+	yx_fcn_inclined2_w2->SetPoint(0, (-dc_half_height - y_x_b[2])/y_x_a[2], -dc_half_height, z_inclined2[1]);
+	yx_fcn_inclined2_w2->SetPoint(1, ( dc_half_height - y_x_b[2])/y_x_a[2],  dc_half_height, z_inclined2[1]);
+	yx_fcn_inclined2_w2->Draw();
+
+	test->Write();
+	//test -> SaveAs(name, name);
+	f3.Close();
 }

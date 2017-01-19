@@ -190,6 +190,7 @@ void Calibration::fit_in_3d()
 		fit3d -> Fit3d::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all);
 		fit3d -> Fit3d::fit_straight_layer();
 		fit3d -> Fit3d::fit_inclined_layers();
+		fit3d -> calculate_xy_functions();
 		fit3d -> Fit3d::set_hit_planes_vectors();
 		fit3d -> Fit3d::calculate_normal_to_hit_planes();
 		fit3d -> Fit3d::calculate_hit_planes_eq();
@@ -198,6 +199,7 @@ void Calibration::fit_in_3d()
 		fit3d -> Fit3d::calculate_3d_track_parameters();
 		fit3d -> Fit3d::set_detector_position(x_lab_position, z_lab_position, half_x_dim, half_z_dim, distance_to_1st_layer);
 		fit3d -> Fit3d::draw_event();
+		delete fit3d;
 	}
 
 }
