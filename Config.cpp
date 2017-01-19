@@ -48,7 +48,7 @@ Config::Config()
 	D1_layer_wire_frame_offset[7] = 5.0;
 	D1_distance_to_1st_layer = 3.3;	// z
 	D1_distance_between_straight_wires = 4.0;		// x
-	D1_distance_between_inclined_wires = 4.667;
+	D1_distance_between_inclined_wires = 4.66653;
 	D1_distance_between_layers = 1.8;	// z
 	D1_layer_angle[0] = 0;
 	D1_layer_angle[1] = 0;

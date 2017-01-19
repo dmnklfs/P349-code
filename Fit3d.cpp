@@ -62,17 +62,19 @@ void Fit3d::fit_straight_layer()
 void Fit3d::fit_inclined_layers()
 {
 	std::vector<double> results;
-	MinuitFit * fit1 = MinuitFit::GetInstance();
-	fit1 -> set_no_of_points(2);		
-	fit1 -> MinuitFit::set_values(x_inclined1, z_inclined1, errors_inclined1);
-	fit1 -> MinuitFit::perform_simplified_fit();
-	results = fit1 -> MinuitFit::fit_with_minuit();
-	//std::cout << " ----- " << std::endl;
-	//std::cout << x_inclined1[0] << " " << z_inclined1[0] << " " << errors_inclined1[0] << std::endl;
-	//std::cout << x_inclined1[1] << " " << z_inclined1[1] << " " << errors_inclined1[1] << std::endl;
-	z_x_a[1] = results.at(0);
-	z_x_b[1] = results.at(1);
-	//std::cout << z_x_a[1] << " " << z_x_b[1] << std::endl;
+	//MinuitFit * fit1 = MinuitFit::GetInstance();
+	//fit1 -> set_no_of_points(2);		
+	//fit1 -> MinuitFit::set_values(x_inclined1, z_inclined1, errors_inclined1);
+	//fit1 -> MinuitFit::perform_simplified_fit();
+	//results = fit1 -> MinuitFit::fit_with_minuit();
+	std::cout << " ----- " << std::endl;
+	std::cout << x_inclined1[0] << " " << z_inclined1[0] << " " << errors_inclined1[0] << std::endl;
+	std::cout << x_inclined1[1] << " " << z_inclined1[1] << " " << errors_inclined1[1] << std::endl;
+	//z_x_a[1] = results.at(0);
+	//z_x_b[1] = results.at(1);
+	z_x_a[1] = (z_inclined1[0]-z_inclined1[1])/(x_inclined1[0]-x_inclined1[1]);
+	z_x_b[1] = z_inclined1[0] - z_x_a[1]*x_inclined1[0];
+	std::cout << z_x_a[1] << " " << z_x_b[1] << std::endl;
 
 	MinuitFit * fit2 = MinuitFit::GetInstance();
 	fit2 -> set_no_of_points(2);		
@@ -86,12 +88,18 @@ void Fit3d::fit_inclined_layers()
 void Fit3d::calculate_xy_functions()
 {
 	// dla plaszczyzny z = 0
+	// straight
 	y_x_a[0] = 0;
-	y_x_b[0] = 0;
+	y_x_b[0][0] = 0;
+	y_x_b[0][1] = 0;
+	// inclined 1
 	y_x_a[1] = TMath::Tan(59*3.14*pow(180,-1));
-	y_x_b[1] = x_inclined1[0]*y_x_a[1];
+	y_x_b[1][0] = -x_inclined1[0]*y_x_a[1];
+	y_x_b[1][1] = -x_inclined1[1]*y_x_a[1];
+	// inclined 2
 	y_x_a[2] =-TMath::Tan(59*3.14*pow(180,-1));
-	y_x_b[2] = x_inclined1[0]*y_x_a[1];
+	y_x_b[2][0] = -x_inclined2[0]*y_x_a[2];
+	y_x_b[2][1] = -x_inclined2[1]*y_x_a[2];
 
 }
 
@@ -161,11 +169,11 @@ void Fit3d::calculate_hit_planes_eq()
 
 	//inclined
 	xp = -z_x_b[1]*pow(z_x_a[1],-1);
-	yp = y_x_a[1]*xp + y_x_b[1];
+	yp = y_x_a[1]*xp + y_x_b[1][0];
 	hit_plane_D[1] = -(hit_plane_A[1]*xp + hit_plane_B[1]*yp);
 
 	xp = -z_x_b[2]*pow(z_x_a[2],-1);
-	yp = y_x_a[2]*xp + y_x_b[2];
+	yp = y_x_a[2]*xp + y_x_b[2][0];
 	hit_plane_D[2] = -(hit_plane_A[2]*xp + hit_plane_B[2]*yp);
 
 }
@@ -217,6 +225,7 @@ void Fit3d::set_detector_position(double _x_lab_position, double _z_lab_position
 
 void Fit3d::draw_event()
 {
+	double tempx,tempy, tempz;
 	TFile f3("file3.root","UPDATE");
 	TString name = Form("test_%d", event_no);
 	TCanvas *test = new TCanvas(name,name);
@@ -224,9 +233,24 @@ void Fit3d::draw_event()
 	test->SetBorderMode(0);
 	test->SetBorderSize(2);
 	test->SetFrameBorderMode(0);
+	// view options
 	TView3D *view = (TView3D*) TView::CreateView(1);
-	//TView *view = new TView::CreateView(1);
-	view->SetRange(x_lab_position-half_x_dim, -100, z_lab_position-half_z_dim, x_lab_position+half_x_dim, +100, z_lab_position+half_z_dim);
+	//    view range
+	double x_range_min, x_range_max, y_range_min, y_range_max, z_range_min, z_range_max;
+	double dc_height = 50;
+	double dc_half_height = 0.5*dc_height;
+	double dc_y_center = y_x_a[1]*(y_x_b[2][0]-y_x_b[1][0])/(y_x_a[1]-y_x_a[2])+y_x_b[1][0];
+	x_range_min = -10;//x_lab_position-half_x_dim;
+	x_range_max =  10;
+	y_range_min = dc_y_center - dc_half_height;
+	y_range_max = dc_y_center + dc_half_height;
+	z_range_min = z_lab_position-half_z_dim;
+	z_range_max = z_lab_position+half_z_dim;
+
+	double dc_z_min = z_straight[0] - 3.3;
+	double dc_z_max = z_straight[3] + 3.3;
+	//    axis options
+	view->SetRange(x_range_min, y_range_min, z_range_min, x_range_max, y_range_max, z_range_max, 1);
 	view->ShowAxis();
 	TAxis3D *axis = TAxis3D::GetPadAxis(); // Get pointer to axis
     if(axis) {
@@ -238,61 +262,126 @@ void Fit3d::draw_event()
         axis->SetYTitle("Y");
         axis->SetZTitle("Z");
     }
-	// chamber
-	double dc_height = 150;
-	double dc_half_height = 0.5*dc_height;
-	TMarker3DBox *drift_chamber = new TMarker3DBox (x_lab_position, 0, z_lab_position, half_x_dim, dc_half_height, half_z_dim, 0, 0);
+	// drawing chamber 
+	TMarker3DBox *drift_chamber = new TMarker3DBox (x_lab_position, dc_y_center, z_lab_position, half_x_dim, dc_half_height, half_z_dim, 0, 0);
 	drift_chamber -> Draw();
-	// straight hit plane 1
+	// ==================== straight hit planes ====================
+	int color[3];
+	color[0]=6;
+	color[1]=38;
+	color[2]=46;
+	// ========== wires ==========
 	// wire1
 	TPolyLine3D *yx_fcn_straight_w1 = new TPolyLine3D(2);
-	yx_fcn_straight_w1->SetPoint(0, x_straight[0], -dc_half_height, z_straight[0]);
-	yx_fcn_straight_w1->SetPoint(1, x_straight[0],  dc_half_height, z_straight[0]);
-	yx_fcn_straight_w1->Draw();
+	yx_fcn_straight_w1->SetPoint(0, x_straight[0], y_range_min, z_straight[0]);
+	yx_fcn_straight_w1->SetPoint(1, x_straight[0], y_range_max, z_straight[0]);
+	yx_fcn_straight_w1->SetLineColor(color[0]);
+	yx_fcn_straight_w1->SetLineWidth(2);
+
 
 	// wire2
 	TPolyLine3D *yx_fcn_straight_w2 = new TPolyLine3D(2);
-	yx_fcn_straight_w2->SetPoint(0, x_straight[1], -dc_half_height, z_straight[1]);
-	yx_fcn_straight_w2->SetPoint(1, x_straight[1],  dc_half_height, z_straight[1]);
-	yx_fcn_straight_w2->Draw();
+	yx_fcn_straight_w2->SetPoint(0, x_straight[1], y_range_min, z_straight[1]);
+	yx_fcn_straight_w2->SetPoint(1, x_straight[1], y_range_max, z_straight[1]);
+	yx_fcn_straight_w2->SetLineColor(color[0]);
+	yx_fcn_straight_w2->SetLineWidth(2);
+
 
 	// wire3
 	TPolyLine3D *yx_fcn_straight_w3 = new TPolyLine3D(2);
-	yx_fcn_straight_w3->SetPoint(0, x_straight[2], -dc_half_height, z_straight[2]);
-	yx_fcn_straight_w3->SetPoint(1, x_straight[2],  dc_half_height, z_straight[2]);
-	yx_fcn_straight_w3->Draw();
+	yx_fcn_straight_w3->SetPoint(0, x_straight[2], y_range_min, z_straight[2]);
+	yx_fcn_straight_w3->SetPoint(1, x_straight[2], y_range_max, z_straight[2]);
+	yx_fcn_straight_w3->SetLineColor(color[0]);
+	yx_fcn_straight_w3->SetLineWidth(2);
+
 
 	// wire4
 	TPolyLine3D *yx_fcn_straight_w4 = new TPolyLine3D(2);
-	yx_fcn_straight_w4->SetPoint(0, x_straight[3], -dc_half_height, z_straight[3]);
-	yx_fcn_straight_w4->SetPoint(1, x_straight[3],  dc_half_height, z_straight[3]);
-	yx_fcn_straight_w4->Draw();
+	yx_fcn_straight_w4->SetPoint(0, x_straight[3], y_range_min, z_straight[3]);
+	yx_fcn_straight_w4->SetPoint(1, x_straight[3], y_range_max, z_straight[3]);
+	yx_fcn_straight_w4->SetLineColor(color[0]);
+	yx_fcn_straight_w4->SetLineWidth(2);
+
 
 	// inclined hit plane 1
 	// wire1
 	TPolyLine3D *yx_fcn_inclined1_w1 = new TPolyLine3D(2);
-	yx_fcn_inclined1_w1->SetPoint(0, (-dc_half_height - y_x_b[1])/y_x_a[1], -dc_half_height, z_inclined1[0]);
-	yx_fcn_inclined1_w1->SetPoint(1, ( dc_half_height - y_x_b[1])/y_x_a[1],  dc_half_height, z_inclined1[0]);
-	yx_fcn_inclined1_w1->Draw();
+	yx_fcn_inclined1_w1->SetPoint(0, (y_range_min - y_x_b[1][0])/y_x_a[1], y_range_min, z_inclined1[0]);
+	yx_fcn_inclined1_w1->SetPoint(1, (y_range_max - y_x_b[1][0])/y_x_a[1], y_range_max, z_inclined1[0]);
+	yx_fcn_inclined1_w1->SetLineColor(color[1]);
+	yx_fcn_inclined1_w1->SetLineWidth(2);
 
 	// wire2
 	TPolyLine3D *yx_fcn_inclined1_w2 = new TPolyLine3D(2);
-	yx_fcn_inclined1_w2->SetPoint(0, (-dc_half_height - y_x_b[1])/y_x_a[1], -dc_half_height, z_inclined1[1]);
-	yx_fcn_inclined1_w2->SetPoint(1, ( dc_half_height - y_x_b[1])/y_x_a[1],  dc_half_height, z_inclined1[1]);
-	yx_fcn_inclined1_w2->Draw();
+	yx_fcn_inclined1_w2->SetPoint(0, (y_range_min - y_x_b[1][1])/y_x_a[1], y_range_min, z_inclined1[1]);
+	yx_fcn_inclined1_w2->SetPoint(1, (y_range_max - y_x_b[1][1])/y_x_a[1], y_range_max, z_inclined1[1]);
+	yx_fcn_inclined1_w2->SetLineColor(color[1]);
+	yx_fcn_inclined1_w2->SetLineWidth(2);
 
 	// inclined hit plane 2
 	// wire1
 	TPolyLine3D *yx_fcn_inclined2_w1 = new TPolyLine3D(2);
-	yx_fcn_inclined2_w1->SetPoint(0, (-dc_half_height - y_x_b[2])/y_x_a[2], -dc_half_height, z_inclined2[0]);
-	yx_fcn_inclined2_w1->SetPoint(1, ( dc_half_height - y_x_b[2])/y_x_a[2],  dc_half_height, z_inclined2[0]);
-	yx_fcn_inclined2_w1->Draw();
+	yx_fcn_inclined2_w1->SetPoint(0, (y_range_min - y_x_b[2][0])/y_x_a[2], y_range_min, z_inclined2[0]);
+	yx_fcn_inclined2_w1->SetPoint(1, (y_range_max - y_x_b[2][0])/y_x_a[2], y_range_max, z_inclined2[0]);
+	yx_fcn_inclined2_w1->SetLineWidth(3);
+	yx_fcn_inclined2_w1->SetLineColor(color[2]);
 
 	// wire2
 	TPolyLine3D *yx_fcn_inclined2_w2 = new TPolyLine3D(2);
-	yx_fcn_inclined2_w2->SetPoint(0, (-dc_half_height - y_x_b[2])/y_x_a[2], -dc_half_height, z_inclined2[1]);
-	yx_fcn_inclined2_w2->SetPoint(1, ( dc_half_height - y_x_b[2])/y_x_a[2],  dc_half_height, z_inclined2[1]);
-	yx_fcn_inclined2_w2->Draw();
+	yx_fcn_inclined2_w2->SetPoint(0, (y_range_min - y_x_b[2][1])/y_x_a[2], y_range_min, z_inclined2[1]);
+	yx_fcn_inclined2_w2->SetPoint(1, (y_range_max - y_x_b[2][1])/y_x_a[2], y_range_max, z_inclined2[1]);
+	yx_fcn_inclined2_w2->SetLineWidth(3);
+	yx_fcn_inclined2_w2->SetLineColor(color[2]);
+
+	// ========== planes ==========
+	TPolyLine3D *straight_hit_plane = new TPolyLine3D(5);
+	straight_hit_plane->SetPoint(0, (dc_z_min - z_x_b[0])*pow(z_x_a[0],-1), y_range_min, dc_z_min);
+	straight_hit_plane->SetPoint(1, (dc_z_min - z_x_b[0])*pow(z_x_a[0],-1), y_range_max, dc_z_min);
+	straight_hit_plane->SetPoint(2, (dc_z_max - z_x_b[0])*pow(z_x_a[0],-1), y_range_max, dc_z_max);
+	straight_hit_plane->SetPoint(3, (dc_z_max - z_x_b[0])*pow(z_x_a[0],-1), y_range_min, dc_z_max);
+	straight_hit_plane->SetPoint(4, (dc_z_min - z_x_b[0])*pow(z_x_a[0],-1), y_range_min, dc_z_min);
+	straight_hit_plane->SetLineWidth(3);
+	straight_hit_plane->SetLineColor(color[0]);
+
+	TPolyLine3D *inclined1_hit_plane = new TPolyLine3D(5);
+	inclined1_hit_plane->SetPoint(0, -TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[1])*pow(z_x_a[1],-1), 0 - dc_half_height, dc_z_min);
+	inclined1_hit_plane->SetPoint(1, +TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[1])*pow(z_x_a[1],-1), 0 + dc_half_height, dc_z_min);
+	inclined1_hit_plane->SetPoint(2, +TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_max - z_x_b[1])*pow(z_x_a[1],-1), 0 + dc_half_height, dc_z_max);
+	inclined1_hit_plane->SetPoint(3, -TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_max - z_x_b[1])*pow(z_x_a[1],-1), 0 - dc_half_height, dc_z_max);
+	inclined1_hit_plane->SetPoint(4, -TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[1])*pow(z_x_a[1],-1), 0 - dc_half_height, dc_z_min);
+	inclined1_hit_plane->SetLineWidth(3);
+	inclined1_hit_plane->SetLineColor(color[1]);
+	TPolyLine3D *inclined1_hit_plane_center = new TPolyLine3D(2);
+	inclined1_hit_plane_center->SetPoint(0, (dc_z_min - z_x_b[1])*pow(z_x_a[1],-1), 0, dc_z_min);
+	inclined1_hit_plane_center->SetPoint(1, (dc_z_max - z_x_b[1])*pow(z_x_a[1],-1), 0, dc_z_max);
+	inclined1_hit_plane_center->SetLineColor(color[1]);
+
+	TPolyLine3D *inclined2_hit_plane = new TPolyLine3D(5);
+	inclined2_hit_plane->SetPoint(0,  TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[2])*pow(z_x_a[2],-1), 0 - dc_half_height, dc_z_min);
+	inclined2_hit_plane->SetPoint(1, -TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[2])*pow(z_x_a[2],-1), 0 + dc_half_height, dc_z_min);
+	inclined2_hit_plane->SetPoint(2, -TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_max - z_x_b[2])*pow(z_x_a[2],-1), 0 + dc_half_height, dc_z_max);
+	inclined2_hit_plane->SetPoint(3,  TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_max - z_x_b[2])*pow(z_x_a[2],-1), 0 - dc_half_height, dc_z_max);
+	inclined2_hit_plane->SetPoint(4,  TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[2])*pow(z_x_a[2],-1), 0 - dc_half_height, dc_z_min);
+	inclined2_hit_plane->SetLineWidth(3);
+	inclined2_hit_plane->SetLineColor(color[2]);
+	TPolyLine3D *inclined2_hit_plane_center = new TPolyLine3D(2);
+	inclined2_hit_plane_center->SetPoint(0, (dc_z_min - z_x_b[2])*pow(z_x_a[2],-1), 0, dc_z_min);
+	inclined2_hit_plane_center->SetPoint(1, (dc_z_max - z_x_b[2])*pow(z_x_a[2],-1), 0, dc_z_max);
+	inclined2_hit_plane_center->SetLineColor(color[2]);
+
+	//yx_fcn_straight_w1->Draw();
+	//yx_fcn_straight_w2->Draw();
+	//yx_fcn_straight_w3->Draw();
+	//yx_fcn_straight_w4->Draw();
+	//yx_fcn_inclined1_w1->Draw();
+	//yx_fcn_inclined1_w2->Draw();
+	//yx_fcn_inclined2_w1->Draw();
+	//yx_fcn_inclined2_w2->Draw();
+	straight_hit_plane->Draw();
+	inclined1_hit_plane->Draw();
+	inclined1_hit_plane_center->Draw();
+	inclined2_hit_plane->Draw();
+	inclined2_hit_plane_center->Draw();
 
 	test->Write();
 	//test -> SaveAs(name, name);

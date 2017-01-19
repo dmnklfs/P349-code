@@ -61,7 +61,7 @@ private:
 	
 	// results of the fit in the zx plane
 	double z_x_a[3], z_x_b[3]; // 0 - straight, 1 - inclined \, 2 - inclined /
-	double y_x_a[3], y_x_b[3];
+	double y_x_a[3], y_x_b[2][3];
 
 	// vectors in the xz plane
 	TVector3 xz_straight;
