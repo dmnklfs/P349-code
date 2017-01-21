@@ -32,6 +32,7 @@
 #include "TView3D.h"
 #include "TView.h"
 #include "TAxis3D.h"
+#include <TPolyMarker3D.h>
 
 class Fit3d
 {

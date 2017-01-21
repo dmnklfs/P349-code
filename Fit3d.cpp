@@ -156,25 +156,30 @@ void Fit3d::calculate_hit_planes_eq()
 	hit_plane_B[1] = normal_inclined1.Y();
 	hit_plane_C[1] = normal_inclined1.Z();
 
-	hit_plane_A[1] = normal_inclined2.X();
-	hit_plane_B[1] = normal_inclined2.Y();
-	hit_plane_C[1] = normal_inclined2.Z();
+	hit_plane_A[2] = normal_inclined2.X();
+	hit_plane_B[2] = normal_inclined2.Y();
+	hit_plane_C[2] = normal_inclined2.Z();
 
-	double xp, yp;
+	double xp, yp, zp;
 	// D 
 	//straight
-	xp = -z_x_b[0]*pow(z_x_a[0],-1);
+	zp = z_straight[0];
+	xp = (zp - z_x_b[0])*pow(z_x_a[0],-1);
 	yp = 0;
-	hit_plane_D[0] = -(hit_plane_A[0]*xp + hit_plane_B[0]*yp);
+	hit_plane_D[0] = -(hit_plane_A[0]*xp + hit_plane_B[0]*yp + hit_plane_C[0]*zp);
 
 	//inclined
-	xp = -z_x_b[1]*pow(z_x_a[1],-1);
-	yp = y_x_a[1]*xp + y_x_b[1][0];
-	hit_plane_D[1] = -(hit_plane_A[1]*xp + hit_plane_B[1]*yp);
+	zp = z_inclined1[0];
+	//xp = (zp -z_x_b[1])/z_x_a[1];
+	//yp = y_x_a[1]*xp + y_x_b[1][0];
+	//hit_plane_D[1] = -(hit_plane_A[1]*xp + hit_plane_B[1]*yp + hit_plane_C[1]*zp);
+	hit_plane_D[1] = -(hit_plane_A[1]*x_inclined1[0] + hit_plane_B[1]*0 + hit_plane_C[1]*z_inclined1[0]);
 
-	xp = -z_x_b[2]*pow(z_x_a[2],-1);
-	yp = y_x_a[2]*xp + y_x_b[2][0];
-	hit_plane_D[2] = -(hit_plane_A[2]*xp + hit_plane_B[2]*yp);
+	zp = z_inclined2[0];
+	//xp = (zp -z_x_b[2])/z_x_a[2];
+	//yp = y_x_a[2]*xp + y_x_b[2][0];
+	//hit_plane_D[2] = -(hit_plane_A[2]*xp + hit_plane_B[2]*yp + hit_plane_C[2]*zp);
+	hit_plane_D[2] = -(hit_plane_A[2]*x_inclined2[0] + hit_plane_B[2]*0 + hit_plane_C[2]*z_inclined2[0]);
 
 }
 
@@ -191,17 +196,17 @@ void Fit3d::calculate_intersection_vectors() // intersection line: vectors
 
 void Fit3d::calculate_intersection_points()// intersection line: points
 {
-	inter_point_si1.SetZ(z_straight[0]);
-	inter_point_si2.SetZ(z_straight[0]);
-	inter_point_i1i2.SetZ(z_straight[0]);
+	inter_point_si1.SetZ(0);
+	inter_point_si2.SetZ(0);
+	inter_point_i1i2.SetZ(0);
 
-	inter_point_si1.SetX((hit_plane_B[0]*hit_plane_D[1] - hit_plane_B[1]*hit_plane_D[0])*pow(hit_plane_A[0]*hit_plane_B[1] - hit_plane_A[1]*hit_plane_B[0],-1));
-	inter_point_si2.SetX((hit_plane_B[1]*hit_plane_D[2] - hit_plane_B[2]*hit_plane_D[1])*pow(hit_plane_A[1]*hit_plane_B[2] - hit_plane_A[2]*hit_plane_B[1],-1));
-	inter_point_i1i2.SetX((hit_plane_B[2]*hit_plane_D[0] - hit_plane_B[0]*hit_plane_D[2])*pow(hit_plane_A[2]*hit_plane_B[0] - hit_plane_A[0]*hit_plane_B[2],-1));
+	inter_point_si1.SetX((hit_plane_B[1]*hit_plane_D[0] - hit_plane_B[0]*hit_plane_D[1])*pow(hit_plane_A[1]*hit_plane_B[0] - hit_plane_A[0]*hit_plane_B[1],-1));
+	inter_point_i1i2.SetX((hit_plane_B[2]*hit_plane_D[1] - hit_plane_B[1]*hit_plane_D[2])*pow(hit_plane_A[2]*hit_plane_B[1] - hit_plane_A[1]*hit_plane_B[2],-1));
+	inter_point_si2.SetX((hit_plane_B[2]*hit_plane_D[0] - hit_plane_B[0]*hit_plane_D[2])*pow(hit_plane_A[2]*hit_plane_B[0] - hit_plane_A[0]*hit_plane_B[2],-1));
 
 	inter_point_si1.SetY((-hit_plane_A[0]*hit_plane_D[1] + hit_plane_A[1]*hit_plane_D[0])*pow(hit_plane_A[0]*hit_plane_B[1] - hit_plane_A[1]*hit_plane_B[0],-1));
-	inter_point_si2.SetY((-hit_plane_A[1]*hit_plane_D[2] + hit_plane_A[2]*hit_plane_D[1])*pow(hit_plane_A[1]*hit_plane_B[2] - hit_plane_A[2]*hit_plane_B[1],-1));
-	inter_point_i1i2.SetY((-hit_plane_A[2]*hit_plane_D[0] + hit_plane_A[0]*hit_plane_D[2])*pow(hit_plane_A[2]*hit_plane_B[0] - hit_plane_A[0]*hit_plane_B[2],-1));
+	inter_point_i1i2.SetY((-hit_plane_A[1]*hit_plane_D[2] + hit_plane_A[2]*hit_plane_D[1])*pow(hit_plane_A[1]*hit_plane_B[2] - hit_plane_A[2]*hit_plane_B[1],-1));
+	inter_point_si2.SetY((-hit_plane_A[2]*hit_plane_D[0] + hit_plane_A[0]*hit_plane_D[2])*pow(hit_plane_A[2]*hit_plane_B[0] - hit_plane_A[0]*hit_plane_B[2],-1));
 }
 
 void Fit3d::calculate_3d_track_parameters()
@@ -264,7 +269,7 @@ void Fit3d::draw_event()
     }
 	// drawing chamber 
 	TMarker3DBox *drift_chamber = new TMarker3DBox (x_lab_position, dc_y_center, z_lab_position, half_x_dim, dc_half_height, half_z_dim, 0, 0);
-	drift_chamber -> Draw();
+	
 	// ==================== straight hit planes ====================
 	int color[3];
 	color[0]=6;
@@ -364,11 +369,117 @@ void Fit3d::draw_event()
 	inclined2_hit_plane->SetPoint(4,  TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[2])*pow(z_x_a[2],-1), 0 - dc_half_height, dc_z_min);
 	inclined2_hit_plane->SetLineWidth(3);
 	inclined2_hit_plane->SetLineColor(color[2]);
+
 	TPolyLine3D *inclined2_hit_plane_center = new TPolyLine3D(2);
 	inclined2_hit_plane_center->SetPoint(0, (dc_z_min - z_x_b[2])*pow(z_x_a[2],-1), 0, dc_z_min);
 	inclined2_hit_plane_center->SetPoint(1, (dc_z_max - z_x_b[2])*pow(z_x_a[2],-1), 0, dc_z_max);
 	inclined2_hit_plane_center->SetLineColor(color[2]);
 
+	// ==================== punkty nalezace do plaszczyzn ===============
+	TPolyMarker3D *straight_plane_point = new TPolyMarker3D(1);
+	straight_plane_point->SetPoint(0, (z_straight[0] - z_x_b[0])*pow(z_x_a[0],-1), 0, z_straight[0]);
+    straight_plane_point->SetMarkerStyle(20);
+    //straight_plane_point->Draw();
+
+    TPolyMarker3D *inclined1_plane_point = new TPolyMarker3D(1);
+	inclined1_plane_point->SetPoint(0, x_inclined1[0], 0, z_inclined1[0]);
+    inclined1_plane_point->SetMarkerStyle(20);
+    //inclined1_plane_point->Draw();
+
+    TPolyMarker3D *inclined2_plane_point = new TPolyMarker3D(1);
+	inclined2_plane_point->SetPoint(0, x_inclined2[0], 0, z_inclined2[0]);
+    inclined2_plane_point->SetMarkerStyle(20);
+    //inclined2_plane_point->Draw();
+
+
+	// ==================== normal to the hit planes ====================
+	double scale = 30;
+	TPolyLine3D *normal_st = new TPolyLine3D(2);
+	normal_st->SetPoint(0, (dc_z_min - z_x_b[0])*pow(z_x_a[0],-1), y_range_min, dc_z_min);
+	normal_st->SetPoint(1, (dc_z_min - z_x_b[0])*pow(z_x_a[0],-1)+scale*normal_straight.X(), y_range_min+scale*normal_straight.Y(), dc_z_min+scale*normal_straight.Z());
+	normal_st->SetLineWidth(3);
+	normal_st->SetLineColor(color[0]);
+
+	TPolyLine3D *normal_i1 = new TPolyLine3D(2);
+	normal_i1->SetPoint(0, -TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[1])*pow(z_x_a[1],-1), 0 - dc_half_height, dc_z_min);
+	normal_i1->SetPoint(1, -TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[1])*pow(z_x_a[1],-1)+scale*normal_inclined1.X(), 0 - dc_half_height+scale*normal_inclined1.Y(), dc_z_min+scale*normal_inclined1.Z());
+	normal_i1->SetLineWidth(3);
+	normal_i1->SetLineColor(color[1]);
+
+	TPolyLine3D *in1_i1 = new TPolyLine3D(2);
+	in1_i1->SetPoint(0, -TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[1])*pow(z_x_a[1],-1), 0 - dc_half_height, dc_z_min);
+	in1_i1->SetPoint(1, -TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[1])*pow(z_x_a[1],-1)+scale*xz_inclined1[0], 0 - dc_half_height, dc_z_min+scale*xz_inclined1[2]);
+	in1_i1->SetLineWidth(3);
+	in1_i1->SetLineColor(color[0]);
+
+	TPolyLine3D *in2_i1 = new TPolyLine3D(2);
+	in2_i1->SetPoint(0, -TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[1])*pow(z_x_a[1],-1), 0 - dc_half_height, dc_z_min);
+	in2_i1->SetPoint(1, -TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[1])*pow(z_x_a[1],-1)+scale*xy_inclined1[0], 0 - dc_half_height+scale*xy_inclined1[1], dc_z_min+scale*xy_inclined1[2]);
+	in2_i1->SetLineWidth(3);
+	in2_i1->SetLineColor(kRed);
+
+	TPolyLine3D *normal_i2 = new TPolyLine3D(2);
+	normal_i2->SetPoint(0,  TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[2])*pow(z_x_a[2],-1), 0 - dc_half_height, dc_z_min);
+	normal_i2->SetPoint(1,  TMath::Tan(31*3.141592654/180)*dc_half_height + (dc_z_min - z_x_b[2])*pow(z_x_a[2],-1)+scale*normal_inclined2.X(), 0 - dc_half_height+scale*normal_inclined2.Y(), dc_z_min+scale*normal_inclined2.Z());
+	normal_i2->SetLineWidth(3);
+	normal_i2->SetLineColor(color[2]);
+
+	// ==================== intersection points ==========================
+	TPolyMarker3D *inter_p_si1 = new TPolyMarker3D(1);
+    inter_p_si1->SetPoint(0, inter_point_si1.X(), inter_point_si1.Y(), inter_point_si1.Z());
+    inter_p_si1->SetMarkerStyle(20);
+
+    TPolyMarker3D *inter_p_si2 = new TPolyMarker3D(1);
+    inter_p_si2->SetPoint(0, inter_point_si2.X(), inter_point_si2.Y(), inter_point_si2.Z());
+    inter_p_si2->SetMarkerStyle(20);
+
+    TPolyMarker3D *inter_p_i1i2 = new TPolyMarker3D(1);
+    inter_p_i1i2->SetPoint(0, inter_point_i1i2.X(), inter_point_i1i2.Y(), inter_point_i1i2.Z());
+    inter_p_i1i2->SetMarkerStyle(20);
+
+    // ===================== hits in inclined =============================
+    TPolyMarker3D *hit1 = new TPolyMarker3D(1);
+    hit1->SetPoint(0, x_inclined1[0], 0, z_inclined1[0]);
+    hit1->SetMarkerStyle(20);
+    //hit1->Draw();
+
+    TPolyMarker3D *hit2 = new TPolyMarker3D(1);
+    hit2->SetPoint(0, x_inclined1[1], 0, z_inclined1[1]);
+    hit2->SetMarkerStyle(20);
+    //hit2->Draw();
+
+    // ===================== intersection lines ===========================
+	TPolyLine3D *inter_line_si1 = new TPolyLine3D(2);
+	inter_line_si1->SetPoint(0,inter_point_si1.X()+scale*inter_si1.X(),inter_point_si1.Y()+scale*inter_si1.Y(),inter_point_si1.Z()+scale*inter_si1.Z());
+	inter_line_si1->SetPoint(1,inter_point_si1.X()-scale*inter_si1.X(),inter_point_si1.Y()-scale*inter_si1.Y(),inter_point_si1.Z()-scale*inter_si1.Z());
+	inter_line_si1->SetLineWidth(3);
+	inter_line_si1->SetLineColor(1);
+
+	TPolyLine3D *inter_line_si2 = new TPolyLine3D(2);
+	inter_line_si2->SetPoint(0,inter_point_si2.X()+scale*inter_si2.X(),inter_point_si2.Y()+scale*inter_si2.Y(),inter_point_si2.Z()+scale*inter_si2.Z());
+	inter_line_si2->SetPoint(1,inter_point_si2.X()-scale*inter_si2.X(),inter_point_si2.Y()-scale*inter_si2.Y(),inter_point_si2.Z()-scale*inter_si2.Z());
+	inter_line_si2->SetLineWidth(3);
+	inter_line_si2->SetLineColor(5);
+
+	TPolyLine3D *inter_line_i1i2 = new TPolyLine3D(2);
+	inter_line_i1i2->SetPoint(0,inter_point_i1i2.X()+scale*inter_i1i2.X(),inter_point_i1i2.Y()+scale*inter_i1i2.Y(),inter_point_i1i2.Z()+scale*inter_i1i2.Z());
+	inter_line_i1i2->SetPoint(1,inter_point_i1i2.X()-scale*inter_i1i2.X(),inter_point_i1i2.Y()-scale*inter_i1i2.Y(),inter_point_i1i2.Z()-scale*inter_i1i2.Z());
+	inter_line_i1i2->SetLineWidth(3);
+	inter_line_i1i2->SetLineColor(3);
+
+	// ========================= 3d TRACK =================================
+	TPolyMarker3D *track_point = new TPolyMarker3D(1);
+	track_point->SetPoint(0, track3d_point.X(), track3d_point.Y(), track3d_point.Z());
+    track_point->SetMarkerStyle(20);
+    track_point->SetMarkerColor(2);
+
+    TPolyLine3D *track3d = new TPolyLine3D(2);
+	track3d->SetPoint(0,track3d_point.X()+scale*track3d_vector.X(),track3d_point.Y()+scale*track3d_vector.Y(),track3d_point.Z()+scale*track3d_vector.Z());
+	track3d->SetPoint(1,track3d_point.X()-scale*track3d_vector.X(),track3d_point.Y()-scale*track3d_vector.Y(),track3d_point.Z()-scale*track3d_vector.Z());
+	track3d->SetLineWidth(3);
+	track3d->SetLineColor(2);
+
+	//drift_chamber -> Draw();
 	//yx_fcn_straight_w1->Draw();
 	//yx_fcn_straight_w2->Draw();
 	//yx_fcn_straight_w3->Draw();
@@ -382,6 +493,19 @@ void Fit3d::draw_event()
 	inclined1_hit_plane_center->Draw();
 	inclined2_hit_plane->Draw();
 	inclined2_hit_plane_center->Draw();
+	inter_p_si1->Draw();
+	inter_p_si2->Draw();
+	inter_p_i1i2->Draw();
+	inter_line_si1->Draw();
+	inter_line_si2->Draw();
+	inter_line_i1i2->Draw();
+	//normal_st->Draw();
+	//normal_i1->Draw();
+	//normal_i2->Draw();
+	//in1_i1->Draw();
+	//in2_i1->Draw();
+	track_point->Draw();
+	track3d->Draw();
 
 	test->Write();
 	//test -> SaveAs(name, name);
