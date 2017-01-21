@@ -211,11 +211,55 @@ void Fit3d::calculate_intersection_points()// intersection line: points
 
 void Fit3d::calculate_3d_track_parameters()
 {
-	track3d_point.SetX((inter_point_si1.X() + inter_point_si2.X() + inter_point_i1i2.X())*pow(3,-1));
-	track3d_point.SetY((inter_point_si1.Y() + inter_point_si2.Y() + inter_point_i1i2.Y())*pow(3,-1));
-	track3d_point.SetZ((inter_point_si1.Z() + inter_point_si2.Z() + inter_point_i1i2.Z())*pow(3,-1));
+	TVector3 track_p_si1_1, track_p_si1_2, track_p_si2_1, track_p_si2_2, track_p_i1i2_1, track_p_i1i2_2;
+	double scale;
+	// points on the intersection line at z = 0
+	track_p_si1_1.SetZ(0);
+	track_p_si2_1.SetZ(0);
+	track_p_i1i2_1.SetZ(0);
+	//    s i1
+	scale = -inter_point_si1.Z()/inter_si1.Z();
+	track_p_si1_1.SetX(inter_point_si1.X()+scale*inter_si1.X());
+	track_p_si1_1.SetY(inter_point_si1.Y()+scale*inter_si1.Y());
+	//    s i2
+	scale = -inter_point_si2.Z()/inter_si2.Z();
+	track_p_si2_1.SetX(inter_point_si2.X()+scale*inter_si2.X());
+	track_p_si2_1.SetY(inter_point_si2.Y()+scale*inter_si2.Y());
+	//    i1 i2
+	scale = -inter_point_i1i2.Z()/inter_i1i2.Z();
+	track_p_i1i2_1.SetX(inter_point_i1i2.X()+scale*inter_i1i2.X());
+	track_p_i1i2_1.SetY(inter_point_i1i2.Y()+scale*inter_i1i2.Y());
+	// points on the intersection line at z = 3
+	double tempz = 3;
+	track_p_si1_2.SetZ(tempz);
+	track_p_si2_2.SetZ(tempz);
+	track_p_i1i2_2.SetZ(tempz);
+	//    s i1
+	scale = (tempz-inter_point_si1.Z())/inter_si1.Z();
+	track_p_si1_2.SetX(inter_point_si1.X()+scale*inter_si1.X());
+	track_p_si1_2.SetY(inter_point_si1.Y()+scale*inter_si1.Y());
+	//    s i2
+	scale = (tempz-inter_point_si2.Z())/inter_si2.Z();
+	track_p_si2_2.SetX(inter_point_si2.X()+scale*inter_si2.X());
+	track_p_si2_2.SetY(inter_point_si2.Y()+scale*inter_si2.Y());
+	//    i1 i2
+	scale = (tempz-inter_point_i1i2.Z())/inter_i1i2.Z();
+	track_p_i1i2_2.SetX(inter_point_i1i2.X()+scale*inter_i1i2.X());
+	track_p_i1i2_2.SetY(inter_point_i1i2.Y()+scale*inter_i1i2.Y());
 
-	track3d_vector = inter_si1 + inter_si2 + inter_i1i2;
+	track3d_point.SetX((track_p_si1_1.X() + track_p_si2_1.X() + track_p_i1i2_1.X())/3);
+	track3d_point.SetY((track_p_si1_1.Y() + track_p_si2_1.Y() + track_p_i1i2_1.Y())/3);
+	track3d_point.SetZ((track_p_si1_1.Z() + track_p_si2_1.Z() + track_p_i1i2_1.Z())/3);
+
+	TVector3 track3d_point2;
+	track3d_point2.SetX((track_p_si1_2.X() + track_p_si2_2.X() + track_p_i1i2_2.X())/3);
+	track3d_point2.SetY((track_p_si1_2.Y() + track_p_si2_2.Y() + track_p_i1i2_2.Y())/3);
+	track3d_point2.SetZ((track_p_si1_2.Z() + track_p_si2_2.Z() + track_p_i1i2_2.Z())/3);
+
+	track3d_vector.SetX(track3d_point2.X() - track3d_point.X());
+	track3d_vector.SetY(track3d_point2.Y() - track3d_point.Y());
+	track3d_vector.SetZ(track3d_point2.Z() - track3d_point.Z());
+
 	track3d_vector = track3d_vector.Unit();
 }
 
@@ -480,25 +524,25 @@ void Fit3d::draw_event()
 	track3d->SetLineColor(2);
 
 	//drift_chamber -> Draw();
-	//yx_fcn_straight_w1->Draw();
-	//yx_fcn_straight_w2->Draw();
-	//yx_fcn_straight_w3->Draw();
-	//yx_fcn_straight_w4->Draw();
-	//yx_fcn_inclined1_w1->Draw();
-	//yx_fcn_inclined1_w2->Draw();
-	//yx_fcn_inclined2_w1->Draw();
-	//yx_fcn_inclined2_w2->Draw();
-	straight_hit_plane->Draw();
-	inclined1_hit_plane->Draw();
-	inclined1_hit_plane_center->Draw();
-	inclined2_hit_plane->Draw();
-	inclined2_hit_plane_center->Draw();
-	inter_p_si1->Draw();
-	inter_p_si2->Draw();
-	inter_p_i1i2->Draw();
-	inter_line_si1->Draw();
-	inter_line_si2->Draw();
-	inter_line_i1i2->Draw();
+	yx_fcn_straight_w1->Draw();
+	yx_fcn_straight_w2->Draw();
+	yx_fcn_straight_w3->Draw();
+	yx_fcn_straight_w4->Draw();
+	yx_fcn_inclined1_w1->Draw();
+	yx_fcn_inclined1_w2->Draw();
+	yx_fcn_inclined2_w1->Draw();
+	yx_fcn_inclined2_w2->Draw();
+	//straight_hit_plane->Draw();
+	//inclined1_hit_plane->Draw();
+	//inclined1_hit_plane_center->Draw();
+	//inclined2_hit_plane->Draw();
+	//inclined2_hit_plane_center->Draw();
+	//inter_p_si1->Draw();
+	//inter_p_si2->Draw();
+	//inter_p_i1i2->Draw();
+	//inter_line_si1->Draw();
+	//inter_line_si2->Draw();
+	//inter_line_i1i2->Draw();
 	//normal_st->Draw();
 	//normal_i1->Draw();
 	//normal_i2->Draw();
