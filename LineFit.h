@@ -33,13 +33,15 @@ public:
 	static LineFit * GetInstance();
 	~LineFit(){ _this = NULL; }
 	double GlobalFCN(const double * par);
-	std::vector<double> fit_with_minuit();
+	void fit_with_minuit();
 	void set_z_values(double *_z);
 	void set_x_straight_values(double *_x);
 	void set_incl_hit_lines_params(double *_a, double *_b);
 	void set_track_point(double _track_x, double _track_y, double _track_z);
 	void set_track_vector(double _track_ux, double _track_uy, double _track_uz);
 	void calculate_start_params();
+	TVector3 return_track_point();
+	TVector3 return_track_vector();
 
 	bool err_flag();
 
@@ -68,9 +70,6 @@ private:
 	// coordinates of the point which belongs to the track - results of the fit
 	double xp, yp, zp;
 	double ux, uy, uz;
-
-	// vector parallel to the track
-	TVector3 track_vector;
 };
 
 #endif

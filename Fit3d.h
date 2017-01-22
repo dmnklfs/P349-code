@@ -52,8 +52,8 @@ public:
 	void calculate_intersection_points();
 	void calculate_3d_track_parameters();
 	void set_detector_position(double x_lab_position, double z_lab_position, double half_x_dim, double half_z_dim, double distance_to_1st_layer);
-	void calculate_projections_on_hit_planes();
-
+	void calculate_projections_on_hit_planes_calculations();
+	void calculate_projections_on_hit_planes_fit();
 	void make_fit_to_lines();
 	
 	void draw_event();
@@ -96,10 +96,13 @@ private:
 	TVector3 track3d_vector;
 	//    point
 	TVector3 track3d_point;
+	// from fit to 8 planes
+	TVector3 track3d_fit_point, track3d_fit_vector;
 
 	// projections of the track on the planes
 	//   vertors (directions)
 	TVector3 projection_straight, projection_inclined1, projection_inclined2;
+	TVector3 projection_straight_fit, projection_inclined1_fit, projection_inclined2_fit;
 	//   lines equations (z_x in all planes)
 	double proj_z_x_a[3];
 	double proj_z_x_b[3];

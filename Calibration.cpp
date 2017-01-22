@@ -199,7 +199,8 @@ void Calibration::fit_in_3d()
 		fit3d -> Fit3d::calculate_intersection_points();
 		fit3d -> Fit3d::calculate_3d_track_parameters();
 		fit3d -> Fit3d::set_detector_position(x_lab_position, z_lab_position, half_x_dim, half_z_dim, distance_to_1st_layer);
-		fit3d -> Fit3d::calculate_projections_on_hit_planes();
+		fit3d -> Fit3d::calculate_projections_on_hit_planes_calculations();
+		fit3d -> Fit3d::calculate_projections_on_hit_planes_fit();
 		fit3d -> Fit3d::make_fit_to_lines();
 
 		fit3d -> Fit3d::draw_event();

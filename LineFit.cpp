@@ -69,17 +69,17 @@ double LineFit::GlobalFCN(const double * par)
 	int i;
 	//calculate chisquare
 	double chisq = 0;
-	double delta;
-//	int straight[4];
+	double delta = 0;
+	int straight[4];
 //	int inclined[4];
-//	straight[0] = 0;
-//	straight[1] = 1;
+	straight[0] = 0;
+	straight[1] = 1;
 //	inclined[0] = 2;
 //	inclined[1] = 3;
 //	inclined[2] = 4;
 //	inclined[3] = 5;
-//	straight[2] = 6;
-//	straight[3] = 7;
+	straight[2] = 6;
+	straight[3] = 7;
 
 	// scaling
 	double t;
@@ -89,7 +89,7 @@ double LineFit::GlobalFCN(const double * par)
 	{
 		//std::cout << errors[i] << std::endl;
 		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
-		t = TMath::Abs(z[i] - zp);
+		t = TMath::Abs(z[ straight[i] ] - zp);
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
 		delta  = x[i] - xi;
@@ -101,7 +101,7 @@ double LineFit::GlobalFCN(const double * par)
 		t = TMath::Abs(z[2+i] - zp); // 1st inclined layer no = 2 (3rd layer counting in the beam direction)
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
-		delta  = (a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
+		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
 		chisq += delta;
 	}
 	//std::cout << "chisq " << chisq << std::endl;
@@ -126,7 +126,7 @@ void LineFit::calculate_start_params()
 	start_yp = track_y + t*track_uy;
 }
 
-std::vector<double> LineFit::fit_with_minuit()
+void LineFit::fit_with_minuit()
 {
 	errflag = true;
 	std::vector<double> output;
@@ -137,17 +137,19 @@ std::vector<double> LineFit::fit_with_minuit()
 	Double_t arglist[10];
 	Int_t ierflg = 0;
 
+	// set strategy - about no of calls during minimization
+	// 0 - optimize time, less calls
+	// 1 - normal
+	// 2 - optimize result, time consuming (wasted calls)
 	arglist[0] = 0;
-	gMinuit->mnexcm( "SET STR", arglist, 2,ierflg );
+	gMinuit->mnexcm( "SET STR", arglist, 1,ierflg );
 
 	arglist[0] = 1;
-	gMinuit->mnexcm("SET ERR", arglist ,2,ierflg);
+	gMinuit->mnexcm("SET ERR", arglist ,1,ierflg);
 
-	// Set starting values and step sizes for parameters
-	
-	//double vstart[2] = {0.5, 1};
+	// Set start values and step sizes for parameters
 	double vstart[4] = {start_xp, start_yp, start_ux, start_uy};
-	double step[4] = {0.5 , 0.5, 0.5, 0.5};
+	double step[4] = {0.01 , 0.01, 0.1, 0.01};
 	gMinuit->mnparm(0, "xp", vstart[0], step[0], 0, 0, ierflg);
 	gMinuit->mnparm(1, "yp", vstart[1], step[1], 0, 0, ierflg);
 	gMinuit->mnparm(2, "ux", vstart[2], step[2], 0, 0, ierflg);
@@ -156,7 +158,6 @@ std::vector<double> LineFit::fit_with_minuit()
 	arglist[0] = 500; //was 500
 	arglist[1] = 1.;
 	gMinuit->mnexcm("MINIMIZE", arglist ,1,ierflg);
-	std::cout << " !!!!!!!!!!! " << std::endl;
 	errflag = ierflg; // IERFLG=0 if no problems
 
 	// acces the results
@@ -189,13 +190,30 @@ std::vector<double> LineFit::fit_with_minuit()
 //		chisq += delta*delta;
 //	}
 	
-	output.push_back(params[0]);
-	output.push_back(params[1]);
-	output.push_back(params[2]);
-	output.push_back(params[3]);
+	xp = params[0];
+	yp = params[1];
+	ux = params[2];
+	uy = params[3];
+	uz = 1;
 
 	delete gMinuit;
-
-	return output;
 }
 
+TVector3 LineFit::return_track_point()
+{
+	TVector3 track_point;
+	track_point.SetX(xp);
+	track_point.SetY(yp);
+	track_point.SetZ(zp);
+	return track_point;
+}
+
+TVector3 LineFit::return_track_vector()
+{
+	TVector3 track_vector;
+	track_vector.SetX(ux);
+	track_vector.SetY(uy);
+	track_vector.SetZ(uz);
+	track_vector.Unit();
+	return track_vector;
+}
