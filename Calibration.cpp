@@ -131,6 +131,7 @@ void Calibration::calculate_hit_position()
 {
 	for (int i = 0; i < 8; i++)
 	{
+		//std::cout << i << std::endl;
 		//if (0==i||1==i||6==i||7==i)
 		if (true)
 		{
@@ -198,6 +199,9 @@ void Calibration::fit_in_3d()
 		fit3d -> Fit3d::calculate_intersection_points();
 		fit3d -> Fit3d::calculate_3d_track_parameters();
 		fit3d -> Fit3d::set_detector_position(x_lab_position, z_lab_position, half_x_dim, half_z_dim, distance_to_1st_layer);
+		fit3d -> Fit3d::calculate_projections_on_hit_planes();
+
+		
 		fit3d -> Fit3d::draw_event();
 		delete fit3d;
 	}

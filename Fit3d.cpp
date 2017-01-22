@@ -32,18 +32,18 @@ void Fit3d::set_values(double *_x, double *_y, double *_errors)
 	errors_straight[3] = _errors[7];
 
 	// inclined
-	x_inclined1[0] = _x[3];
-	z_inclined1[0] = _y[3];
-	errors_inclined1[0] = _errors[3];
-	x_inclined1[1] = _x[4];
-	z_inclined1[1] = _y[4];
-	errors_inclined1[1] = _errors[4];
-	x_inclined2[0] = _x[5];
-	z_inclined2[0] = _y[5];
-	errors_inclined2[0] = _errors[5];
-	x_inclined2[1] = _x[6];
-	z_inclined2[1] = _y[6];
-	errors_inclined2[1] = _errors[6];
+	x_inclined1[0] = _x[2];
+	z_inclined1[0] = _y[2];
+	errors_inclined1[0] = _errors[2];
+	x_inclined1[1] = _x[3];
+	z_inclined1[1] = _y[3];
+	errors_inclined1[1] = _errors[3];
+	x_inclined2[0] = _x[4];
+	z_inclined2[0] = _y[4];
+	errors_inclined2[0] = _errors[4];
+	x_inclined2[1] = _x[5];
+	z_inclined2[1] = _y[5];
+	errors_inclined2[1] = _errors[5];
 }
 
 void Fit3d::fit_straight_layer()
@@ -270,6 +270,33 @@ void Fit3d::set_detector_position(double _x_lab_position, double _z_lab_position
 	half_x_dim = _half_x_dim;
 	half_z_dim = _half_z_dim;
 	distance_to_1st_layer = _distance_to_1st_layer;
+}
+
+void Fit3d::calculate_projections_on_hit_planes()
+{
+	// to get the direction it is enough to remove from the track vetor
+	// the part which is perpendicular to the certain plane
+
+	double angle;
+
+	// straight
+	projection_straight.SetX(track3d_vector.X());
+	projection_straight.SetY(0);
+	projection_straight.SetZ(track3d_vector.Z());
+	projection_straight.Unit();
+	
+	// inclined1
+	angle = 31*TMath::DegToRad();
+	TVector3 wire_direction_inclined1;
+	wire_direction_inclined1.SetXYZ(TMath::Sin(angle), TMath::Cos(angle), 0);
+	projection_inclined1 = track3d_vector - track3d_vector.Dot(wire_direction_inclined1)*wire_direction_inclined1;
+	projection_inclined1.Unit();
+
+	TVector3 wire_direction_inclined2;
+	wire_direction_inclined2.SetXYZ(-TMath::Sin(angle), TMath::Cos(angle), 0);
+	projection_inclined2 = track3d_vector - track3d_vector.Dot(wire_direction_inclined2)*wire_direction_inclined2;
+	projection_inclined2.Unit();
+	
 }
 
 void Fit3d::draw_event()
@@ -523,7 +550,26 @@ void Fit3d::draw_event()
 	track3d->SetLineWidth(3);
 	track3d->SetLineColor(2);
 
-	//drift_chamber -> Draw();
+	// ================== projections on the wire planes ===================
+	TPolyLine3D *track3d_proj_straight = new TPolyLine3D(2);
+	track3d_proj_straight->SetPoint(0,track3d_point.X()+scale*projection_straight.X(),track3d_point.Y()+scale*projection_straight.Y(),track3d_point.Z()+scale*projection_straight.Z());
+	track3d_proj_straight->SetPoint(1,track3d_point.X()-scale*projection_straight.X(),track3d_point.Y()-scale*projection_straight.Y(),track3d_point.Z()-scale*projection_straight.Z());
+	track3d_proj_straight->SetLineWidth(3);
+	track3d_proj_straight->SetLineColor(kMagenta+2);
+
+	TPolyLine3D *track3d_proj_inclined1 = new TPolyLine3D(2);
+	track3d_proj_inclined1->SetPoint(0,track3d_point.X()+scale*projection_inclined1.X(),track3d_point.Y()+scale*projection_inclined1.Y(),track3d_point.Z()+scale*projection_inclined1.Z());
+	track3d_proj_inclined1->SetPoint(1,track3d_point.X()-scale*projection_inclined1.X(),track3d_point.Y()-scale*projection_inclined1.Y(),track3d_point.Z()-scale*projection_inclined1.Z());
+	track3d_proj_inclined1->SetLineWidth(3);
+	track3d_proj_inclined1->SetLineColor(kBlue+1);
+
+	TPolyLine3D *track3d_proj_inclined2 = new TPolyLine3D(2);
+	track3d_proj_inclined2->SetPoint(0,track3d_point.X()+scale*projection_inclined2.X(),track3d_point.Y()+scale*projection_inclined2.Y(),track3d_point.Z()+scale*projection_inclined2.Z());
+	track3d_proj_inclined2->SetPoint(1,track3d_point.X()-scale*projection_inclined2.X(),track3d_point.Y()-scale*projection_inclined2.Y(),track3d_point.Z()-scale*projection_inclined2.Z());
+	track3d_proj_inclined2->SetLineWidth(3);
+	track3d_proj_inclined2->SetLineColor(kOrange+2);
+
+	drift_chamber -> Draw();
 	yx_fcn_straight_w1->Draw();
 	yx_fcn_straight_w2->Draw();
 	yx_fcn_straight_w3->Draw();
@@ -548,8 +594,11 @@ void Fit3d::draw_event()
 	//normal_i2->Draw();
 	//in1_i1->Draw();
 	//in2_i1->Draw();
-	track_point->Draw();
+	//track_point->Draw();
 	track3d->Draw();
+	track3d_proj_straight->Draw();
+	track3d_proj_inclined1->Draw();
+	track3d_proj_inclined2->Draw();
 
 	test->Write();
 	//test -> SaveAs(name, name);

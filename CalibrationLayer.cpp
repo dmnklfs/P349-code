@@ -135,6 +135,7 @@ void CalibrationLayer::calculate_hit_position()
 		drifttime = CalibrationData.at(i).drift_time;
 		CalibrationData.at(i).hit_pos_X = wirex+lr*drift_time_to_distance(CalibrationData.at(i).calib_bin, drifttime);
 		CalibrationData.at(i).hit_pos_Z = wirez;
+		//std::cout << "z: " << CalibrationData.at(i).hit_pos_Z << " x: " << CalibrationData.at(i).hit_pos_X << std::endl;
 	}
 }
 
