@@ -29,6 +29,7 @@
 #include <TMarker3DBox.h>
 #include <TPolyLine3D.h>
 #include "MinuitFit.h"
+#include "LineFit.h"
 #include "TView3D.h"
 #include "TView.h"
 #include "TAxis3D.h"
@@ -52,6 +53,9 @@ public:
 	void calculate_3d_track_parameters();
 	void set_detector_position(double x_lab_position, double z_lab_position, double half_x_dim, double half_z_dim, double distance_to_1st_layer);
 	void calculate_projections_on_hit_planes();
+
+	void make_fit_to_lines();
+	
 	void draw_event();
 
 private:

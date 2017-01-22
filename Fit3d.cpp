@@ -67,14 +67,14 @@ void Fit3d::fit_inclined_layers()
 	//fit1 -> MinuitFit::set_values(x_inclined1, z_inclined1, errors_inclined1);
 	//fit1 -> MinuitFit::perform_simplified_fit();
 	//results = fit1 -> MinuitFit::fit_with_minuit();
-	std::cout << " ----- " << std::endl;
-	std::cout << x_inclined1[0] << " " << z_inclined1[0] << " " << errors_inclined1[0] << std::endl;
-	std::cout << x_inclined1[1] << " " << z_inclined1[1] << " " << errors_inclined1[1] << std::endl;
+	//std::cout << " ----- " << std::endl;
+	//std::cout << x_inclined1[0] << " " << z_inclined1[0] << " " << errors_inclined1[0] << std::endl;
+	//std::cout << x_inclined1[1] << " " << z_inclined1[1] << " " << errors_inclined1[1] << std::endl;
 	//z_x_a[1] = results.at(0);
 	//z_x_b[1] = results.at(1);
 	z_x_a[1] = (z_inclined1[0]-z_inclined1[1])/(x_inclined1[0]-x_inclined1[1]);
 	z_x_b[1] = z_inclined1[0] - z_x_a[1]*x_inclined1[0];
-	std::cout << z_x_a[1] << " " << z_x_b[1] << std::endl;
+	//std::cout << z_x_a[1] << " " << z_x_b[1] << std::endl;
 
 	MinuitFit * fit2 = MinuitFit::GetInstance();
 	fit2 -> set_no_of_points(2);		
@@ -603,4 +603,39 @@ void Fit3d::draw_event()
 	test->Write();
 	//test -> SaveAs(name, name);
 	f3.Close();
+}
+
+// =================== fit line to 8 lines ===========================
+void Fit3d::make_fit_to_lines()
+{
+	double z[8];
+	z[0] = z_straight[0];
+	z[1] = z_straight[1];
+	z[2] = z_inclined1[0];
+	z[3] = z_inclined1[1];
+	z[4] = z_inclined2[0];
+	z[5] = z_inclined2[1];
+	z[6] = z_straight[2];
+	z[7] = z_straight[3];
+
+	double a[4];
+	a[0] = y_x_a[1];
+	a[1] = y_x_a[1];
+	a[2] = y_x_a[2];
+	a[3] = y_x_a[2];
+
+	double b[4];
+	b[0] = y_x_b[1][0];
+	b[1] = y_x_b[1][1];
+	b[2] = y_x_b[2][0];
+	b[3] = y_x_b[2][1];
+
+	LineFit * lineFit3d = LineFit::GetInstance();
+	lineFit3d -> set_z_values(z);
+	lineFit3d -> set_x_straight_values(x_straight);
+	lineFit3d -> set_incl_hit_lines_params(a, b);
+	lineFit3d -> set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
+	lineFit3d -> set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
+	lineFit3d -> calculate_start_params();
+	lineFit3d -> fit_with_minuit();
 }

@@ -74,7 +74,7 @@ std::vector<double> MinuitFit::fit_with_minuit()
 	gMinuit->mnexcm( "SET STR", arglist, 2,ierflg );
 
 	arglist[0] = 1;
-	gMinuit->mnexcm("SET ERR", arglist ,1,ierflg);
+	gMinuit->mnexcm("SET ERR", arglist ,2,ierflg);
 
 	// Set starting values and step sizes for parameters
 	

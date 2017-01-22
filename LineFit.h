@@ -1,5 +1,5 @@
-#ifndef MINUITFIT_H
-#define MINUITFIT_H 
+#ifndef LINEFIT_H
+#define LINEFIT_H 
 
 #include "TFile.h"
 #include "TH1.h"
@@ -29,30 +29,44 @@
 class LineFit
 {
 public:
-	MinuitFit();
-	static MinuitFit * GetInstance();
-	~MinuitFit(){ _this = NULL; }
+	LineFit();
+	static LineFit * GetInstance();
+	~LineFit(){ _this = NULL; }
 	double GlobalFCN(const double * par);
 	std::vector<double> fit_with_minuit();
-	void set_values(double *_x, double *_y, double *_errors);
-	void set_no_of_hits(int nhits);
-	void set_point_start_params(double _zp, double y_p, double zp_);
-	void set_point_start_params(double _ux, double _uy, double _uz);
+	void set_z_values(double *_z);
+	void set_x_straight_values(double *_x);
+	void set_incl_hit_lines_params(double *_a, double *_b);
+	void set_track_point(double _track_x, double _track_y, double _track_z);
+	void set_track_vector(double _track_ux, double _track_uy, double _track_uz);
+	void calculate_start_params();
 
 	bool err_flag();
 
 private:
 	int no_of_points;
-	static MinuitFit * _this;
-	double x[8], z[8], errors[8];
+	static LineFit * _this;
+	// z positions of all layers - common
+	double z[8];
+	// points - for straight layers
+	double x[4], errors[4];
+	// hit equations - fo inclined layers
+	double a[4], b[4];
+
 	bool errflag;
 
-	// coordinates of the point which belongs to the track
-	double start_zp, start_yp, start_zp;
-	double start_ux, start_uy, start_uz;
+	// coordinates of the point which belongs to the track - from the previous method
+	double track_x, track_y, track_z;
+	// 3d track vector - from the previous method
+	double track_ux, track_uy, track_uz;
 
-	// coordinates of the point which belongs to the track
-	double zp, yp, zp;
+	// starting params
+	double start_xp, start_yp;
+	double start_ux, start_uy;
+
+	// results of the fit
+	// coordinates of the point which belongs to the track - results of the fit
+	double xp, yp, zp;
 	double ux, uy, uz;
 
 	// vector parallel to the track

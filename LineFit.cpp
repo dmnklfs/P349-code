@@ -1,143 +1,198 @@
-#include "MinuitFit.h"
+#include "LineFit.h"
 
-MinuitFit * MinuitFit::_this = NULL;
+LineFit * LineFit::_this = NULL;
 
-MinuitFit * MinuitFit::GetInstance(){ 
+LineFit * LineFit::GetInstance(){ 
   if( _this == NULL ){
-    _this = new MinuitFit();
+    _this = new LineFit();
   }
   return _this; 
 }
 
-MinuitFit::MinuitFit()
+LineFit::LineFit()
 {
 	no_of_points = 8;
+}
+
+void LineFit::set_z_values(double *_z)
+{
 	for (int i = 0; i < 8; i++)
 	{
-		x[i] = 0;
-		z[i] = 0;
-		errors[i] = 10000;
+		z[i] = _z[i];
 	}
+	zp = z[0]-20;
 }
 
-void MinuitFit::set_no_of_points(int npoints)
+void LineFit::set_x_straight_values(double *_x)
 {
-	no_of_points = npoints;
-}
-
-
-void MinuitFit::set_values(double *_x, double *_y, double *_errors)
-{
-	for (int i = 0; i < no_of_points; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		x[i] = _x[i];
-		z[i] = _z[i];
-		errors[i] = _errors[i];
 	}
-	zp = -z[0] - 20;
 }
 
-bool MinuitFit::err_flag()
+void LineFit::set_incl_hit_lines_params(double *_a, double *_b)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		a[i] = _a[i];
+		b[i] = _b[i];
+	}
+}
+
+void LineFit::set_track_point(double _track_x, double _track_y, double _track_z)
+{
+	track_x = _track_x;
+	track_y = _track_y;
+	track_z = _track_z;
+}
+
+void LineFit::set_track_vector(double _track_ux, double _track_uy, double _track_uz)
+{
+	track_ux = _track_ux;
+	track_uy = _track_uy;
+	track_uz = _track_uz;
+	std::cout << track_ux << std::endl;
+	std::cout << track_uy << std::endl;
+	std::cout << track_uz << std::endl;
+}
+
+bool LineFit::err_flag()
 {
 	return errflag;
 }
 
 
-double MinuitFit::GlobalFCN(const double * par)
+double LineFit::GlobalFCN(const double * par)
 {
 	const int points = no_of_points;
 	int i;
 	//calculate chisquare
 	double chisq = 0;
 	double delta;
-	double straight[4];
-	double inclined[4];
-	straight[0] = 0;
-	straight[1] = 1;
-	inclined[0] = 2;
-	inclined[1] = 3;
-	inclined[2] = 4;
-	inclined[3] = 5;
-	straight[2] = 6;
-	straight[3] = 7;
+//	int straight[4];
+//	int inclined[4];
+//	straight[0] = 0;
+//	straight[1] = 1;
+//	inclined[0] = 2;
+//	inclined[1] = 3;
+//	inclined[2] = 4;
+//	inclined[3] = 5;
+//	straight[2] = 6;
+//	straight[3] = 7;
 
 	// scaling
 	double t;
 	// points in which the line goes through the certain z plane
+	double xi, yi;
 	for (i=0;i<4; i++)
 	{
 		//std::cout << errors[i] << std::endl;
 		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
 		t = TMath::Abs(z[i] - zp);
-		delta  = ;
+		xi = t*par[2] + par[0];
+		yi = t*par[3] + par[1];
+		delta  = x[i] - xi;
 		chisq += delta*delta;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		t = TMath::Abs(z[2+i] - zp); // 1st inclined layer no = 2 (3rd layer counting in the beam direction)
+		xi = t*par[2] + par[0];
+		yi = t*par[3] + par[1];
+		delta  = (a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
+		chisq += delta;
 	}
 	//std::cout << "chisq " << chisq << std::endl;
 	return chisq;
 }
 
-void gfcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
+void ffcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 {
-	MinuitFit * rec = MinuitFit::GetInstance();
+	LineFit * rec = LineFit::GetInstance();
 	f = rec->GlobalFCN( par ); 
 }
 
-std::vector<double> MinuitFit::fit_with_minuit()
+void LineFit::calculate_start_params()
+{
+	double t;
+	t = 1/track_uz;
+	start_ux = t*track_ux;
+	start_uy = t*track_uy;
+
+	t = (zp - track_z)/track_uz;
+	start_xp = track_x + t*track_ux;
+	start_yp = track_y + t*track_uy;
+}
+
+std::vector<double> LineFit::fit_with_minuit()
 {
 	errflag = true;
 	std::vector<double> output;
-	TMinuit *gMinuit = new TMinuit(5);  //initialize TMinuit with a maximum of 5 params
-	gMinuit->SetFCN(gfcn);
-	gMinuit->SetPrintLevel(-1);
+	TMinuit *gMinuit = new TMinuit(7);  //initialize TMinuit with a maximum of 5 params
+	gMinuit->SetFCN(ffcn);
+	gMinuit->SetPrintLevel(0);
 
 	Double_t arglist[10];
 	Int_t ierflg = 0;
 
-	arglist[0] = 2;
+	arglist[0] = 0;
 	gMinuit->mnexcm( "SET STR", arglist, 2,ierflg );
 
 	arglist[0] = 1;
-	gMinuit->mnexcm("SET ERR", arglist ,1,ierflg);
+	gMinuit->mnexcm("SET ERR", arglist ,2,ierflg);
 
 	// Set starting values and step sizes for parameters
 	
 	//double vstart[2] = {0.5, 1};
-	double vstart[2] = {a_start, b_start};
-	double step[2] = {0.1 , 0.1};
-	gMinuit->mnparm(0, "a", vstart[0], step[0], 0, 0, ierflg);
-	gMinuit->mnparm(1, "b", vstart[1], step[1], 0, 0, ierflg);
+	double vstart[4] = {start_xp, start_yp, start_ux, start_uy};
+	double step[4] = {0.5 , 0.5, 0.5, 0.5};
+	gMinuit->mnparm(0, "xp", vstart[0], step[0], 0, 0, ierflg);
+	gMinuit->mnparm(1, "yp", vstart[1], step[1], 0, 0, ierflg);
+	gMinuit->mnparm(2, "ux", vstart[2], step[2], 0, 0, ierflg);
+	gMinuit->mnparm(3, "uy", vstart[3], step[3], 0, 0, ierflg);
 
 	arglist[0] = 500; //was 500
 	arglist[1] = 1.;
-	gMinuit->mnexcm("MINIMIZE", arglist ,2,ierflg);
-
+	gMinuit->mnexcm("MINIMIZE", arglist ,1,ierflg);
+	std::cout << " !!!!!!!!!!! " << std::endl;
 	errflag = ierflg; // IERFLG=0 if no problems
 
 	// acces the results
-	TString namea = "a";
-	TString nameb = "b";
+	TString name[4];
+	name[0] = "xp";
+	name[1] = "yp";
+	name[2] = "ux";
+	name[3] = "uy";
+
 	Double_t val, err, llim, ulim;
 	Int_t  aaa;
-	double *params = new double[2];
-	gMinuit->mnpout( 0, namea, val, err, llim, ulim, aaa );
+	double *params = new double[4];
+	gMinuit->mnpout( 0, name[0], val, err, llim, ulim, aaa );
 	params[0] = val;
-	gMinuit->mnpout( 1, nameb, val, err, llim, ulim, aaa );
+	gMinuit->mnpout( 1, name[1], val, err, llim, ulim, aaa );
 	params[1] = val;
+	gMinuit->mnpout( 2, name[2], val, err, llim, ulim, aaa );
+	params[2] = val;
+	gMinuit->mnpout( 3, name[3], val, err, llim, ulim, aaa );
+	params[3] = val;
 
-	double chisq=0;
-	double delta=0;
-	int i;
-	int points =no_of_points;
+//	double chisq=0;
+//	double delta=0;
+//	int i;
+//	int points =no_of_points;
 
-	for (i=0;i<points; i++)
-	{
-		delta  = (((y[i]-params[1])/params[0])-x[i])/errors[i];
-		chisq += delta*delta;
-	}
+//	for (i=0;i<points; i++)
+//	{
+//		delta  = (((y[i]-params[1])/params[0])-x[i])/errors[i];
+//		chisq += delta*delta;
+//	}
 	
 	output.push_back(params[0]);
 	output.push_back(params[1]);
-	output.push_back(chisq);
+	output.push_back(params[2]);
+	output.push_back(params[3]);
 
 	delete gMinuit;
 
