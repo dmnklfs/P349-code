@@ -61,8 +61,10 @@ public:
 	bool was_correct_angle(double track_angle);
 	void set_pos_Xerr();
 	void fit_in_3d();
+	void fit_events();
 
 private:
+	bool fit_with_inclined;
 	CalibrationLayer *Layer[8];
 	int no_of_iteration;
 	int no_of_calib_bins;

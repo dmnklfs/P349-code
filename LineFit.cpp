@@ -52,9 +52,9 @@ void LineFit::set_track_vector(double _track_ux, double _track_uy, double _track
 	track_ux = _track_ux;
 	track_uy = _track_uy;
 	track_uz = _track_uz;
-	std::cout << track_ux << std::endl;
-	std::cout << track_uy << std::endl;
-	std::cout << track_uz << std::endl;
+	//std::cout << track_ux << std::endl;
+	//std::cout << track_uy << std::endl;
+	//std::cout << track_uz << std::endl;
 }
 
 bool LineFit::err_flag()
@@ -132,7 +132,7 @@ void LineFit::fit_with_minuit()
 	std::vector<double> output;
 	TMinuit *gMinuit = new TMinuit(7);  //initialize TMinuit with a maximum of 5 params
 	gMinuit->SetFCN(ffcn);
-	gMinuit->SetPrintLevel(0);
+	gMinuit->SetPrintLevel(-1);
 
 	Double_t arglist[10];
 	Int_t ierflg = 0;

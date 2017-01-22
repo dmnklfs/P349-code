@@ -81,6 +81,7 @@ void Fit3d::fit_inclined_layers()
 	fit2 -> MinuitFit::set_values(x_inclined2, z_inclined2, errors_inclined2);
 	fit2 -> MinuitFit::perform_simplified_fit();
 	results = fit2 -> MinuitFit::fit_with_minuit();
+
 	z_x_a[2] = results.at(0);
 	z_x_b[2] = results.at(1);
 }
@@ -304,22 +305,24 @@ void Fit3d::calculate_projections_on_hit_planes_fit()
 	double angle;
 
 	// straight
-	projection_straight.SetX(track3d_fit_vector.X());
-	projection_straight.SetY(0);
-	projection_straight.SetZ(track3d_fit_vector.Z());
-	projection_straight.Unit();
+	std::cout << "track " << track3d_fit_vector.X() << std::endl;
+	projection_straight_fit.SetX(track3d_fit_vector.X());
+	projection_straight_fit.SetY(0);
+	projection_straight_fit.SetZ(track3d_fit_vector.Z());
+	projection_straight_fit.Unit();
+	std::cout << "projection track " << projection_straight_fit.X() << std::endl;
 	
 	// inclined1
 	angle = 31*TMath::DegToRad();
 	TVector3 wire_direction_inclined1;
 	wire_direction_inclined1.SetXYZ(TMath::Sin(angle), TMath::Cos(angle), 0);
-	projection_inclined1 = track3d_fit_vector - track3d_fit_vector.Dot(wire_direction_inclined1)*wire_direction_inclined1;
-	projection_inclined1.Unit();
+	projection_inclined1_fit = track3d_fit_vector - track3d_fit_vector.Dot(wire_direction_inclined1)*wire_direction_inclined1;
+	projection_inclined1_fit.Unit();
 
 	TVector3 wire_direction_inclined2;
 	wire_direction_inclined2.SetXYZ(-TMath::Sin(angle), TMath::Cos(angle), 0);
-	projection_inclined2 = track3d_fit_vector - track3d_fit_vector.Dot(wire_direction_inclined2)*wire_direction_inclined2;
-	projection_inclined2.Unit();
+	projection_inclined2_fit = track3d_fit_vector - track3d_fit_vector.Dot(wire_direction_inclined2)*wire_direction_inclined2;
+	projection_inclined2_fit.Unit();
 }
 
 void Fit3d::draw_event()
@@ -349,7 +352,7 @@ void Fit3d::draw_event()
 	double dc_z_min = z_straight[0] - 3.3;
 	double dc_z_max = z_straight[3] + 3.3;
 	//    axis options
-	view->SetRange(x_range_min, y_range_min, z_range_min, x_range_max, y_range_max, z_range_max, 1);
+	// view->SetRange(x_range_min, y_range_min, z_range_min, x_range_max, y_range_max, z_range_max, 1);
 	view->ShowAxis();
 	TAxis3D *axis = TAxis3D::GetPadAxis(); // Get pointer to axis
     if(axis) {
@@ -602,9 +605,21 @@ void Fit3d::draw_event()
 	// its projections
 	TPolyLine3D *track3d_8lines_fit_straight = new TPolyLine3D(2);
 	track3d_8lines_fit_straight->SetPoint(0,track3d_fit_point.X(),track3d_fit_point.Y(),track3d_fit_point.Z());
-	track3d_8lines_fit_straight->SetPoint(1,track3d_fit_point.X()+1.5*scale*track3d_fit_vector.X(),track3d_fit_point.Y()+1.5*scale*track3d_fit_vector.Y(),track3d_fit_point.Z()+1.5*scale*track3d_fit_vector.Z());
+	track3d_8lines_fit_straight->SetPoint(1,track3d_fit_point.X()+1.5*scale*projection_straight_fit.X(),track3d_fit_point.Y()+1.5*scale*projection_straight_fit.Y(),track3d_fit_point.Z()+1.5*scale*projection_straight_fit.Z());
 	track3d_8lines_fit_straight->SetLineWidth(3);
-	track3d_8lines_fit_straight->SetLineColor(kGreen+2);
+	track3d_8lines_fit_straight->SetLineColor(kAzure-1);
+
+	TPolyLine3D *track3d_8lines_fit_inclined1 = new TPolyLine3D(2);
+	track3d_8lines_fit_inclined1->SetPoint(0,track3d_fit_point.X(),track3d_fit_point.Y(),track3d_fit_point.Z());
+	track3d_8lines_fit_inclined1->SetPoint(1,track3d_fit_point.X()+1.5*scale*projection_inclined1_fit.X(),track3d_fit_point.Y()+1.5*scale*projection_inclined1_fit.Y(),track3d_fit_point.Z()+1.5*scale*projection_inclined1_fit.Z());
+	track3d_8lines_fit_inclined1->SetLineWidth(3);
+	track3d_8lines_fit_inclined1->SetLineColor(kAzure-1);
+
+	TPolyLine3D *track3d_8lines_fit_inclined2 = new TPolyLine3D(2);
+	track3d_8lines_fit_inclined2->SetPoint(0,track3d_fit_point.X(),track3d_fit_point.Y(),track3d_fit_point.Z());
+	track3d_8lines_fit_inclined2->SetPoint(1,track3d_fit_point.X()+1.5*scale*projection_inclined2_fit.X(),track3d_fit_point.Y()+1.5*scale*projection_inclined2_fit.Y(),track3d_fit_point.Z()+1.5*scale*projection_inclined2_fit.Z());
+	track3d_8lines_fit_inclined2->SetLineWidth(3);
+	track3d_8lines_fit_inclined2->SetLineColor(kAzure-1);
 
 	//drift_chamber -> Draw();
 	yx_fcn_straight_w1->Draw();
@@ -637,6 +652,9 @@ void Fit3d::draw_event()
 	//track3d_proj_inclined1->Draw();
 	//track3d_proj_inclined2->Draw();
 	track3d_8lines_fit -> Draw();
+	track3d_8lines_fit_straight -> Draw();
+	track3d_8lines_fit_inclined1 -> Draw();
+	track3d_8lines_fit_inclined2 -> Draw();
 
 	test->Write();
 	//test -> SaveAs(name, name);
@@ -678,4 +696,59 @@ void Fit3d::make_fit_to_lines()
 	lineFit3d -> fit_with_minuit();
 	track3d_fit_point = lineFit3d -> return_track_point();
 	track3d_fit_vector = lineFit3d -> return_track_vector();
+	errflag = lineFit3d -> err_flag();
+}
+
+bool Fit3d::err_flag()
+{
+	return errflag;
+}
+
+double Fit3d::get_track_8lines_projection_params(int direction, int a_b)
+{
+	double A, B, C; // track projection parameters
+	// line Ax + By +C = 0
+	// [A,B] - vector perpendicular to the track
+	// [projection_x, projection_y] - vector parallel to the track
+	// [-projection_y, projection_x] - vector perpendicular to the track
+	if (direction==0) // straight
+	{
+		A = -projection_straight_fit.Z();
+		B = projection_straight_fit.X();
+	}
+
+	if (direction==1) // inclined1
+	{
+		A = -projection_inclined1_fit.Y();
+		B = projection_inclined1_fit.X();
+	}
+
+	if (direction==2) // inclined2
+	{
+		A = -projection_inclined2_fit.Y();
+		B = projection_inclined2_fit.X();
+	}
+
+	// point which belongs to the 3d track belongs also to each of the projections
+	// Axp + Byp + C == 0
+	double xp, yp;
+	xp = track3d_fit_point.X();
+	yp = track3d_fit_point.Y();
+
+	C = -(A*xp + B*yp);
+
+	// By = -Ax -C
+	// y = -A/B*x -C/B
+	// y =    a*x+ b
+	double a, b;
+	a = -A/B;
+	b = -C/B;
+
+	std::cout << "A: " << TMath::ATan(a)*TMath::RadToDeg() << std::endl;
+
+	double return_par;
+	if (a_b == 0) return_par = a;
+	if (a_b == 1) return_par = b;
+
+	return return_par;
 }

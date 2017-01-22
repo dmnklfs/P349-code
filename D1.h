@@ -50,6 +50,7 @@ private:
     int D1_no_of_planes_with_hits;
     int D1_no_of_cells_with_hits;
 
+    bool fit_with_inclined;
     double half_x_dim;
     double half_z_dim;
     double x_lab_position;

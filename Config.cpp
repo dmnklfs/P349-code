@@ -225,7 +225,7 @@ Config::Config()
 		D1_L8_calibration_distances.push_back(D1_distance_l8[i]);
 	}
 	
-	
+	fit_with_inclined = true;
 	for (int i = 0; i < 8; i++)
 	{
 		if (i==0||i==1||i==6||i==7)

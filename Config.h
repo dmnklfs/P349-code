@@ -68,6 +68,7 @@ public:
 	double track_angle_max;
 
 	// ---DRIFT CHAMBER D1---
+	bool fit_with_inclined;
 	// min and max number of hits in layers (if set to -1: any value is ok)
 	int D1_layer_max_hits[8];
 	int D1_layer_min_hits[8];

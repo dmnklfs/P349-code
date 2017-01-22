@@ -94,8 +94,8 @@ int main(int argc, char *argv[])
     
     calibration -> set_no_of_iteration(0);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers_biased(100000);
-    calibration -> fit_in_3d();
+    //calibration -> fit_events_in_straight_layers_biased(100000);
+    calibration -> fit_events();
     // add: make a 3d track, make projections
 
     calibration -> save_histograms();

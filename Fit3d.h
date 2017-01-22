@@ -55,7 +55,9 @@ public:
 	void calculate_projections_on_hit_planes_calculations();
 	void calculate_projections_on_hit_planes_fit();
 	void make_fit_to_lines();
-	
+	double get_track_8lines_projection_params(int direction, int a_b);
+	bool err_flag();
+
 	void draw_event();
 
 private:
@@ -113,6 +115,7 @@ private:
 	double x_lab_position;
 	double z_lab_position;
 	double distance_to_1st_layer;
+	bool errflag;
 };
 
 
