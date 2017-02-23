@@ -89,7 +89,7 @@ double LineFit::GlobalFCN(const double * par)
 	{
 		//std::cout << errors[i] << std::endl;
 		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
-		t = TMath::Abs(z[ straight[i] ] - zp);
+		t = z[ straight[i] ] - zp;//TMath::Abs(z[ straight[i] ] - zp);
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
 		delta  = x[i] - xi;
@@ -98,7 +98,7 @@ double LineFit::GlobalFCN(const double * par)
 
 	for (int i = 0; i < 4; i++)
 	{
-		t = TMath::Abs(z[2+i] - zp); // 1st inclined layer no = 2 (3rd layer counting in the beam direction)
+		t = z[2+i] - zp;//TMath::Abs(z[2+i] - zp); // 1st inclined layer no = 2 (3rd layer counting in the beam direction)
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
@@ -132,7 +132,7 @@ void LineFit::fit_with_minuit()
 	std::vector<double> output;
 	TMinuit *gMinuit = new TMinuit(7);  //initialize TMinuit with a maximum of 5 params
 	gMinuit->SetFCN(ffcn);
-	gMinuit->SetPrintLevel(-1);
+	gMinuit->SetPrintLevel(0);
 
 	Double_t arglist[10];
 	Int_t ierflg = 0;
@@ -141,15 +141,18 @@ void LineFit::fit_with_minuit()
 	// 0 - optimize time, less calls
 	// 1 - normal
 	// 2 - optimize result, time consuming (wasted calls)
-	arglist[0] = 0;
+	arglist[0] = 2;
 	gMinuit->mnexcm( "SET STR", arglist, 1,ierflg );
 
+	// Sets the value of up (default value= 1.), defining parameter errors.
+	// MINUIT defines parameter errors as the change in parameter value required to change the function value by up.
+	// Normally, for chisquared fits up=1, and for negative log likelihood, up=0.5.
 	arglist[0] = 1;
 	gMinuit->mnexcm("SET ERR", arglist ,1,ierflg);
 
 	// Set start values and step sizes for parameters
 	double vstart[4] = {start_xp, start_yp, start_ux, start_uy};
-	double step[4] = {0.01 , 0.01, 0.1, 0.01};
+	double step[4] = {0.01 , 0.01, 0.0001, 0.0001};
 	gMinuit->mnparm(0, "xp", vstart[0], step[0], 0, 0, ierflg);
 	gMinuit->mnparm(1, "yp", vstart[1], step[1], 0, 0, ierflg);
 	gMinuit->mnparm(2, "ux", vstart[2], step[2], 0, 0, ierflg);

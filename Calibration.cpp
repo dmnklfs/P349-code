@@ -168,14 +168,18 @@ void Calibration::save_histograms()
 	plot_chi2_cut() -> SaveAs(name);
 	name = Form("results/tracks_anglular_distribution_iteration_%d.png",no_of_iteration);
 	plot_angle_distribution() -> SaveAs(name);
+	//name = Form("test_%d", event_no);
+	TFile test_file("file_calib.root","UPDATE");
 	for (int i = 0; i < 8; i++)
 	{
 		if (0==i||1==i||6==i||7==i)
 		{
 			name = Form("results/layer%d_delta_iteration_%d.png",i+1, no_of_iteration);
-			Layer[i] -> CalibrationLayer::plot_delta() -> SaveAs(name);	
+			Layer[i] -> CalibrationLayer::plot_delta() -> SaveAs(name);
+			Layer[i] -> CalibrationLayer::plot_delta() -> Write();	
 		}
 	}
+	test_file.Write();
 }
 
 void Calibration::fit_events()
@@ -239,7 +243,7 @@ void Calibration::fit_in_3d()
 			// straight
 			aSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,0);
 			bSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,1);
-			std::cout << " ok " << aSt << std::endl;
+			//std::cout << " ok " << aSt << std::endl;
 			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
 			if (track_angle < 0) track_angle = 180+track_angle;
 			//chi2St = results.at(2);
@@ -299,6 +303,7 @@ void Calibration::fit_in_3d()
 					Layer[4+i] -> CalibrationData.at(i).track_a = aSt;
 					Layer[4+i] -> CalibrationData.at(i).track_b = bSt;
 					Layer[4+i] -> CalibrationData.at(i).track_angle = track_angle;
+					// set deltas, calculate deltas??
 					Layer[4+i] -> calculate_deltas(i);
 				}
 			}

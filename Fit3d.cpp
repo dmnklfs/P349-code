@@ -305,12 +305,12 @@ void Fit3d::calculate_projections_on_hit_planes_fit()
 	double angle;
 
 	// straight
-	std::cout << "track " << track3d_fit_vector.X() << std::endl;
+	//std::cout << "track " << track3d_fit_vector.X() << std::endl;
 	projection_straight_fit.SetX(track3d_fit_vector.X());
 	projection_straight_fit.SetY(0);
 	projection_straight_fit.SetZ(track3d_fit_vector.Z());
 	projection_straight_fit.Unit();
-	std::cout << "projection track " << projection_straight_fit.X() << std::endl;
+	//std::cout << "projection track " << projection_straight_fit.X() << std::endl;
 	
 	// inclined1
 	angle = 31*TMath::DegToRad();
@@ -744,7 +744,7 @@ double Fit3d::get_track_8lines_projection_params(int direction, int a_b)
 	a = -A/B;
 	b = -C/B;
 
-	std::cout << "A: " << TMath::ATan(a)*TMath::RadToDeg() << std::endl;
+	//std::cout << "A: " << TMath::ATan(a)*TMath::RadToDeg() << std::endl;
 
 	double return_par;
 	if (a_b == 0) return_par = a;
