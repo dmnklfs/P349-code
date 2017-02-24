@@ -57,8 +57,14 @@ public:
 	void make_fit_to_lines();
 	double get_track_8lines_projection_params(int direction, int a_b);
 	bool err_flag();
+	void calculate_wire_track_distances();
 
 	void draw_event();
+
+	// from 3d fitting (not calculation)
+	TVector3 return_track_point();
+	TVector3 return_track_vector();
+	double return_wire_track_dist(int _layer_no);
 
 private:
 	int event_no;
@@ -116,6 +122,8 @@ private:
 	double z_lab_position;
 	double distance_to_1st_layer;
 	bool errflag;
+
+	double wire_track_dist[8];
 };
 
 

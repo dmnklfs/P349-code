@@ -28,7 +28,8 @@
 #include "Config.h"
 #include "EventDisplay.h"
 #include "SimpleCalibration.h"
-#include "Calibration.h"
+#include "Calibration2d.h"
+#include "Calibration3d.h"
 
 #define START 1
 #define NTOF 10

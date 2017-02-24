@@ -1,5 +1,5 @@
-#ifndef CALIBRATIONLAYER_H
-#define CALIBRATIONLAYER_H
+#ifndef CALIBRATIONLAYER3D_H
+#define CALIBRATIONLAYER3D_H
 
 #include <TStyle.h>
 #include "TFile.h"
@@ -26,7 +26,7 @@
 #include <iostream>
 #include <TGraphErrors.h>
 
-struct D1_single_event_data
+struct D1_single_event_data3d
 {
 	double wire_pos_X;
 	double wire_pos_Z;
@@ -35,36 +35,39 @@ struct D1_single_event_data
 	double hit_pos_Z;
 	int left_right; // left - right information
 	double drift_time;
-	double distance_from_wire;
+	double distance_from_wire; // from drift time, seems 2b unused, 24.02.17
+	double distance_wire_track; // from 
 	double error;
 	double delta;
-	double track_a; // projections of 3d track on a given axis
-	double track_b; // projections of 3d track on a given axis
+	double track_A; // track params: Ax + By + Cz = 0, needs to be changed when 3d unbiased fitting is prepared
+	double track_B; // 
+	double track_C; // 
 	double track_angle;
 	double chi2;
 	bool errflag;
 	int calib_bin;
 	int corr_bin;
 
-	D1_single_event_data()
+	D1_single_event_data3d()
 	{
 		calib_bin= -1;
 		corr_bin = -1;
 		chi2 = -1;
 		hit_pos_Xerr = 1;
-		track_a = -1;
-		track_b = -1;
+		track_A = -1;
+		track_B = -1;
+		track_C = -1;
 		track_angle = -1;
 	}
 };
 
-class CalibrationLayer
+class CalibrationLayer3d
 {
 public:
 
-	CalibrationLayer();
-	CalibrationLayer(int _layer_no, const std::vector<double> &_CalibTimes, const std::vector<double> &_CalibDistances);
-	~CalibrationLayer();
+	CalibrationLayer3d();
+	CalibrationLayer3d(int _layer_no, const std::vector<double> &_CalibTimes, const std::vector<double> &_CalibDistances);
+	~CalibrationLayer3d();
 
 	// in general - for constructor
 	void set_max_time_range(double _max_time_range);
@@ -100,7 +103,7 @@ public:
 	void set_no_of_iteration(double _no_of_iteration);
 
 	// this should not be like that...
-	std::vector<D1_single_event_data> CalibrationData;
+	std::vector<D1_single_event_data3d> CalibrationData;
 
 private:
 	int no_of_iteration;

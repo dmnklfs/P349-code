@@ -752,3 +752,48 @@ double Fit3d::get_track_8lines_projection_params(int direction, int a_b)
 
 	return return_par;
 }
+
+TVector3 Fit3d::return_track_point()
+{
+	return track3d_fit_point;
+}
+
+TVector3 Fit3d::return_track_vector()
+{
+	return track3d_fit_vector;
+}
+
+void Fit3d::calculate_wire_track_distances()
+{
+	// scaling
+	double t;
+	// points in which the line goes through the certain z plane
+	double xi, yi;
+	double zp = track3d_fit_point.Z();
+	std::cout << zp << std::endl;
+	for (i=0;i<4; i++)
+	{
+		//std::cout << errors[i] << std::endl;
+		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
+		t = z[ straight[i] ] - zp;//TMath::Abs(z[ straight[i] ] - zp);
+		xi = t*track3d_fit_vector.X() + track3d_fit_point.X();
+		yi = t*track3d_fit_vector.Y() + track3d_fit_point.Y();
+		delta  = TMath::Abs(x_straight[i] - xi);
+		wire_track_dist[i] = delta;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		t = z[2+i] - zp;//TMath::Abs(z[2+i] - zp); // 1st inclined layer no = 2 (3rd layer counting in the beam direction)
+		xi = t*track3d_fit_vector.X() + track3d_fit_point.X();
+		yi = t*track3d_fit_vector.Y() + track3d_fit_point.Y();
+		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
+		chisq += delta;
+	}
+
+}
+
+double Fit3d::return_wire_track_dist(int _layer_no)
+{
+
+}

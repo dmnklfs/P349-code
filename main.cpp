@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	SingleEvent *single_event;
 	//EventDisplay *event_to_display;
 	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
-  Calibration *calibration = new Calibration(config);
+  Calibration3d *calibration = new Calibration3d(config);
 	std::cout << "* start of the loop over the events" << std::endl;
   int delme_iter = 0;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
@@ -105,9 +105,9 @@ int main(int argc, char *argv[])
     calibration -> plot_current_calibration();
     calibration -> deletations();
 
-    /*calibration -> set_no_of_iteration(1);
+    calibration -> set_no_of_iteration(1);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers_biased(100000);
+    calibration -> fit_events();
     // add: make a 3d track, make projections
 
     calibration -> save_histograms();
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
     calibration -> plot_current_calibration();
     calibration -> deletations();
 
-    calibration -> set_no_of_iteration(2);
+    /*calibration -> set_no_of_iteration(2);
     calibration -> calculate_hit_position();
     calibration -> fit_events_in_straight_layers_biased(100000);
     // add: make a 3d track, make projections

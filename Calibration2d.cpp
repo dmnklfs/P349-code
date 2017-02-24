@@ -1,19 +1,12 @@
-#include "Calibration.h"
+#include "Calibration2d.h"
 
-Calibration::Calibration()
+Calibration2d::Calibration2d()
 { 
 	std::cout << "Warning: You are probably trying to run a Calibration metod. Note that it requires strict conditions on the number of events in the straight layers of the D1. In case of the problems: check the config/remove this objects/adjust methods of the Calibration class/check event selection criteria in the SingleEvent class. Note that the postion in D1 should be calculated FOR WIRES (now)." << std::endl;
 }
 
-Calibration::Calibration(const Config &_config)
+Calibration2d::Calibration2d(const Config &_config)
 {
-	fit_with_inclined = _config.fit_with_inclined;
-	// for drawing
-	half_x_dim = _config.D1_half_x_dim;
-	half_z_dim = _config.D1_half_z_dim;
-	x_lab_position = _config.D1_x_lab_position;
-	z_lab_position = _config.D1_z_lab_position;
-	distance_to_1st_layer = _config.D1_distance_to_1st_layer;
 	
 	no_of_iteration = 1; 
 	no_of_calib_bins = _config.D1_L1_calibration_times.size()-1;
@@ -27,27 +20,27 @@ Calibration::Calibration(const Config &_config)
 	std::cout << "* simple calibration of the D1 will be done" << std::endl;
 	std::cout << "	WARNING: You are probably trying to run a Simple Calibration metod. Note that it requires strict conditions on the number of events in the straight layers of the D1. In case of the problems: check the config/remove this objects/adjust methods of the Calibration class/check event selection criteria in the SingleEvent class. Note that the postion in D1 should be calculated FOR WIRES (now)." << std::endl;
 
-	// init independent from fit_with_inclined
 	// initialization of the layers
-	Layer[0] = new CalibrationLayer(1, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances);
-	Layer[1] = new CalibrationLayer(2, _config.D1_L2_calibration_times, _config.D1_L2_calibration_distances);
-	Layer[2] = new CalibrationLayer(3, _config.D1_L3_calibration_times, _config.D1_L3_calibration_distances);
-	Layer[3] = new CalibrationLayer(4, _config.D1_L4_calibration_times, _config.D1_L4_calibration_distances);
-	Layer[4] = new CalibrationLayer(5, _config.D1_L5_calibration_times, _config.D1_L5_calibration_distances);
-	Layer[5] = new CalibrationLayer(6, _config.D1_L6_calibration_times, _config.D1_L6_calibration_distances);
-	Layer[6] = new CalibrationLayer(7, _config.D1_L7_calibration_times, _config.D1_L7_calibration_distances);
-	Layer[7] = new CalibrationLayer(8, _config.D1_L8_calibration_times, _config.D1_L8_calibration_distances);
+	Layer[0] = new CalibrationLayer2d(1, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances);
+	Layer[1] = new CalibrationLayer2d(2, _config.D1_L2_calibration_times, _config.D1_L2_calibration_distances);
+	Layer[6] = new CalibrationLayer2d(7, _config.D1_L7_calibration_times, _config.D1_L7_calibration_distances);
+	Layer[7] = new CalibrationLayer2d(8, _config.D1_L8_calibration_times, _config.D1_L8_calibration_distances);
 	for (int i = 0; i < 8; i++)
 	{
-		//if (0==i||1==i||6==i||7==i)
-		if (true)
+		if (0==i||1==i||6==i||7==i)
 		{
-			Layer[i] -> CalibrationLayer::set_no_of_corr_bins(no_of_corr_bins);
-			Layer[i] -> CalibrationLayer::set_max_time_range(max_time_range);
-			Layer[i] -> CalibrationLayer::set_no_of_bin_in_calib();
+			Layer[i] -> CalibrationLayer2d::set_no_of_corr_bins(no_of_corr_bins);
+			Layer[i] -> CalibrationLayer2d::set_max_time_range(max_time_range);
+			Layer[i] -> CalibrationLayer2d::set_no_of_bin_in_calib();
+		}
+		else 
+		{
+			// layers with inclined wires *somehow* initialized - for now, 24.11.2016
+			Layer[i] = new CalibrationLayer2d(i+1, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances);
+			Layer[i] -> CalibrationLayer2d::set_no_of_corr_bins(no_of_corr_bins);
+			Layer[i] -> CalibrationLayer2d::set_max_time_range(max_time_range);
 		}
 	}
-
 	TString name;
 	name = Form("#chi^{2}",1);
 	chi2 = new TH1F(name, name, 2000, -0.25, 25);
@@ -78,88 +71,96 @@ Calibration::Calibration(const Config &_config)
 	}
 }
 
-Calibration::~Calibration()
+Calibration2d::~Calibration2d()
 {
 
 }
 
-void Calibration::tell_no_of_events()
+void Calibration2d::tell_no_of_events()
 {
 	unsigned int no_of_chosen_events;
 	no_of_chosen_events = Layer[0] -> CalibrationData.size();
 	std::cout << "NO OF EVENTS FOR CALIBRATION (in each layer): " << no_of_chosen_events << std::endl;
 }
 
-void Calibration::get_data(data_for_D1_calibration _single_event_data)
+void Calibration2d::get_data(data_for_D1_calibration _single_event_data)
 {
 	double wirepos1, wirepos2;
 	int left_right[8];
-	for (int i = 0; i < 4; i++)
+	wirepos1 = _single_event_data.positionsX[0];
+	wirepos2 = _single_event_data.positionsX[1];
+	if (wirepos1 > wirepos2)
 	{
-		if (i==0||i==3||(i==1&&fit_with_inclined)||(i==2&&fit_with_inclined))
-		{
-			wirepos1 = _single_event_data.positionsX[2*i];
-			wirepos2 = _single_event_data.positionsX[2*i+1];
-			if (wirepos1 > wirepos2)
-			{
-				left_right[2*i] 	= -1;
-				left_right[2*i+1] 	= +1;
-			}
-			else
-			{
-				left_right[2*i] 	= +1;
-				left_right[2*i+1] 	= -1;
-			}
-		}
+		left_right[0] 	= -1;
+		left_right[1] 	= +1;
+	}
+	else
+	{
+		left_right[0] 	= +1;
+		left_right[1] 	= -1;
+	}
+	wirepos1 = _single_event_data.positionsX[6];
+	wirepos2 = _single_event_data.positionsX[7];
+	if (wirepos1 > wirepos2)
+	{
+		left_right[6] 	= -1;
+		left_right[7] 	= +1;
+	}
+	else
+	{
+		left_right[6] 	= +1;
+		left_right[7] 	= -1;
 	}
 
 	for (int i = 0; i < 8; i++)
 	{
-		// always straight, inclined only when they are set to
-		if(i==0||i==1||i==6||i==7||((i==2||i==3||i==4||i==5)&&fit_with_inclined))
+		if (0==i||1==i||6==i||7==i)
 		{
-			Layer[i] -> CalibrationLayer::get_data(_single_event_data.positionsX[i], _single_event_data.positionsZ[i], _single_event_data.drift_times[i], left_right[i]);
+			Layer[i] -> CalibrationLayer2d::get_data(_single_event_data.positionsX[i], _single_event_data.positionsZ[i], _single_event_data.drift_times[i], left_right[i]);
+		}
+		else 
+		{
+			// layers with inclined wires *somehow* initialized - for now, 24.11.2016
+			Layer[i] -> CalibrationLayer2d::get_data(_single_event_data.positionsX[0], _single_event_data.positionsZ[0], _single_event_data.drift_times[0], left_right[0]);;
 		}
 	}
 }
 
-void Calibration::set_no_of_iteration(double _no_of_iteration)
+void Calibration2d::set_no_of_iteration(double _no_of_iteration)
 {
 	no_of_iteration = _no_of_iteration;
 	for (int i = 0; i < 8; i++)
 	{
-		//if (0==i||1==i||6==i||7==i)
-		if (i==0||i==1||i==6||i==7||((i==2||i==3||i==4||i==5)&&fit_with_inclined))
+		if (0==i||1==i||6==i||7==i)
 		{
-			Layer[i] -> CalibrationLayer::set_no_of_iteration(_no_of_iteration);
+			Layer[i] -> CalibrationLayer2d::set_no_of_iteration(_no_of_iteration);
 		}
 	}
 }
 
-void Calibration::calculate_hit_position()
+void Calibration2d::calculate_hit_position()
 {
 	for (int i = 0; i < 8; i++)
 	{
-		if (i==0||i==1||i==6||i==7||((i==2||i==3||i==4||i==5)&&fit_with_inclined))
+		if (0==i||1==i||6==i||7==i)
 		{
-			Layer[i] -> CalibrationLayer::calculate_hit_position();
+			Layer[i] -> CalibrationLayer2d::calculate_hit_position();
 		}
 	}
 }
 
-void Calibration::set_no_of_bin_in_event()
+void Calibration2d::set_no_of_bin_in_event()
 {
 	for (int i = 0; i < 8; i++)
 	{
-		//if (0==i||1==i||6==i||7==i)
-		if (i==0||i==1||i==6||i==7||((i==2||i==3||i==4||i==5)&&fit_with_inclined))
+		if (0==i||1==i||6==i||7==i)
 		{
-			Layer[i] -> CalibrationLayer::set_no_of_bin_in_event();
+			Layer[i] -> CalibrationLayer2d::set_no_of_bin_in_event();
 		}
 	}
 }
 
-void Calibration::save_histograms()
+void Calibration2d::save_histograms()
 {
 	TString name;
 	name = Form("results/chi2_iteration_%d.png",no_of_iteration);
@@ -168,152 +169,23 @@ void Calibration::save_histograms()
 	plot_chi2_cut() -> SaveAs(name);
 	name = Form("results/tracks_anglular_distribution_iteration_%d.png",no_of_iteration);
 	plot_angle_distribution() -> SaveAs(name);
-	//name = Form("test_%d", event_no);
-	TFile test_file("file_calib.root","UPDATE");
 	for (int i = 0; i < 8; i++)
 	{
 		if (0==i||1==i||6==i||7==i)
 		{
 			name = Form("results/layer%d_delta_iteration_%d.png",i+1, no_of_iteration);
-			Layer[i] -> CalibrationLayer::plot_delta() -> SaveAs(name);
-			Layer[i] -> CalibrationLayer::plot_delta() -> Write();	
+			Layer[i] -> CalibrationLayer2d::plot_delta() -> SaveAs(name);	
 		}
 	}
-	test_file.Write();
 }
 
-void Calibration::fit_events()
+void Calibration2d::fit_events()
 {
-	if (fit_with_inclined)
-	{
-		//fit_events_in_straight_layers_biased(100000);
-		fit_in_3d();
-	}
-	else fit_events_in_straight_layers_biased(100000);
-
+	fit_events_in_straight_layers_biased(10000);
+	//fit_events_in_straight_layers_unbiased(10000);
 }
 
-void Calibration::fit_in_3d()
-{
-	int layers_numbers[4];
-	layers_numbers[0] = 0;
-	layers_numbers[1] = 1;
-	layers_numbers[2] = 6;
-	layers_numbers[3] = 7;
-
-	double aSt, bSt, track_angle;
-	double hits_positionsX_all[8];
-	double hits_positionsZ_all[8];
-	double errors_all[8];
-	unsigned int no_of_chosen_events;
-	no_of_chosen_events = Layer[0] -> CalibrationData.size();
-	for (unsigned int i = 0; i < no_of_chosen_events; i++)
-	{
-		//std::cout << "ok " << std::endl;
-		//std::cout << i << std::endl;
-		for (int j = 0; j < 8; j++)
-		{
-			//std::cout << "layer " << j << std::endl;
-			hits_positionsX_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_X;
-			hits_positionsZ_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Z;
-			errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
-		}
-		
-		Fit3d *fit3d = new Fit3d(i);
-		fit3d -> Fit3d::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all);
-		fit3d -> Fit3d::fit_straight_layer();
-		fit3d -> Fit3d::fit_inclined_layers();
-		fit3d -> calculate_xy_functions();
-		fit3d -> Fit3d::set_hit_planes_vectors();
-		fit3d -> Fit3d::calculate_normal_to_hit_planes();
-		fit3d -> Fit3d::calculate_hit_planes_eq();
-		fit3d -> Fit3d::calculate_intersection_vectors();
-		fit3d -> Fit3d::calculate_intersection_points();
-		fit3d -> Fit3d::calculate_3d_track_parameters();
-		fit3d -> Fit3d::set_detector_position(x_lab_position, z_lab_position, half_x_dim, half_z_dim, distance_to_1st_layer);
-		fit3d -> Fit3d::calculate_projections_on_hit_planes_calculations();
-
-		fit3d -> Fit3d::make_fit_to_lines();
-		fit3d -> Fit3d::calculate_projections_on_hit_planes_fit();
-		fit3d -> Fit3d::draw_event();
-
-
-		if (!(fit3d -> Fit3d::err_flag()))
-		{
-			// straight
-			aSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,0);
-			bSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,1);
-			//std::cout << " ok " << aSt << std::endl;
-			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
-			if (track_angle < 0) track_angle = 180+track_angle;
-			//chi2St = results.at(2);
-			angle_distribution_no_cut[0] -> Fill(track_angle);
-			if ( was_correct_angle(track_angle) )
-			{
-				angle_distribution[0] -> Fill(track_angle);
-				//chi2_cut -> Fill(chi2St);
-				//chi2 -> Fill(chi2St);
-				// set values is straight layers
-				for (int j = 0; j < 4; j++)
-				{
-					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_a = aSt;
-					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_b = bSt;
-					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_angle = track_angle;
-					Layer[layers_numbers[j]] -> calculate_deltas(i);
-				}
-			}
-
-			// inclined1
-			aSt = fit3d -> Fit3d::get_track_8lines_projection_params(1,0);
-			bSt = fit3d -> Fit3d::get_track_8lines_projection_params(1,1);
-			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
-			if (track_angle < 0) track_angle = 180+track_angle;
-			//chi2St = results.at(2);
-			//angle_distribution_no_cut[0] -> Fill(track_angle);
-			if ( was_correct_angle(track_angle) )
-			{
-				//angle_distribution[0] -> Fill(track_angle);
-				//chi2_cut -> Fill(chi2St);
-				//chi2 -> Fill(chi2St);
-				// set values is straight layers
-				for (int j = 0; j < 2; j++)
-				{
-					Layer[2+i] -> CalibrationData.at(i).track_a = aSt;
-					Layer[2+i] -> CalibrationData.at(i).track_b = bSt;
-					Layer[2+i] -> CalibrationData.at(i).track_angle = track_angle;
-					Layer[2+i] -> calculate_deltas(i);
-				}
-			}
-
-			// inclined2
-			aSt = fit3d -> Fit3d::get_track_8lines_projection_params(2,0);
-			bSt = fit3d -> Fit3d::get_track_8lines_projection_params(2,1);
-			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
-			if (track_angle < 0) track_angle = 180+track_angle;
-			//chi2St = results.at(2);
-			//angle_distribution_no_cut[0] -> Fill(track_angle);
-			if ( was_correct_angle(track_angle) )
-			{
-				//angle_distribution[0] -> Fill(track_angle);
-				//chi2_cut -> Fill(chi2St);
-				//chi2 -> Fill(chi2St);
-				// set values is straight layers
-				for (int j = 0; j < 2; j++)
-				{
-					Layer[4+i] -> CalibrationData.at(i).track_a = aSt;
-					Layer[4+i] -> CalibrationData.at(i).track_b = bSt;
-					Layer[4+i] -> CalibrationData.at(i).track_angle = track_angle;
-					// set deltas, calculate deltas??
-					Layer[4+i] -> calculate_deltas(i);
-				}
-			}
-		}
-		delete fit3d;
-	}
-
-}
-
-void Calibration::fit_events_in_straight_layers_biased(double _chi2_cut)
+void Calibration2d::fit_events_in_straight_layers_biased(double _chi2_cut)
 {
 	std::vector<double> results;
 	double hits_positionsX[4];
@@ -379,7 +251,7 @@ void Calibration::fit_events_in_straight_layers_biased(double _chi2_cut)
 	}
 }
 
-void Calibration::fit_events_in_straight_layers_unbiased(double _chi2_cut)
+void Calibration2d::fit_events_in_straight_layers_unbiased(double _chi2_cut)
 {
 	std::vector<double> results;
 	double hits_positionsX[4];
@@ -553,12 +425,11 @@ void Calibration::fit_events_in_straight_layers_unbiased(double _chi2_cut)
 		// there should be some 3d fitting
 	}// end of loop over all calib events
 }
-
-void Calibration::deletations()
+void Calibration2d::deletations()
 {
 	for (int i = 0; i < 8; i++)
 	{
-		Layer[i] -> CalibrationLayer::deletations();
+		Layer[i] -> CalibrationLayer2d::deletations();
 	}
 	StraightLayersTracks_apar.clear();
 	StraightLayersTracks_bpar.clear();
@@ -574,10 +445,9 @@ void Calibration::deletations()
 		angle_distribution[i] -> Reset();
 		angle_distribution_no_cut[i] -> Reset();
 	}
-	
 }
 
-TCanvas* Calibration::plot_chi2()
+TCanvas* Calibration2d::plot_chi2()
 {
 	TString name;
 	name = "c_#chi^{2}_1";
@@ -591,7 +461,7 @@ TCanvas* Calibration::plot_chi2()
 	return c;
 }
 
-TCanvas* Calibration::plot_chi2_cut()
+TCanvas* Calibration2d::plot_chi2_cut()
 {
 	TString name;
 	name = "c_#chi^{2}_2";
@@ -605,20 +475,20 @@ TCanvas* Calibration::plot_chi2_cut()
 	return c2;
 }
 
-void Calibration::fit_delta_projections()
+void Calibration2d::fit_delta_projections()
 {
 	TString name;
 	name = Form("results/DeltaProjections1_iteration_%d/",no_of_iteration);
 	Layer[0] -> fit_delta_projections(name);
 	name = Form("results/DeltaProjections2_iteration_%d/",no_of_iteration);
 	Layer[1] -> fit_delta_projections(name);
-	name = Form("results/DeltaProjections7_iteration_%d/",no_of_iteration);
+	name = Form("results/DeltaProjections6_iteration_%d/",no_of_iteration);
 	Layer[6] -> fit_delta_projections(name);
-	name = Form("results/DeltaProjections8_iteration_%d/",no_of_iteration);
+	name = Form("results/DeltaProjections7_iteration_%d/",no_of_iteration);
 	Layer[7] -> fit_delta_projections(name);
 }
 
-void Calibration::apply_corrections()
+void Calibration2d::apply_corrections()
 {
 	Layer[0] -> apply_corrections();
 	Layer[1] -> apply_corrections();
@@ -626,27 +496,27 @@ void Calibration::apply_corrections()
 	Layer[7] -> apply_corrections();
 }
 
-void Calibration::set_pos_Xerr()
+void Calibration2d::set_pos_Xerr()
 {
 	Layer[0] -> set_pos_Xerr();
 	Layer[1] -> set_pos_Xerr();
 	Layer[6] -> set_pos_Xerr();
 	Layer[7] -> set_pos_Xerr();
 }
-void Calibration::plot_current_calibration()
+void Calibration2d::plot_current_calibration()
 {
 	TString name;
-	for (int i = 0; i < 8; i++)
-	{
-		if (i==0||i==1||i==6||i==7)
-		{
-			name = Form("results/layer%d_calibration_iteration_%d.png",i+1, no_of_iteration);
-			Layer[i] -> plot_current_calibration() -> SaveAs(name);
-		}
-	}
+	name = Form("results/layer1_calibration_iteration_%d.png",no_of_iteration);
+	Layer[0] -> plot_current_calibration() -> SaveAs(name);
+	name = Form("results/layer2_calibration_iteration_%d.png",no_of_iteration);
+	Layer[1] -> plot_current_calibration() -> SaveAs(name);
+	name = Form("results/layer7_calibration_iteration_%d.png",no_of_iteration);
+	Layer[6] -> plot_current_calibration() -> SaveAs(name);
+	name = Form("results/layer8_calibration_iteration_%d.png",no_of_iteration);
+	Layer[7] -> plot_current_calibration() -> SaveAs(name);
 }
 
-TCanvas* Calibration::Calibration::plot_angle_distribution()
+TCanvas* Calibration2d::plot_angle_distribution()
 {
 	TString name;
 	name = Form("Track angles distribution iteration %d", no_of_iteration);
@@ -669,7 +539,7 @@ TCanvas* Calibration::Calibration::plot_angle_distribution()
 	return c;
 }
 
-bool Calibration::was_correct_angle(double track_angle)
+bool Calibration2d::was_correct_angle(double track_angle)
 {
 	if (track_angle > track_angle_min && track_angle < track_angle_max) return true;
 	else return false;

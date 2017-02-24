@@ -1,5 +1,5 @@
-#ifndef CALIBRATION_H
-#define CALIBRATION_H
+#ifndef CALIBRATION3D_H
+#define CALIBRATION3D_H
 
 #include "TFile.h"
 #include "TH1.h"
@@ -26,20 +26,20 @@
 #include "Config.h"
 #include "MinuitFit.h"
 #include "Fit3d.h"
-#include "CalibrationLayer.h"
+#include "CalibrationLayer3d.h"
 #include <TMath.h>
 
-class Calibration
+class Calibration3d
 {
 public:
 
-	Calibration();
-	Calibration(const Config &_config);
-	~Calibration();
+	Calibration3d();
+	Calibration3d(const Config &_config);
+	~Calibration3d();
 
 	void get_data(data_for_D1_calibration _single_event_data);
 	void tell_no_of_events();
-	void solve_lr_ambiguity(const CalibrationLayer &layer1, const CalibrationLayer &layer2);
+	void solve_lr_ambiguity(const CalibrationLayer3d &layer1, const CalibrationLayer3d &layer2);
 	void calculate_hit_position();
 	void save_histograms();
 	void fit_events_in_straight_layers_biased(double _chi2_cut);
@@ -65,7 +65,7 @@ public:
 
 private:
 	bool fit_with_inclined;
-	CalibrationLayer *Layer[8];
+	CalibrationLayer3d *Layer[8];
 	int no_of_iteration;
 	int no_of_calib_bins;
 	int no_of_corr_bins;
@@ -78,6 +78,8 @@ private:
 	TH1F *angle_distribution_no_cut[4];
 	double track_angle_min;
 	double track_angle_max;
+
+	TVector3 track3d_fit_point, track3d_fit_vector;
 
 	// a, b track parameters in the frames of each set of layers (straight, Pl - +31, M - -31)
 	std::vector<double> StraightLayersTracks_apar;

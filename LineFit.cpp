@@ -20,7 +20,7 @@ void LineFit::set_z_values(double *_z)
 	{
 		z[i] = _z[i];
 	}
-	zp = z[0]-20;
+	zp = 0;//z[0]-20;
 }
 
 void LineFit::set_x_straight_values(double *_x)
@@ -132,7 +132,7 @@ void LineFit::fit_with_minuit()
 	std::vector<double> output;
 	TMinuit *gMinuit = new TMinuit(7);  //initialize TMinuit with a maximum of 5 params
 	gMinuit->SetFCN(ffcn);
-	gMinuit->SetPrintLevel(0);
+	gMinuit->SetPrintLevel(-1);
 
 	Double_t arglist[10];
 	Int_t ierflg = 0;

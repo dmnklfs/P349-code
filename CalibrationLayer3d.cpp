@@ -1,11 +1,11 @@
-#include "CalibrationLayer.h"
+#include "CalibrationLayer3d.h"
 
-CalibrationLayer::CalibrationLayer()
+CalibrationLayer3d::CalibrationLayer3d()
 {
 
 }
 
-CalibrationLayer::CalibrationLayer(int _layer_no, const std::vector<double> &_CalibTimes, const std::vector<double> &_CalibDistances)
+CalibrationLayer3d::CalibrationLayer3d(int _layer_no, const std::vector<double> &_CalibTimes, const std::vector<double> &_CalibDistances)
 {
 	max_time_range = -1;
 	no_of_corr_bins = -1;
@@ -21,12 +21,12 @@ CalibrationLayer::CalibrationLayer(int _layer_no, const std::vector<double> &_Ca
 	for (int i = 0; i < DriftTimes.size(); i++) XErrors.push_back(0);
 }
 
-CalibrationLayer::~CalibrationLayer()
+CalibrationLayer3d::~CalibrationLayer3d()
 {
 
 }
 
-void CalibrationLayer::set_no_of_corr_bins(double _no_of_corr_bins)
+void CalibrationLayer3d::set_no_of_corr_bins(double _no_of_corr_bins)
 {
 	no_of_corr_bins = _no_of_corr_bins;
 	if (-1!=max_time_range)
@@ -45,7 +45,7 @@ void CalibrationLayer::set_no_of_corr_bins(double _no_of_corr_bins)
 	}
 }
 
-void CalibrationLayer::set_max_time_range(double _max_time_range)
+void CalibrationLayer3d::set_max_time_range(double _max_time_range)
 {
 	max_time_range = _max_time_range;
 	if (-1!=no_of_corr_bins)
@@ -65,7 +65,7 @@ void CalibrationLayer::set_max_time_range(double _max_time_range)
 	}
 }
 
-void CalibrationLayer::set_no_of_bin_in_event()
+void CalibrationLayer3d::set_no_of_bin_in_event()
 {
 	double dtime;
 	for (unsigned int i = 0; i < CalibrationData.size(); i++)
@@ -91,7 +91,7 @@ void CalibrationLayer::set_no_of_bin_in_event()
 	}
 }
 
-void CalibrationLayer::set_no_of_bin_in_calib()
+void CalibrationLayer3d::set_no_of_bin_in_calib()
 {
 	double dtime;
 	for (unsigned int i = 0; i < DriftTimes.size(); i++)
@@ -108,14 +108,14 @@ void CalibrationLayer::set_no_of_bin_in_calib()
 	}
 }
 
-void CalibrationLayer::set_no_of_iteration(double _no_of_iteration)
+void CalibrationLayer3d::set_no_of_iteration(double _no_of_iteration)
 {
 	no_of_iteration = _no_of_iteration;
 }
 
-void CalibrationLayer::get_data(double _wire_pos_X, double _wire_pos_Z, double _drift_time, int _lr)
+void CalibrationLayer3d::get_data(double _wire_pos_X, double _wire_pos_Z, double _drift_time, int _lr)
 {
-	D1_single_event_data data;
+	D1_single_event_data3d data;
 	data.wire_pos_X = _wire_pos_X;
 	data.wire_pos_Z = _wire_pos_Z;
 	data.drift_time = _drift_time;
@@ -124,7 +124,7 @@ void CalibrationLayer::get_data(double _wire_pos_X, double _wire_pos_Z, double _
 }
 
 // in a loop when everything is already set (lf ambiguity especially!)
-void CalibrationLayer::calculate_hit_position()
+void CalibrationLayer3d::calculate_hit_position()
 {
 	double wirex, wirez, lr, drifttime;
 	for (unsigned int i = 0; i < CalibrationData.size(); i++)
@@ -139,7 +139,7 @@ void CalibrationLayer::calculate_hit_position()
 	}
 }
 
-double CalibrationLayer::drift_time_to_distance(int i, double drift_time) // i - calib bin
+double CalibrationLayer3d::drift_time_to_distance(int i, double drift_time) // i - calib bin
 {
 	double distance;
 	int calib_bin = i;
@@ -152,7 +152,7 @@ double CalibrationLayer::drift_time_to_distance(int i, double drift_time) // i -
 	return distance;
 }
 
-double CalibrationLayer::set_pos_Xerr()
+double CalibrationLayer3d::set_pos_Xerr()
 {
 	int corr_bin;
 	double error;
@@ -169,7 +169,7 @@ double CalibrationLayer::set_pos_Xerr()
 	}
 }
 
-void CalibrationLayer::fit_delta_projections(const char* folder_name)
+void CalibrationLayer3d::fit_delta_projections(const char* folder_name)
 {
 	ProjectionConstant.clear();
 	ProjectionMean.clear();
@@ -227,7 +227,7 @@ void CalibrationLayer::fit_delta_projections(const char* folder_name)
 	delete gaussian;
 }
 
-void CalibrationLayer::apply_corrections()
+void CalibrationLayer3d::apply_corrections()
 {
 	int corr_bin;
 	for (unsigned int i = 0; i < no_of_calib_bins; i++)
@@ -244,7 +244,7 @@ void CalibrationLayer::apply_corrections()
 	SigmaForCalibration.push_back(0);
 }
 
-void CalibrationLayer::deletations()
+void CalibrationLayer3d::deletations()
 {
 	ProjectionConstant.clear();
 	ProjectionSigma.clear();
@@ -254,7 +254,7 @@ void CalibrationLayer::deletations()
 	delta_cut -> Reset();
 }
 
-TCanvas* CalibrationLayer::plot_delta()
+TCanvas* CalibrationLayer3d::plot_delta()
 {
 	TString name;
 	name = Form("c layer%d #Delta iteration %d",layer_no, no_of_iteration);
@@ -270,7 +270,7 @@ TCanvas* CalibrationLayer::plot_delta()
 	return c;
 }
 
-TCanvas* CalibrationLayer::plot_delta_cut()
+TCanvas* CalibrationLayer3d::plot_delta_cut()
 {
 	TString name;
 	name = Form("c layer%d #Delta cut iteration %d",layer_no, no_of_iteration);
@@ -286,7 +286,7 @@ TCanvas* CalibrationLayer::plot_delta_cut()
 	return c;
 }
 
-TCanvas* CalibrationLayer::plot_current_calibration()
+TCanvas* CalibrationLayer3d::plot_current_calibration()
 {
 //	std::cout << "CALIBRATION" << std::endl;
 //	for (int i = 0; i < DriftTimes.size(); i++)
@@ -295,15 +295,16 @@ TCanvas* CalibrationLayer::plot_current_calibration()
 //	}
 
 	TString name;
-	name = Form("results/layer%d_calibration_iteration_%d.txt", layer_no, no_of_iteration);
-	ofstream calibdata;
-	calibdata.open(name);
-	for (int i = 0; i < DriftTimes.size()-1; i++)
-	{
-		calibdata << DriftTimes.at(i) << " " << Distances.at(i) << " " << XErrors.at(i) << " " << SigmaForCalibration.at(i) << std::endl;
-	}
-
-	calibdata.close();
+	// save calibration as a txt file. move to separate method
+//	name = Form("results/layer%d_calibration_iteration_%d.txt", layer_no, no_of_iteration);
+//	ofstream calibdata;
+//	calibdata.open(name);
+//	for (int i = 0; i < DriftTimes.size()-1; i++)
+//	{
+//		calibdata << DriftTimes.at(i) << " " << Distances.at(i) << " " << XErrors.at(i) << " " << SigmaForCalibration.at(i) << std::endl;
+//	}
+//
+//	calibdata.close();
 
 	name = Form("c layer%d current calibration iteration %d", layer_no, no_of_iteration);
 	//TGraph* current_calibration;
@@ -326,12 +327,10 @@ TCanvas* CalibrationLayer::plot_current_calibration()
 	return c_current_calibration;
 }
 
-void CalibrationLayer::calculate_deltas(int i)
+void CalibrationLayer3d::calculate_deltas(int i)
 {
 	double x, z, a, b, x_wire;
 	double wire_track, wire_hit;
-	a = CalibrationData.at(i).track_a;
-	b = CalibrationData.at(i).track_b;
 	x = CalibrationData.at(i).hit_pos_X;
 	z = CalibrationData.at(i).hit_pos_Z;
 	x_wire = CalibrationData.at(i).wire_pos_X;
