@@ -42,6 +42,7 @@ public:
 	void calculate_start_params();
 	TVector3 return_track_point();
 	TVector3 return_track_vector();
+	double get_chisq();
 
 	bool err_flag();
 

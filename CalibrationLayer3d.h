@@ -36,7 +36,7 @@ struct D1_single_event_data3d
 	double hit_pos_Z;
 	int left_right; // left - right information
 	double drift_time;
-	double distance_from_wire; // from drift time, seems 2b unused, 24.02.17
+	double distance_wire_hit; // from drift time, seems 2b unused, 24.02.17
 	double distance_wire_track; // from 
 	double error;
 	double delta;
@@ -102,6 +102,9 @@ public:
 	void recalculate_positions();
 
 	void set_no_of_iteration(double _no_of_iteration);
+	void save_in_root_file(TH2F *_c);
+	void save_in_root_file(TGraph *_c);
+	void save_in_root_file(TH1F *_c);
 
 	// this should not be like that...
 	std::vector<D1_single_event_data3d> CalibrationData;
@@ -128,6 +131,8 @@ private:
 
 	TH2F *delta;
 	TH2F *delta_cut;
+	TH1F *wire_hit_test;
+	TH1F *wire_track_test;
 
 	std::vector<double> ProjectionConstant;
 	std::vector<double> ProjectionSigma;

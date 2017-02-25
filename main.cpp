@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 
     /*calibration -> set_no_of_iteration(2);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers_biased(100000);
+    calibration -> fit_events();
     // add: make a 3d track, make projections
 
     calibration -> save_histograms();
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
 
     calibration -> set_no_of_iteration(3);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers_biased(100000);
+    calibration -> fit_events();
     // add: make a 3d track, make projections
 
     calibration -> save_histograms();
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
 
     calibration -> set_no_of_iteration(4);
     calibration -> calculate_hit_position();
-    calibration -> fit_events_in_straight_layers_biased(100000);
+    calibration -> fit_events();
     // add: make a 3d track, make projections
 
     calibration -> save_histograms();

@@ -46,7 +46,7 @@ Calibration3d::Calibration3d(const Config &_config)
 
 	TString name;
 	name = Form("#chi^{2}",1);
-	chi2 = new TH1F(name, name, 2000, -0.25, 25);
+	chi2 = new TH1F(name, name, 1000, -0.01, 0.05);
 	chi2->GetXaxis()->SetTitle("#chi^{2}");
 	chi2->GetYaxis()->SetTitle("counts");
 	chi2->SetLineWidth(2);
@@ -147,17 +147,14 @@ void Calibration3d::save_histograms()
 	name = Form("results/tracks_anglular_distribution_iteration_%d.png",no_of_iteration);
 	plot_angle_distribution() -> SaveAs(name);
 	//name = Form("test_%d", event_no);
-	TFile test_file("file_calib.root","UPDATE");
+	//TFile test_file("results/file_calib.root","UPDATE");
 	for (int i = 0; i < 8; i++)
 	{
-		if (0==i||1==i||6==i||7==i)
-		{
-			name = Form("results/layer%d_delta_iteration_%d.png",i+1, no_of_iteration);
-			Layer[i] -> CalibrationLayer3d::plot_delta() -> SaveAs(name);
-			Layer[i] -> CalibrationLayer3d::plot_delta() -> Write();	
-		}
+		name = Form("results/layer%d_delta_iteration_%d.png",i+1, no_of_iteration);
+		Layer[i] -> CalibrationLayer3d::plot_delta() -> SaveAs(name);
+		//Layer[i] -> CalibrationLayer3d::plot_delta() -> Write();	
 	}
-	test_file.Write();
+	//test_file.Close();
 }
 
 void Calibration3d::fit_events()
@@ -167,12 +164,6 @@ void Calibration3d::fit_events()
 
 void Calibration3d::fit_in_3d()
 {
-	int layers_numbers[4];
-	layers_numbers[0] = 0;
-	layers_numbers[1] = 1;
-	layers_numbers[2] = 6;
-	layers_numbers[3] = 7;
-
 	double aSt, bSt, track_angle;
 	double wires_positionsX_all[8];
 	double hits_positionsX_all[8];
@@ -216,18 +207,18 @@ void Calibration3d::fit_in_3d()
 		track3d_fit_vector = fit3d -> Fit3d::return_track_vector();
 		fit3d -> Fit3d::calculate_wires_xy_functions();
 		fit3d -> Fit3d::calculate_wire_track_distances();
-		fit3d -> Fit3d::draw_event();
-
+		//fit3d -> Fit3d::draw_event();
+		chi2 -> Fill(fit3d -> Fit3d::get_chisq());
 
 		if (!(fit3d -> Fit3d::err_flag()))
 		{
 			// straight
 			aSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,0);
 			bSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,1);
-			//std::cout << " ok " << aSt << std::endl;
+
 			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
 			if (track_angle < 0) track_angle = 180+track_angle;
-			//chi2St = results.at(2);
+
 			angle_distribution_no_cut[0] -> Fill(track_angle);
 			if ( was_correct_angle(track_angle) )
 			{
@@ -235,54 +226,15 @@ void Calibration3d::fit_in_3d()
 				//chi2_cut -> Fill(chi2St);
 				//chi2 -> Fill(chi2St);
 				// set values is straight layers
-				for (int j = 0; j < 4; j++)
+				for (int j = 0; j < 8; j++)
 				{
-					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_A = aSt;
-					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_B = bSt;
-					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_C = bSt;
-					Layer[layers_numbers[j]] -> CalibrationData.at(i).track_angle = track_angle;
-					Layer[layers_numbers[j]] -> calculate_deltas(i);
-				}
-			}
-
-			// inclined1
-			aSt = fit3d -> Fit3d::get_track_8lines_projection_params(1,0);
-			bSt = fit3d -> Fit3d::get_track_8lines_projection_params(1,1);
-			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
-			if (track_angle < 0) track_angle = 180+track_angle;
-			//chi2St = results.at(2);
-			//angle_distribution_no_cut[0] -> Fill(track_angle);
-			if ( was_correct_angle(track_angle) )
-			{
-				//angle_distribution[0] -> Fill(track_angle);
-				//chi2_cut -> Fill(chi2St);
-				//chi2 -> Fill(chi2St);
-				// set values is straight layers
-				for (int j = 0; j < 2; j++)
-				{
-					Layer[2+i] -> CalibrationData.at(i).track_angle = track_angle;
-					Layer[2+i] -> calculate_deltas(i);
-				}
-			}
-
-			// inclined2
-			aSt = fit3d -> Fit3d::get_track_8lines_projection_params(2,0);
-			bSt = fit3d -> Fit3d::get_track_8lines_projection_params(2,1);
-			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
-			if (track_angle < 0) track_angle = 180+track_angle;
-			//chi2St = results.at(2);
-			//angle_distribution_no_cut[0] -> Fill(track_angle);
-			if ( was_correct_angle(track_angle) )
-			{
-				//angle_distribution[0] -> Fill(track_angle);
-				//chi2_cut -> Fill(chi2St);
-				//chi2 -> Fill(chi2St);
-				// set values is straight layers
-				for (int j = 0; j < 2; j++)
-				{
-					Layer[4+i] -> CalibrationData.at(i).track_angle = track_angle;
-					// set deltas, calculate deltas??
-					Layer[4+i] -> calculate_deltas(i);
+					Layer[j] -> CalibrationData.at(i).track_A = aSt;
+					Layer[j] -> CalibrationData.at(i).track_B = bSt;
+					Layer[j] -> CalibrationData.at(i).track_C = bSt;
+					Layer[j] -> CalibrationData.at(i).distance_wire_track = fit3d -> Fit3d::get_wire_track_dist(j);
+					//std::cout << " c " << Layer[j] -> CalibrationData.at(i).distance_wire_track << std::endl;
+					Layer[j] -> CalibrationData.at(i).track_angle = track_angle;
+					Layer[j] -> CalibrationLayer3d::calculate_deltas(i);
 				}
 			}
 		}
@@ -345,41 +297,35 @@ TCanvas* Calibration3d::plot_chi2_cut()
 void Calibration3d::fit_delta_projections()
 {
 	TString name;
-	name = Form("results/DeltaProjections1_iteration_%d/",no_of_iteration);
-	Layer[0] -> fit_delta_projections(name);
-	name = Form("results/DeltaProjections2_iteration_%d/",no_of_iteration);
-	Layer[1] -> fit_delta_projections(name);
-	name = Form("results/DeltaProjections7_iteration_%d/",no_of_iteration);
-	Layer[6] -> fit_delta_projections(name);
-	name = Form("results/DeltaProjections8_iteration_%d/",no_of_iteration);
-	Layer[7] -> fit_delta_projections(name);
+	for (int i = 0; i < 8; i++)
+	{
+		name = Form("results/DeltaProjections%d_iteration_%d/",i+1,no_of_iteration);
+		Layer[i] -> fit_delta_projections(name);
+	}
 }
 
 void Calibration3d::apply_corrections()
 {
-	Layer[0] -> apply_corrections();
-	Layer[1] -> apply_corrections();
-	Layer[6] -> apply_corrections();
-	Layer[7] -> apply_corrections();
+	for (int i = 0; i < 8; i++)
+	{
+		Layer[i] -> apply_corrections();
+	}
 }
 
 void Calibration3d::set_pos_Xerr()
 {
-	Layer[0] -> set_pos_Xerr();
-	Layer[1] -> set_pos_Xerr();
-	Layer[6] -> set_pos_Xerr();
-	Layer[7] -> set_pos_Xerr();
+	for (int i = 0; i < 8; i++)
+	{
+		Layer[i] -> set_pos_Xerr();
+	}
 }
 void Calibration3d::plot_current_calibration()
 {
 	TString name;
 	for (int i = 0; i < 8; i++)
 	{
-		if (i==0||i==1||i==6||i==7)
-		{
-			name = Form("results/layer%d_calibration_iteration_%d.png",i+1, no_of_iteration);
-			Layer[i] -> plot_current_calibration() -> SaveAs(name);
-		}
+		name = Form("results/layer%d_calibration_iteration_%d.png",i+1, no_of_iteration);
+		Layer[i] -> plot_current_calibration() -> SaveAs(name);
 	}
 }
 

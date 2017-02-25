@@ -16,6 +16,12 @@ CalibrationLayer3d::CalibrationLayer3d(int _layer_no, const std::vector<double> 
 	DriftTimes = _CalibTimes;
 	Distances = _CalibDistances;
 
+	TString name;
+	name = Form("wire_hit_layer_%d", _layer_no); 
+	wire_hit_test = new TH1F(name, name, 800, -0.5, 2.5);
+	name = Form("wire_track_layer_%d", _layer_no); 
+	wire_track_test = new TH1F(name, name, 800, -0.5, 2.5);
+
 	no_of_calib_bins = DriftTimes.size() - 1; // t1 bin1 t2 bin2 t3
 	// vector of x errors is just needed for the tgrapherrors plot.
 	for (int i = 0; i < DriftTimes.size(); i++) XErrors.push_back(0);
@@ -135,6 +141,7 @@ void CalibrationLayer3d::calculate_hit_position()
 		drifttime = CalibrationData.at(i).drift_time;
 		if (layer_no==1||layer_no==2||layer_no==7||layer_no==8) CalibrationData.at(i).hit_pos_X = wirex+lr*drift_time_to_distance(CalibrationData.at(i).calib_bin, drifttime);//*pow(TMath::Cos(31*TMath::DegToRad()),-1);
 		if (layer_no==3||layer_no==4||layer_no==5||layer_no==6) CalibrationData.at(i).hit_pos_X = wirex+lr*drift_time_to_distance(CalibrationData.at(i).calib_bin, drifttime)*pow(TMath::Cos(31*TMath::DegToRad()),-1);
+		CalibrationData.at(i).distance_wire_hit = drift_time_to_distance(CalibrationData.at(i).calib_bin, drifttime);
 		CalibrationData.at(i).hit_pos_Z = wirez;
 		//std::cout << "z: " << CalibrationData.at(i).hit_pos_Z << " x: " << CalibrationData.at(i).hit_pos_X << std::endl;
 	}
@@ -253,6 +260,8 @@ void CalibrationLayer3d::deletations()
 	SigmaForCalibration.clear();
 	delta -> Reset();
 	delta_cut -> Reset();
+	wire_track_test -> Reset();
+	wire_hit_test -> Reset();
 }
 
 TCanvas* CalibrationLayer3d::plot_delta()
@@ -268,6 +277,17 @@ TCanvas* CalibrationLayer3d::plot_delta()
 	gStyle -> SetOptStat(1111111);
 	gPad -> SetLogz();
 	delta -> Draw("colz");
+
+	name = Form("c layer%d wire-hit iteration %d",layer_no, no_of_iteration);
+	TCanvas *c2 = new TCanvas(name,name);
+	wire_track_test->Draw();
+	name = Form("results/layer%d_wire-hit_iteration_%d.png",layer_no, no_of_iteration);
+	c2 -> SaveAs(name);
+	name = Form("c layer%d wire-track iteration %d",layer_no, no_of_iteration);
+	TCanvas *c3 = new TCanvas(name,name);
+	wire_hit_test->Draw();
+	name = Form("results/layer%d_wire-track_iteration_%d.png",layer_no, no_of_iteration);
+	c3 -> SaveAs(name);
 	return c;
 }
 
@@ -324,26 +344,57 @@ TCanvas* CalibrationLayer3d::plot_current_calibration()
 	TCanvas *c_current_calibration = new TCanvas(name,name);
 	initial_calibration -> Draw("AL");
 	current_calibration -> Draw("sameP");
-  ;
 	return c_current_calibration;
 }
 
 void CalibrationLayer3d::calculate_deltas(int i)
 {
-	double x, z, a, b, x_wire;
+	double x_wire;
 	double wire_track, wire_hit;
-	x = CalibrationData.at(i).hit_pos_X;
-	z = CalibrationData.at(i).hit_pos_Z;
+
 	x_wire = CalibrationData.at(i).wire_pos_X;
-	wire_track = fabs((z - b)/a - x_wire);
-	wire_hit = fabs( x - x_wire);
+	wire_track = CalibrationData.at(i).distance_wire_track;
+	wire_hit = CalibrationData.at(i).distance_wire_hit;
 	double delta_val;
+	//std::cout << CalibrationData.at(i).distance_wire_track << std::endl;
+	//std::cout << CalibrationData.at(i).distance_wire_hit << std::endl;
+	//std::cout << "wire_track: " << wire_track << " " << "wire_hit: " << wire_hit << std::endl;
 	if (fabs(wire_hit) < fabs(wire_track)) delta_val = fabs(wire_track - wire_hit);
 	if (fabs(wire_hit) > fabs(wire_track)) delta_val = -fabs(wire_track - wire_hit);
+	wire_hit_test -> Fill(wire_hit);
+	wire_track_test -> Fill(wire_track);
 	CalibrationData.at(i).delta = delta_val;
 
-	if (CalibrationData.at(i).track_angle <= 89.5) // change
+	if (1) // change
 	{
 		delta -> Fill(CalibrationData.at(i).drift_time, delta_val);
 	}
 }
+
+/*void CalibrationLayer3d::save_in_root_file(TH2F *_c)
+{
+	TFile f3("results/calibration_results.root","UPDATE");
+	TH2F *c = new TH2F();
+	c = _c;
+	c -> Draw();
+	f3.Close();
+}
+
+void CalibrationLayer3d::save_in_root_file(TGraph *_c)
+{
+	TFile f3("results/calibration_results.root","UPDATE");
+	TGraph *c = new TGraph();
+	c = _c;
+	c -> Draw();
+	f3.Close();
+}
+
+void CalibrationLayer3d::save_in_root_file(TH1F *_c)
+{
+	TFile f3("results/calibration_results.root","UPDATE");
+	TH1F *c = new TH1F();
+	c = _c;
+	c -> Draw();
+	f3.Close();
+}*/
+

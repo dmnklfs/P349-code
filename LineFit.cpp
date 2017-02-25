@@ -109,6 +109,49 @@ double LineFit::GlobalFCN(const double * par)
 	return chisq;
 }
 
+double LineFit::get_chisq()
+{
+	double chisq = 0;
+	double delta = 0;
+	int straight[4];
+	straight[0] = 0;
+	straight[1] = 1;
+	straight[2] = 6;
+	straight[3] = 7;
+
+	double par[4];
+	par[0] = xp;
+	par[1] = yp;
+	par[2] = ux;
+	par[3] = uy;
+	// scaling
+	double t;
+	// points in which the line goes through the certain z plane
+	double xi, yi;
+	for (int i=0;i<4; i++)
+	{
+		//std::cout << errors[i] << std::endl;
+		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
+		t = z[ straight[i] ] - zp;//TMath::Abs(z[ straight[i] ] - zp);
+		xi = t*par[2] + par[0];
+		yi = t*par[3] + par[1];
+		delta  = x[i] - xi;
+		chisq += delta*delta;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		t = z[2+i] - zp;//TMath::Abs(z[2+i] - zp); // 1st inclined layer no = 2 (3rd layer counting in the beam direction)
+		xi = t*par[2] + par[0];
+		yi = t*par[3] + par[1];
+		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
+		//std::cout << "delta: " << delta << std::endl;
+		chisq += delta;
+	}
+	//std::cout << "chisq " << chisq << std::endl;
+	return chisq;
+}
+
 void ffcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 {
 	LineFit * rec = LineFit::GetInstance();

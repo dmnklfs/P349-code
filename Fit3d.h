@@ -66,7 +66,8 @@ public:
 	// from 3d fitting (not calculation)
 	TVector3 return_track_point();
 	TVector3 return_track_vector();
-	double return_wire_track_dist(int _layer_no);
+	double get_wire_track_dist(int _layer_no);
+	double get_chisq();
 
 private:
 	int event_no;
@@ -132,6 +133,7 @@ private:
 	bool errflag;
 
 	double wire_track_dist[8];
+	double chisq;
 };
 
 
