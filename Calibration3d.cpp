@@ -174,6 +174,7 @@ void Calibration3d::fit_in_3d()
 	layers_numbers[3] = 7;
 
 	double aSt, bSt, track_angle;
+	double wires_positionsX_all[8];
 	double hits_positionsX_all[8];
 	double hits_positionsZ_all[8];
 	double errors_all[8];
@@ -187,17 +188,19 @@ void Calibration3d::fit_in_3d()
 		for (int j = 0; j < 8; j++)
 		{
 			//std::cout << "layer " << j << std::endl;
+			wires_positionsX_all[j] = Layer[j]->CalibrationData.at(i).wire_pos_X;
 			hits_positionsX_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_X;
 			hits_positionsZ_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Z;
 			errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
 		}
 		
-		if (0==i%1000) std::cout << "    " << i/no_of_chosen_events << "%" << " done" << std::endl;
+		if (0==i%1000) std::cout << "    " << i << " out of " << no_of_chosen_events << " done" << std::endl;
+
 		Fit3d *fit3d = new Fit3d(i);
-		fit3d -> Fit3d::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all);
+		fit3d -> Fit3d::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all, wires_positionsX_all);
 		fit3d -> Fit3d::fit_straight_layer();
 		fit3d -> Fit3d::fit_inclined_layers();
-		fit3d -> calculate_xy_functions();
+		fit3d -> Fit3d::calculate_xy_functions();
 		fit3d -> Fit3d::set_hit_planes_vectors();
 		fit3d -> Fit3d::calculate_normal_to_hit_planes();
 		fit3d -> Fit3d::calculate_hit_planes_eq();
@@ -211,8 +214,9 @@ void Calibration3d::fit_in_3d()
 		fit3d -> Fit3d::calculate_projections_on_hit_planes_fit();
 		track3d_fit_point = fit3d -> Fit3d::return_track_point();
 		track3d_fit_vector = fit3d -> Fit3d::return_track_vector();
+		fit3d -> Fit3d::calculate_wires_xy_functions();
 		fit3d -> Fit3d::calculate_wire_track_distances();
-		//fit3d -> Fit3d::draw_event();
+		fit3d -> Fit3d::draw_event();
 
 
 		if (!(fit3d -> Fit3d::err_flag()))

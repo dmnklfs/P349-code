@@ -85,7 +85,7 @@ double LineFit::GlobalFCN(const double * par)
 	double t;
 	// points in which the line goes through the certain z plane
 	double xi, yi;
-	for (i=0;i<4; i++)
+	for (int i=0;i<4; i++)
 	{
 		//std::cout << errors[i] << std::endl;
 		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
@@ -102,6 +102,7 @@ double LineFit::GlobalFCN(const double * par)
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
+		//std::cout << "delta: " << delta << std::endl;
 		chisq += delta;
 	}
 	//std::cout << "chisq " << chisq << std::endl;
@@ -152,7 +153,7 @@ void LineFit::fit_with_minuit()
 
 	// Set start values and step sizes for parameters
 	double vstart[4] = {start_xp, start_yp, start_ux, start_uy};
-	double step[4] = {0.01 , 0.01, 0.0001, 0.0001};
+	double step[4] = {0.01 , 0.01, 0.001, 0.001};
 	gMinuit->mnparm(0, "xp", vstart[0], step[0], 0, 0, ierflg);
 	gMinuit->mnparm(1, "yp", vstart[1], step[1], 0, 0, ierflg);
 	gMinuit->mnparm(2, "ux", vstart[2], step[2], 0, 0, ierflg);

@@ -41,10 +41,11 @@ public:
 	Fit3d();
 	Fit3d(int _event_no);
 	~Fit3d();
-	void set_values(double *_x, double *_y, double *_errors);
+	void set_values(double *_x, double *_y, double *_errors, double *_x_wires);
 	void fit_straight_layer();
 	void fit_inclined_layers();
 	void calculate_xy_functions();
+	void calculate_wires_xy_functions();
 	void set_hit_planes_vectors();
 	void calculate_normal_to_hit_planes();
 	void calculate_hit_planes_eq();
@@ -56,6 +57,7 @@ public:
 	void calculate_projections_on_hit_planes_fit();
 	void make_fit_to_lines();
 	double get_track_8lines_projection_params(int direction, int a_b);
+	double get_wires_params(int layer, int a_b);
 	bool err_flag();
 	void calculate_wire_track_distances();
 
@@ -69,13 +71,19 @@ public:
 private:
 	int event_no;
 	// data for fit
+	double x_straight_wires[4];
 	double x_straight[4],  z_straight[4],  errors_straight[4];
+
+	double x_inclined1_wires[2], x_inclined2_wires[2];
 	double x_inclined1[2], z_inclined1[2], errors_inclined1[2];
 	double x_inclined2[2], z_inclined2[2], errors_inclined2[2];
 	
 	// results of the fit in the zx plane
 	double z_x_a[3], z_x_b[3]; // 0 - straight, 1 - inclined \, 2 - inclined /
-	double y_x_a[3], y_x_b[2][3];
+	double y_x_a[3], y_x_b[3][2];
+
+	// 0 - straight, 1 - inclined \, 2 - inclined /
+	double y_x_a_wire[3], y_x_b_wire[3][2];
 
 	// vectors in the xz plane
 	TVector3 xz_straight;

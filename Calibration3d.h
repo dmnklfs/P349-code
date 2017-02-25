@@ -97,6 +97,10 @@ private:
 	double x_lab_position;
 	double z_lab_position;
 	double distance_to_1st_layer;
+
+
+
+
 };
 
 #endif

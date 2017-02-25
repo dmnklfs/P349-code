@@ -25,6 +25,7 @@
 #include <sstream>
 #include <iostream>
 #include <TGraphErrors.h>
+#include "TMath.h"
 
 struct D1_single_event_data3d
 {

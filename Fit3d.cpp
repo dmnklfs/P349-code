@@ -15,33 +15,41 @@ Fit3d::~Fit3d()
 
 }
 
-void Fit3d::set_values(double *_x, double *_y, double *_errors)
+void Fit3d::set_values(double *_x, double *_y, double *_errors, double *_x_wires)
 {
 	// straight
 	x_straight[0] = _x[0];
+	x_straight_wires[0] = _x_wires[0];
 	z_straight[0] = _y[0];
 	errors_straight[0] = _errors[0];
 	x_straight[1] = _x[1];
+	x_straight_wires[1] = _x_wires[1];
 	z_straight[1] = _y[1];
 	errors_straight[1] = _errors[1];
 	x_straight[2] = _x[6];
+	x_straight_wires[2] = _x_wires[6];
 	z_straight[2] = _y[6];
 	errors_straight[2] = _errors[6];
 	x_straight[3] = _x[7];
+	x_straight_wires[3] = _x_wires[7];
 	z_straight[3] = _y[7];
 	errors_straight[3] = _errors[7];
 
 	// inclined
 	x_inclined1[0] = _x[2];
+	x_inclined1_wires[0] = _x_wires[2];
 	z_inclined1[0] = _y[2];
 	errors_inclined1[0] = _errors[2];
 	x_inclined1[1] = _x[3];
+	x_inclined1_wires[1] = _x_wires[3];
 	z_inclined1[1] = _y[3];
 	errors_inclined1[1] = _errors[3];
 	x_inclined2[0] = _x[4];
+	x_inclined2_wires[0] = _x_wires[4];
 	z_inclined2[0] = _y[4];
 	errors_inclined2[0] = _errors[4];
 	x_inclined2[1] = _x[5];
+	x_inclined2_wires[1] = _x_wires[5];
 	z_inclined2[1] = _y[5];
 	errors_inclined2[1] = _errors[5];
 }
@@ -101,7 +109,23 @@ void Fit3d::calculate_xy_functions()
 	y_x_a[2] =-TMath::Tan(59*3.14*pow(180,-1));
 	y_x_b[2][0] = -x_inclined2[0]*y_x_a[2];
 	y_x_b[2][1] = -x_inclined2[1]*y_x_a[2];
+}
 
+void Fit3d::calculate_wires_xy_functions()
+{
+	// dla plaszczyzny z = 0
+	// straight
+	y_x_a_wire[0] = 0;
+	y_x_b_wire[0][0] = 0;
+	y_x_b_wire[0][1] = 0;
+	// inclined 1
+	y_x_a_wire[1] = TMath::Tan(59*3.14*pow(180,-1));
+	y_x_b_wire[1][0] = -x_inclined1_wires[0]*y_x_a_wire[1];
+	y_x_b_wire[1][1] = -x_inclined1_wires[1]*y_x_a_wire[1];
+	// inclined 2
+	y_x_a_wire[2] =-TMath::Tan(59*3.14*pow(180,-1));
+	y_x_b_wire[2][0] = -x_inclined2_wires[0]*y_x_a_wire[2];
+	y_x_b_wire[2][1] = -x_inclined2_wires[1]*y_x_a_wire[2];
 }
 
 void Fit3d::set_hit_planes_vectors()
@@ -408,32 +432,63 @@ void Fit3d::draw_event()
 	// inclined hit plane 1
 	// wire1
 	TPolyLine3D *yx_fcn_inclined1_w1 = new TPolyLine3D(2);
-	yx_fcn_inclined1_w1->SetPoint(0, (y_range_min - y_x_b[1][0])/y_x_a[1], y_range_min, z_inclined1[0]);
-	yx_fcn_inclined1_w1->SetPoint(1, (y_range_max - y_x_b[1][0])/y_x_a[1], y_range_max, z_inclined1[0]);
-	yx_fcn_inclined1_w1->SetLineColor(color[1]);
+	yx_fcn_inclined1_w1->SetPoint(0, (y_range_min - y_x_b_wire[1][0])/y_x_a_wire[1], y_range_min, z_inclined1[0]);
+	yx_fcn_inclined1_w1->SetPoint(1, (y_range_max - y_x_b_wire[1][0])/y_x_a_wire[1], y_range_max, z_inclined1[0]);
+	yx_fcn_inclined1_w1->SetLineColor(kBlack);
 	yx_fcn_inclined1_w1->SetLineWidth(2);
+
+	// hit1
+	TPolyLine3D *yx_fcn_inclined1_h1 = new TPolyLine3D(2);
+	yx_fcn_inclined1_h1->SetPoint(0, (y_range_min - y_x_b[1][0])/y_x_a[1], y_range_min, z_inclined1[0]);
+	yx_fcn_inclined1_h1->SetPoint(1, (y_range_max - y_x_b[1][0])/y_x_a[1], y_range_max, z_inclined1[0]);
+	yx_fcn_inclined1_h1->SetLineColor(color[1]);
+	yx_fcn_inclined1_h1->SetLineWidth(2);
+
 
 	// wire2
 	TPolyLine3D *yx_fcn_inclined1_w2 = new TPolyLine3D(2);
-	yx_fcn_inclined1_w2->SetPoint(0, (y_range_min - y_x_b[1][1])/y_x_a[1], y_range_min, z_inclined1[1]);
-	yx_fcn_inclined1_w2->SetPoint(1, (y_range_max - y_x_b[1][1])/y_x_a[1], y_range_max, z_inclined1[1]);
-	yx_fcn_inclined1_w2->SetLineColor(color[1]);
+	yx_fcn_inclined1_w2->SetPoint(0, (y_range_min - y_x_b_wire[1][1])/y_x_a_wire[1], y_range_min, z_inclined1[1]);
+	yx_fcn_inclined1_w2->SetPoint(1, (y_range_max - y_x_b_wire[1][1])/y_x_a_wire[1], y_range_max, z_inclined1[1]);
+	yx_fcn_inclined1_w2->SetLineColor(kBlack);
 	yx_fcn_inclined1_w2->SetLineWidth(2);
+
+	// hit2
+	TPolyLine3D *yx_fcn_inclined1_h2 = new TPolyLine3D(2);
+	yx_fcn_inclined1_h2->SetPoint(0, (y_range_min - y_x_b[1][1])/y_x_a[1], y_range_min, z_inclined1[1]);
+	yx_fcn_inclined1_h2->SetPoint(1, (y_range_max - y_x_b[1][1])/y_x_a[1], y_range_max, z_inclined1[1]);
+	yx_fcn_inclined1_h2->SetLineColor(color[1]);
+	yx_fcn_inclined1_h2->SetLineWidth(2);
 
 	// inclined hit plane 2
 	// wire1
 	TPolyLine3D *yx_fcn_inclined2_w1 = new TPolyLine3D(2);
-	yx_fcn_inclined2_w1->SetPoint(0, (y_range_min - y_x_b[2][0])/y_x_a[2], y_range_min, z_inclined2[0]);
-	yx_fcn_inclined2_w1->SetPoint(1, (y_range_max - y_x_b[2][0])/y_x_a[2], y_range_max, z_inclined2[0]);
+	yx_fcn_inclined2_w1->SetPoint(0, (y_range_min - y_x_b_wire[2][0])/y_x_a_wire[2], y_range_min, z_inclined2[0]);
+	yx_fcn_inclined2_w1->SetPoint(1, (y_range_max - y_x_b_wire[2][0])/y_x_a_wire[2], y_range_max, z_inclined2[0]);
 	yx_fcn_inclined2_w1->SetLineWidth(3);
-	yx_fcn_inclined2_w1->SetLineColor(color[2]);
+	yx_fcn_inclined2_w1->SetLineColor(kBlack);
+
+	// wire1
+	TPolyLine3D *yx_fcn_inclined2_h1 = new TPolyLine3D(2);
+	yx_fcn_inclined2_h1->SetPoint(0, (y_range_min - y_x_b[2][0])/y_x_a[2], y_range_min, z_inclined2[0]);
+	yx_fcn_inclined2_h1->SetPoint(1, (y_range_max - y_x_b[2][0])/y_x_a[2], y_range_max, z_inclined2[0]);
+	yx_fcn_inclined2_h1->SetLineWidth(3);
+	yx_fcn_inclined2_h1->SetLineColor(color[2]);
 
 	// wire2
 	TPolyLine3D *yx_fcn_inclined2_w2 = new TPolyLine3D(2);
-	yx_fcn_inclined2_w2->SetPoint(0, (y_range_min - y_x_b[2][1])/y_x_a[2], y_range_min, z_inclined2[1]);
-	yx_fcn_inclined2_w2->SetPoint(1, (y_range_max - y_x_b[2][1])/y_x_a[2], y_range_max, z_inclined2[1]);
+	yx_fcn_inclined2_w2->SetPoint(0, (y_range_min - y_x_b_wire[2][1])/y_x_a_wire[2], y_range_min, z_inclined2[1]);
+	yx_fcn_inclined2_w2->SetPoint(1, (y_range_max - y_x_b_wire[2][1])/y_x_a_wire[2], y_range_max, z_inclined2[1]);
 	yx_fcn_inclined2_w2->SetLineWidth(3);
-	yx_fcn_inclined2_w2->SetLineColor(color[2]);
+	yx_fcn_inclined2_w2->SetLineColor(kBlack);
+
+	// hit2
+	TPolyLine3D *yx_fcn_inclined2_h2 = new TPolyLine3D(2);
+	yx_fcn_inclined2_h2->SetPoint(0, (y_range_min - y_x_b[2][1])/y_x_a[2], y_range_min, z_inclined2[1]);
+	yx_fcn_inclined2_h2->SetPoint(1, (y_range_max - y_x_b[2][1])/y_x_a[2], y_range_max, z_inclined2[1]);
+	yx_fcn_inclined2_h2->SetLineWidth(3);
+	yx_fcn_inclined2_h2->SetLineColor(color[2]);
+
+	
 
 	// ========== planes ==========
 	TPolyLine3D *straight_hit_plane = new TPolyLine3D(5);
@@ -627,9 +682,13 @@ void Fit3d::draw_event()
 	yx_fcn_straight_w3->Draw();
 	yx_fcn_straight_w4->Draw();
 	yx_fcn_inclined1_w1->Draw();
+	yx_fcn_inclined1_h1->Draw();
 	yx_fcn_inclined1_w2->Draw();
+	yx_fcn_inclined1_h2->Draw();
 	yx_fcn_inclined2_w1->Draw();
+	yx_fcn_inclined2_h1->Draw();
 	yx_fcn_inclined2_w2->Draw();
+	yx_fcn_inclined2_h2->Draw();
 	//straight_hit_plane->Draw();
 	//inclined1_hit_plane->Draw();
 	//inclined1_hit_plane_center->Draw();
@@ -652,9 +711,9 @@ void Fit3d::draw_event()
 	//track3d_proj_inclined1->Draw();
 	//track3d_proj_inclined2->Draw();
 	track3d_8lines_fit -> Draw();
-	track3d_8lines_fit_straight -> Draw();
-	track3d_8lines_fit_inclined1 -> Draw();
-	track3d_8lines_fit_inclined2 -> Draw();
+	//track3d_8lines_fit_straight -> Draw();
+	//track3d_8lines_fit_inclined1 -> Draw();
+	//track3d_8lines_fit_inclined2 -> Draw();
 
 	test->Write();
 	//test -> SaveAs(name, name);
@@ -673,6 +732,8 @@ void Fit3d::make_fit_to_lines()
 	z[5] = z_inclined2[1];
 	z[6] = z_straight[2];
 	z[7] = z_straight[3];
+
+	//std::cout << "z incl " << z[2] << " " << z[3] << " " << z[4] << " " << z[5] <<std::endl;
 
 	double a[4];
 	a[0] = y_x_a[1];
@@ -765,30 +826,63 @@ TVector3 Fit3d::return_track_vector()
 
 void Fit3d::calculate_wire_track_distances()
 {
+	int straight[4];
+	straight[0] = 0;
+	straight[1] = 1;
+	straight[2] = 6;
+	straight[3] = 7;
+
 	// scaling
-	double t;
+	double t, t2;
 	// points in which the line goes through the certain z plane
 	double xi, yi;
 	double zp = track3d_fit_point.Z();
-	std::cout << zp << std::endl;
-	for (i=0;i<4; i++)
+	for (int i=0;i<4; i++)
 	{
-		//std::cout << errors[i] << std::endl;
 		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
-		t = z[ straight[i] ] - zp;//TMath::Abs(z[ straight[i] ] - zp);
-		xi = t*track3d_fit_vector.X() + track3d_fit_point.X();
-		yi = t*track3d_fit_vector.Y() + track3d_fit_point.Y();
-		delta  = TMath::Abs(x_straight[i] - xi);
-		wire_track_dist[i] = delta;
+		t = z_straight[i] - zp;//TMath::Abs(z[ straight[i] ] - zp);
+		//std::cout << "t: " << t << " z: " << z_straight[i] << std::endl;
+		t2 = 1/track3d_fit_vector.Z();
+		xi = t*t2*track3d_fit_vector.X() + track3d_fit_point.X();
+		yi = t*t2*track3d_fit_vector.Y() + track3d_fit_point.Y();
+		wire_track_dist[ straight[i] ]  = TMath::Abs(x_straight_wires[i] - xi);
 	}
+
+	double z[4];
+	z[0] = z_inclined1[0];
+	z[1] = z_inclined1[1];
+	z[2] = z_inclined2[0];
+	z[3] = z_inclined2[1];
+
+	double a[4];
+	a[0] = y_x_a_wire[1];
+	a[1] = y_x_a_wire[1];
+	a[2] = y_x_a_wire[2];
+	a[3] = y_x_a_wire[2];
+
+	double b[4];
+	b[0] = y_x_b_wire[1][0];
+	b[1] = y_x_b_wire[1][1];
+	b[2] = y_x_b_wire[2][0];
+	b[3] = y_x_b_wire[2][1];
+
+	std::cout << "a " << a[0] << " " << a[2] << std::endl;
+	std::cout << "x " << x_inclined1_wires[0] - x_inclined1_wires[1] << std::endl;
+	std::cout << "b " << b[0] - b[1] << std::endl;
 
 	for (int i = 0; i < 4; i++)
 	{
-		t = z[2+i] - zp;//TMath::Abs(z[2+i] - zp); // 1st inclined layer no = 2 (3rd layer counting in the beam direction)
-		xi = t*track3d_fit_vector.X() + track3d_fit_point.X();
-		yi = t*track3d_fit_vector.Y() + track3d_fit_point.Y();
-		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
-		chisq += delta;
+		t = z[i] - zp;//TMath::Abs(z[2+i] - zp); // 1st inclined layer no = 2 (3rd layer counting in the beam direction)
+		t2 = 1/track3d_fit_vector.Z();
+		//std::cout << "t: " << t << "z: " << z[i] << std::endl;
+		xi = t*t2*track3d_fit_vector.X() + track3d_fit_point.X();
+		yi = t*t2*track3d_fit_vector.Y() + track3d_fit_point.Y();
+		wire_track_dist[ 2+i ]  = TMath::Abs(a[i]*xi-yi+b[i])*pow(pow((a[i]*a[i]+1),0.5),-1);
+	}
+
+	for (int i = 0; i < 8; i++)
+	{
+		std::cout << "d: " << wire_track_dist[i] << std::endl;
 	}
 
 }

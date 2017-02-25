@@ -243,7 +243,7 @@ void D1::calculate_relative_and_absolute_positions_inclined()
 			// X COORDINATE
 			for (unsigned int ii = 0; ii < no_of_hits_in_layer; ii++)
 			{
-				// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10
+				// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10.16
 				x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_inclined_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
 				//if(i == 2 || i == 3) x = 2+calc_position_in_detector(41-(Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
 				Layer[no_of_layer]->RelativeXPosition.push_back(x);
@@ -303,7 +303,7 @@ void D1::collect_hits_from_all_layers()
 		for (unsigned int i = 0; i < no_of_entries; i++)
 		{
 			// now positions of wires are plotted
-			if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10
+			if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10.16
 			{
 				AllWiresAbsolutePositionX.push_back(Layer[ j ] -> AbsoluteXPosition.at(i));
 				AllHitsAbsolutePositionXEventDisplay.push_back( -(Layer[ j ] -> AbsoluteXPosition.at(i)) );
