@@ -82,12 +82,12 @@ void Fit3d::fit_inclined_layers()
 	//z_x_b[1] = results.at(1);
 	z_x_a[1] = (z_inclined1[0]-z_inclined1[1])/(x_inclined1[0]-x_inclined1[1]);
 	z_x_b[1] = z_inclined1[0] - z_x_a[1]*x_inclined1[0];
-	//std::cout << z_x_a[1] << " " << z_x_b[1] << std::endl;
+	std::cout << " !!! " << std::endl;
 
 	MinuitFit * fit2 = MinuitFit::GetInstance();
 	fit2 -> set_no_of_points(2);		
 	fit2 -> MinuitFit::set_values(x_inclined2, z_inclined2, errors_inclined2);
-	fit2 -> MinuitFit::perform_simplified_fit();
+	fit2 -> MinuitFit::perform_simplified_fit_calc_coeff();
 	results = fit2 -> MinuitFit::fit_with_minuit();
 
 	z_x_a[2] = results.at(0);

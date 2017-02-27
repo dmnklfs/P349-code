@@ -40,12 +40,12 @@ void CalibrationLayer3d::set_no_of_corr_bins(double _no_of_corr_bins)
 		corr_bin_width = max_time_range/no_of_corr_bins;
 		TString name;
 		name = Form("layer%d #Delta", layer_no);
-		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);
+		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 150, -0.3, 0.3);///350, -0.4, 0.4);
 		delta->GetXaxis()->SetTitle("time [ns]");
 		delta->GetYaxis()->SetTitle("delta [cm]");
 
 		name = Form("layer%d #Delta cut", layer_no);
-		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);
+		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 150, -0.3, 0.3);///350, -0.4, 0.4);
 		delta_cut->GetXaxis()->SetTitle("time [ns]");
 		delta_cut->GetYaxis()->SetTitle("delta [cm]");
 	}
@@ -60,12 +60,12 @@ void CalibrationLayer3d::set_max_time_range(double _max_time_range)
 		corr_bin_width = max_time_range/no_of_corr_bins;
 		TString name;
 		name = Form("layer%d #Delta", layer_no);
-		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);
+		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 150, -0.3, 0.3);///350, -0.4, 0.4);
 		delta->GetXaxis()->SetTitle("time [ns]");
 		delta->GetYaxis()->SetTitle("delta [cm]");
 
 		name = Form("layer%d #Delta cut", layer_no);
-		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);
+		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 150, -0.3, 0.3);///350, -0.4, 0.4);
 		delta_cut->GetXaxis()->SetTitle("time [ns]");
 		delta_cut->GetYaxis()->SetTitle("delta [cm]");
 	}

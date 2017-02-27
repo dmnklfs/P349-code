@@ -35,8 +35,8 @@ Config::Config()
 	D1_z_offset = 0; // up to the beginning of the detector (not: 1st layer)
 	D1_x_offset = 0;
 	D1_y_rotation_angle = (0)*3.14/180; // rad
-	track_angle_min = 45;
-	track_angle_max =130;
+	track_angle_min = 30;
+	track_angle_max = 150;
 	// layers "offsets" - distances drom the frame
 	D1_layer_wire_frame_offset[0] = 3.0;	// x
 	D1_layer_wire_frame_offset[1] = 5.0;

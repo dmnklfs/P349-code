@@ -85,7 +85,7 @@ double LineFit::GlobalFCN(const double * par)
 	double t;
 	// points in which the line goes through the certain z plane
 	double xi, yi;
-	for (int i=0;i<4; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		//std::cout << errors[i] << std::endl;
 		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];

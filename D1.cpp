@@ -76,10 +76,10 @@ bool D1::was_correct_event()
 			D1_no_of_cells_with_hits = D1_no_of_cells_with_hits + Layer[i]-> Wire.size();
 		}
 	}
-	if (no_of_layers_with_hits == 8)
-	{
-		correct_event = true;
-	}
+	// if (no_of_layers_with_hits == 8)
+	// {
+		// correct_event = true;
+	// }
 
 	// dell it, choice of coincidences if one wire parametrized
 //	double edge_val1, edge_val2, dtime1, dtime2;
@@ -112,22 +112,41 @@ bool D1::was_correct_event()
 //		//correct_event = true;
 //	}
 
-//	int wire1;
-//	int wire2;
-//	int wire7;
-//	int wire8;
-//	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[6]&&correct_in_layer[7])
-//	{
-//		wire1 = Layer[0] -> DCLayer::Wire.at(0);
-//		wire2 = Layer[1] -> DCLayer::Wire.at(0);
-//		wire7 = Layer[6] -> DCLayer::Wire.at(0);
-//		wire8 = Layer[7] -> DCLayer::Wire.at(0);
-//		//std::cout << wire1 << " " << wire2 << " " << wire7 << " " << wire8 << std::endl;
+	int wire1;
+	int wire2;
+	int wire3;
+	int wire4;
+	int wire5;
+	int wire6;
+	int wire7;
+	int wire8;
+	bool pair1, pair2, pair3, pair4;
+	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[2]&&correct_in_layer[3]&&correct_in_layer[4]&&correct_in_layer[5]&&correct_in_layer[6]&&correct_in_layer[7])
+	{
+		wire1 = Layer[0] -> DCLayer::Wire.at(0);
+		wire2 = Layer[1] -> DCLayer::Wire.at(0);
+		wire3 = Layer[2] -> DCLayer::Wire.at(0);
+		wire4 = Layer[3] -> DCLayer::Wire.at(0);
+		wire5 = Layer[4] -> DCLayer::Wire.at(0);
+		wire6 = Layer[5] -> DCLayer::Wire.at(0);		
+		wire7 = Layer[6] -> DCLayer::Wire.at(0);
+		wire8 = Layer[7] -> DCLayer::Wire.at(0);
+		//std::cout << wire1 << " " << wire2 << " " << wire7 << " " << wire8 << std::endl;
 //		if ((wire2==wire1||wire2==wire1+1)&&(wire8==wire7||wire8==wire7+1))// wire1==19&&wire7==19&&wire2==20&&wire8==20) // ||wire2==wire1+1 ||wire8==wire7+1
 //		{
 //			correct_event = true;
 //		}
-//	}
+		pair1 = false;
+		pair2 = false;
+		pair3 = false;
+		pair4 = false;
+		if (wire2==wire1||wire2==wire1+1) pair1 = true;
+		if (wire3==wire4||wire3==wire4+1) pair2 = true;
+		if (wire5==wire6||wire5==wire6+1) pair3 = true;
+		if (wire8==wire7||wire8==wire7+1) pair4 = true;
+
+		if (pair1&&pair2&&pair3&&pair4) correct_event = true;
+	}
 	
 	return correct_event;
 }
@@ -334,8 +353,8 @@ TGraph* D1::plot_track_in_D1()
 	pos_X[0] =wirepos1 + left_right[0]*(Layer[0] -> HitsDistancesFromWires.at(0));
 	pos_X[1] =wirepos2 + left_right[1]*(Layer[1] -> HitsDistancesFromWires.at(0));
 
-	wirepos1 = wirepos1 = Layer[6] -> AbsoluteXPosition.at(0);
-	wirepos2 = wirepos2 = Layer[7] -> AbsoluteXPosition.at(0);
+	wirepos1 = Layer[6] -> AbsoluteXPosition.at(0);
+	wirepos2 = Layer[7] -> AbsoluteXPosition.at(0);
 	if (wirepos1 > wirepos2)
 	{
 		left_right[2] 	= -1;
@@ -391,8 +410,8 @@ void D1::set_hits_absolute_positions() // potrzebne do fitu w EventDisplay. doce
 	AllHitsAbsolutePositionX.push_back(wirepos1 + left_right[0]*(Layer[0] -> HitsDistancesFromWires.at(0)));
 	AllHitsAbsolutePositionX.push_back(wirepos2 + left_right[1]*(Layer[1] -> HitsDistancesFromWires.at(0)));
 
-	wirepos1 = wirepos1 = Layer[6] -> AbsoluteXPosition.at(0);
-	wirepos2 = wirepos2 = Layer[7] -> AbsoluteXPosition.at(0);
+	wirepos1 = Layer[6] -> AbsoluteXPosition.at(0);
+	wirepos2 = Layer[7] -> AbsoluteXPosition.at(0);
 	if (wirepos1 > wirepos2)
 	{
 		left_right[2] 	= -1;

@@ -147,14 +147,14 @@ void Calibration3d::save_histograms()
 	name = Form("results/tracks_anglular_distribution_iteration_%d.png",no_of_iteration);
 	plot_angle_distribution() -> SaveAs(name);
 	//name = Form("test_%d", event_no);
-	//TFile test_file("results/file_calib.root","UPDATE");
+	TFile test_file("results/file_calib.root","UPDATE");
 	for (int i = 0; i < 8; i++)
 	{
 		name = Form("results/layer%d_delta_iteration_%d.png",i+1, no_of_iteration);
 		Layer[i] -> CalibrationLayer3d::plot_delta() -> SaveAs(name);
-		//Layer[i] -> CalibrationLayer3d::plot_delta() -> Write();	
+		Layer[i] -> CalibrationLayer3d::plot_delta() -> Write();	
 	}
-	//test_file.Close();
+	test_file.Close();
 }
 
 void Calibration3d::fit_events()
@@ -208,7 +208,6 @@ void Calibration3d::fit_in_3d()
 		fit3d -> Fit3d::calculate_wires_xy_functions();
 		fit3d -> Fit3d::calculate_wire_track_distances();
 		//fit3d -> Fit3d::draw_event();
-		chi2 -> Fill(fit3d -> Fit3d::get_chisq());
 
 		if (!(fit3d -> Fit3d::err_flag()))
 		{
@@ -223,6 +222,7 @@ void Calibration3d::fit_in_3d()
 			if ( was_correct_angle(track_angle) )
 			{
 				angle_distribution[0] -> Fill(track_angle);
+				chi2 -> Fill(fit3d -> Fit3d::get_chisq());
 				//chi2_cut -> Fill(chi2St);
 				//chi2 -> Fill(chi2St);
 				// set values is straight layers
