@@ -82,7 +82,7 @@ void Fit3d::fit_inclined_layers()
 	//z_x_b[1] = results.at(1);
 	z_x_a[1] = (z_inclined1[0]-z_inclined1[1])/(x_inclined1[0]-x_inclined1[1]);
 	z_x_b[1] = z_inclined1[0] - z_x_a[1]*x_inclined1[0];
-	std::cout << " !!! " << std::endl;
+	//std::cout << " !!! " << std::endl;
 
 	MinuitFit * fit2 = MinuitFit::GetInstance();
 	fit2 -> set_no_of_points(2);		

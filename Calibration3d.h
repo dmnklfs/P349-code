@@ -62,6 +62,8 @@ public:
 	void set_pos_Xerr();
 	void fit_in_3d();
 	void fit_events();
+	double calculate_phi_xz();
+	double calculate_theta_y();
 
 private:
 	bool fit_with_inclined;
@@ -73,6 +75,8 @@ private:
 	double calib_bin_width;
 	double corr_bin_width;
 	TH1F *chi2;
+	TH1F *phi_xz;
+	TH1F *theta_y;
 	TH1F *chi2_cut;
 	TH1F *angle_distribution[4];
 	TH1F *angle_distribution_no_cut[4];

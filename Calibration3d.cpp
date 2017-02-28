@@ -52,6 +52,16 @@ Calibration3d::Calibration3d(const Config &_config)
 	chi2->SetLineWidth(2);
 	//chi2->SetLineColor(kBlue);
 
+	name = Form("#phi_{xz}",1);
+	phi_xz = new TH1F(name, name, 2000, -10, 190);
+	phi_xz->GetXaxis()->SetTitle("#phi_{xz} (deg)");
+	phi_xz->GetYaxis()->SetTitle("counts");
+
+	name = Form("#theta_{y}",1);
+	theta_y = new TH1F(name, name, 2000, -10, 190);
+	theta_y->GetXaxis()->SetTitle("#theta_{y} (deg)");
+	theta_y->GetYaxis()->SetTitle("counts");
+
 	name = Form("#chi^{2} cut", 1);
 	chi2_cut = new TH1F(name, name, 400, -0.01, 15);
 	chi2_cut->GetXaxis()->SetTitle("#chi^{2}");
@@ -162,6 +172,35 @@ void Calibration3d::fit_events()
 	fit_in_3d();
 }
 
+double Calibration3d::calculate_phi_xz()
+{
+	double phi_xz;
+	// calculate vector projected onto xz plane
+	double vx, vz, norm;
+	vx = track3d_fit_vector.X();
+	vz = track3d_fit_vector.Z();
+	norm = pow(vx*vx+vz*vz,0.5);
+	vx = vx*pow(norm,-1);
+	vz = vz*pow(norm,-1);
+	// calculate angle between Ox and vector
+	phi_xz = TMath::ACos(vx)*180*pow(3.14,-1);
+	return phi_xz;
+}
+
+double Calibration3d::calculate_theta_y()
+{
+	double theta_y = 0;
+	double vz, vy, norm;
+	vz = track3d_fit_vector.Z();
+	vy = track3d_fit_vector.Y();
+	norm = pow(vz*vz+vy*vy,0.5);
+	vz = vz*pow(norm,-1);
+	vy = vy*pow(norm,-1);
+	// calculate angle between Ox and vector
+	theta_y = TMath::ACos(vy)*180*pow(3.14,-1);
+	return theta_y;
+}
+
 void Calibration3d::fit_in_3d()
 {
 	double aSt, bSt, track_angle;
@@ -223,6 +262,9 @@ void Calibration3d::fit_in_3d()
 			{
 				angle_distribution[0] -> Fill(track_angle);
 				chi2 -> Fill(fit3d -> Fit3d::get_chisq());
+				phi_xz -> Fill(Calibration3d::calculate_phi_xz());
+				theta_y -> Fill(Calibration3d::calculate_theta_y());
+
 				//chi2_cut -> Fill(chi2St);
 				//chi2 -> Fill(chi2St);
 				// set values is straight layers
@@ -334,21 +376,24 @@ TCanvas* Calibration3d::plot_angle_distribution()
 	TString name;
 	name = Form("Track angles distribution iteration %d", no_of_iteration);
 	TCanvas *c = new TCanvas(name,name,2000,500);
-	c->Divide(4,1);
-	for (int i = 0; i < 4; i++)
-	{
-		c->cd(i+1);
-		name = Form("Track angles distribution iteration %d", no_of_iteration);
-		gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
-		gStyle->SetStatX(0.4);                
-		gStyle->SetStatW(0.2);
-		gStyle->SetStatH(0.1);
-		gStyle->SetStatY(0.9);
-		gStyle -> SetOptStat(1111111);
-		gPad -> SetLogy();
-		angle_distribution_no_cut[i] -> Draw();
-		angle_distribution[i] -> Draw("same");
-	}
+	c->Divide(3,1);
+	c->cd(1);
+	name = Form("Track angles distribution iteration %d", no_of_iteration);
+	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
+	gStyle->SetStatX(0.4);                
+	gStyle->SetStatW(0.2);
+	gStyle->SetStatH(0.1);
+	gStyle->SetStatY(0.9);
+	gStyle -> SetOptStat(1111111);
+	gPad -> SetLogy();
+	angle_distribution_no_cut[0] -> Draw();
+	angle_distribution[0] -> Draw("same");
+	c->cd(2);
+	gPad -> SetLogy();
+	phi_xz -> Draw();
+	c->cd(3);
+	//gPad -> SetLogy();
+	theta_y -> Draw();
 	return c;
 }
 
