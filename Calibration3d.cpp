@@ -392,7 +392,7 @@ TCanvas* Calibration3d::plot_angle_distribution()
 	gPad -> SetLogy();
 	phi_xz -> Draw();
 	c->cd(3);
-	//gPad -> SetLogy();
+	gPad -> SetLogy();
 	theta_y -> Draw();
 	return c;
 }

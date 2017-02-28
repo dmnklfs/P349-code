@@ -30,6 +30,7 @@
 #include <TPolyLine3D.h>
 #include "MinuitFit.h"
 #include "LineFit.h"
+#include "UncorrelatedOpt.h"
 #include "TView3D.h"
 #include "TView.h"
 #include "TAxis3D.h"

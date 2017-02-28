@@ -748,17 +748,30 @@ void Fit3d::make_fit_to_lines()
 	b[3] = y_x_b[2][1];
 
 	LineFit * lineFit3d = LineFit::GetInstance();
-	lineFit3d -> set_z_values(z);
-	lineFit3d -> set_x_straight_values(x_straight);
-	lineFit3d -> set_incl_hit_lines_params(a, b);
-	lineFit3d -> set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
-	lineFit3d -> set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
-	lineFit3d -> calculate_start_params();
-	lineFit3d -> fit_with_minuit();
-	track3d_fit_point = lineFit3d -> return_track_point();
-	track3d_fit_vector = lineFit3d -> return_track_vector();
-	errflag = lineFit3d -> err_flag();
-	chisq = lineFit3d -> get_chisq();
+	lineFit3d -> LineFit::set_z_values(z);
+	lineFit3d -> LineFit::set_x_straight_values(x_straight);
+	lineFit3d -> LineFit::set_incl_hit_lines_params(a, b);
+	lineFit3d -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
+	lineFit3d -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
+	lineFit3d -> LineFit::calculate_start_params();
+	lineFit3d -> LineFit::fit_with_minuit();
+	track3d_fit_point = lineFit3d -> LineFit::return_track_point();
+	track3d_fit_vector = lineFit3d -> LineFit::return_track_vector();
+	errflag = lineFit3d -> LineFit::err_flag();
+	chisq = lineFit3d -> LineFit::get_chisq();
+
+	// UncorrelatedOpt * track_optimization = UncorrelatedOpt::GetInstance();
+	// track_optimization -> UncorrelatedOpt::set_z_values(z);
+	// track_optimization -> UncorrelatedOpt::set_x_straight_values(x_straight);
+	// track_optimization -> UncorrelatedOpt::set_incl_hit_lines_params(a, b);
+	// track_optimization -> UncorrelatedOpt::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
+	// track_optimization -> UncorrelatedOpt::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
+	// track_optimization -> UncorrelatedOpt::calculate_start_params();
+	// track_optimization -> UncorrelatedOpt::fit_with_minuit();
+	// track3d_fit_point = track_optimization -> UncorrelatedOpt::return_track_point();
+	// track3d_fit_vector = track_optimization -> UncorrelatedOpt::return_track_vector();
+	// errflag = track_optimization -> UncorrelatedOpt::err_flag();
+	// chisq = track_optimization -> UncorrelatedOpt::get_chisq();
 }
 
 bool Fit3d::err_flag()
