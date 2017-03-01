@@ -50,6 +50,7 @@ public:
 	void fill_chi2(double _chi2_cut);
 	TCanvas* plot_chi2();		// w kazdej iteracji mozna dodawac histogramy do wektora, pozniej zwracac wektor do main
 	TCanvas* plot_chi2_cut();
+	TCanvas* plot_chi2_pdf();
 	TCanvas* plot_delta();
 	void fit_delta_projections();
 	void apply_corrections();
@@ -78,6 +79,7 @@ private:
 	TH1F *phi_xz;
 	TH1F *theta_y;
 	TH1F *chi2_cut;
+	TH1F *chi2_pdf;
 	TH1F *angle_distribution[4];
 	TH1F *angle_distribution_no_cut[4];
 	double track_angle_min;

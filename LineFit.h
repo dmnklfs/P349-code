@@ -36,9 +36,11 @@ public:
 	void fit_with_minuit();
 	void set_z_values(double *_z);
 	void set_x_straight_values(double *_x);
+	void set_x_errors(double *_xerrors);
 	void set_incl_hit_lines_params(double *_a, double *_b);
 	void set_track_point(double _track_x, double _track_y, double _track_z);
 	void set_track_vector(double _track_ux, double _track_uy, double _track_uz);
+	void set_excluded_layer(int _excluded_layer);
 	void calculate_start_params();
 	TVector3 return_track_point();
 	TVector3 return_track_vector();
@@ -49,10 +51,11 @@ public:
 private:
 	int no_of_points;
 	static LineFit * _this;
+	int excluded_layer;
 	// z positions of all layers - common
 	double z[8];
 	// points - for straight layers
-	double x[4], errors[4];
+	double x[4], errors[8];
 	// hit equations - fo inclined layers
 	double a[4], b[4];
 

@@ -87,7 +87,7 @@ void Fit3d::fit_inclined_layers()
 	MinuitFit * fit2 = MinuitFit::GetInstance();
 	fit2 -> set_no_of_points(2);		
 	fit2 -> MinuitFit::set_values(x_inclined2, z_inclined2, errors_inclined2);
-	fit2 -> MinuitFit::perform_simplified_fit_calc_coeff();
+	fit2 -> MinuitFit::perform_simplified_fit();
 	results = fit2 -> MinuitFit::fit_with_minuit();
 
 	z_x_a[2] = results.at(0);
@@ -733,7 +733,17 @@ void Fit3d::make_fit_to_lines()
 	z[6] = z_straight[2];
 	z[7] = z_straight[3];
 
-	//std::cout << "z incl " << z[2] << " " << z[3] << " " << z[4] << " " << z[5] <<std::endl;
+	double errors[8];
+	errors[0] = errors_straight[0];
+	errors[1] = errors_straight[1];
+	errors[2] = errors_inclined1[0];
+	errors[3] = errors_inclined1[1];
+	errors[4] = errors_inclined2[0];
+	errors[5] = errors_inclined2[1];
+	errors[6] = errors_straight[2];
+	errors[7] = errors_straight[3];
+
+	// std::cout << "err " << errors[0] << std::endl;
 
 	double a[4];
 	a[0] = y_x_a[1];
@@ -751,14 +761,16 @@ void Fit3d::make_fit_to_lines()
 	lineFit3d -> LineFit::set_z_values(z);
 	lineFit3d -> LineFit::set_x_straight_values(x_straight);
 	lineFit3d -> LineFit::set_incl_hit_lines_params(a, b);
+	lineFit3d -> LineFit::set_x_errors(errors);
 	lineFit3d -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
 	lineFit3d -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
 	lineFit3d -> LineFit::calculate_start_params();
-	lineFit3d -> LineFit::fit_with_minuit();
-	track3d_fit_point = lineFit3d -> LineFit::return_track_point();
-	track3d_fit_vector = lineFit3d -> LineFit::return_track_vector();
-	errflag = lineFit3d -> LineFit::err_flag();
-	chisq = lineFit3d -> LineFit::get_chisq();
+	// since there: separate
+	 lineFit3d -> LineFit::fit_with_minuit();
+	 track3d_fit_point = lineFit3d -> LineFit::return_track_point();
+	 track3d_fit_vector = lineFit3d -> LineFit::return_track_vector();
+	 errflag = lineFit3d -> LineFit::err_flag();
+	 chisq = lineFit3d -> LineFit::get_chisq();
 
 	// UncorrelatedOpt * track_optimization = UncorrelatedOpt::GetInstance();
 	// track_optimization -> UncorrelatedOpt::set_z_values(z);
@@ -766,7 +778,6 @@ void Fit3d::make_fit_to_lines()
 	// track_optimization -> UncorrelatedOpt::set_incl_hit_lines_params(a, b);
 	// track_optimization -> UncorrelatedOpt::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
 	// track_optimization -> UncorrelatedOpt::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
-	// track_optimization -> UncorrelatedOpt::calculate_start_params();
 	// track_optimization -> UncorrelatedOpt::fit_with_minuit();
 	// track3d_fit_point = track_optimization -> UncorrelatedOpt::return_track_point();
 	// track3d_fit_vector = track_optimization -> UncorrelatedOpt::return_track_vector();

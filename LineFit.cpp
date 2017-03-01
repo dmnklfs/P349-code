@@ -31,6 +31,19 @@ void LineFit::set_x_straight_values(double *_x)
 	}
 }
 
+void LineFit::set_x_errors(double *_errors)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		errors[i] = _errors[i];
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		if (errors[2+i]!=1) errors[2+i] = a[i]/(pow(a[i]*a[i]+1,0.5)*TMath::Cos(31*TMath::DegToRad()))*errors[2+i];
+	}
+
+}
+
 void LineFit::set_incl_hit_lines_params(double *_a, double *_b)
 {
 	for (int i = 0; i < 4; i++)
@@ -57,6 +70,11 @@ void LineFit::set_track_vector(double _track_ux, double _track_uy, double _track
 	//std::cout << track_uz << std::endl;
 }
 
+void LineFit::set_excluded_layer(int _excluded_layer)
+{
+	excluded_layer = _excluded_layer;
+}
+
 bool LineFit::err_flag()
 {
 	return errflag;
@@ -70,6 +88,7 @@ double LineFit::GlobalFCN(const double * par)
 	//calculate chisquare
 	double chisq = 0;
 	double delta = 0;
+	double layer_chisq[8];
 	int straight[4];
 //	int inclined[4];
 	straight[0] = 0;
@@ -85,27 +104,45 @@ double LineFit::GlobalFCN(const double * par)
 	double t;
 	// points in which the line goes through the certain z plane
 	double xi, yi;
-	for (int i = 0; i < 4; i++)
-	{
-		//std::cout << errors[i] << std::endl;
-		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
-		t = z[ straight[i] ] - zp;//TMath::Abs(z[ straight[i] ] - zp);
-		xi = t*par[2] + par[0];
-		yi = t*par[3] + par[1];
-		delta  = x[i] - xi;
-		chisq += delta*delta;
-	}
+		// === calculation of deltas*delta for all layers separately ===
+	// straight
+	// layer 1
+	t = z[0] - zp;
+	xi = t*par[2] + par[0];
+	yi = t*par[3] + par[1];
+	delta  = x[0] - xi;
+	layer_chisq[0] = (delta*delta)/(errors[0]*errors[0]);
+	// layer 2
+	t = z[1] - zp;
+	xi = t*par[2] + par[0];
+	yi = t*par[3] + par[1];
+	delta  = x[1] - xi;
+	layer_chisq[1] = (delta*delta)/(errors[1]*errors[1]);
+	// layer 3
+	t = z[6] - zp;
+	xi = t*par[2] + par[0];
+	yi = t*par[3] + par[1];
+	delta  = x[2] - xi;
+	layer_chisq[6] = (delta*delta)/(errors[6]*errors[6]);
+	// layer 4
+	t = z[7] - zp;
+	xi = t*par[2] + par[0];
+	yi = t*par[3] + par[1];
+	delta  = x[3] - xi;
+	layer_chisq[7] = (delta*delta)/(errors[7]*errors[7]);
 
 	for (int i = 0; i < 4; i++)
 	{
-		t = z[2+i] - zp;//TMath::Abs(z[2+i] - zp); // 1st inclined layer no = 2 (3rd layer counting in the beam direction)
+		t = z[2+i] - zp;
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
-		//std::cout << "delta: " << delta << std::endl;
-		chisq += delta;
+		layer_chisq[2+i] = delta/(errors[2+i]*errors[2+i]);
 	}
-	//std::cout << "chisq " << chisq << std::endl;
+	for (int i = 0; i < 8; i++)
+	{
+		chisq = chisq + layer_chisq[i];
+	}
 	return chisq;
 }
 
@@ -136,7 +173,7 @@ double LineFit::get_chisq()
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
 		delta  = x[i] - xi;
-		chisq += delta*delta;
+		chisq += delta*delta/(errors[ straight[i] ]*errors[ straight[i] ]);
 	}
 
 	for (int i = 0; i < 4; i++)
@@ -146,7 +183,7 @@ double LineFit::get_chisq()
 		yi = t*par[3] + par[1];
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
 		//std::cout << "delta: " << delta << std::endl;
-		chisq += delta;
+		chisq += delta/(errors[2+i]*errors[2+i]);
 	}
 	//std::cout << "chisq " << chisq << std::endl;
 	return chisq;

@@ -46,7 +46,7 @@ Calibration3d::Calibration3d(const Config &_config)
 
 	TString name;
 	name = Form("#chi^{2}",1);
-	chi2 = new TH1F(name, name, 1000, -0.01, 0.05);
+	chi2 = new TH1F(name, name, 250, -0.25, 25);//1000, -0.01, 0.05);
 	chi2->GetXaxis()->SetTitle("#chi^{2}");
 	chi2->GetYaxis()->SetTitle("counts");
 	chi2->SetLineWidth(2);
@@ -67,6 +67,11 @@ Calibration3d::Calibration3d(const Config &_config)
 	chi2_cut->GetXaxis()->SetTitle("#chi^{2}");
 	chi2_cut->GetYaxis()->SetTitle("counts");
 	//chi2_cut->SetLineColor(kRed);
+
+	name = Form("#chi^{2} PDF", 1);
+	chi2_pdf = new TH1F(name, name, 100, -0.1, 1.1);
+	chi2_pdf->GetXaxis()->SetTitle("probability");
+	chi2_pdf->GetYaxis()->SetTitle("counts");
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -156,6 +161,8 @@ void Calibration3d::save_histograms()
 	plot_chi2_cut() -> SaveAs(name);
 	name = Form("results/tracks_anglular_distribution_iteration_%d.png",no_of_iteration);
 	plot_angle_distribution() -> SaveAs(name);
+	name = Form("results/chi2_PDF_iteration_%d.png",no_of_iteration);
+	plot_chi2_pdf() -> SaveAs(name);
 	//name = Form("test_%d", event_no);
 	TFile test_file("results/file_calib.root","UPDATE");
 	for (int i = 0; i < 8; i++)
@@ -203,7 +210,7 @@ double Calibration3d::calculate_theta_y()
 
 void Calibration3d::fit_in_3d()
 {
-	double aSt, bSt, track_angle;
+	double aSt, bSt, track_angle, temp_chi2, temp_chi2_prob;
 	double wires_positionsX_all[8];
 	double hits_positionsX_all[8];
 	double hits_positionsZ_all[8];
@@ -221,7 +228,9 @@ void Calibration3d::fit_in_3d()
 			wires_positionsX_all[j] = Layer[j]->CalibrationData.at(i).wire_pos_X;
 			hits_positionsX_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_X;
 			hits_positionsZ_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Z;
-			errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
+			if (no_of_iteration==0) errors_all[j]=1;
+			else errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
+			// std::cout << "t " << errors_all[j] << std::endl;
 		}
 		
 		if (0==i%1000) std::cout << "    " << i << " out of " << no_of_chosen_events << " done" << std::endl;
@@ -248,7 +257,10 @@ void Calibration3d::fit_in_3d()
 		fit3d -> Fit3d::calculate_wire_track_distances();
 		//fit3d -> Fit3d::draw_event();
 
-		if (!(fit3d -> Fit3d::err_flag()))
+		temp_chi2 = fit3d -> Fit3d::get_chisq();
+		temp_chi2_prob = TMath::Prob(temp_chi2,4);
+
+		if ((!(fit3d -> Fit3d::err_flag()))&&((temp_chi2_prob>0.05&&temp_chi2_prob<0.98)||no_of_iteration==0))
 		{
 			// straight
 			aSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,0);
@@ -262,6 +274,7 @@ void Calibration3d::fit_in_3d()
 			{
 				angle_distribution[0] -> Fill(track_angle);
 				chi2 -> Fill(fit3d -> Fit3d::get_chisq());
+				chi2_pdf -> Fill(temp_chi2_prob);
 				phi_xz -> Fill(Calibration3d::calculate_phi_xz());
 				theta_y -> Fill(Calibration3d::calculate_theta_y());
 
@@ -300,6 +313,7 @@ void Calibration3d::deletations()
 	Chi2.clear();
 	chi2 -> Reset();
 	chi2_cut -> Reset();
+	chi2_pdf -> Reset();
 	for (int i = 0; i < 4; i++)
 	{
 		angle_distribution[i] -> Reset();
@@ -326,13 +340,28 @@ TCanvas* Calibration3d::plot_chi2_cut()
 {
 	TString name;
 	name = "c_#chi^{2}_2";
-	TCanvas *c2 = new TCanvas(name,name);
+	TCanvas *c = new TCanvas(name,name);
 	gStyle -> SetOptStat(1111111);
 	gStyle->SetStatX(0.9);                
 	gStyle->SetStatW(0.2);
 	gStyle->SetStatH(0.1);
 	gStyle->SetStatY(0.9);
 	chi2_cut -> Draw();
+	return c;
+}
+
+TCanvas* Calibration3d::plot_chi2_pdf()
+{
+	TString name;
+	name = "c_#chi^{2}_pdf";
+	TCanvas *c2 = new TCanvas(name,name);
+	gStyle -> SetOptStat(1111111);
+	gStyle->SetStatX(0.9);                
+	gStyle->SetStatW(0.2);
+	gStyle->SetStatH(0.1);
+	gStyle->SetStatY(0.9);
+	gPad->SetLogy();
+	chi2_pdf -> Draw();
 	return c2;
 }
 
