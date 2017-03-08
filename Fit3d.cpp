@@ -722,7 +722,7 @@ void Fit3d::draw_event()
 }
 
 // =================== fit line to 8 lines ===========================
-void Fit3d::make_fit_to_lines()
+void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 {
 	double z[8];
 	z[0] = z_straight[0];
@@ -759,20 +759,20 @@ void Fit3d::make_fit_to_lines()
 	b[3] = y_x_b[2][1];
 
 	// biased
-	// LineFit * lineFit3d = LineFit::GetInstance();
-	// lineFit3d -> LineFit::set_z_values(z);
-	// lineFit3d -> LineFit::set_x_straight_values(x_straight);
-	// lineFit3d -> LineFit::set_incl_hit_lines_params(a, b);
-	// lineFit3d -> LineFit::set_x_errors(errors);
-	// lineFit3d -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
-	// lineFit3d -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
-	// lineFit3d -> LineFit::calculate_start_params();
-	// lineFit3d -> LineFit::fit_with_minuit();
-	// track3d_fit_point = lineFit3d -> LineFit::return_track_point();
-	/*std::cout << "in fit " << track3d_fit_point.Y() << std::endl;*/
-	// track3d_fit_vector = lineFit3d -> LineFit::return_track_vector();
-	// errflag = lineFit3d -> LineFit::err_flag();
-	// chisq = lineFit3d -> LineFit::get_chisq();
+	LineFit * lineFit3d = LineFit::GetInstance();
+	lineFit3d -> LineFit::set_z_values(z);
+	lineFit3d -> LineFit::set_x_straight_values(x_straight);
+	lineFit3d -> LineFit::set_incl_hit_lines_params(a, b);
+	lineFit3d -> LineFit::set_x_errors(errors);
+	lineFit3d -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
+	lineFit3d -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
+	lineFit3d -> LineFit::calculate_start_params();
+	lineFit3d -> LineFit::fit_with_minuit();
+	track3d_fit_point = lineFit3d -> LineFit::return_track_point();
+	// /*std::cout << "in fit " << track3d_fit_point.Y() << std::endl;*/
+	track3d_fit_vector = lineFit3d -> LineFit::return_track_vector();
+	errflag = lineFit3d -> LineFit::err_flag();
+	chisq = lineFit3d -> LineFit::get_chisq();
 
 	// unbiased
 	unbiased_fit = true;

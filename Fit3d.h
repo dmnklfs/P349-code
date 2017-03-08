@@ -56,7 +56,7 @@ public:
 	void set_detector_position(double x_lab_position, double z_lab_position, double half_x_dim, double half_z_dim, double distance_to_1st_layer);
 	void calculate_projections_on_hit_planes_calculations();
 	void calculate_projections_on_hit_planes_fit();
-	void make_fit_to_lines();
+	void make_fit_to_lines(bool _unbiased_fit);
 	double get_track_8lines_projection_params(int direction, int a_b);
 	double get_wires_params(int layer, int a_b);
 	bool err_flag();

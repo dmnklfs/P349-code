@@ -8,6 +8,7 @@ Calibration3d::Calibration3d()
 Calibration3d::Calibration3d(const Config &_config)
 {
 	fit_with_inclined = _config.fit_with_inclined;
+	unbiased_fit = _config.unbiased_fit;
 	// for drawing
 	half_x_dim = _config.D1_half_x_dim;
 	half_z_dim = _config.D1_half_z_dim;
@@ -63,29 +64,81 @@ Calibration3d::Calibration3d(const Config &_config)
 	theta_y->GetYaxis()->SetTitle("counts");
 
 	name = Form("#chi^{2} cut", 1);
-	chi2_cut = new TH1F(name, name, 400, -0.01, 15);
-	chi2_cut->GetXaxis()->SetTitle("#chi^{2}");
-	chi2_cut->GetYaxis()->SetTitle("counts");
-	//chi2_cut->SetLineColor(kRed);
+	chi2_no_cut = new TH1F(name, name, 250, -0.25, 25);
+	chi2_no_cut->GetXaxis()->SetTitle("#chi^{2}");
+	chi2_no_cut->GetYaxis()->SetTitle("counts");
+	chi2_no_cut->SetLineColor(kRed);
 
 	name = Form("#chi^{2} PDF", 1);
 	chi2_pdf = new TH1F(name, name, 100, -0.1, 1.1);
 	chi2_pdf->GetXaxis()->SetTitle("probability");
 	chi2_pdf->GetYaxis()->SetTitle("counts");
 
-	for (int i = 0; i < 4; i++)
-	{
-		name = Form("track angles layer %d",i+1);
-		angle_distribution[i] = new TH1F(name, name, 2000, -10, 190);
-		angle_distribution[i]->GetXaxis()->SetTitle("track angle (deg)");
-		angle_distribution[i]->GetYaxis()->SetTitle("counts");
-		angle_distribution[i]->SetLineColor(kBlue);
+	name = Form("#chi^{2} PDF cut", 1);
+	chi2_pdf_no_cut = new TH1F(name, name, 100, -0.1, 1.1);
+	chi2_pdf_no_cut->GetXaxis()->SetTitle("probability");
+	chi2_pdf_no_cut->GetYaxis()->SetTitle("counts");
+	chi2_pdf_no_cut->SetLineColor(kRed);
+
+	name = "track angles";
+	angle_distribution = new TH1F(name, name, 2000, -10, 190);
+	angle_distribution->GetXaxis()->SetTitle("track angle (deg)");
+	angle_distribution->GetYaxis()->SetTitle("counts");
+	angle_distribution->SetLineColor(kBlue);
 		
-		name = Form("track angles no cut layer %d",i+1);
-		angle_distribution_no_cut[i] = new TH1F(name, name, 2000, -10, 190);
-		angle_distribution_no_cut[i]->GetXaxis()->SetTitle("track angle (deg)");
-		angle_distribution_no_cut[i]->GetYaxis()->SetTitle("counts");
-		angle_distribution_no_cut[i]->SetLineColor(kRed);
+	name = "track angles no cut";
+	angle_distribution_no_cut = new TH1F(name, name, 2000, -10, 190);
+	angle_distribution_no_cut->GetXaxis()->SetTitle("track angle (deg)");
+	angle_distribution_no_cut->GetYaxis()->SetTitle("counts");
+	angle_distribution_no_cut->SetLineColor(kRed);
+
+	for (int i = 0; i < 8; i++)
+	{
+		name = Form("layer %d track angles",i+1);
+		layer_angle_distribution[i] = new TH1F(name, name, 2000, -10, 190);
+		layer_angle_distribution[i]->GetXaxis()->SetTitle("track angle (deg)");
+		layer_angle_distribution[i]->GetYaxis()->SetTitle("counts");
+		layer_angle_distribution[i]->SetLineColor(kBlue);
+		
+		name = Form("layer %d track angles no cut",i+1);
+		layer_angle_distribution_no_cut[i] = new TH1F(name, name, 2000, -10, 190);
+		layer_angle_distribution_no_cut[i]->GetXaxis()->SetTitle("track angle (deg)");
+		layer_angle_distribution_no_cut[i]->GetYaxis()->SetTitle("counts");
+		layer_angle_distribution_no_cut[i]->SetLineColor(kRed);
+
+		name = Form("layer %d #chi^{2}",i+1);
+		layer_chi2[i] = new TH1F(name, name, 250, -0.25, 25);//1000, -0.01, 0.05);
+		layer_chi2[i]->GetXaxis()->SetTitle("#chi^{2}");
+		layer_chi2[i]->GetYaxis()->SetTitle("counts");
+		layer_chi2[i]->SetLineWidth(2);
+		//chi2->SetLineColor(kBlue);
+
+		name = Form("layer %d #phi_{xz}",i+1);
+		layer_phi_xz[i] = new TH1F(name, name, 2000, -10, 190);
+		layer_phi_xz[i]->GetXaxis()->SetTitle("#phi_{xz} (deg)");
+		layer_phi_xz[i]->GetYaxis()->SetTitle("counts");
+
+		name = Form("layer %d #theta_{y}",i+1);
+		layer_theta_y[i] = new TH1F(name, name, 2000, -10, 190);
+		layer_theta_y[i]->GetXaxis()->SetTitle("#theta_{y} (deg)");
+		layer_theta_y[i]->GetYaxis()->SetTitle("counts");
+
+		name = Form("layer %d #chi^{2} cut", i+1);
+		layer_chi2_no_cut[i] = new TH1F(name, name, 250, -0.25, 25);
+		layer_chi2_no_cut[i]->GetXaxis()->SetTitle("#chi^{2}");
+		layer_chi2_no_cut[i]->GetYaxis()->SetTitle("counts");
+		layer_chi2_no_cut[i]->SetLineColor(kRed);
+
+		name = Form("layer %d #chi^{2} PDF",i+1);
+		layer_chi2_pdf[i] = new TH1F(name, name, 100, -0.1, 1.1);
+		layer_chi2_pdf[i]->GetXaxis()->SetTitle("probability");
+		layer_chi2_pdf[i]->GetYaxis()->SetTitle("counts");
+
+		name = Form("layer %d #chi^{2} PDF cut",i+1);
+		layer_chi2_pdf_no_cut[i] = new TH1F(name, name, 100, -0.1, 1.1);
+		layer_chi2_pdf_no_cut[i]->GetXaxis()->SetTitle("probability");
+		layer_chi2_pdf_no_cut[i]->GetYaxis()->SetTitle("counts");
+		layer_chi2_pdf_no_cut[i]->SetLineColor(kRed);
 	}
 }
 
@@ -169,7 +222,15 @@ void Calibration3d::save_histograms()
 	{
 		name = Form("results/layer%d_delta_iteration_%d.png",i+1, no_of_iteration);
 		Layer[i] -> CalibrationLayer3d::plot_delta() -> SaveAs(name);
-		Layer[i] -> CalibrationLayer3d::plot_delta() -> Write();	
+		//Layer[i] -> CalibrationLayer3d::plot_delta() -> Write();	
+		name = Form("results/layer%d_chi2_iteration_%d.png",i+1, no_of_iteration);
+		//plot_chi2(i) -> SaveAs(name);
+		name = Form("results/layer%d_chi2_range_iteration_%d.png",i+1, no_of_iteration);
+		plot_chi2_cut(i) -> SaveAs(name);
+		name = Form("results/layer%d_tracks_anglular_distribution_iteration_%d.png",i+1, no_of_iteration);
+		//plot_angle_distribution(i) -> SaveAs(name);
+		name = Form("results/layer%d_chi2_PDF_iteration_%d.png",i+1, no_of_iteration);
+		plot_chi2_pdf(i) -> SaveAs(name);
 	}
 	test_file.Close();
 }
@@ -210,7 +271,7 @@ double Calibration3d::calculate_theta_y()
 
 void Calibration3d::fit_in_3d()
 {
-	double aSt, bSt, track_angle, temp_chi2, temp_chi2_prob;
+	double aSt, bSt, track_angle, temp_chi2, layer_temp_chi2[8], temp_chi2_prob, layer_temp_chi2_prob[8];
 	double wires_positionsX_all[8];
 	double hits_positionsX_all[8];
 	double hits_positionsZ_all[8];
@@ -249,7 +310,7 @@ void Calibration3d::fit_in_3d()
 		fit3d -> Fit3d::set_detector_position(x_lab_position, z_lab_position, half_x_dim, half_z_dim, distance_to_1st_layer);
 		fit3d -> Fit3d::calculate_projections_on_hit_planes_calculations();
 
-		fit3d -> Fit3d::make_fit_to_lines();
+		fit3d -> Fit3d::make_fit_to_lines(unbiased_fit);
 		fit3d -> Fit3d::calculate_projections_on_hit_planes_fit();
 		track3d_fit_point = fit3d -> Fit3d::return_track_point();
 		track3d_fit_vector = fit3d -> Fit3d::return_track_vector();
@@ -257,23 +318,42 @@ void Calibration3d::fit_in_3d()
 		fit3d -> Fit3d::calculate_wire_track_distances();
 		//fit3d -> Fit3d::draw_event();
 
-		temp_chi2 = fit3d -> Fit3d::get_chisq(2);
-		temp_chi2_prob = TMath::Prob(temp_chi2,4);
-
+		// cut on convergence of -- ALL ?? -- fits
+		// cut on fit probability -- only for all layers
 		if ((!(fit3d -> Fit3d::err_flag())));//&&((temp_chi2_prob>0.05&&temp_chi2_prob<0.98)||no_of_iteration==0))
 		{
+
+			temp_chi2 = fit3d -> Fit3d::get_chisq();
+			temp_chi2_prob = TMath::Prob(temp_chi2,4);
 			//std::cout << "ok" << std::endl;
 			// straight
-			aSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,0);
+			aSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,0); // remove
 			bSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,1);
 
+			// not from track projection - from calculate phi/theta
 			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);
 			if (track_angle < 0) track_angle = 180+track_angle;
 
-			angle_distribution_no_cut[0] -> Fill(track_angle);
-			if ( 1)//was_correct_angle(track_angle) )
+			angle_distribution_no_cut -> Fill(track_angle);
+			chi2_pdf_no_cut->Fill(temp_chi2_prob);
+			chi2_no_cut->Fill(temp_chi2);
+
+			// -------------------------------
+			// | results from layers, no cut |
+			// -------------------------------
+			for (int i = 0; i < 8; i++)
 			{
-				angle_distribution[0] -> Fill(track_angle);
+				layer_temp_chi2[i] = fit3d -> Fit3d::get_chisq(i);
+				layer_temp_chi2_prob[i] = TMath::Prob(layer_temp_chi2[i],3);
+				layer_angle_distribution_no_cut[i] -> Fill( fit3d -> Fit3d::calculate_phi_xz(i) );
+				layer_chi2_pdf_no_cut[i] -> Fill(layer_temp_chi2_prob[i]);
+				layer_chi2_no_cut[i] -> Fill(layer_temp_chi2[i]);
+			}
+
+			if ( 1 ) //was_correct_angle(track_angle) )
+			{
+				//std::cout << " ok 1" << std::endl;
+				angle_distribution -> Fill(track_angle);
 				chi2 -> Fill(temp_chi2);
 				chi2_pdf -> Fill(temp_chi2_prob);
 				phi_xz -> Fill(Calibration3d::calculate_phi_xz());
@@ -291,6 +371,9 @@ void Calibration3d::fit_in_3d()
 					//std::cout << " c " << Layer[j] -> CalibrationData.at(i).distance_wire_track << std::endl;
 					Layer[j] -> CalibrationData.at(i).track_angle = track_angle;
 					Layer[j] -> CalibrationLayer3d::calculate_deltas(i);
+					layer_angle_distribution[j] -> Fill( fit3d -> Fit3d::calculate_phi_xz(j) );
+					layer_chi2_pdf[j] -> Fill(layer_temp_chi2_prob[j]);
+					layer_chi2[j] -> Fill(layer_temp_chi2[j]);
 				}
 			}
 		}
@@ -313,12 +396,19 @@ void Calibration3d::deletations()
 	InclinedLayersMTracks_bpar.clear();
 	Chi2.clear();
 	chi2 -> Reset();
-	chi2_cut -> Reset();
+	chi2_no_cut -> Reset();
 	chi2_pdf -> Reset();
-	for (int i = 0; i < 4; i++)
+	chi2_pdf_no_cut -> Reset();
+	angle_distribution -> Reset();
+	angle_distribution_no_cut -> Reset();
+	for (int i = 0; i < 8; i++)
 	{
-		angle_distribution[i] -> Reset();
-		angle_distribution_no_cut[i] -> Reset();
+		layer_angle_distribution[i] -> Reset();
+		layer_angle_distribution_no_cut[i] -> Reset();
+		layer_chi2[i] -> Reset();
+		layer_chi2_no_cut[i] -> Reset();
+		layer_chi2_pdf[i] -> Reset();
+		layer_chi2_pdf_no_cut[i] -> Reset();
 	}
 	
 }
@@ -347,7 +437,23 @@ TCanvas* Calibration3d::plot_chi2_cut()
 	gStyle->SetStatW(0.2);
 	gStyle->SetStatH(0.1);
 	gStyle->SetStatY(0.9);
-	chi2_cut -> Draw();
+	chi2_no_cut -> Draw();
+	chi2 -> Draw("same");
+	return c;
+}
+
+TCanvas* Calibration3d::plot_chi2_cut(int _layer_no)
+{
+	TString name;
+	name = Form("c_#chi^{2}_cut_layer%d", _layer_no);
+	TCanvas *c = new TCanvas(name,name);
+	gStyle -> SetOptStat(1111111);
+	gStyle->SetStatX(0.9);                
+	gStyle->SetStatW(0.2);
+	gStyle->SetStatH(0.1);
+	gStyle->SetStatY(0.9);
+	layer_chi2_no_cut[_layer_no] -> Draw();
+	layer_chi2[_layer_no] -> Draw("same");
 	return c;
 }
 
@@ -362,7 +468,24 @@ TCanvas* Calibration3d::plot_chi2_pdf()
 	gStyle->SetStatH(0.1);
 	gStyle->SetStatY(0.9);
 	gPad->SetLogy();
-	chi2_pdf -> Draw();
+	chi2_pdf_no_cut -> Draw();
+	chi2_pdf -> Draw("same");
+	return c2;
+}
+
+TCanvas* Calibration3d::plot_chi2_pdf(int _layer_no)
+{
+	TString name;
+	name = Form("c_#chi^{2}_pdf_layer%d", _layer_no);
+	TCanvas *c2 = new TCanvas(name,name);
+	gStyle -> SetOptStat(1111111);
+	gStyle->SetStatX(0.9);                
+	gStyle->SetStatW(0.2);
+	gStyle->SetStatH(0.1);
+	gStyle->SetStatY(0.9);
+	gPad->SetLogy();
+	layer_chi2_pdf_no_cut[ _layer_no ] -> Draw();
+	layer_chi2_pdf[ _layer_no ] -> Draw("same");
 	return c2;
 }
 
@@ -416,8 +539,8 @@ TCanvas* Calibration3d::plot_angle_distribution()
 	gStyle->SetStatY(0.9);
 	gStyle -> SetOptStat(1111111);
 	gPad -> SetLogy();
-	angle_distribution_no_cut[0] -> Draw();
-	angle_distribution[0] -> Draw("same");
+	angle_distribution_no_cut -> Draw();
+	angle_distribution -> Draw("same");
 	c->cd(2);
 	gPad -> SetLogy();
 	phi_xz -> Draw();

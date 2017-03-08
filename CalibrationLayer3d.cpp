@@ -278,16 +278,18 @@ TCanvas* CalibrationLayer3d::plot_delta()
 	gPad -> SetLogz();
 	delta -> Draw("colz");
 
-	name = Form("c layer%d wire-hit iteration %d",layer_no, no_of_iteration);
+	name = Form("c layer%d wire-track iteration %d",layer_no, no_of_iteration);
 	TCanvas *c2 = new TCanvas(name,name);
 	wire_track_test->Draw();
-	name = Form("results/layer%d_wire-hit_iteration_%d.png",layer_no, no_of_iteration);
+	name = Form("results/layer%d_wire-track_iteration_%d.png",layer_no, no_of_iteration);
 	c2 -> SaveAs(name);
-	name = Form("c layer%d wire-track iteration %d",layer_no, no_of_iteration);
+
+	name = Form("c layer%d wire-hit iteration %d",layer_no, no_of_iteration);
 	TCanvas *c3 = new TCanvas(name,name);
 	wire_hit_test->Draw();
-	name = Form("results/layer%d_wire-track_iteration_%d.png",layer_no, no_of_iteration);
+	name = Form("results/layer%d_wire-hit_iteration_%d.png",layer_no, no_of_iteration);
 	c3 -> SaveAs(name);
+	
 	return c;
 }
 

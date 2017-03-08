@@ -226,6 +226,7 @@ Config::Config()
 	}
 	
 	fit_with_inclined = true;
+	unbiased_fit = true;
 	for (int i = 0; i < 8; i++)
 	{
 		if (i==0||i==1||i==6||i==7)

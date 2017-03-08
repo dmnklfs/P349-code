@@ -51,6 +51,9 @@ public:
 	TCanvas* plot_chi2();		// w kazdej iteracji mozna dodawac histogramy do wektora, pozniej zwracac wektor do main
 	TCanvas* plot_chi2_cut();
 	TCanvas* plot_chi2_pdf();
+	TCanvas* plot_chi2(int _layer_no);
+	TCanvas* plot_chi2_cut(int _layer_no);
+	TCanvas* plot_chi2_pdf(int _layer_no);
 	TCanvas* plot_delta();
 	void fit_delta_projections();
 	void apply_corrections();
@@ -59,6 +62,7 @@ public:
 	void set_no_of_bin_in_event();
 	void fill_angle_distribution();
 	TCanvas* plot_angle_distribution();
+	TCanvas* plot_angle_distribution(int _layer_no);
 	bool was_correct_angle(double track_angle);
 	void set_pos_Xerr();
 	void fit_in_3d();
@@ -68,6 +72,7 @@ public:
 
 private:
 	bool fit_with_inclined;
+	bool unbiased_fit;
 	CalibrationLayer3d *Layer[8];
 	int no_of_iteration;
 	int no_of_calib_bins;
@@ -75,13 +80,22 @@ private:
 	double max_time_range;
 	double calib_bin_width;
 	double corr_bin_width;
-	TH1F *chi2;
 	TH1F *phi_xz;
 	TH1F *theta_y;
-	TH1F *chi2_cut;
+	TH1F *chi2;
+	TH1F *chi2_no_cut;
 	TH1F *chi2_pdf;
-	TH1F *angle_distribution[4];
-	TH1F *angle_distribution_no_cut[4];
+	TH1F *chi2_pdf_no_cut;
+	TH1F *angle_distribution;
+	TH1F *angle_distribution_no_cut;
+	TH1F *layer_phi_xz[8];
+	TH1F *layer_theta_y[8];
+	TH1F *layer_chi2[8];
+	TH1F *layer_chi2_no_cut[8];
+	TH1F *layer_chi2_pdf[8];
+	TH1F *layer_chi2_pdf_no_cut[8];
+	TH1F *layer_angle_distribution[8];
+	TH1F *layer_angle_distribution_no_cut[8];
 	double track_angle_min;
 	double track_angle_max;
 
