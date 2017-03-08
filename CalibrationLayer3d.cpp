@@ -229,7 +229,7 @@ void CalibrationLayer3d::fit_delta_projections(const char* folder_name)
 			ProjectionMean.push_back(-1);
 			ProjectionSigma.push_back(0.0);
 		}
-		c_delta_projection -> SaveAs(ProjectionName);
+		//c_delta_projection -> SaveAs(ProjectionName);
 		delete c_delta_projection;
 	}
 	delete gaussian;

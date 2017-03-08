@@ -1,21 +1,20 @@
-#include "LineFit.h"
+#include "LineFitUnbiased.h"
 
-LineFit * LineFit::_this = NULL;
+LineFitUnbiased * LineFitUnbiased::_this = NULL;
 
-LineFit * LineFit::GetInstance(){ 
+LineFitUnbiased * LineFitUnbiased::GetInstance(){ 
   if( _this == NULL ){
-    _this = new LineFit();
+    _this = new LineFitUnbiased();
   }
   return _this; 
 }
 
-LineFit::LineFit()
+LineFitUnbiased::LineFitUnbiased()
 {
 	no_of_points = 8;
-	excluded_layer = -1;
 }
 
-void LineFit::set_z_values(double *_z)
+void LineFitUnbiased::set_z_values(double *_z)
 {
 	for (int i = 0; i < 8; i++)
 	{
@@ -24,7 +23,7 @@ void LineFit::set_z_values(double *_z)
 	zp = 0;//z[0]-20;
 }
 
-void LineFit::set_x_straight_values(double *_x)
+void LineFitUnbiased::set_x_straight_values(double *_x)
 {
 	for (int i = 0; i < 4; i++)
 	{
@@ -32,7 +31,7 @@ void LineFit::set_x_straight_values(double *_x)
 	}
 }
 
-void LineFit::set_x_errors(double *_errors)
+void LineFitUnbiased::set_x_errors(double *_errors)
 {
 	for (int i = 0; i < 8; i++)
 	{
@@ -45,7 +44,7 @@ void LineFit::set_x_errors(double *_errors)
 
 }
 
-void LineFit::set_incl_hit_lines_params(double *_a, double *_b)
+void LineFitUnbiased::set_incl_hit_lines_params(double *_a, double *_b)
 {
 	for (int i = 0; i < 4; i++)
 	{
@@ -54,14 +53,14 @@ void LineFit::set_incl_hit_lines_params(double *_a, double *_b)
 	}
 }
 
-void LineFit::set_track_point(double _track_x, double _track_y, double _track_z)
+void LineFitUnbiased::set_track_point(double _track_x, double _track_y, double _track_z)
 {
 	track_x = _track_x;
 	track_y = _track_y;
 	track_z = _track_z;
 }
 
-void LineFit::set_track_vector(double _track_ux, double _track_uy, double _track_uz)
+void LineFitUnbiased::set_track_vector(double _track_ux, double _track_uy, double _track_uz)
 {
 	track_ux = _track_ux;
 	track_uy = _track_uy;
@@ -71,25 +70,23 @@ void LineFit::set_track_vector(double _track_ux, double _track_uy, double _track
 	//std::cout << track_uz << std::endl;
 }
 
-void LineFit::set_excluded_layer(int _excluded_layer)
+void LineFitUnbiased::set_excluded_layer(int _excluded_layer)
 {
 	excluded_layer = _excluded_layer;
 }
 
-bool LineFit::err_flag()
+bool LineFitUnbiased::err_flag()
 {
 	return errflag;
 }
 
-
-double LineFit::GlobalFCN(const double * par)
+double LineFitUnbiased::GlobalFCN(const double * par)
 {
 	const int points = no_of_points;
 	int i;
 	//calculate chisquare
 	double chisq = 0;
 	double delta = 0;
-	
 	double layer_chisq[8];
 	int straight[4];
 //	int inclined[4];
@@ -143,15 +140,14 @@ double LineFit::GlobalFCN(const double * par)
 	}
 	for (int i = 0; i < 8; i++)
 	{
-		if (i!=excluded_layer) chisq = chisq + layer_chisq[i];
+		if () chisq = chisq + layer_chisq[i];
 	}
 	return chisq;
 }
 
-double LineFit::get_chisq()
+double LineFitUnbiased::get_chisq()
 {
 	double chisq = 0;
-	double layer_chisq[8];
 	double delta = 0;
 	int straight[4];
 	straight[0] = 0;
@@ -168,54 +164,37 @@ double LineFit::get_chisq()
 	double t;
 	// points in which the line goes through the certain z plane
 	double xi, yi;
-	// straight
-	// layer 1
-	t = z[0] - zp;
-	xi = t*par[2] + par[0];
-	yi = t*par[3] + par[1];
-	delta  = x[0] - xi;
-	layer_chisq[0] = (delta*delta)/(errors[0]*errors[0]);
-	// layer 2
-	t = z[1] - zp;
-	xi = t*par[2] + par[0];
-	yi = t*par[3] + par[1];
-	delta  = x[1] - xi;
-	layer_chisq[1] = (delta*delta)/(errors[1]*errors[1]);
-	// layer 3
-	t = z[6] - zp;
-	xi = t*par[2] + par[0];
-	yi = t*par[3] + par[1];
-	delta  = x[2] - xi;
-	layer_chisq[6] = (delta*delta)/(errors[6]*errors[6]);
-	// layer 4
-	t = z[7] - zp;
-	xi = t*par[2] + par[0];
-	yi = t*par[3] + par[1];
-	delta  = x[3] - xi;
-	layer_chisq[7] = (delta*delta)/(errors[7]*errors[7]);
+	for (int i=0;i<4; i++)
+	{
+		//std::cout << errors[i] << std::endl;
+		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
+		t = z[ straight[i] ] - zp;//TMath::Abs(z[ straight[i] ] - zp);
+		xi = t*par[2] + par[0];
+		yi = t*par[3] + par[1];
+		delta  = x[i] - xi;
+		chisq += delta*delta/(errors[ straight[i] ]*errors[ straight[i] ]);
+	}
 
 	for (int i = 0; i < 4; i++)
 	{
-		t = z[2+i] - zp;
+		t = z[2+i] - zp;//TMath::Abs(z[2+i] - zp); // 1st inclined layer no = 2 (3rd layer counting in the beam direction)
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
-		layer_chisq[2+i] = delta/(errors[2+i]*errors[2+i]);
+		//std::cout << "delta: " << delta << std::endl;
+		chisq += delta/(errors[2+i]*errors[2+i]);
 	}
-	for (int i = 0; i < 8; i++)
-	{
-		if (i!=excluded_layer) chisq = chisq + layer_chisq[i];
-	}
+	//std::cout << "chisq " << chisq << std::endl;
 	return chisq;
 }
 
-void ffcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
+void mfcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 {
-	LineFit * rec = LineFit::GetInstance();
+	LineFitUnbiased * rec = LineFitUnbiased::GetInstance();
 	f = rec->GlobalFCN( par ); 
 }
 
-void LineFit::calculate_start_params()
+void LineFitUnbiased::calculate_start_params()
 {
 	double t;
 	t = 1/track_uz;
@@ -227,12 +206,12 @@ void LineFit::calculate_start_params()
 	start_yp = track_y + t*track_uy;
 }
 
-void LineFit::fit_with_minuit()
+void LineFitUnbiased::fit_with_minuit()
 {
 	errflag = true;
 	std::vector<double> output;
 	TMinuit *gMinuit = new TMinuit(7);  //initialize TMinuit with a maximum of 5 params
-	gMinuit->SetFCN(ffcn);
+	gMinuit->SetFCN(mfcn);
 	gMinuit->SetPrintLevel(-1);
 
 	Double_t arglist[10];
@@ -303,7 +282,7 @@ void LineFit::fit_with_minuit()
 	delete gMinuit;
 }
 
-TVector3 LineFit::return_track_point()
+TVector3 LineFitUnbiased::return_track_point()
 {
 	TVector3 track_point;
 	track_point.SetX(xp);
@@ -312,7 +291,7 @@ TVector3 LineFit::return_track_point()
 	return track_point;
 }
 
-TVector3 LineFit::return_track_vector()
+TVector3 LineFitUnbiased::return_track_vector()
 {
 	TVector3 track_vector;
 	track_vector.SetX(ux);

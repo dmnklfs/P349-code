@@ -66,12 +66,20 @@ public:
 
 	// from 3d fitting (not calculation)
 	TVector3 return_track_point();
+	TVector3 return_track_point(int _layer);
 	TVector3 return_track_vector();
+	TVector3 return_track_vector(int _layer);
 	double get_wire_track_dist(int _layer_no);
 	double get_chisq();
+	double get_chisq(int _layer);
+	double calculate_phi_xz();
+	double calculate_phi_xz(int _layer_no);
+	double calculate_theta_y();
+	double calculate_theta_y(int _layer_no);
 
 private:
 	int event_no;
+	bool unbiased_fit;
 	// data for fit
 	double x_straight_wires[4];
 	double x_straight[4],  z_straight[4],  errors_straight[4];
@@ -116,6 +124,7 @@ private:
 	TVector3 track3d_point;
 	// from fit to 8 planes
 	TVector3 track3d_fit_point, track3d_fit_vector;
+	TVector3 track3d_fit_point_unbiased[8], track3d_fit_vector_unbiased[8];
 
 	// projections of the track on the planes
 	//   vertors (directions)
@@ -132,9 +141,12 @@ private:
 	double z_lab_position;
 	double distance_to_1st_layer;
 	bool errflag;
+	bool errflag_unbiased[8];
 
 	double wire_track_dist[8];
 	double chisq;
+	double chisq_unbiased[8];
+
 };
 
 

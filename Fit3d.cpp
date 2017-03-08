@@ -8,6 +8,7 @@ Fit3d::Fit3d()
 Fit3d::Fit3d(int _event_no)
 {
 	event_no = _event_no;
+	unbiased_fit = false;
 }
 
 Fit3d::~Fit3d()
@@ -757,20 +758,44 @@ void Fit3d::make_fit_to_lines()
 	b[2] = y_x_b[2][0];
 	b[3] = y_x_b[2][1];
 
-	LineFit * lineFit3d = LineFit::GetInstance();
-	lineFit3d -> LineFit::set_z_values(z);
-	lineFit3d -> LineFit::set_x_straight_values(x_straight);
-	lineFit3d -> LineFit::set_incl_hit_lines_params(a, b);
-	lineFit3d -> LineFit::set_x_errors(errors);
-	lineFit3d -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
-	lineFit3d -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
-	lineFit3d -> LineFit::calculate_start_params();
-	// since there: separate
-	 lineFit3d -> LineFit::fit_with_minuit();
-	 track3d_fit_point = lineFit3d -> LineFit::return_track_point();
-	 track3d_fit_vector = lineFit3d -> LineFit::return_track_vector();
-	 errflag = lineFit3d -> LineFit::err_flag();
-	 chisq = lineFit3d -> LineFit::get_chisq();
+	// biased
+	// LineFit * lineFit3d = LineFit::GetInstance();
+	// lineFit3d -> LineFit::set_z_values(z);
+	// lineFit3d -> LineFit::set_x_straight_values(x_straight);
+	// lineFit3d -> LineFit::set_incl_hit_lines_params(a, b);
+	// lineFit3d -> LineFit::set_x_errors(errors);
+	// lineFit3d -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
+	// lineFit3d -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
+	// lineFit3d -> LineFit::calculate_start_params();
+	// lineFit3d -> LineFit::fit_with_minuit();
+	// track3d_fit_point = lineFit3d -> LineFit::return_track_point();
+	/*std::cout << "in fit " << track3d_fit_point.Y() << std::endl;*/
+	// track3d_fit_vector = lineFit3d -> LineFit::return_track_vector();
+	// errflag = lineFit3d -> LineFit::err_flag();
+	// chisq = lineFit3d -> LineFit::get_chisq();
+
+	// unbiased
+	unbiased_fit = true;
+	LineFit * lineFit3dUnbiased[8];
+	for (int i = 0; i < 8; i++)
+	{
+		lineFit3dUnbiased[i] = LineFit::GetInstance();
+		lineFit3dUnbiased[i] -> LineFit::set_z_values(z);
+		lineFit3dUnbiased[i] -> LineFit::set_x_straight_values(x_straight);
+		lineFit3dUnbiased[i] -> LineFit::set_incl_hit_lines_params(a, b);
+		lineFit3dUnbiased[i] -> LineFit::set_x_errors(errors);
+		lineFit3dUnbiased[i] -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
+		lineFit3dUnbiased[i] -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
+		lineFit3dUnbiased[i] -> LineFit::calculate_start_params();
+		lineFit3dUnbiased[i] -> LineFit::set_excluded_layer(i);
+		lineFit3dUnbiased[i] -> LineFit::fit_with_minuit();
+		track3d_fit_point_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::return_track_point();
+		track3d_fit_vector_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::return_track_vector();
+		errflag_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::err_flag();
+		chisq_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::get_chisq();
+		//std::cout << chisq_unbiased[i] << std::endl;
+	}
+	
 
 	// UncorrelatedOpt * track_optimization = UncorrelatedOpt::GetInstance();
 	// track_optimization -> UncorrelatedOpt::set_z_values(z);
@@ -787,12 +812,21 @@ void Fit3d::make_fit_to_lines()
 
 bool Fit3d::err_flag()
 {
+	if(unbiased_fit)
+	{
+		errflag = errflag_unbiased[0]&&errflag_unbiased[1]&&errflag_unbiased[2]&&errflag_unbiased[3]&&errflag_unbiased[4]&&errflag_unbiased[5]&&errflag_unbiased[6]&&errflag_unbiased[7];
+	}
 	return errflag;
 }
 
 double Fit3d::get_chisq()
 {
 	return chisq;
+}
+
+double Fit3d::get_chisq(int _layer)
+{
+	return chisq_unbiased[_layer];
 }
 
 double Fit3d::get_track_8lines_projection_params(int direction, int a_b)
@@ -849,9 +883,19 @@ TVector3 Fit3d::return_track_point()
 	return track3d_fit_point;
 }
 
+TVector3 Fit3d::return_track_point(int _layer_no)
+{
+	return track3d_fit_point_unbiased[ _layer_no ];
+}
+
 TVector3 Fit3d::return_track_vector()
 {
 	return track3d_fit_vector;
+}
+
+TVector3 Fit3d::return_track_vector(int _layer_no)
+{
+	return track3d_fit_vector_unbiased[ _layer_no ];
 }
 
 void Fit3d::calculate_wire_track_distances()
@@ -861,22 +905,6 @@ void Fit3d::calculate_wire_track_distances()
 	straight[1] = 1;
 	straight[2] = 6;
 	straight[3] = 7;
-
-	// scaling
-	double t, t2;
-	// points in which the line goes through the certain z plane
-	double xi, yi;
-	double zp = track3d_fit_point.Z();
-	for (int i=0;i<4; i++)
-	{
-		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
-		t = z_straight[i] - zp;//TMath::Abs(z[ straight[i] ] - zp);
-		//std::cout << "t: " << t << " z: " << z_straight[i] << std::endl;
-		t2 = 1/track3d_fit_vector.Z();
-		xi = t*t2*track3d_fit_vector.X() + track3d_fit_point.X();
-		yi = t*t2*track3d_fit_vector.Y() + track3d_fit_point.Y();
-		wire_track_dist[ straight[i] ]  = TMath::Abs(x_straight_wires[i] - xi);
-	}
 
 	double z[4];
 	z[0] = z_inclined1[0];
@@ -896,12 +924,56 @@ void Fit3d::calculate_wire_track_distances()
 	b[2] = y_x_b_wire[2][0];
 	b[3] = y_x_b_wire[2][1];
 
+	// scaling
+	double t, t2;
+	// points in which the line goes through the certain z plane
+	double xi, yi;
+	double xp[8], yp[8], zp[8];
+	double ux[8], uy[8], uz[8];
+	if (unbiased_fit==false)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			zp[i] = track3d_fit_point.Z();
+			//std::cout << track3d_fit_point.Z() << std::endl;
+			xp[i] = track3d_fit_point.X();
+			yp[i] = track3d_fit_point.Y();
+			ux[i] = track3d_fit_vector.X();
+			uy[i] = track3d_fit_vector.Y();
+			uz[i] = track3d_fit_vector.Z();
+		}
+	}
+	if (unbiased_fit==true)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			zp[i] = track3d_fit_point_unbiased[i].Z();
+			xp[i] = track3d_fit_point_unbiased[i].X();
+			yp[i] = track3d_fit_point_unbiased[i].Y();
+			ux[i] = track3d_fit_vector_unbiased[i].X();
+			uy[i] = track3d_fit_vector_unbiased[i].Y();
+			uz[i] = track3d_fit_vector_unbiased[i].Z();
+		}
+	}
+	
+	for (int i=0;i<4; i++)
+	{
+		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
+		t = z_straight[i] - zp[ straight[i] ];//TMath::Abs(z[ straight[i] ] - zp);
+		//std::cout << "t: " << t << " z: " << z_straight[i] << std::endl;
+		t2 = 1/uz[ straight[i] ];
+		xi = t*t2*ux[ straight[i] ] + xp[ straight[i] ];
+		yi = t*t2*uy[ straight[i] ] + yp[ straight[i] ];
+		wire_track_dist[ straight[i] ]  = TMath::Abs(x_straight_wires[i] - xi);
+		//std::cout << t2 << std::endl;
+	}
+
 	for (int i = 0; i < 4; i++)
 	{
-		t = z[i] - zp;
-		t2 = 1/track3d_fit_vector.Z();
-		xi = t*t2*track3d_fit_vector.X() + track3d_fit_point.X();
-		yi = t*t2*track3d_fit_vector.Y() + track3d_fit_point.Y();
+		t = z[i] - zp[ 2+i ];
+		t2 = 1/uz[i+2];
+		xi = t*t2*ux[i+2] + xp[i+2];
+		yi = t*t2*uy[i+2] + yp[i+2];
 		wire_track_dist[ 2+i ]  = TMath::Abs(a[i]*xi-yi+b[i])*pow(pow((a[i]*a[i]+1),0.5),-1);
 	}
 
@@ -915,4 +987,62 @@ void Fit3d::calculate_wire_track_distances()
 double Fit3d::get_wire_track_dist(int _layer_no)
 {
 	return wire_track_dist[_layer_no];
+}
+
+double Fit3d::calculate_phi_xz()
+{
+	double phi_xz;
+	// calculate vector projected onto xz plane
+	double vx, vz, norm;
+	vx = track3d_fit_vector.X();
+	vz = track3d_fit_vector.Z();
+	norm = pow(vx*vx+vz*vz,0.5);
+	vx = vx*pow(norm,-1);
+	vz = vz*pow(norm,-1);
+	// calculate angle between Ox and vector
+	phi_xz = TMath::ACos(vx)*180*pow(3.14,-1);
+	return phi_xz;
+}
+
+double Fit3d::calculate_phi_xz(int _layer_no)
+{
+	double phi_xz;
+	// calculate vector projected onto xz plane
+	double vx, vz, norm;
+	vx = track3d_fit_vector_unbiased[_layer_no].X();
+	vz = track3d_fit_vector_unbiased[_layer_no].Z();
+	norm = pow(vx*vx+vz*vz,0.5);
+	vx = vx*pow(norm,-1);
+	vz = vz*pow(norm,-1);
+	// calculate angle between Ox and vector
+	phi_xz = TMath::ACos(vx)*180*pow(3.14,-1);
+	return phi_xz;
+}
+
+double Fit3d::calculate_theta_y()
+{
+	double theta_y = 0;
+	double vz, vy, norm;
+	vz = track3d_fit_vector.Z();
+	vy = track3d_fit_vector.Y();
+	norm = pow(vz*vz+vy*vy,0.5);
+	vz = vz*pow(norm,-1);
+	vy = vy*pow(norm,-1);
+	// calculate angle between Ox and vector
+	theta_y = TMath::ACos(vy)*180*pow(3.14,-1);
+	return theta_y;
+}
+
+double Fit3d::calculate_theta_y(int _layer_no)
+{
+	double theta_y = 0;
+	double vz, vy, norm;
+	vz = track3d_fit_vector_unbiased[_layer_no].Z();
+	vy = track3d_fit_vector_unbiased[_layer_no].Y();
+	norm = pow(vz*vz+vy*vy,0.5);
+	vz = vz*pow(norm,-1);
+	vy = vy*pow(norm,-1);
+	// calculate angle between Ox and vector
+	theta_y = TMath::ACos(vy)*180*pow(3.14,-1);
+	return theta_y;
 }

@@ -257,11 +257,12 @@ void Calibration3d::fit_in_3d()
 		fit3d -> Fit3d::calculate_wire_track_distances();
 		//fit3d -> Fit3d::draw_event();
 
-		temp_chi2 = fit3d -> Fit3d::get_chisq();
+		temp_chi2 = fit3d -> Fit3d::get_chisq(2);
 		temp_chi2_prob = TMath::Prob(temp_chi2,4);
 
-		if ((!(fit3d -> Fit3d::err_flag()))&&((temp_chi2_prob>0.05&&temp_chi2_prob<0.98)||no_of_iteration==0))
+		if ((!(fit3d -> Fit3d::err_flag())));//&&((temp_chi2_prob>0.05&&temp_chi2_prob<0.98)||no_of_iteration==0))
 		{
+			//std::cout << "ok" << std::endl;
 			// straight
 			aSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,0);
 			bSt = fit3d -> Fit3d::get_track_8lines_projection_params(0,1);
@@ -270,10 +271,10 @@ void Calibration3d::fit_in_3d()
 			if (track_angle < 0) track_angle = 180+track_angle;
 
 			angle_distribution_no_cut[0] -> Fill(track_angle);
-			if ( was_correct_angle(track_angle) )
+			if ( 1)//was_correct_angle(track_angle) )
 			{
 				angle_distribution[0] -> Fill(track_angle);
-				chi2 -> Fill(fit3d -> Fit3d::get_chisq());
+				chi2 -> Fill(temp_chi2);
 				chi2_pdf -> Fill(temp_chi2_prob);
 				phi_xz -> Fill(Calibration3d::calculate_phi_xz());
 				theta_y -> Fill(Calibration3d::calculate_theta_y());

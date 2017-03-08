@@ -109,7 +109,7 @@ Config::Config()
 	HEX_distance_between_wires = 1.8;		// x
 	HEX_distance_between_layers = 2.8785;	// z
 
-	// this should be bear from somewhere
+	// this should be read from somewhere
 	double _D1_L1_drift_time_offset[41] =  {40, 40, 40, 46, 46, 46, 46, 46, 46, 46, 
 											46, 46, 46, 40, 40, 40, 40, 40, 40, 40,
 											34, 34, 34, 46, 40, 40, 40,  4, -2,  4,
