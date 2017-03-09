@@ -228,7 +228,7 @@ void Calibration3d::save_histograms()
 		name = Form("results/layer%d_chi2_range_iteration_%d.png",i+1, no_of_iteration);
 		plot_chi2_cut(i) -> SaveAs(name);
 		name = Form("results/layer%d_tracks_anglular_distribution_iteration_%d.png",i+1, no_of_iteration);
-		//plot_angle_distribution(i) -> SaveAs(name);
+		plot_angle_distribution(i) -> SaveAs(name);
 		name = Form("results/layer%d_chi2_PDF_iteration_%d.png",i+1, no_of_iteration);
 		plot_chi2_pdf(i) -> SaveAs(name);
 	}
@@ -541,6 +541,32 @@ TCanvas* Calibration3d::plot_angle_distribution()
 	gPad -> SetLogy();
 	angle_distribution_no_cut -> Draw();
 	angle_distribution -> Draw("same");
+	c->cd(2);
+	gPad -> SetLogy();
+	phi_xz -> Draw();
+	c->cd(3);
+	gPad -> SetLogy();
+	theta_y -> Draw();
+	return c;
+}
+
+TCanvas* Calibration3d::plot_angle_distribution(int _layer_no)
+{
+	TString name;
+	name = Form("Track angles distribution iteration %d layer %d", no_of_iteration, _layer_no);
+	TCanvas *c = new TCanvas(name,name,2000,500);
+	c->Divide(3,1);
+	c->cd(1);
+	name = Form("Track angles distribution iteration %d", no_of_iteration);
+	gStyle->SetOptStat(0000000);		// tym mozna manipulowac przy rzutach (tylko tym?)
+	gStyle->SetStatX(0.4);                
+	gStyle->SetStatW(0.2);
+	gStyle->SetStatH(0.1);
+	gStyle->SetStatY(0.9);
+	gStyle -> SetOptStat(1111111);
+	gPad -> SetLogy();
+	layer_angle_distribution_no_cut[ _layer_no ] -> Draw();
+	layer_angle_distribution[ _layer_no ] -> Draw("same");
 	c->cd(2);
 	gPad -> SetLogy();
 	phi_xz -> Draw();

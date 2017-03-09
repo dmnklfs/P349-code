@@ -767,12 +767,14 @@ void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 	lineFit3d -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
 	lineFit3d -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
 	lineFit3d -> LineFit::calculate_start_params();
+	lineFit3d -> LineFit::set_excluded_layer(-1);
 	lineFit3d -> LineFit::fit_with_minuit();
 	track3d_fit_point = lineFit3d -> LineFit::return_track_point();
 	// /*std::cout << "in fit " << track3d_fit_point.Y() << std::endl;*/
 	track3d_fit_vector = lineFit3d -> LineFit::return_track_vector();
 	errflag = lineFit3d -> LineFit::err_flag();
 	chisq = lineFit3d -> LineFit::get_chisq();
+	std::cout << " all " << chisq << std::endl;
 
 	// unbiased
 	unbiased_fit = true;
@@ -780,6 +782,7 @@ void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 	for (int i = 0; i < 8; i++)
 	{
 		lineFit3dUnbiased[i] = LineFit::GetInstance();
+		lineFit3dUnbiased[i] -> LineFit::set_excluded_layer(i);
 		lineFit3dUnbiased[i] -> LineFit::set_z_values(z);
 		lineFit3dUnbiased[i] -> LineFit::set_x_straight_values(x_straight);
 		lineFit3dUnbiased[i] -> LineFit::set_incl_hit_lines_params(a, b);
@@ -787,13 +790,12 @@ void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 		lineFit3dUnbiased[i] -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
 		lineFit3dUnbiased[i] -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
 		lineFit3dUnbiased[i] -> LineFit::calculate_start_params();
-		lineFit3dUnbiased[i] -> LineFit::set_excluded_layer(i);
 		lineFit3dUnbiased[i] -> LineFit::fit_with_minuit();
 		track3d_fit_point_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::return_track_point();
 		track3d_fit_vector_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::return_track_vector();
 		errflag_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::err_flag();
 		chisq_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::get_chisq();
-		//std::cout << chisq_unbiased[i] << std::endl;
+		std::cout << chisq_unbiased[i] << std::endl;
 	}
 	
 
