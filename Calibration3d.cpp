@@ -47,7 +47,7 @@ Calibration3d::Calibration3d(const Config &_config)
 
 	TString name;
 	name = Form("#chi^{2}",1);
-	chi2 = new TH1F(name, name, 250, -0.25, 25);//1000, -0.01, 0.05);
+	chi2 = new TH1F(name, name, 80, -0.25, 8);//1000, -0.01, 0.05);  250, -0.25, 25
 	chi2->GetXaxis()->SetTitle("#chi^{2}");
 	chi2->GetYaxis()->SetTitle("counts");
 	chi2->SetLineWidth(2);
@@ -64,7 +64,7 @@ Calibration3d::Calibration3d(const Config &_config)
 	theta_y->GetYaxis()->SetTitle("counts");
 
 	name = Form("#chi^{2} cut", 1);
-	chi2_no_cut = new TH1F(name, name, 250, -0.25, 25);
+	chi2_no_cut = new TH1F(name, name, 80, -0.25, 8);
 	chi2_no_cut->GetXaxis()->SetTitle("#chi^{2}");
 	chi2_no_cut->GetYaxis()->SetTitle("counts");
 	chi2_no_cut->SetLineColor(kRed);
@@ -107,7 +107,7 @@ Calibration3d::Calibration3d(const Config &_config)
 		layer_angle_distribution_no_cut[i]->SetLineColor(kRed);
 
 		name = Form("layer %d #chi^{2}",i+1);
-		layer_chi2[i] = new TH1F(name, name, 250, -0.25, 25);//1000, -0.01, 0.05);
+		layer_chi2[i] = new TH1F(name, name, 80, -0.25, 8);//1000, -0.01, 0.05);
 		layer_chi2[i]->GetXaxis()->SetTitle("#chi^{2}");
 		layer_chi2[i]->GetYaxis()->SetTitle("counts");
 		layer_chi2[i]->SetLineWidth(2);
@@ -124,7 +124,7 @@ Calibration3d::Calibration3d(const Config &_config)
 		layer_theta_y[i]->GetYaxis()->SetTitle("counts");
 
 		name = Form("layer %d #chi^{2} cut", i+1);
-		layer_chi2_no_cut[i] = new TH1F(name, name, 250, -0.25, 25);
+		layer_chi2_no_cut[i] = new TH1F(name, name, 80, -0.25, 8);
 		layer_chi2_no_cut[i]->GetXaxis()->SetTitle("#chi^{2}");
 		layer_chi2_no_cut[i]->GetYaxis()->SetTitle("counts");
 		layer_chi2_no_cut[i]->SetLineColor(kRed);
@@ -467,7 +467,7 @@ TCanvas* Calibration3d::plot_chi2_pdf()
 	gStyle->SetStatW(0.2);
 	gStyle->SetStatH(0.1);
 	gStyle->SetStatY(0.9);
-	gPad->SetLogy();
+	//gPad->SetLogy();
 	chi2_pdf_no_cut -> Draw();
 	chi2_pdf -> Draw("same");
 	return c2;
@@ -483,7 +483,7 @@ TCanvas* Calibration3d::plot_chi2_pdf(int _layer_no)
 	gStyle->SetStatW(0.2);
 	gStyle->SetStatH(0.1);
 	gStyle->SetStatY(0.9);
-	gPad->SetLogy();
+	//gPad->SetLogy();
 	layer_chi2_pdf_no_cut[ _layer_no ] -> Draw();
 	layer_chi2_pdf[ _layer_no ] -> Draw("same");
 	return c2;

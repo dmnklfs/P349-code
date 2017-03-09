@@ -774,7 +774,8 @@ void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 	track3d_fit_vector = lineFit3d -> LineFit::return_track_vector();
 	errflag = lineFit3d -> LineFit::err_flag();
 	chisq = lineFit3d -> LineFit::get_chisq();
-	std::cout << " all " << chisq << std::endl;
+	//std::cout << " all " << chisq << std::endl;
+	lineFit3d -> LineFit::~LineFit();
 
 	// unbiased
 	unbiased_fit = true;
@@ -795,7 +796,8 @@ void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 		track3d_fit_vector_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::return_track_vector();
 		errflag_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::err_flag();
 		chisq_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::get_chisq();
-		std::cout << chisq_unbiased[i] << std::endl;
+		lineFit3dUnbiased[i] -> LineFit::~LineFit();
+		//std::cout << chisq_unbiased[i] << std::endl;
 	}
 	
 

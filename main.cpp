@@ -153,6 +153,78 @@ int main(int argc, char *argv[])
     calibration -> plot_current_calibration();
     calibration -> deletations();
 
+    calibration -> set_no_of_iteration(5);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    // add: make a 3d track, make projections
+
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(6);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    // add: make a 3d track, make projections
+
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(7);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    // add: make a 3d track, make projections
+
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(8);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    // add: make a 3d track, make projections
+
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(9);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    // add: make a 3d track, make projections
+
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(10);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    // add: make a 3d track, make projections
+
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
     /*calibration -> set_no_of_iteration(5);
     calibration -> calculate_hit_position();
     calibration -> fit_events_in_straight_layers_biased(100000);
