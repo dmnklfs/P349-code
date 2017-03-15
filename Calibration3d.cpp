@@ -47,7 +47,7 @@ Calibration3d::Calibration3d(const Config &_config)
 
 	TString name;
 	name = Form("#chi^{2}",1);
-	chi2 = new TH1F(name, name, 80, -0.25, 8);//1000, -0.01, 0.05);  250, -0.25, 25
+	chi2 = new TH1F(name, name, 250, -0.25, 25);//80, -0.25, 8);//1000, -0.01, 0.05);  250, -0.25, 25
 	chi2->GetXaxis()->SetTitle("#chi^{2}");
 	chi2->GetYaxis()->SetTitle("counts");
 	chi2->SetLineWidth(2);
@@ -64,7 +64,7 @@ Calibration3d::Calibration3d(const Config &_config)
 	theta_y->GetYaxis()->SetTitle("counts");
 
 	name = Form("#chi^{2} cut", 1);
-	chi2_no_cut = new TH1F(name, name, 80, -0.25, 8);
+	chi2_no_cut = new TH1F(name, name, 250, -0.25, 25);
 	chi2_no_cut->GetXaxis()->SetTitle("#chi^{2}");
 	chi2_no_cut->GetYaxis()->SetTitle("counts");
 	chi2_no_cut->SetLineColor(kRed);
@@ -291,12 +291,12 @@ void Calibration3d::fit_in_3d()
 			hits_positionsZ_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Z;
 			if (no_of_iteration==0) errors_all[j]=1;
 			else errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
-			// std::cout << "t " << errors_all[j] << std::endl;
 		}
 		
 		if (0==i%1000) std::cout << "    " << i << " out of " << no_of_chosen_events << " done" << std::endl;
 
 		Fit3d *fit3d = new Fit3d(i);
+		fit3d -> Fit3d::set_no_of_iteration(no_of_iteration);
 		fit3d -> Fit3d::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all, wires_positionsX_all);
 		fit3d -> Fit3d::fit_straight_layer();
 		fit3d -> Fit3d::fit_inclined_layers();
@@ -320,7 +320,7 @@ void Calibration3d::fit_in_3d()
 
 		// cut on convergence of -- ALL ?? -- fits
 		// cut on fit probability -- only for all layers
-		if ((!(fit3d -> Fit3d::err_flag())));//&&((temp_chi2_prob>0.05&&temp_chi2_prob<0.98)||no_of_iteration==0))
+		if ((!(fit3d -> Fit3d::err_flag())))//&&((temp_chi2_prob>0.05)||no_of_iteration==0))
 		{
 
 			temp_chi2 = fit3d -> Fit3d::get_chisq();
@@ -341,16 +341,16 @@ void Calibration3d::fit_in_3d()
 			// -------------------------------
 			// | results from layers, no cut |
 			// -------------------------------
-			for (int i = 0; i < 8; i++)
+			for (int j = 0; j < 8; j++)
 			{
-				layer_temp_chi2[i] = fit3d -> Fit3d::get_chisq(i);
-				layer_temp_chi2_prob[i] = TMath::Prob(layer_temp_chi2[i],3);
-				layer_angle_distribution_no_cut[i] -> Fill( fit3d -> Fit3d::calculate_phi_xz(i) );
-				layer_chi2_pdf_no_cut[i] -> Fill(layer_temp_chi2_prob[i]);
-				layer_chi2_no_cut[i] -> Fill(layer_temp_chi2[i]);
+				layer_temp_chi2[j] = fit3d -> Fit3d::get_chisq(j);
+				layer_temp_chi2_prob[j] = TMath::Prob(layer_temp_chi2[j],3);
+				layer_angle_distribution_no_cut[j] -> Fill( fit3d -> Fit3d::calculate_phi_xz(j) );
+				layer_chi2_pdf_no_cut[j] -> Fill(layer_temp_chi2_prob[j]);
+				layer_chi2_no_cut[j] -> Fill(layer_temp_chi2[j]);
 			}
 
-			if ( 1 ) //was_correct_angle(track_angle) )
+			if ( temp_chi2_prob>0.05 ) //was_correct_angle(track_angle) )
 			{
 				//std::cout << " ok 1" << std::endl;
 				angle_distribution -> Fill(track_angle);
@@ -359,9 +359,6 @@ void Calibration3d::fit_in_3d()
 				phi_xz -> Fill(Calibration3d::calculate_phi_xz());
 				theta_y -> Fill(Calibration3d::calculate_theta_y());
 
-				//chi2_cut -> Fill(chi2St);
-				//chi2 -> Fill(chi2St);
-				// set values is straight layers
 				for (int j = 0; j < 8; j++)
 				{
 					Layer[j] -> CalibrationData.at(i).track_A = aSt;
@@ -521,6 +518,8 @@ void Calibration3d::plot_current_calibration()
 	{
 		name = Form("results/layer%d_calibration_iteration_%d.png",i+1, no_of_iteration);
 		Layer[i] -> plot_current_calibration() -> SaveAs(name);
+		name = Form("results/layer%d_corrections_%d.png",i+1, no_of_iteration);
+		Layer[i] -> plot_corrections() -> SaveAs(name);
 	}
 }
 

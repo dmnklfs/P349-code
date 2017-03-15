@@ -76,6 +76,7 @@ public:
 	double calculate_phi_xz(int _layer_no);
 	double calculate_theta_y();
 	double calculate_theta_y(int _layer_no);
+	void set_no_of_iteration(int _no_of_iteration);
 
 private:
 	int event_no;
@@ -146,6 +147,8 @@ private:
 	double wire_track_dist[8];
 	double chisq;
 	double chisq_unbiased[8];
+
+	int no_of_iteration;
 
 };
 

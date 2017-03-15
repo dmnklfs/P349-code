@@ -95,6 +95,7 @@ public:
 	TCanvas* plot_delta();
 	TCanvas* plot_delta_cut();
 	TCanvas* plot_current_calibration();
+	TCanvas* plot_corrections();
 
 	// applying results and deletations
 	void apply_corrections();

@@ -40,12 +40,12 @@ void CalibrationLayer3d::set_no_of_corr_bins(double _no_of_corr_bins)
 		corr_bin_width = max_time_range/no_of_corr_bins;
 		TString name;
 		name = Form("layer%d #Delta", layer_no);
-		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);//150, -0.3, 0.3);///350, -0.4, 0.4);
+		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 150, -0.3, 0.3);///350, -0.4, 0.4);
 		delta->GetXaxis()->SetTitle("time [ns]");
 		delta->GetYaxis()->SetTitle("delta [cm]");
 
 		name = Form("layer%d #Delta cut", layer_no);
-		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);//150, -0.3, 0.3);///350, -0.4, 0.4);
+		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 150, -0.3, 0.3);///350, -0.4, 0.4);
 		delta_cut->GetXaxis()->SetTitle("time [ns]");
 		delta_cut->GetYaxis()->SetTitle("delta [cm]");
 	}
@@ -60,12 +60,12 @@ void CalibrationLayer3d::set_max_time_range(double _max_time_range)
 		corr_bin_width = max_time_range/no_of_corr_bins;
 		TString name;
 		name = Form("layer%d #Delta", layer_no);
-		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);///350, -0.4, 0.4);
+		delta = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 150, -0.3, 0.3);///350, -0.4, 0.4);
 		delta->GetXaxis()->SetTitle("time [ns]");
 		delta->GetYaxis()->SetTitle("delta [cm]");
 
 		name = Form("layer%d #Delta cut", layer_no);
-		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 350, -0.4, 0.4);///350, -0.4, 0.4);
+		delta_cut = new TH2F(name, name, no_of_corr_bins, 0, max_time_range, 150, -0.3, 0.3);///350, -0.4, 0.4);
 		delta_cut->GetXaxis()->SetTitle("time [ns]");
 		delta_cut->GetYaxis()->SetTitle("delta [cm]");
 	}
@@ -212,7 +212,7 @@ void CalibrationLayer3d::fit_delta_projections(const char* folder_name)
 		gStyle->SetStatH(0.2);           
 		ProjectionName = Form(folder_name + TString("projection_%d.png"),i);
 		delta_projection -> Draw();
-		if (no_of_entries_in_projection > 20)
+		if (no_of_entries_in_projection > 70)
 		{
 			gaussian -> SetParameters(delta_projection -> GetMaximum(), hist_center, 0.1);
 			delta_projection->Fit("gaussian","WWQEMI","",hist_center-0.15,hist_center+0.15);//hist_center-hist_sigma,hist_center+hist_sigma);
@@ -229,7 +229,7 @@ void CalibrationLayer3d::fit_delta_projections(const char* folder_name)
 			ProjectionMean.push_back(-1);
 			ProjectionSigma.push_back(0.0);
 		}
-		c_delta_projection -> SaveAs(ProjectionName);
+		if (no_of_iteration < 5 || no_of_iteration > 10) c_delta_projection -> SaveAs(ProjectionName);
 		delete c_delta_projection;
 	}
 	delete gaussian;
@@ -243,7 +243,8 @@ void CalibrationLayer3d::apply_corrections()
 		corr_bin = Bins.at(i);
 		if(-1!=ProjectionMean.at(corr_bin))
 		{
-			Distances.at(i) = Distances.at(i) + ProjectionMean.at(corr_bin);
+			if (no_of_iteration!=11 && no_of_iteration!=12) Distances.at(i) = Distances.at(i) + ProjectionMean.at(corr_bin);
+			else Distances.at(i) = Distances.at(i);
 			SigmaForCalibration.push_back(ProjectionSigma.at(corr_bin));
 		}
 		else SigmaForCalibration.push_back(0);
@@ -347,6 +348,17 @@ TCanvas* CalibrationLayer3d::plot_current_calibration()
 	initial_calibration -> Draw("AL");
 	current_calibration -> Draw("sameP");
 	return c_current_calibration;
+}
+
+TCanvas* CalibrationLayer3d::plot_corrections()
+{
+	TString name;
+	name = Form("c layer%d current corrections iteration %d", layer_no, no_of_iteration);
+	TGraphErrors* corrections_plot;
+	corrections_plot = new TGraphErrors(DriftTimes.size(), &DriftTimes.at(0), &ProjectionMean.at(0), &XErrors.at(0), &SigmaForCalibration.at(0));
+	TCanvas *c_corrections_plot = new TCanvas(name,name);
+	corrections_plot -> Draw("AP");
+	return c_corrections_plot;
 }
 
 void CalibrationLayer3d::calculate_deltas(int i)

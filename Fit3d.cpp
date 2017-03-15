@@ -16,6 +16,11 @@ Fit3d::~Fit3d()
 
 }
 
+void Fit3d::set_no_of_iteration(int _no_of_iteration)
+{
+	no_of_iteration = _no_of_iteration;
+}
+
 void Fit3d::set_values(double *_x, double *_y, double *_errors, double *_x_wires)
 {
 	// straight
@@ -783,7 +788,8 @@ void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 	for (int i = 0; i < 8; i++)
 	{
 		lineFit3dUnbiased[i] = LineFit::GetInstance();
-		lineFit3dUnbiased[i] -> LineFit::set_excluded_layer(i);
+		if (no_of_iteration == 0 || no_of_iteration == 11 || no_of_iteration == 12) lineFit3dUnbiased[i] -> LineFit::set_excluded_layer(-1);
+		else lineFit3dUnbiased[i] -> LineFit::set_excluded_layer(i);
 		lineFit3dUnbiased[i] -> LineFit::set_z_values(z);
 		lineFit3dUnbiased[i] -> LineFit::set_x_straight_values(x_straight);
 		lineFit3dUnbiased[i] -> LineFit::set_incl_hit_lines_params(a, b);
@@ -797,10 +803,7 @@ void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 		errflag_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::err_flag();
 		chisq_unbiased[i] = lineFit3dUnbiased[i] -> LineFit::get_chisq();
 		lineFit3dUnbiased[i] -> LineFit::~LineFit();
-		//std::cout << chisq_unbiased[i] << std::endl;
 	}
-	
-
 	// UncorrelatedOpt * track_optimization = UncorrelatedOpt::GetInstance();
 	// track_optimization -> UncorrelatedOpt::set_z_values(z);
 	// track_optimization -> UncorrelatedOpt::set_x_straight_values(x_straight);
