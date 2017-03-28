@@ -18,7 +18,7 @@ Config::Config()
 	TOF_time_min = -1500;
 	TOF_time_max = 1500;
 	TOF_element_min = 1;
-	TOF_element_max = 10;
+	TOF_element_max = 12;
 
 	Intermediate_hits  = -1; // if -1 is set - any number of hits is accepted
 	Intermediate_time_min = -1500;
@@ -233,19 +233,19 @@ Config::Config()
 		//if (i==0||i==1)
 		//if (true)
 		{
-			D1_layer_min_hits[i] = 1;
-			D1_layer_max_hits[i] = 1;
+			D1_layer_min_hits[i] = -1;
+			D1_layer_max_hits[i] = -1;
 			//if (i==0) D1_drift_time_min[i] = 100;
 			//else D1_drift_time_min[i] = 0;
-			D1_drift_time_min[i] = 0;
-			D1_drift_time_max[i] = 609;
+			D1_drift_time_min[i] =-1500;
+			D1_drift_time_max[i] = 1500;
 		}
 		else
 		{
-			D1_layer_min_hits[i] = 1;
-			D1_layer_max_hits[i] = 1;
-			D1_drift_time_min[i] = 0;
-			D1_drift_time_max[i] = 609;
+			D1_layer_min_hits[i] = -1;
+			D1_layer_max_hits[i] = -1;
+			D1_drift_time_min[i] =-1500;
+			D1_drift_time_max[i] = 1500;
 		}
 	}
 	

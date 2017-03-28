@@ -464,7 +464,7 @@ TCanvas* Calibration3d::plot_chi2_pdf()
 	gStyle->SetStatW(0.2);
 	gStyle->SetStatH(0.1);
 	gStyle->SetStatY(0.9);
-	//gPad->SetLogy();
+	gPad->SetLogy();
 	chi2_pdf_no_cut -> Draw();
 	chi2_pdf -> Draw("same");
 	return c2;
@@ -480,7 +480,7 @@ TCanvas* Calibration3d::plot_chi2_pdf(int _layer_no)
 	gStyle->SetStatW(0.2);
 	gStyle->SetStatH(0.1);
 	gStyle->SetStatY(0.9);
-	//gPad->SetLogy();
+	gPad->SetLogy();
 	layer_chi2_pdf_no_cut[ _layer_no ] -> Draw();
 	layer_chi2_pdf[ _layer_no ] -> Draw("same");
 	return c2;

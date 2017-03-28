@@ -343,9 +343,9 @@ void Hist::fill_TOF_histos_preselected(TOF_hist_data* _tof_data)
 	{
 		Hist::TOF_Preselected_Layer_Up_Multiplicity -> Fill(_tof_data->preselected_multiplicity_up);
 		Hist::TOF_Preselected_Layer_Down_Multiplicity -> Fill(_tof_data->preselected_multiplicity_down);
-		Hist::TOF_Mean_Time -> Fill(0.5*(_tof_data -> preselected_time_up.at(0)+_tof_data -> preselected_time_down.at(0)));
-		Hist::TOF_Time_Up -> Fill(_tof_data -> preselected_time_up.at(0));
-		Hist::TOF_Time_Down -> Fill(_tof_data -> preselected_time_down.at(0));
+		//Hist::TOF_Mean_Time -> Fill(0.5*(_tof_data -> preselected_time_up.at(0)+_tof_data -> preselected_time_down.at(0)));
+		//Hist::TOF_Time_Up -> Fill(_tof_data -> preselected_time_up.at(0));
+		//Hist::TOF_Time_Down -> Fill(_tof_data -> preselected_time_down.at(0));
 		for (unsigned int i = 0; i < _tof_data->preselected_elements_up.size(); i++) Hist::TOF_Preselected_Layer_Up_Element -> Fill(_tof_data->preselected_elements_up.at(i));
 		for (unsigned int i = 0; i < _tof_data->preselected_elements_down.size(); i++) Hist::TOF_Preselected_Layer_Down_Element -> Fill(_tof_data->preselected_elements_down.at(i));
 	}
@@ -423,7 +423,7 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 //			for (int i = 0; i < 42; i++) D1_channel_multiplicities[j][i] -> Fill(multiplicities[i]);
 
 			// correlation histograms are filled in
-			if (0==j)
+/*			if (0==j)
 			{
 				for (unsigned int i = 0; i < _d1_data->layer_data[j]->preselected_elements.size(); i++)
 				{
@@ -495,7 +495,7 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 //					tot = _d1_data->layer_data[j]->tot.at(i);
 //					D1_L8[wire1] -> Fill(time1, tot);				
 //				}
-//			}
+//			}*/ //-------------------------------
 		}
 	}
 }

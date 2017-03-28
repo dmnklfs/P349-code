@@ -81,11 +81,16 @@ void Start::choose_corr_leading_up()
 // (applies constraints on time range according to Config)
 void Start::choose_corr_leading_down()
 {
+//	for (int i = 0; i < RoughEdgeDown.size(); i++)
+//	{
+//		std::cout << RoughEdgeDown.at(i) << " ";
+//	}
+//	std::cout << " --- " << std::endl;
 	int iterations = RoughEdgeDown.size()-1;
 	if (RoughEdgeDown.size()-1 < 0) iterations = 0;
 	for (int i = 0; i < iterations; i++)
 	{
-		if (1==RoughEdgeDown.at(i)&&0==RoughEdgeDown.at(i+1))
+		if (1==RoughEdgeDown.at(i)&&0==RoughEdgeDown.at(i+1)&&1==RoughEdgeDown.at(0)&&0==RoughEdgeDown.at(1))
 		{
 			if (check_time_range(RoughTrealDown.at(i)))
 			{
@@ -151,8 +156,8 @@ bool Start::check_coincidence()
 start_hist_data* Start::get_hist_data()
 {
 	start_hist_data *start_data = new start_hist_data(TrealUp, TrealDown);
-	start_data -> rough_multiplicity_up = RoughElementDown.size(); // RoughElementDown has all elements with leading and trailing edges
-	start_data -> rough_multiplicity_down = RoughElementUp.size();
+	start_data -> rough_multiplicity_up = RoughElementUp.size(); // RoughElementDown has all elements with leading and trailing edges
+	start_data -> rough_multiplicity_down = RoughElementDown.size();
 	start_data -> preselected_multiplicity_up = 2*ElementUp.size(); // ElementDown only single correct elements -> multiplicity = size*2
 	start_data -> preselected_multiplicity_down = 2*ElementDown.size();
 

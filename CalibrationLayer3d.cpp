@@ -212,7 +212,7 @@ void CalibrationLayer3d::fit_delta_projections(const char* folder_name)
 		gStyle->SetStatH(0.2);           
 		ProjectionName = Form(folder_name + TString("projection_%d.png"),i);
 		delta_projection -> Draw();
-		if (no_of_entries_in_projection > 70)
+		if (no_of_entries_in_projection > 39)
 		{
 			gaussian -> SetParameters(delta_projection -> GetMaximum(), hist_center, 0.1);
 			delta_projection->Fit("gaussian","WWQEMI","",hist_center-0.15,hist_center+0.15);//hist_center-hist_sigma,hist_center+hist_sigma);
@@ -229,7 +229,7 @@ void CalibrationLayer3d::fit_delta_projections(const char* folder_name)
 			ProjectionMean.push_back(-1);
 			ProjectionSigma.push_back(0.0);
 		}
-		if (no_of_iteration < 5 || no_of_iteration > 10) c_delta_projection -> SaveAs(ProjectionName);
+		//if (no_of_iteration < 5 || no_of_iteration > 10) c_delta_projection -> SaveAs(ProjectionName);
 		delete c_delta_projection;
 	}
 	delete gaussian;
@@ -342,8 +342,10 @@ TCanvas* CalibrationLayer3d::plot_current_calibration()
 	initial_calibration = new TGraph(InitialDriftTimes.size(), &InitialDriftTimes.at(0), &InitialDistances.at(0));
 	initial_calibration -> SetLineColor(kBlue);
 	initial_calibration -> SetLineWidth(3);
-	initial_calibration->SetMinimum(0);
-   	initial_calibration->SetMaximum(2.5);
+	initial_calibration -> SetMinimum(0);
+   	initial_calibration -> SetMaximum(2.5);
+   	initial_calibration -> GetXaxis()->SetTitle("drift time [ns]");
+	initial_calibration -> GetYaxis()->SetTitle("distance [cm]");
 	TCanvas *c_current_calibration = new TCanvas(name,name);
 	initial_calibration -> Draw("AL");
 	current_calibration -> Draw("sameP");
@@ -356,6 +358,10 @@ TCanvas* CalibrationLayer3d::plot_corrections()
 	name = Form("c layer%d current corrections iteration %d", layer_no, no_of_iteration);
 	TGraphErrors* corrections_plot;
 	corrections_plot = new TGraphErrors(DriftTimes.size(), &DriftTimes.at(0), &ProjectionMean.at(0), &XErrors.at(0), &SigmaForCalibration.at(0));
+	corrections_plot->SetMinimum(-0.1);
+   	corrections_plot->SetMaximum(0.1);
+   	corrections_plot->GetXaxis()->SetTitle("drift time [ns]");
+	corrections_plot->GetYaxis()->SetTitle("positions [cm]");
 	TCanvas *c_corrections_plot = new TCanvas(name,name);
 	corrections_plot -> Draw("AP");
 	return c_corrections_plot;
