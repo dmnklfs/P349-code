@@ -217,7 +217,7 @@ void Calibration3d::save_histograms()
 	name = Form("results/chi2_PDF_iteration_%d.png",no_of_iteration);
 	plot_chi2_pdf() -> SaveAs(name);
 	//name = Form("test_%d", event_no);
-	TFile test_file("results/file_calib.root","UPDATE");
+	//TFile test_file("results/file_calib.root","UPDATE");
 	for (int i = 0; i < 8; i++)
 	{
 		name = Form("results/layer%d_delta_iteration_%d.png",i+1, no_of_iteration);
@@ -232,7 +232,7 @@ void Calibration3d::save_histograms()
 		name = Form("results/layer%d_chi2_PDF_iteration_%d.png",i+1, no_of_iteration);
 		plot_chi2_pdf(i) -> SaveAs(name);
 	}
-	test_file.Close();
+	//test_file.Close();
 }
 
 void Calibration3d::fit_events()
@@ -250,8 +250,12 @@ double Calibration3d::calculate_phi_xz()
 	norm = pow(vx*vx+vz*vz,0.5);
 	vx = vx*pow(norm,-1);
 	vz = vz*pow(norm,-1);
-	// calculate angle between Ox and vector
 	phi_xz = TMath::ACos(vx)*180*pow(3.14,-1);
+	if (no_of_iteration==3)
+	{
+		std::cout << track3d_fit_point.X() << " " << track3d_fit_point.Y() << " " ;
+		std::cout << phi_xz << " ";
+	}
 	return phi_xz;
 }
 
@@ -266,6 +270,10 @@ double Calibration3d::calculate_theta_y()
 	vy = vy*pow(norm,-1);
 	// calculate angle between Ox and vector
 	theta_y = TMath::ACos(vy)*180*pow(3.14,-1);
+	if (no_of_iteration==3)
+	{
+		std::cout << theta_y << " " << std::endl;
+	}
 	return theta_y;
 }
 
@@ -546,6 +554,11 @@ TCanvas* Calibration3d::plot_angle_distribution()
 	c->cd(3);
 	gPad -> SetLogy();
 	theta_y -> Draw();
+
+	gDirectory->pwd();
+	if (no_of_iteration==3) phi_xz -> Write();
+	if (no_of_iteration==3) theta_y -> Write();
+
 	return c;
 }
 

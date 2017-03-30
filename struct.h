@@ -45,10 +45,12 @@ struct data_for_D1_calibration
 // STRUCTS USED IN Hist CLASS
 struct start_hist_data
 {
-	start_hist_data(std::vector<double>& _preselected_time_up, std::vector<double>& _preselected_time_down)
-		: preselected_time_up(_preselected_time_up), preselected_time_down(_preselected_time_down) { }
+	start_hist_data(std::vector<int>& _rough_elements_up, std::vector<int>& _rough_elements_down, std::vector<double>& _preselected_time_up, std::vector<double>& _preselected_time_down)
+		: rough_elements_up(_rough_elements_up), rough_elements_down(_rough_elements_down), preselected_time_up(_preselected_time_up), preselected_time_down(_preselected_time_down) { }
 	unsigned int rough_multiplicity_up, rough_multiplicity_down; 
 	unsigned int preselected_multiplicity_up, preselected_multiplicity_down; 
+	std::vector<int> &rough_elements_up;
+	std::vector<int> &rough_elements_down;
 	std::vector<double> &preselected_time_up;
 	std::vector<double> &preselected_time_down;
 };

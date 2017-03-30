@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	SingleEvent *single_event;
 	//EventDisplay *event_to_display;
 	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
-  //Calibration3d *calibration = new Calibration3d(config);
+  Calibration3d *calibration = new Calibration3d(config);
 	std::cout << "* start of the loop over the events" << std::endl;
   int delme_iter = 0;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
@@ -87,6 +87,10 @@ int main(int argc, char *argv[])
       in_out -> Tree::fill_rough_histos(single_event -> SingleEvent::get_hist_data());
   		delete single_event;
   	} // end of loop over events
+    in_out -> Tree::save_output_file();
+
+    TFile test_file("results/res_file.root","UPDATE");
+
     std::cout << "iter " << delme_iter << std::endl;
 
     //CALIBRATION
@@ -143,7 +147,7 @@ int main(int argc, char *argv[])
     calibration -> plot_current_calibration();
     calibration -> deletations();
 
-    calibration -> set_no_of_iteration(4);
+    /*calibration -> set_no_of_iteration(4);
     calibration -> calculate_hit_position();
     calibration -> fit_events();
     // add: make a 3d track, make projections
@@ -368,9 +372,10 @@ int main(int argc, char *argv[])
     //START_Mean_Time -> Write();
     //TOF_Mean_Time -> Write();
     */
+    test_file.Close();
     TCanvas *ctemp = new TCanvas("ctemp","ctemp");
     //D1_HEX_pos_diff -> Draw();
     //ctemp -> Print("unequal.png");
-  	in_out -> Tree::save_output_file();
+  	//in_out -> Tree::save_output_file();
   	std::cout << "\n" << std::endl;
 }

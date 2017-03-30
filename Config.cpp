@@ -155,7 +155,6 @@ Config::Config()
 
 	for (int i = 0; i < 41; i++)
 	{
-		std::cout << i << std::endl;
 		D1_L1_drift_time_offset.push_back(_D1_L1_drift_time_offset[i]);
 		D1_L2_drift_time_offset.push_back(_D1_L2_drift_time_offset[i]);
 		D1_L3_drift_time_offset.push_back(_D1_L3_drift_time_offset[i]);
@@ -233,19 +232,19 @@ Config::Config()
 		//if (i==0||i==1)
 		//if (true)
 		{
-			D1_layer_min_hits[i] = -1;
-			D1_layer_max_hits[i] = -1;
+			D1_layer_min_hits[i] = 1;
+			D1_layer_max_hits[i] = 1;
 			//if (i==0) D1_drift_time_min[i] = 100;
 			//else D1_drift_time_min[i] = 0;
-			D1_drift_time_min[i] =-1500;
-			D1_drift_time_max[i] = 1500;
+			D1_drift_time_min[i] = 0;
+			D1_drift_time_max[i] = 609;
 		}
 		else
 		{
-			D1_layer_min_hits[i] = -1;
-			D1_layer_max_hits[i] = -1;
-			D1_drift_time_min[i] =-1500;
-			D1_drift_time_max[i] = 1500;
+			D1_layer_min_hits[i] = 1;
+			D1_layer_max_hits[i] = 1;
+			D1_drift_time_min[i] = 0;
+			D1_drift_time_max[i] = 609;
 		}
 	}
 	

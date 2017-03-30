@@ -51,7 +51,7 @@ void Start::check_hits()
 	bool coincidence = check_coincidence(); // checks if vectors are of the same size
 	if (size_up&&size_down&&coincidence)
 	{
-		mean_time = 0.5*(TrealUp.at(0)+TrealDown.at(0));
+		//mean_time = 0.5*(TrealUp.at(0)+TrealDown.at(0));
 		correct_event = true;
 	}
 	else correct_event = false;
@@ -155,7 +155,7 @@ bool Start::check_coincidence()
 
 start_hist_data* Start::get_hist_data()
 {
-	start_hist_data *start_data = new start_hist_data(TrealUp, TrealDown);
+	start_hist_data *start_data = new start_hist_data(RoughEdgeUp , RoughEdgeDown, TrealUp, TrealDown);
 	start_data -> rough_multiplicity_up = RoughElementUp.size(); // RoughElementDown has all elements with leading and trailing edges
 	start_data -> rough_multiplicity_down = RoughElementDown.size();
 	start_data -> preselected_multiplicity_up = 2*ElementUp.size(); // ElementDown only single correct elements -> multiplicity = size*2

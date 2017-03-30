@@ -46,6 +46,8 @@ void Hist::init_start_histos_rough()
 	TString temp_name;
 	START_Rough_Layer_Up_Multiplicity = new TH1F("START rough data layer up multiplicity", "START Rough layer up multiplicity;multiplicity (hits: leading+trailing);counts", 10, -0.5, 9.5);
 	START_Rough_Layer_Down_Multiplicity = new TH1F("START rough data layer down multiplicity", "START Rough layer down multiplicity;multiplicity (hits: leading+trailing);counts", 10, -0.5, 9.5);
+	START_event_type_up = new TH1F("START_event_type_up", "Event type in START up", 8, -0.5, 7.5);
+	START_event_type_down = new TH1F("START_event_type_down", "Event type in START down", 8, -0.5, 7.5);
 }
 
 void Hist::init_start_histos_preselected()
@@ -80,6 +82,10 @@ void Hist::init_tof_histos_preselected()
 	TOF_Mean_Time 	= new TH1F("tof_mean", "TOF mean time 0.5*(timeUp-timeDown)", 20000, -400, 700);
 	TOF_Time_Up 	= new TH1F("tof_time_up", "TOF time timeUp)", 20000, -400, 700);
 	TOF_Time_Down 	= new TH1F("tof_time_down", "TOF time timeDown)", 20000, -400, 700);
+	TOF_Rough_Elements_When8_Up = new TH1F("TOF_elements_when8_up", "TOF up elements when there was hit in 8;element no. type;counts", 15, -0.5, 14.5);
+	TOF_Rough_Elements_When8_Down = new TH1F("TOF_elements_when8_down", "TOF down elements when there was hit in 8;element no. type;counts", 15, -0.5, 14.5);
+	TOF_Rough_Multiplicity_When8_Up = new TH1F("TOF_multiplicity_when8_up", "TOF up multiplicity when there was hit in 8;multiplicity;counts", 20, -0.5, 19.5);
+	TOF_Rough_Multiplicity_When8_Down = new TH1F("TOF_elmultiplicityhen8_down", "TOF down elmultiplicity when there was hit in 8;multiplicity;counts", 20, -0.5, 19.5);
 }
 
 void Hist::init_D1_histos_rough()
@@ -311,6 +317,44 @@ void Hist::fill_start_histos_rough(start_hist_data* _start_data)
 	{
 		Hist::START_Rough_Layer_Up_Multiplicity -> Fill(_start_data -> rough_multiplicity_up);
 		Hist::START_Rough_Layer_Down_Multiplicity -> Fill(_start_data -> rough_multiplicity_down);
+		/*std::cout << _start_data -> rough_elements_up.size() << std::endl;
+		for (int i = 0; i < _start_data -> rough_elements_up.size(); i++)
+		{
+			std::cout << " " << _start_data -> rough_elements_up.at(i) << std::endl;
+		}*/
+		if (_start_data -> rough_elements_up.size() == 1)
+		{
+			if (_start_data -> rough_elements_up.at(0)==1) START_event_type_up -> Fill(1);
+			if (_start_data -> rough_elements_up.at(0)==0) START_event_type_up -> Fill(0);
+
+		}
+		if (_start_data -> rough_elements_up.size() == 2)
+		{
+			if (_start_data -> rough_elements_up.at(0)==1&&_start_data -> rough_elements_up.at(1)==0) START_event_type_up -> Fill(2);
+			if (_start_data -> rough_elements_up.at(0)==1&&_start_data -> rough_elements_up.at(1)==1) START_event_type_up -> Fill(3);
+		}
+		if (_start_data -> rough_elements_up.size() == 3)
+		{
+			if (_start_data -> rough_elements_up.at(0)==1&&_start_data -> rough_elements_up.at(1)==1&&_start_data -> rough_elements_up.at(2)==0) START_event_type_up -> Fill(4);
+		}
+		if (_start_data -> rough_elements_up.size() > 3) START_event_type_up -> Fill(5);
+		// ---------------------------------------------------------------------------------
+		if (_start_data -> rough_elements_down.size() == 1)
+		{
+			if (_start_data -> rough_elements_down.at(0)==1) START_event_type_down -> Fill(1);
+			if (_start_data -> rough_elements_down.at(0)==0) START_event_type_down -> Fill(0);
+
+		}
+		if (_start_data -> rough_elements_down.size() == 2)
+		{
+			if (_start_data -> rough_elements_down.at(0)==1&&_start_data -> rough_elements_down.at(1)==0) START_event_type_down -> Fill(2);
+			if (_start_data -> rough_elements_down.at(0)==1&&_start_data -> rough_elements_down.at(1)==1) START_event_type_down -> Fill(3);
+		}
+		if (_start_data -> rough_elements_down.size() == 3)
+		{
+			if (_start_data -> rough_elements_down.at(0)==1&&_start_data -> rough_elements_down.at(1)==1&&_start_data -> rough_elements_down.at(2)==0) START_event_type_down -> Fill(4);
+		}
+		if (_start_data -> rough_elements_down.size() > 3) START_event_type_down -> Fill(5);
 	}
 }
 
@@ -332,13 +376,23 @@ void Hist::fill_TOF_histos_rough(TOF_hist_data* _tof_data)
 	{
 		Hist::TOF_Rough_Layer_Up_Multiplicity -> Fill(_tof_data->rough_multiplicity_up);
 		Hist::TOF_Rough_Layer_Down_Multiplicity -> Fill(_tof_data->rough_multiplicity_down);
-		for (unsigned int i = 0; i < _tof_data->rough_elements_up.size(); i++) Hist::TOF_Rough_Layer_Up_Elements -> Fill(_tof_data->rough_elements_up.at(i));
-		for (unsigned int i = 0; i < _tof_data->rough_elements_down.size(); i++) Hist::TOF_Rough_Layer_Down_Element -> Fill(_tof_data->rough_elements_down.at(i));
+		for (unsigned int i = 0; i < _tof_data->rough_elements_up.size(); i++)
+		{
+			Hist::TOF_Rough_Layer_Up_Elements -> Fill(_tof_data->rough_elements_up.at(i));
+		}
+		for (unsigned int i = 0; i < _tof_data->rough_elements_down.size(); i++)
+		{
+			Hist::TOF_Rough_Layer_Down_Element -> Fill(_tof_data->rough_elements_down.at(i));
+		}
+
 	}
 }
 
 void Hist::fill_TOF_histos_preselected(TOF_hist_data* _tof_data)
 {
+	bool was_8_up, was_8_down;
+	was_8_up = false;
+	was_8_down = false;
 	if (tof_histos_preselected)
 	{
 		Hist::TOF_Preselected_Layer_Up_Multiplicity -> Fill(_tof_data->preselected_multiplicity_up);
@@ -346,8 +400,39 @@ void Hist::fill_TOF_histos_preselected(TOF_hist_data* _tof_data)
 		//Hist::TOF_Mean_Time -> Fill(0.5*(_tof_data -> preselected_time_up.at(0)+_tof_data -> preselected_time_down.at(0)));
 		//Hist::TOF_Time_Up -> Fill(_tof_data -> preselected_time_up.at(0));
 		//Hist::TOF_Time_Down -> Fill(_tof_data -> preselected_time_down.at(0));
-		for (unsigned int i = 0; i < _tof_data->preselected_elements_up.size(); i++) Hist::TOF_Preselected_Layer_Up_Element -> Fill(_tof_data->preselected_elements_up.at(i));
-		for (unsigned int i = 0; i < _tof_data->preselected_elements_down.size(); i++) Hist::TOF_Preselected_Layer_Down_Element -> Fill(_tof_data->preselected_elements_down.at(i));
+		for (unsigned int i = 0; i < _tof_data->preselected_elements_up.size(); i++)
+		{
+			Hist::TOF_Preselected_Layer_Up_Element -> Fill(_tof_data->preselected_elements_up.at(i));
+			if (_tof_data->preselected_elements_up.at(i) == 8) was_8_up = true;
+		} 
+		for (unsigned int i = 0; i < _tof_data->preselected_elements_down.size(); i++)
+		{
+			Hist::TOF_Preselected_Layer_Down_Element -> Fill(_tof_data->preselected_elements_down.at(i));
+			if (_tof_data->preselected_elements_down.at(i) == 8) was_8_down = true;
+		} 
+		// delme
+		if (was_8_up)
+		{
+			was_8_up = false;
+			TOF_Rough_Multiplicity_When8_Up -> Fill(_tof_data->preselected_multiplicity_up);
+			for (unsigned int i = 0; i < _tof_data->preselected_elements_up.size(); i++)
+			{
+				if (_tof_data->preselected_elements_up.at(i) == 8 && was_8_up == false) was_8_up = true;
+				if (_tof_data->preselected_elements_up.at(i) == 8 && was_8_up == true) TOF_Rough_Elements_When8_Up -> Fill(_tof_data->preselected_elements_up.at(i));
+				if (_tof_data->preselected_elements_up.at(i) != 8) TOF_Rough_Elements_When8_Up -> Fill(_tof_data->preselected_elements_up.at(i));
+			}	
+		}
+		if (was_8_down)
+		{
+			TOF_Rough_Multiplicity_When8_Down -> Fill(_tof_data->preselected_multiplicity_down);
+			was_8_down = false;
+			for (unsigned int i = 0; i < _tof_data->preselected_elements_down.size(); i++)
+			{
+				if (_tof_data->preselected_elements_down.at(i) == 8 && was_8_down == false) was_8_down = true;
+				if (_tof_data->preselected_elements_down.at(i) == 8 && was_8_down == true) TOF_Rough_Elements_When8_Down -> Fill(_tof_data->preselected_elements_down.at(i));
+				if (_tof_data->preselected_elements_down.at(i) != 8) TOF_Rough_Elements_When8_Down -> Fill(_tof_data->preselected_elements_down.at(i));
+			}	
+		}
 	}
 }
 
@@ -423,7 +508,7 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 //			for (int i = 0; i < 42; i++) D1_channel_multiplicities[j][i] -> Fill(multiplicities[i]);
 
 			// correlation histograms are filled in
-/*			if (0==j)
+			if (0==j)
 			{
 				for (unsigned int i = 0; i < _d1_data->layer_data[j]->preselected_elements.size(); i++)
 				{
@@ -495,7 +580,7 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 //					tot = _d1_data->layer_data[j]->tot.at(i);
 //					D1_L8[wire1] -> Fill(time1, tot);				
 //				}
-//			}*/ //-------------------------------
+//			} //-------------------------------
 		}
 	}
 }

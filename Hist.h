@@ -61,6 +61,9 @@ public:
 	TH1F *START_Time_Up;
 	TH1F *START_Time_Down;
 
+	TH1F *START_event_type_up;
+	TH1F *START_event_type_down;
+
 	// TOF
 	TH1F *TOF_Rough_Layer_Up_Multiplicity;
 	TH1F *TOF_Rough_Layer_Down_Multiplicity;
@@ -75,6 +78,11 @@ public:
 	TH1F *TOF_Mean_Time;
 	TH1F *TOF_Time_Up;
 	TH1F *TOF_Time_Down;
+
+	TH1F *TOF_Rough_Elements_When8_Up;
+	TH1F *TOF_Rough_Elements_When8_Down;
+	TH1F *TOF_Rough_Multiplicity_When8_Up;
+	TH1F *TOF_Rough_Multiplicity_When8_Down;
 
 	// Intermediate
 	TH1F *Intermediate_Rough_Layer_Up_Multiplicity;

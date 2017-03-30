@@ -335,11 +335,14 @@ TCanvas* CalibrationLayer3d::plot_current_calibration()
 	TGraphErrors* current_calibration;
 	TGraph* initial_calibration;
 	current_calibration = new TGraphErrors(DriftTimes.size(), &DriftTimes.at(0), &Distances.at(0), &XErrors.at(0), &SigmaForCalibration.at(0));
+	name = Form("current-calib-layer-%d-iteration-%d", layer_no, no_of_iteration);
 	current_calibration -> SetLineColor(kRed);
 	current_calibration -> SetMarkerColor(kRed);
 	current_calibration -> SetMarkerStyle(6);
 	current_calibration -> SetLineWidth(1);
 	initial_calibration = new TGraph(InitialDriftTimes.size(), &InitialDriftTimes.at(0), &InitialDistances.at(0));
+	name = Form("init_calib-layer-%d-iteration-%d", layer_no, no_of_iteration);
+	initial_calibration -> SetName(name);
 	initial_calibration -> SetLineColor(kBlue);
 	initial_calibration -> SetLineWidth(3);
 	initial_calibration -> SetMinimum(0);
@@ -349,6 +352,12 @@ TCanvas* CalibrationLayer3d::plot_current_calibration()
 	TCanvas *c_current_calibration = new TCanvas(name,name);
 	initial_calibration -> Draw("AL");
 	current_calibration -> Draw("sameP");
+	if (no_of_iteration==0)
+	{
+		gDirectory->pwd();
+		initial_calibration -> Write();
+	}
+	
 	return c_current_calibration;
 }
 

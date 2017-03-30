@@ -32,7 +32,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
 	// if ( (start && tof && D1 && D2 && HEX && Start::getTimeUp()<10 && Start::getTimeDown()<10) || stage == 2)
-	if ( (start && Start::getTimeUp()<10 && Start::getTimeDown()<10 && tof) || stage == 2)
+	if ( (start) || stage == 2)
 	{
 		return true;
 	}
@@ -84,7 +84,7 @@ event_to_display SingleEvent::get_event_to_display()
 double SingleEvent::getTOF()
 {
 	double tof;
-	tof = TOF::getTime() - Start::getTime();
+	//tof = TOF::getTime() - Start::getTime();
 	return tof;
 }
 

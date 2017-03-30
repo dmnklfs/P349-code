@@ -338,6 +338,9 @@ void Tree::save_preselected_histos()
 		Hist::START_Mean_Time -> Write();
 		Hist::START_Time_Up -> Write();
 		Hist::START_Time_Down -> Write();
+		Hist::START_event_type_up -> Write();
+		Hist::START_event_type_down -> Write();
+
 	}
 
 	if (Hist::tof_histos_preselected)
@@ -350,6 +353,10 @@ void Tree::save_preselected_histos()
 		Hist::TOF_Mean_Time -> Write();
 		Hist::TOF_Time_Up -> Write();
 		Hist::TOF_Time_Down -> Write();
+		Hist::TOF_Rough_Elements_When8_Up -> Write();
+		Hist::TOF_Rough_Elements_When8_Down -> Write();
+		Hist::TOF_Rough_Multiplicity_When8_Up -> Write();
+		Hist::TOF_Rough_Multiplicity_When8_Down -> Write();
 	}
 
 	if (Hist::inter_histos_preselected)
