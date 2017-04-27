@@ -264,6 +264,10 @@ void Tree::save_rough_histos()
 		make_hist_dir("START",1);
 		Hist::START_Rough_Layer_Up_Multiplicity -> Write();
 		Hist::START_Rough_Layer_Down_Multiplicity -> Write();
+		Hist::START_event_type_up -> Write();
+		Hist::START_event_type_down -> Write();
+		START_time_diff[0] -> Write();
+		START_time_diff[1] -> Write();
 	}
 
 	if (Hist::tof_histos_rough)
@@ -338,8 +342,6 @@ void Tree::save_preselected_histos()
 		Hist::START_Mean_Time -> Write();
 		Hist::START_Time_Up -> Write();
 		Hist::START_Time_Down -> Write();
-		Hist::START_event_type_up -> Write();
-		Hist::START_event_type_down -> Write();
 
 	}
 
@@ -353,10 +355,52 @@ void Tree::save_preselected_histos()
 		Hist::TOF_Mean_Time -> Write();
 		Hist::TOF_Time_Up -> Write();
 		Hist::TOF_Time_Down -> Write();
+
+		Hist::TOF_Rough_Elements_When8_Up -> SetLineWidth(3);
+		Hist::TOF_Rough_Elements_When8_Down -> SetLineWidth(3);
+		Hist::TOF_Rough_Elements_When8_Up -> SetLineColor(kBlue);
+		Hist::TOF_Rough_Elements_When8_Down -> SetLineColor(kRed);
+
+		Hist::TOF_Rough_Elements_When8_Up->GetXaxis()->SetLabelSize(0.05);
+		Hist::TOF_Rough_Elements_When8_Up->GetXaxis()->SetTitleSize(0.05);
+		Hist::TOF_Rough_Elements_When8_Down->GetXaxis()->SetLabelSize(0.05);
+		Hist::TOF_Rough_Elements_When8_Down->GetXaxis()->SetTitleSize(0.05);
+		Hist::TOF_Rough_Elements_When8_Up->GetYaxis()->SetLabelSize(0.05);
+		Hist::TOF_Rough_Elements_When8_Up->GetYaxis()->SetTitleSize(0.05);
+		Hist::TOF_Rough_Elements_When8_Down->GetYaxis()->SetLabelSize(0.05);
+		Hist::TOF_Rough_Elements_When8_Down->GetYaxis()->SetTitleSize(0.05);
+
 		Hist::TOF_Rough_Elements_When8_Up -> Write();
 		Hist::TOF_Rough_Elements_When8_Down -> Write();
+
+		Hist::TOF_Rough_Multiplicity_When8_Up -> SetLineWidth(3);
+		Hist::TOF_Rough_Multiplicity_When8_Down -> SetLineWidth(3);
+		Hist::TOF_Rough_Multiplicity_When8_Up -> SetLineColor(kBlue);
+		Hist::TOF_Rough_Multiplicity_When8_Down -> SetLineColor(kRed);
+
+		Hist::TOF_Rough_Multiplicity_When8_Up ->GetXaxis()->SetLabelSize(0.05);
+		Hist::TOF_Rough_Multiplicity_When8_Up ->GetXaxis()->SetTitleSize(0.05);
+		Hist::TOF_Rough_Multiplicity_When8_Down ->GetXaxis()->SetLabelSize(0.05);
+		Hist::TOF_Rough_Multiplicity_When8_Down ->GetXaxis()->SetTitleSize(0.05);
+		Hist::TOF_Rough_Multiplicity_When8_Up ->GetYaxis()->SetLabelSize(0.05);
+		Hist::TOF_Rough_Multiplicity_When8_Up ->GetYaxis()->SetTitleSize(0.05);
+		Hist::TOF_Rough_Multiplicity_When8_Down ->GetYaxis()->SetLabelSize(0.05);
+		Hist::TOF_Rough_Multiplicity_When8_Down ->GetYaxis()->SetTitleSize(0.05);
+
 		Hist::TOF_Rough_Multiplicity_When8_Up -> Write();
 		Hist::TOF_Rough_Multiplicity_When8_Down -> Write();
+
+		TCanvas *e1 = new TCanvas("TOF_Rough_Elements_When8","TOF_Rough_Elements_When8");
+		Hist::TOF_Rough_Elements_When8_Up -> Draw();
+		Hist::TOF_Rough_Elements_When8_Down -> Draw("same");
+		gPad -> BuildLegend();
+		e1 -> Write();
+
+		TCanvas *e2 = new TCanvas("TOF_Rough_Multiplicity_When8","TOF_Rough_Multiplicity_When8");
+		Hist::TOF_Rough_Multiplicity_When8_Up -> Draw();
+		Hist::TOF_Rough_Multiplicity_When8_Down -> Draw("same");
+		gPad -> BuildLegend();
+		e2 -> Write();
 	}
 
 	if (Hist::inter_histos_preselected)

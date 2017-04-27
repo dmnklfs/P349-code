@@ -64,6 +64,8 @@ public:
 	TH1F *START_event_type_up;
 	TH1F *START_event_type_down;
 
+	TH1F *START_time_diff[6];
+
 	// TOF
 	TH1F *TOF_Rough_Layer_Up_Multiplicity;
 	TH1F *TOF_Rough_Layer_Down_Multiplicity;
