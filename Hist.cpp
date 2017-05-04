@@ -49,11 +49,26 @@ void Hist::init_start_histos_rough()
 	START_event_type_up = new TH1F("START_event_type_up", "Event type in START up", 11, -0.5, 10.5);
 	START_event_type_down = new TH1F("START_event_type_down", "Event type in START down", 11, -0.5, 10.5);
 
+	// all for upper part
 	// 11
-	START_time_diff[0] = new TH1F("time difference_type_2", "time difference (type 3: 11);time difference;counts", 800,   0, 160);
+	START_time_diff[0] = new TH1F("time difference_type_2", "time difference (type 3: 11);time difference;counts", 2500, 0, 500);
 	// 10
 	START_time_diff[1] = new TH1F("time difference_type_3", "time difference (type 2: 10);time difference;counts", 200, -20, 20);
-	// 110 diff between 10
+	// 110 diff between 1(10)
+	START_time_diff[2] = new TH1F("time difference_type_4_1", "time difference (type 4: 1[10]);time difference;counts", 1000, -500, 20);
+	// 110 diff between 1(10)
+	START_time_diff[3] = new TH1F("time difference_type_4_2", "time difference (type 4: [1]1[0]);time difference;counts", 1000, -500, 20);
+	// 110 diff between (1)1(0)
+	START_time_diff[4] = new TH1F("time difference_type_4_3", "time difference (type 4: [11]0);time difference;counts",  2500, 0, 500);
+	// 110 diff between (10)sth
+	START_time_diff[5] = new TH1F("time difference_type_5", "time difference (type 5: [10]antyhing);time difference;counts", 1000, -500, 20);
+	// 110 diff between 1(10)sth
+	START_time_diff[6] = new TH1F("time difference_type_6", "time difference (type 6: [1]1[0]anything);time difference;counts", 1000, -500, 20);
+	// 110 diff between 1(10)sth
+	START_time_diff[7] = new TH1F("time difference_type_6", "time difference (type 6: 1[10]anything);time difference;counts", 1000, -500, 20);
+	// 110 diff between 1(10)sth
+	//START_time_diff[6] = new TH1F("time difference_type_6", "time difference (type 6: [1]1[0]anything);time difference;counts", 1000, -500, 20);
+	
 }
 
 void Hist::init_start_histos_preselected()
@@ -351,15 +366,29 @@ void Hist::fill_start_histos_rough(start_hist_data* _start_data)
 		}
 		if (_start_data -> rough_elements_up.size() == 3)
 		{
-			if (_start_data -> rough_elements_up.at(0)==1&&_start_data -> rough_elements_up.at(1)==1&&_start_data -> rough_elements_up.at(2)==0) START_event_type_up -> Fill(4);
+			if (_start_data -> rough_elements_up.at(0)==1&&_start_data -> rough_elements_up.at(1)==1&&_start_data -> rough_elements_up.at(2)==0)
+			{
+				START_event_type_up -> Fill(4);
+				START_time_diff[2] -> Fill(_start_data -> rough_time_up.at(2) - _start_data -> rough_time_up.at(1));
+				START_time_diff[3] -> Fill(_start_data -> rough_time_up.at(2) - _start_data -> rough_time_up.at(0));
+				START_time_diff[4] -> Fill(_start_data -> rough_time_up.at(1) - _start_data -> rough_time_up.at(0));
+			}
 		}
 		if (_start_data -> rough_elements_up.size() > 2)
 		{
-			if (_start_data -> rough_elements_up.at(0)==1&&_start_data -> rough_elements_up.at(1)==0) START_event_type_up -> Fill(5);
+			if (_start_data -> rough_elements_up.at(0)==1&&_start_data -> rough_elements_up.at(1)==0)
+			{
+				START_event_type_up -> Fill(5);
+				START_time_diff[5] -> Fill(_start_data -> rough_time_up.at(1) - _start_data -> rough_time_up.at(0));
+			}
 		}
 		if (_start_data -> rough_elements_up.size() > 3)
 		{
-			if (_start_data -> rough_elements_up.at(0)==1&&_start_data -> rough_elements_up.at(1)==1&&_start_data -> rough_elements_up.at(2)==0) START_event_type_up -> Fill(6);
+			if (_start_data -> rough_elements_up.at(0)==1&&_start_data -> rough_elements_up.at(1)==1&&_start_data -> rough_elements_up.at(2)==0)
+			{
+				START_event_type_up -> Fill(6);
+				START_time_diff[6] -> Fill(_start_data -> rough_time_up.at(2) - _start_data -> rough_time_up.at(0));
+			}
 		}
 		if (_start_data -> rough_elements_up.size() > 3) START_event_type_up -> Fill(7);
 		// ---------------------------------------------------------------------------------

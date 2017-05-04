@@ -266,8 +266,15 @@ void Tree::save_rough_histos()
 		Hist::START_Rough_Layer_Down_Multiplicity -> Write();
 		Hist::START_event_type_up -> Write();
 		Hist::START_event_type_down -> Write();
-		START_time_diff[0] -> Write();
-		START_time_diff[1] -> Write();
+		for (int i = 0; i < 7; i++)
+		{
+			START_time_diff[i] ->GetXaxis()->SetLabelSize(0.05);
+			START_time_diff[i] ->GetXaxis()->SetTitleSize(0.05);
+			START_time_diff[i] ->GetYaxis()->SetLabelSize(0.05);
+			START_time_diff[i] ->GetYaxis()->SetTitleSize(0.05);
+			START_time_diff[i] ->SetLineWidth(3);
+			START_time_diff[i] -> Write();
+		}
 	}
 
 	if (Hist::tof_histos_rough)
