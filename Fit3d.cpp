@@ -171,9 +171,6 @@ void Fit3d::calculate_normal_to_hit_planes()
 	normal_straight  = normal_straight.Unit();
 	normal_inclined1 = normal_inclined1.Unit();
 	normal_inclined2 = normal_inclined2.Unit();
-
-	//std::cout << normal_inclined1.X() << " " << normal_inclined1.Y() << " " << normal_inclined1.Z() << std::endl;
-	//std::cout << " --- " << std::endl;
 }
 
 void Fit3d::calculate_hit_planes_eq()
@@ -220,9 +217,22 @@ void Fit3d::calculate_intersection_vectors() // intersection line: vectors
 	inter_si2 = normal_straight.Cross(normal_inclined2);
 	inter_i1i2 = normal_inclined1.Cross(normal_inclined2);
 
-	inter_si1 = inter_si1.Unit();
-	inter_si2 = inter_si2.Unit();
-	inter_i1i2 = inter_i1i2.Unit();	
+	inter_si1.SetX(inter_si1.X()/inter_si1.Z());
+	inter_si1.SetY(inter_si1.Y()/inter_si1.Z());
+	inter_si1.SetZ(inter_si1.Z()/inter_si1.Z());
+
+	inter_si2.SetX(inter_si2.X()/inter_si2.Z());
+	inter_si2.SetY(inter_si2.Y()/inter_si2.Z());
+	inter_si2.SetZ(inter_si2.Z()/inter_si2.Z());
+
+	// do testow
+	inter_i1i2.SetX(inter_i1i2.X()/inter_i1i2.Z());
+	inter_i1i2.SetY(inter_i1i2.Y()/inter_i1i2.Z());
+	inter_i1i2.SetZ(inter_i1i2.Z()/inter_i1i2.Z());
+
+	//inter_si1 = inter_si1.Unit();
+	//inter_si2 = inter_si2.Unit();
+	//inter_i1i2 = inter_i1i2.Unit();	
 }
 
 void Fit3d::calculate_intersection_points()// intersection line: points
@@ -248,7 +258,7 @@ void Fit3d::calculate_3d_track_parameters()
 	track_p_si1_1.SetZ(0);
 	track_p_si2_1.SetZ(0);
 	track_p_i1i2_1.SetZ(0);
-	//    s i1
+	//    s i1 // 10.05.17 - dlaczego ujemne?
 	scale = -inter_point_si1.Z()/inter_si1.Z();
 	track_p_si1_1.SetX(inter_point_si1.X()+scale*inter_si1.X());
 	track_p_si1_1.SetY(inter_point_si1.Y()+scale*inter_si1.Y());
@@ -291,7 +301,18 @@ void Fit3d::calculate_3d_track_parameters()
 	track3d_vector.SetY(track3d_point2.Y() - track3d_point.Y());
 	track3d_vector.SetZ(track3d_point2.Z() - track3d_point.Z());
 
+	// alternative method of calculation of parameters
+	TVector3 alt_vector, alt_point;
+	alt_vector.SetX((inter_si1.X() + inter_si2.X() + inter_i1i2.X())/3);
+	alt_vector.SetY((inter_si1.Y() + inter_si2.Y() + inter_i1i2.Y())/3);
+	alt_vector.SetZ((inter_si1.Z() + inter_si2.Z() + inter_i1i2.Z())/3);
+	alt_vector.Unit();
+
 	track3d_vector = track3d_vector.Unit();
+
+	std::cout << "1 " << alt_vector.X() << std::endl;
+	std::cout << "2 " << track3d_vector.X() << std::endl;
+
 }
 
 void Fit3d::set_detector_position(double _x_lab_position, double _z_lab_position, double _half_x_dim, double _half_z_dim, double _distance_to_1st_layer)

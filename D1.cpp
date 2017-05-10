@@ -247,7 +247,7 @@ void D1::calculate_relative_and_absolute_positions_inclined()
 		
 		int no_of_layer;
 	
-		// CALCULATIONS FOR THE STRAIGHT LAYERS
+		// CALCULATIONS FOR THE --inclined-- LAYERS
 		for (int i = 0; i < 4; i++)
 		{
 			no_of_layer = straight_layers[i];
@@ -269,17 +269,20 @@ void D1::calculate_relative_and_absolute_positions_inclined()
 		
 				x = Layer[no_of_layer]->RelativeXPosition.back();
 				z = Layer[no_of_layer]->RelativeZPosition;
+				//std::cout << "1. " << z << std::endl;
 				
 				// CALCULATE POSITION IN THE LAB
 				// MAKE ROTATION AROUND Y AXIS
 				x_prim = get_x_after_rot_Y(x, z, y_rotation_angle);
 				z_prim = get_z_after_rot_Y(x, z, y_rotation_angle);
+				//std::cout << "2. " << z_prim << std::endl;
 	
 				// !!! MAKE ROTATION AROUND X AXIS
 	
 				// calc_position_in_lab(double position_in_detector, double detector_position, double detector_offset)
 				x = calc_position_in_lab(x_prim, x_lab_position, x_offset);
 				z = calc_position_in_lab(z_prim, z_lab_position, z_offset);
+				//std::cout << "3. " << z << std::endl;
 	
 				Layer[no_of_layer]->AbsoluteXPosition.push_back(x);
 				Layer[no_of_layer]->AbsoluteZPosition.push_back(z);

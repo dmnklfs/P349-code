@@ -139,8 +139,10 @@ void CalibrationLayer3d::calculate_hit_position()
 		wirez = CalibrationData.at(i).wire_pos_Z;
 		lr = CalibrationData.at(i).left_right;
 		drifttime = CalibrationData.at(i).drift_time;
+		// pos in the lab
 		if (layer_no==1||layer_no==2||layer_no==7||layer_no==8) CalibrationData.at(i).hit_pos_X = wirex+lr*drift_time_to_distance(CalibrationData.at(i).calib_bin, drifttime);//*pow(TMath::Cos(31*TMath::DegToRad()),-1);
 		if (layer_no==3||layer_no==4||layer_no==5||layer_no==6) CalibrationData.at(i).hit_pos_X = wirex+lr*drift_time_to_distance(CalibrationData.at(i).calib_bin, drifttime)*pow(TMath::Cos(31*TMath::DegToRad()),-1);
+		// distance wire hit = odległosc prostopadla do drutu!!
 		CalibrationData.at(i).distance_wire_hit = drift_time_to_distance(CalibrationData.at(i).calib_bin, drifttime);
 		CalibrationData.at(i).hit_pos_Z = wirez;
 		//std::cout << "z: " << CalibrationData.at(i).hit_pos_Z << " x: " << CalibrationData.at(i).hit_pos_X << std::endl;

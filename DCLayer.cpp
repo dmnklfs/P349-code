@@ -48,39 +48,15 @@ void DCLayer::check_hits()
 // makes a loop over edges vector and chooses trailing times from correct pairs of leading and trailing edges
 // (applies constraints on time range and elements range according to Config)
 // wersja 1
-//void DCLayer::choose_corr_leading()
-//{
-//	//std::cout << "DCLayer::choose_corr_leading()" << std::endl;
-//	int iterations = RoughEdge.size()-1;
-//	if (RoughEdge.size()-1 < 0) iterations = 0;
-//	//std::cout << "---" << std::endl;
-//	for (int i = 0; i < iterations; i++)
-//	{
-//		//std::cout << "1. " << RoughEdge.at(i) << " 2. " << RoughEdge.at(i+1) << " 3. " << RoughWire.at(i) << " 4. " << RoughWire.at(i+1) << std::endl;
-//		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))//&&RoughWire.at(i)>=10&&RoughWire.at(i)<=26)
-//		{
-//			//std::cout << "time before check: " << RoughDriftTime.at(i) << std::endl;
-//			if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i))))
-//			{	
-//				DriftTime.push_back(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i)));
-//				Wire.push_back(RoughWire.at(i));
-//				TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
-//				//break;
-//			}
-//		}
-//		//if (RoughEdge.at(i)==RoughEdge.at(i+1)) break;
-//	}
-//}
-
-// wersja 2: pierwsza poprawna para, jeśli jest.
 void DCLayer::choose_corr_leading()
 {
 	//std::cout << "DCLayer::choose_corr_leading()" << std::endl;
 	int iterations = RoughEdge.size()-1;
-	if (RoughEdge.size()>=2)
+	if (RoughEdge.size()-1 < 0) iterations = 0;
+	//std::cout << "---" << std::endl;
+	for (int i = 0; i < iterations; i++)
 	{
 		//std::cout << "1. " << RoughEdge.at(i) << " 2. " << RoughEdge.at(i+1) << " 3. " << RoughWire.at(i) << " 4. " << RoughWire.at(i+1) << std::endl;
-		int i = 0;
 		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))//&&RoughWire.at(i)>=10&&RoughWire.at(i)<=26)
 		{
 			//std::cout << "time before check: " << RoughDriftTime.at(i) << std::endl;
@@ -89,10 +65,34 @@ void DCLayer::choose_corr_leading()
 				DriftTime.push_back(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i)));
 				Wire.push_back(RoughWire.at(i));
 				TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
+				//break;
 			}
 		}
+		//if (RoughEdge.at(i)==RoughEdge.at(i+1)) break;
 	}
 }
+
+// wersja 2: pierwsza poprawna para, jeśli jest.
+//void DCLayer::choose_corr_leading()
+//{
+//	//std::cout << "DCLayer::choose_corr_leading()" << std::endl;
+//	int iterations = RoughEdge.size()-1;
+//	if (RoughEdge.size()>=2)
+//	{
+//		//std::cout << "1. " << RoughEdge.at(i) << " 2. " << RoughEdge.at(i+1) << " 3. " << RoughWire.at(i) << " 4. " << RoughWire.at(i+1) << std::endl;
+//		int i = 0;
+//		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))//&&RoughWire.at(i)>=10&&RoughWire.at(i)<=26)
+//		{
+//			//std::cout << "time before check: " << RoughDriftTime.at(i) << std::endl;
+//			if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i))))
+//			{	
+//				DriftTime.push_back(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i)));
+//				Wire.push_back(RoughWire.at(i));
+//				TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
+//			}
+//		}
+//	}
+//}
 
 bool DCLayer::check_time_range(double drift_time)
 {

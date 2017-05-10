@@ -51,7 +51,7 @@ void TOF::check_hits()
 	bool size_up = check_size_up();
 	bool size_down = check_size_down();
 	bool coincidence = check_coincidence();
-	if (size_up)	// condition only on the upper layer
+	if (coincidence)	// condition only on the upper layer
 	{
 		// comment the line below if no conditions on size d
 		//mean_time = 0.5*(TrealUp.at(0)+TrealDown.at(0));
@@ -141,7 +141,7 @@ bool TOF::check_time_range(double treal)
 bool TOF::check_coincidence()
 {
 	bool was_coincidence = true;
-	if (ElementUp.size()==ElementDown.size())
+	if (ElementUp.size()==ElementDown.size()&&ElementUp.size()==1)
 	{
 		for (unsigned int i = 0; i < ElementUp.size(); i++)
 		{
@@ -157,6 +157,12 @@ bool TOF::check_coincidence()
 		}
 	}
 	else was_coincidence = false;
+	if (was_coincidence==false&&ElementUp.size()>=2)//&&ElementDown.size()==0
+	{
+		//std::cout << ElementUp.at(0) << std::endl;
+		//std::cout << ElementUp.at(0) << std::endl;
+		if(ElementUp.at(0)==8||ElementUp.at(1)==8) was_coincidence = true; //
+	}
 	return was_coincidence;
 
 	/*bool was_coincidence = true;

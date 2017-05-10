@@ -445,7 +445,6 @@ void Hist::fill_TOF_histos_rough(TOF_hist_data* _tof_data)
 		{
 			Hist::TOF_Rough_Layer_Down_Element -> Fill(_tof_data->rough_elements_down.at(i));
 		}
-
 	}
 }
 
@@ -473,6 +472,9 @@ void Hist::fill_TOF_histos_preselected(TOF_hist_data* _tof_data)
 			Hist::TOF_Preselected_Layer_Down_Element -> Fill(_tof_data->preselected_elements_down.at(i));
 			if (_tof_data->preselected_elements_down.at(i) == el_no) was_el_down = true;
 		} 
+		//if (_tof_data->preselected_elements_up.size() > 0) Hist::TOF_Preselected_Layer_Up_Element -> Fill(_tof_data->preselected_elements_up.at(0));
+		//if (_tof_data->preselected_elements_down.size() > 0) Hist::TOF_Preselected_Layer_Down_Element -> Fill(_tof_data->preselected_elements_down.at(0));
+	
 		// delme
 		if (was_el_up)
 		{
