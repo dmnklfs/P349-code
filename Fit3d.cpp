@@ -225,7 +225,6 @@ void Fit3d::calculate_intersection_vectors() // intersection line: vectors
 	inter_si2.SetY(inter_si2.Y()/inter_si2.Z());
 	inter_si2.SetZ(inter_si2.Z()/inter_si2.Z());
 
-	// do testow
 	inter_i1i2.SetX(inter_i1i2.X()/inter_i1i2.Z());
 	inter_i1i2.SetY(inter_i1i2.Y()/inter_i1i2.Z());
 	inter_i1i2.SetZ(inter_i1i2.Z()/inter_i1i2.Z());
@@ -308,10 +307,16 @@ void Fit3d::calculate_3d_track_parameters()
 	alt_vector.SetZ((inter_si1.Z() + inter_si2.Z() + inter_i1i2.Z())/3);
 	alt_vector.Unit();
 
-	track3d_vector = track3d_vector.Unit();
+	alt_point.SetX((inter_point_si1.X() + inter_point_i1i2.X() + inter_point_si2.X())/3);
+	alt_point.SetY((inter_point_si1.Y() + inter_point_i1i2.Y() + inter_point_si2.Y())/3);
+	alt_point.SetZ((inter_point_si1.Z() + inter_point_i1i2.Z() + inter_point_si2.Z())/3);
 
-	std::cout << "1 " << alt_vector.X() << std::endl;
-	std::cout << "2 " << track3d_vector.X() << std::endl;
+	track3d_vector = alt_vector.Unit();//track3d_vector.Unit();
+
+	//std::cout << "1 " << alt_vector.X() << std::endl;
+	//std::cout << "2ux " << track3d_vector.X() << std::endl;
+	//std::cout << "p1 " << alt_point.X() << " " << alt_point.Y() << std::endl;
+	//std::cout << "p2 " << track3d_point.X() << " " << track3d_point.Y() << std::endl;
 
 }
 
@@ -324,7 +329,7 @@ void Fit3d::set_detector_position(double _x_lab_position, double _z_lab_position
 	distance_to_1st_layer = _distance_to_1st_layer;
 }
 
-void Fit3d::calculate_projections_on_hit_planes_calculations()
+void Fit3d::calculate_projections_on_hit_planes_calculations() // unused, expect from drawings
 {
 	// to get the direction it is enough to remove from the track vetor
 	// the part which is perpendicular to the certain plane
@@ -791,13 +796,13 @@ void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 	lineFit3d -> LineFit::set_incl_hit_lines_params(a, b);
 	lineFit3d -> LineFit::set_x_errors(errors);
 	lineFit3d -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
-	lineFit3d -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
+	lineFit3d -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z()); //(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
 	lineFit3d -> LineFit::calculate_start_params();
 	lineFit3d -> LineFit::set_excluded_layer(-1);
 	lineFit3d -> LineFit::fit_with_minuit();
 	track3d_fit_point = lineFit3d -> LineFit::return_track_point();
 	// /*std::cout << "in fit " << track3d_fit_point.Y() << std::endl;*/
-	track3d_fit_vector = lineFit3d -> LineFit::return_track_vector();
+	track3d_fit_vector = lineFit3d -> LineFit::return_track_vector(); // normalized to 1 (NOT to uz = 1)
 	errflag = lineFit3d -> LineFit::err_flag();
 	chisq = lineFit3d -> LineFit::get_chisq();
 	//std::cout << " all " << chisq << std::endl;
@@ -809,7 +814,7 @@ void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 	for (int i = 0; i < 8; i++)
 	{
 		lineFit3dUnbiased[i] = LineFit::GetInstance();
-		if (no_of_iteration == 0 || no_of_iteration == 11 || no_of_iteration == 12) lineFit3dUnbiased[i] -> LineFit::set_excluded_layer(-1);
+		if (no_of_iteration == 8 || no_of_iteration == 9) lineFit3dUnbiased[i] -> LineFit::set_excluded_layer(-1);
 		else lineFit3dUnbiased[i] -> LineFit::set_excluded_layer(i);
 		lineFit3dUnbiased[i] -> LineFit::set_z_values(z);
 		lineFit3dUnbiased[i] -> LineFit::set_x_straight_values(x_straight);
@@ -969,6 +974,8 @@ void Fit3d::calculate_wire_track_distances()
 			ux[i] = track3d_fit_vector.X();
 			uy[i] = track3d_fit_vector.Y();
 			uz[i] = track3d_fit_vector.Z();
+
+			//std::cout << "a " << uz[i] << std::endl;
 		}
 	}
 	if (unbiased_fit==true)
@@ -981,6 +988,7 @@ void Fit3d::calculate_wire_track_distances()
 			ux[i] = track3d_fit_vector_unbiased[i].X();
 			uy[i] = track3d_fit_vector_unbiased[i].Y();
 			uz[i] = track3d_fit_vector_unbiased[i].Z();
+			//std::cout << "a " << uz[i] << std::endl;
 		}
 	}
 	
@@ -998,11 +1006,11 @@ void Fit3d::calculate_wire_track_distances()
 
 	for (int i = 0; i < 4; i++)
 	{
-		t = z[i] - zp[ 2+i ];
+		t = z[i] - zp[2+i];
 		t2 = 1/uz[i+2];
 		xi = t*t2*ux[i+2] + xp[i+2];
 		yi = t*t2*uy[i+2] + yp[i+2];
-		wire_track_dist[ 2+i ]  = TMath::Abs(a[i]*xi-yi+b[i])*pow(pow((a[i]*a[i]+1),0.5),-1);
+		wire_track_dist[2+i]  = TMath::Abs(a[i]*xi-yi+b[i])*pow(pow((a[i]*a[i]+1),0.5),-1);
 	}
 
 //	for (int i = 0; i < 8; i++)

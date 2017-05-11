@@ -251,11 +251,6 @@ double Calibration3d::calculate_phi_xz()
 	vx = vx*pow(norm,-1);
 	vz = vz*pow(norm,-1);
 	phi_xz = TMath::ACos(vx)*180*pow(3.14,-1);
-	if (no_of_iteration==3)
-	{
-		std::cout << track3d_fit_point.X() << " " << track3d_fit_point.Y() << " " ;
-		std::cout << phi_xz << " ";
-	}
 	return phi_xz;
 }
 
@@ -270,10 +265,6 @@ double Calibration3d::calculate_theta_y()
 	vy = vy*pow(norm,-1);
 	// calculate angle between Ox and vector
 	theta_y = TMath::ACos(vy)*180*pow(3.14,-1);
-	if (no_of_iteration==3)
-	{
-		std::cout << theta_y << " " << std::endl;
-	}
 	return theta_y;
 }
 

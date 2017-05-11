@@ -107,8 +107,8 @@ int main(int argc, char *argv[])
     calibration -> save_histograms();
     calibration -> fit_delta_projections();
     calibration -> set_pos_Xerr();
-    //calibration -> apply_corrections();
-    //calibration -> plot_current_calibration();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
     calibration -> deletations();
 
     calibration -> set_no_of_iteration(1);
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     calibration -> fit_events();
     // add: make a 3d track, make projections
 
-    /*calibration -> save_histograms();
+    calibration -> save_histograms();
     calibration -> fit_delta_projections();
     calibration -> set_pos_Xerr();
     calibration -> apply_corrections();
@@ -147,11 +147,9 @@ int main(int argc, char *argv[])
     calibration -> plot_current_calibration();
     calibration -> deletations();
 
-    /*calibration -> set_no_of_iteration(4);
+    calibration -> set_no_of_iteration(4);
     calibration -> calculate_hit_position();
     calibration -> fit_events();
-    // add: make a 3d track, make projections
-
     calibration -> save_histograms();
     calibration -> fit_delta_projections();
     calibration -> set_pos_Xerr();
@@ -162,8 +160,6 @@ int main(int argc, char *argv[])
     calibration -> set_no_of_iteration(5);
     calibration -> calculate_hit_position();
     calibration -> fit_events();
-    // add: make a 3d track, make projections
-
     calibration -> save_histograms();
     calibration -> fit_delta_projections();
     calibration -> set_pos_Xerr();
@@ -211,7 +207,7 @@ int main(int argc, char *argv[])
     calibration -> plot_current_calibration();
     calibration -> deletations();
 
-    calibration -> set_no_of_iteration(10);
+    /*calibration -> set_no_of_iteration(10);
     calibration -> calculate_hit_position();
     calibration -> fit_events();
     calibration -> save_histograms();
@@ -239,8 +235,87 @@ int main(int argc, char *argv[])
     calibration -> set_pos_Xerr();
     calibration -> apply_corrections();
     calibration -> plot_current_calibration();
-    calibration -> deletations();*/
+    calibration -> deletations();
 
+    calibration -> set_no_of_iteration(13);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(14);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(15);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(16);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(17);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(18);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(19);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();
+
+    calibration -> set_no_of_iteration(20);
+    calibration -> calculate_hit_position();
+    calibration -> fit_events();
+    calibration -> save_histograms();
+    calibration -> fit_delta_projections();
+    calibration -> set_pos_Xerr();
+    calibration -> apply_corrections();
+    calibration -> plot_current_calibration();
+    calibration -> deletations();*/
 
     /*calibration -> set_no_of_iteration(5);
     calibration -> calculate_hit_position();

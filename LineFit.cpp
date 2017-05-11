@@ -95,10 +95,6 @@ double LineFit::GlobalFCN(const double * par)
 //	int inclined[4];
 	straight[0] = 0;
 	straight[1] = 1;
-//	inclined[0] = 2;
-//	inclined[1] = 3;
-//	inclined[2] = 4;
-//	inclined[3] = 5;
 	straight[2] = 6;
 	straight[3] = 7;
 
@@ -163,7 +159,9 @@ double LineFit::get_chisq()
 	par[0] = xp;
 	par[1] = yp;
 	par[2] = ux;
-	par[3] = uy;
+	par[3] = uy; 
+	// here it is ok - uz=1
+
 	// scaling
 	double t;
 	// points in which the line goes through the certain z plane
@@ -220,6 +218,7 @@ void LineFit::calculate_start_params()
 	double t;
 	t = 1/track_uz;
 	start_ux = t*track_ux;
+	//std::cout << "ux " << start_ux << std::endl;
 	start_uy = t*track_uy;
 
 	t = (zp - track_z)/track_uz;
@@ -309,6 +308,9 @@ TVector3 LineFit::return_track_point()
 	track_point.SetX(xp);
 	track_point.SetY(yp);
 	track_point.SetZ(zp);
+	//std::cout << "p1 " << xp << std::endl;
+	//std::cout << "p2 " << yp << std::endl;
+	//std::cout << "p3 " << zp << std::endl;
 	return track_point;
 }
 

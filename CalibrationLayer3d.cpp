@@ -231,7 +231,7 @@ void CalibrationLayer3d::fit_delta_projections(const char* folder_name)
 			ProjectionMean.push_back(-1);
 			ProjectionSigma.push_back(0.0);
 		}
-		//if (no_of_iteration < 5 || no_of_iteration > 10) c_delta_projection -> SaveAs(ProjectionName);
+		if (no_of_iteration == 1 || no_of_iteration == 7 || no_of_iteration == 8 || no_of_iteration == 9) c_delta_projection -> SaveAs(ProjectionName);
 		delete c_delta_projection;
 	}
 	delete gaussian;
@@ -245,7 +245,7 @@ void CalibrationLayer3d::apply_corrections()
 		corr_bin = Bins.at(i);
 		if(-1!=ProjectionMean.at(corr_bin))
 		{
-			if (no_of_iteration!=11 && no_of_iteration!=12) Distances.at(i) = Distances.at(i) + ProjectionMean.at(corr_bin);
+			if (no_of_iteration!=8 && no_of_iteration!=9) Distances.at(i) = Distances.at(i) + ProjectionMean.at(corr_bin);
 			else Distances.at(i) = Distances.at(i);
 			SigmaForCalibration.push_back(ProjectionSigma.at(corr_bin));
 		}
