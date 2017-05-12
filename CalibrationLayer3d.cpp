@@ -192,6 +192,7 @@ void CalibrationLayer3d::fit_delta_projections(const char* folder_name)
 	TCanvas *c_delta_projection;
 	TF1 *gaussian = new TF1("gaussian","gaus", -1.5, 1.5);
 	double hist_center, hist_sigma, hist_max_bin;
+	int counter;
 	for (int i = 0; i < no_of_corr_bins+1; i++) // there was no_of_corr_bins + 1, removed 22.11.16
 	{
 		delta_projection = delta -> ProjectionY("",i,i+1);
@@ -216,8 +217,26 @@ void CalibrationLayer3d::fit_delta_projections(const char* folder_name)
 		delta_projection -> Draw();
 		if (no_of_entries_in_projection > 39)
 		{
-			gaussian -> SetParameters(delta_projection -> GetMaximum(), hist_center, 0.1);
-			delta_projection->Fit("gaussian","WWQEMI","",hist_center-0.15,hist_center+0.15);//hist_center-hist_sigma,hist_center+hist_sigma);
+
+			if (i < 6)
+			{
+				counter = 0;
+				for (int j = 0; j < delta_projection -> GetNbinsX(); j++)
+				{
+					if (delta_projection -> GetBinContent(j)>0)
+					{
+						counter = j;
+						break;
+					}
+				}
+				gaussian -> SetParameters(delta_projection -> GetMaximum(), 0, 0.3);
+				delta_projection->Fit("gaussian","QEMI","", 0,hist_center+0.15);
+			}
+			else
+			{
+				gaussian -> SetParameters(delta_projection -> GetMaximum(), hist_center, 0.1);
+				delta_projection->Fit("gaussian","WWQEMI","",hist_center-0.15,hist_center+0.15);//hist_center-hist_sigma,hist_center+hist_sigma);
+			}
 			ProjectionConstant.push_back(gaussian->GetParameter(0));
     		ProjectionMean.push_back(gaussian->GetParameter(1));
     		ProjectionSigma.push_back(gaussian->GetParameter(2));
@@ -231,7 +250,7 @@ void CalibrationLayer3d::fit_delta_projections(const char* folder_name)
 			ProjectionMean.push_back(-1);
 			ProjectionSigma.push_back(0.0);
 		}
-		if (no_of_iteration == 1 || no_of_iteration == 7 || no_of_iteration == 8 || no_of_iteration == 9) c_delta_projection -> SaveAs(ProjectionName);
+		if (no_of_iteration == 0 || no_of_iteration == 1 || no_of_iteration == 7 || no_of_iteration == 8 || no_of_iteration == 9) c_delta_projection -> SaveAs(ProjectionName);
 		delete c_delta_projection;
 	}
 	delete gaussian;
@@ -369,8 +388,8 @@ TCanvas* CalibrationLayer3d::plot_corrections()
 	name = Form("c layer%d current corrections iteration %d", layer_no, no_of_iteration);
 	TGraphErrors* corrections_plot;
 	corrections_plot = new TGraphErrors(DriftTimes.size(), &DriftTimes.at(0), &ProjectionMean.at(0), &XErrors.at(0), &SigmaForCalibration.at(0));
-	corrections_plot->SetMinimum(-0.1);
-   	corrections_plot->SetMaximum(0.1);
+	corrections_plot->SetMinimum(-0.12);
+   	corrections_plot->SetMaximum(0.12);
    	corrections_plot->GetXaxis()->SetTitle("drift time [ns]");
 	corrections_plot->GetYaxis()->SetTitle("positions [cm]");
 	TCanvas *c_corrections_plot = new TCanvas(name,name);
