@@ -218,7 +218,7 @@ void CalibrationLayer3d::fit_delta_projections(const char* folder_name)
 		if (no_of_entries_in_projection > 39)
 		{
 
-			if (i < 6)
+			if ( (i < 6 && no_of_iteration == 0) || i <= 2 )
 			{
 				counter = 0;
 				for (int j = 0; j < delta_projection -> GetNbinsX(); j++)
