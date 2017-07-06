@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	SingleEvent *single_event;
 	//EventDisplay *event_to_display;
 	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
-  Calibration3d *calibration = new Calibration3d(config);
+  //Calibration3d *calibration = new Calibration3d(config);
 	std::cout << "* start of the loop over the events" << std::endl;
   int delme_iter = 0;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
@@ -65,18 +65,18 @@ int main(int argc, char *argv[])
   			in_out -> Tree::fill_preselected_data_tree();
         in_out -> Tree::fill_preselected_histos(single_event -> SingleEvent::get_hist_data());
   			//tof -> Fill(single_event -> SingleEvent::getTOF());
-        START_Mean_Time  -> Fill(single_event -> SingleEvent::Start::getTime());
+        //START_Mean_Time  -> Fill(single_event -> SingleEvent::Start::getTime());
         //TOF_Mean_Time  -> Fill(single_event -> SingleEvent::TOF::getTime());
-  			single_event -> SingleEvent::test_calculate_distances();
+  			//single_event -> SingleEvent::test_calculate_distances();
         //D1_HEX_pos_diff -> Fill(single_event -> SingleEvent::test_positions_histogram());
   			//event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
   			//event_to_display -> get_canvas() -> Write(name);
-  			name = Form("results/Event_%ld.png", entry);
+  			//name = Form("results/Event_%ld.png", entry);
   			//event_to_display -> get_canvas() -> SaveAs(name);
 
   			//data for the simple calibration
   			//simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
-  			calibration -> get_data( single_event -> SingleEvent::D1::get_data_for_calibration() ); 
+  			//calibration -> get_data( single_event -> SingleEvent::D1::get_data_for_calibration() ); 
         //delete event_to_display;
   			
   		} // end if correct event
@@ -95,15 +95,12 @@ int main(int argc, char *argv[])
 
     //CALIBRATION
     
-    calibration -> tell_no_of_events();
+    /*calibration -> tell_no_of_events();
     calibration -> set_no_of_bin_in_event();
     
     calibration -> set_no_of_iteration(0);
     calibration -> calculate_hit_position();
-    //calibration -> fit_events_in_straight_layers_biased(100000);
     calibration -> fit_events();
-    // add: make a 3d track, make projections
-
     calibration -> save_histograms();
     calibration -> fit_delta_projections();
     calibration -> set_pos_Xerr();
@@ -114,8 +111,6 @@ int main(int argc, char *argv[])
     calibration -> set_no_of_iteration(1);
     calibration -> calculate_hit_position();
     calibration -> fit_events();
-    // add: make a 3d track, make projections
-
     calibration -> save_histograms();
     calibration -> fit_delta_projections();
     calibration -> set_pos_Xerr();
@@ -205,7 +200,7 @@ int main(int argc, char *argv[])
     calibration -> set_pos_Xerr();
     calibration -> apply_corrections();
     calibration -> plot_current_calibration();
-    calibration -> deletations();
+    calibration -> deletations();*/
 
     /*calibration -> set_no_of_iteration(10);
     calibration -> calculate_hit_position();

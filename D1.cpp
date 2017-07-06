@@ -76,10 +76,10 @@ bool D1::was_correct_event()
 			D1_no_of_cells_with_hits = D1_no_of_cells_with_hits + Layer[i]-> Wire.size();
 		}
 	}
-//	if (no_of_layers_with_hits == 8)
-//	{
-//		correct_event = true;
-//	}
+	if (no_of_layers_with_hits == 8)
+	{
+		correct_event = true;
+	}
 
 	// dell it, choice of coincidences if one wire parametrized
 //	double edge_val1, edge_val2, dtime1, dtime2;
@@ -112,7 +112,7 @@ bool D1::was_correct_event()
 //		//correct_event = true;
 //	}
 
-	int wire1;
+/*	int wire1;
 	int wire2;
 	int wire3;
 	int wire4;
@@ -147,7 +147,7 @@ bool D1::was_correct_event()
 
 		if (pair1&&pair2&&pair3&&pair4) correct_event = true;
 	}
-	
+*/	
 	return correct_event;
 }
 

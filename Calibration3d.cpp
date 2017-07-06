@@ -222,7 +222,8 @@ void Calibration3d::save_histograms()
 	{
 		name = Form("results/layer%d_delta_iteration_%d.png",i+1, no_of_iteration);
 		Layer[i] -> CalibrationLayer3d::plot_delta() -> SaveAs(name);
-		//Layer[i] -> CalibrationLayer3d::plot_delta() -> Write();	
+		gDirectory->pwd();
+		Layer[i] -> CalibrationLayer3d::plot_delta() -> Write();	
 		name = Form("results/layer%d_chi2_iteration_%d.png",i+1, no_of_iteration);
 		//plot_chi2(i) -> SaveAs(name);
 		name = Form("results/layer%d_chi2_range_iteration_%d.png",i+1, no_of_iteration);
@@ -547,8 +548,8 @@ TCanvas* Calibration3d::plot_angle_distribution()
 	theta_y -> Draw();
 
 	gDirectory->pwd();
-	if (no_of_iteration==3) phi_xz -> Write();
-	if (no_of_iteration==3) theta_y -> Write();
+	if (no_of_iteration==9) phi_xz -> Write();
+	if (no_of_iteration==9) theta_y -> Write();
 
 	return c;
 }

@@ -103,6 +103,10 @@ public:
 	std::vector<double> D1_L7_drift_time_offset;
 	std::vector<double> D1_L8_drift_time_offset;
 
+	std::vector<double> D2_L1_drift_time_offset;
+	std::vector<double> D2_L2_drift_time_offset;
+	std::vector<double> D2_L3_drift_time_offset;
+	std::vector<double> D2_L4_drift_time_offset;
 	std::vector<double> D2_L5_drift_time_offset;
 	std::vector<double> D2_L6_drift_time_offset;
 

@@ -7,12 +7,12 @@ D2::D2(const Config &_config)
 {
 	for (int i = 0; i < 6; i++)
 	{
-		if(i==4||i==5)
-		{
-			if (i==4) Layer[i] = new DCLayer(i, _config.D2_L5_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D2_drift_time_min[i],_config.D2_drift_time_max[i],_config.D2_layer_min_hits[i],_config.D2_layer_max_hits[i]);
-			if (i==5) Layer[i] = new DCLayer(i, _config.D2_L6_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D2_drift_time_min[i],_config.D2_drift_time_max[i],_config.D2_layer_min_hits[i],_config.D2_layer_max_hits[i]);
-		}
-		else Layer[i] = new DCLayer(i, _config.D2_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D2_drift_time_min[i],_config.D2_drift_time_max[i],_config.D2_layer_min_hits[i],_config.D2_layer_max_hits[i]);
+		Layer[0] = new DCLayer(1, _config.D2_L1_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D2_drift_time_min[0],_config.D2_drift_time_max[0],_config.D2_layer_min_hits[0],_config.D2_layer_max_hits[0]);
+		Layer[1] = new DCLayer(2, _config.D2_L2_drift_time_offset, _config.D1_L2_calibration_times, _config.D1_L2_calibration_distances, _config.D2_drift_time_min[1],_config.D2_drift_time_max[1],_config.D2_layer_min_hits[1],_config.D2_layer_max_hits[1]);
+		Layer[2] = new DCLayer(3, _config.D2_L3_drift_time_offset, _config.D1_L3_calibration_times, _config.D1_L3_calibration_distances, _config.D2_drift_time_min[2],_config.D2_drift_time_max[2],_config.D2_layer_min_hits[2],_config.D2_layer_max_hits[2]);
+		Layer[3] = new DCLayer(4, _config.D2_L4_drift_time_offset, _config.D1_L4_calibration_times, _config.D1_L4_calibration_distances, _config.D2_drift_time_min[3],_config.D2_drift_time_max[3],_config.D2_layer_min_hits[3],_config.D2_layer_max_hits[3]);
+		Layer[4] = new DCLayer(5, _config.D2_L5_drift_time_offset, _config.D1_L5_calibration_times, _config.D1_L5_calibration_distances, _config.D2_drift_time_min[4],_config.D2_drift_time_max[4],_config.D2_layer_min_hits[4],_config.D2_layer_max_hits[4]);
+		Layer[5] = new DCLayer(6, _config.D2_L6_drift_time_offset, _config.D1_L6_calibration_times, _config.D1_L6_calibration_distances, _config.D2_drift_time_min[5],_config.D2_drift_time_max[5],_config.D2_layer_min_hits[5],_config.D2_layer_max_hits[5]);
 		layer_wire_frame_offset[i] = _config.D2_layer_wire_frame_offset[i];
 	}
 	half_x_dim = _config.D2_half_x_dim;
@@ -25,6 +25,8 @@ D2::D2(const Config &_config)
 	distance_to_1st_layer = _config.D2_distance_to_1st_layer;
 	distance_between_wires = _config.D2_distance_between_wires;
 	distance_between_layers = _config.D2_distance_between_layers;
+	D2_no_of_planes_with_hits = 0;
+	D2_no_of_cells_with_hits = 0;
 }
 
 D2::~D2()
@@ -50,12 +52,18 @@ bool D2::was_correct_event()
 	correct_event = false;
 	no_of_layers_with_hits = 0;
 	bool correct_in_layer[6];
+	D2_no_of_planes_with_hits = 0;
+	D2_no_of_cells_with_hits = 0;
 	for (int i = 0; i < 6; i++)
 	{
 		correct_in_layer[i] = Layer[i]-> DCLayer::was_correct_event();
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
+		if (0!= Layer[i]-> Wire.size())
+		{
+			D2_no_of_planes_with_hits++;
+			D2_no_of_cells_with_hits = D2_no_of_cells_with_hits + Layer[i]-> Wire.size();
+		}
 	}
-
 	if (no_of_layers_with_hits == 6)
 	{
 		correct_event = true;
@@ -84,6 +92,8 @@ D2_hist_data* D2::get_hist_data()
 	{
 		D2_data -> layer_data[i] = Layer[i]-> DCLayer::get_hist_data();
 	}
+	D2_data -> D2_no_of_cells_with_hits = D2_no_of_cells_with_hits;
+	D2_data -> D2_no_of_planes_with_hits = D2_no_of_planes_with_hits;
 	return D2_data;
 }
 

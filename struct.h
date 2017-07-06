@@ -108,6 +108,8 @@ struct D1_hist_data
 struct D2_hist_data
 {
 	DCLayer_hist_data* layer_data[6];
+	int D2_no_of_cells_with_hits;
+	int D2_no_of_planes_with_hits;
 };
 
 struct HEX_hist_data

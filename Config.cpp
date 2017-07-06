@@ -143,15 +143,31 @@ Config::Config()
 											40, 34, 34, 34, 34, 34, 40, 40 ,40, 40,
 											40, 40, 40, 40, 40, 40, 34, 40, 40, 40, 40};
 
-	double _D2_L5_drift_time_offset[41] =  {46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 
-											46, 46, 46, 46, 46, 46, 46, 46, 46, 43, 
-											43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 
+	double _D2_L1_drift_time_offset[41] =  {19, 19, 19, 19, 19, 24, 19, 22, 22, 22, 
+											22, 40, 40, 43, 40, 40, 40, 40, 40, 40, 
+											40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 
+											40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40};
+	double _D2_L2_drift_time_offset[41] =  {22, 22, 22, 22, 22, 22, 22, 22, 25, 22, 
+											22, 25, 31, 31, 31, 34, 25, 25, 25, 25, 
+											25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 
+											25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25};
+	double _D2_L3_drift_time_offset[41] =  {34, 34, 34, 34, 34, 40, 40, 40, 40, 40, 
+											40, 43, 43, 43, 43, 40, 40, 40, 40, 40, 
+											40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 
+											40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40};
+	double _D2_L4_drift_time_offset[41] =  {43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 
+											43, 46, 8, 8, 8, 5, 14, 14, 11, 11, 
+											11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+											11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11};
+	double _D2_L5_drift_time_offset[41] =  {46, 46, 46, 46, 46, 46, 46, 43, 46, 43, 
+											43, 46, 46, 46, 43, 43, 43, 43, 40, 40, 
+											43, 40, 40, 40, 40, 40, 40, 43, 43, 43, 
 											43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43};
-	double _D2_L6_drift_time_offset[41] =  {43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 
-											43, 43, 43, 43, 46, 46, 46, 46, 46, 46, 
-											46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 
-											46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46};
-
+	double _D2_L6_drift_time_offset[41] =  {40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 
+											40, 46, 43, 43, 46, 43, 46, 46, 40, 43, 
+											40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 
+											40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40};
+	
 
 	for (int i = 0; i < 41; i++)
 	{
@@ -163,6 +179,10 @@ Config::Config()
 		D1_L6_drift_time_offset.push_back(_D1_L6_drift_time_offset[i]);
 		D1_L7_drift_time_offset.push_back(_D1_L7_drift_time_offset[i]);
 		D1_L8_drift_time_offset.push_back(_D1_L8_drift_time_offset[i]);
+		D2_L1_drift_time_offset.push_back(_D2_L1_drift_time_offset[i]);
+		D2_L2_drift_time_offset.push_back(_D2_L2_drift_time_offset[i]);
+		D2_L3_drift_time_offset.push_back(_D2_L3_drift_time_offset[i]);
+		D2_L4_drift_time_offset.push_back(_D2_L4_drift_time_offset[i]);
 		D2_L5_drift_time_offset.push_back(_D2_L5_drift_time_offset[i]);
 		D2_L6_drift_time_offset.push_back(_D2_L6_drift_time_offset[i]);
 	}
@@ -234,41 +254,39 @@ Config::Config()
 		D1_L8_calibration_distances.push_back(D1_distance_l8[i]);
 	}
 	
-	fit_with_inclined = true;
-	unbiased_fit = true;
+	fit_with_inclined = false;
+	unbiased_fit = false;
 	for (int i = 0; i < 8; i++)
 	{
-		if (i==0||i==1||i==6||i==7)
+		//if (i==0||i==1||i==6||i==7)
 		//if (i==0||i==1)
-		//if (true)
+		if (true)
 		{
-			D1_layer_min_hits[i] = 1;
-			D1_layer_max_hits[i] = 1;
+			D1_layer_min_hits[i] = -1;
+			D1_layer_max_hits[i] = -1;
 			//if (i==0) D1_drift_time_min[i] = 100;
 			//else D1_drift_time_min[i] = 0;
-			D1_drift_time_min[i] = 0;
-			D1_drift_time_max[i] = 609;
+			D1_drift_time_min[i] = -1500;
+			D1_drift_time_max[i] = 1500;
 		}
 		else
 		{
 			D1_layer_min_hits[i] = 1;
 			D1_layer_max_hits[i] = 1;
-			D1_drift_time_min[i] = 0;
-			D1_drift_time_max[i] = 609;
+			D1_drift_time_min[i] = -1500;
+			D1_drift_time_max[i] = 1500;
 		}
 	}
 	
 	// ---DRIFT CHEMBER D2---
 	for (int i = 0; i < 6; i++)
 	{
-		//if (i==4||i==5)
-		//if (i==0||i==1)
-		if (false)
+		if (true)
 		{
 			D2_layer_min_hits[i] = 1;
 			D2_layer_max_hits[i] = 1;
 			D2_drift_time_min[i] = 0;
-			D2_drift_time_max[i] = 609;
+			D2_drift_time_max[i] = 600;
 		}
 		else
 		{

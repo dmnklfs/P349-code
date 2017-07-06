@@ -40,6 +40,8 @@ private:
 	DCLayer *Layer[6];
 	int no_of_layers_with_hits;
 	bool correct_event;
+    int D2_no_of_planes_with_hits;
+    int D2_no_of_cells_with_hits;
 
 	// config
     double half_x_dim;

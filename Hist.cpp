@@ -20,7 +20,7 @@ Hist::Hist()
 	//init_start_histos_rough();
 	//init_tof_histos_rough();
 	//init_D1_histos_rough();
-	//init_D2_histos_rough();
+	init_D2_histos_rough();
 	//init_HEX_histos_rough();
 	//init_fiber_histos_rough();
 	//init_inter_histos_rough();
@@ -28,7 +28,7 @@ Hist::Hist()
 	//init_start_histos_preselected();
 	//init_tof_histos_preselected();
 	//init_D1_histos_preselected();
-	//init_D2_histos_preselected();
+	init_D2_histos_preselected();
 	//init_HEX_histos_preselected();
 	//init_fiber_histos_preselected();
 	//init_inter_histos_preselected();
@@ -212,25 +212,65 @@ void Hist::init_D2_histos_preselected()
 {
 	D2_histos_preselected = true;
 	TString temp_name;
-	// D2
+	temp_name = Form("D2 #mu_{planes};counts;#mu_{planes}",0);
+	D2_no_of_planes = new TH1F(temp_name, temp_name, 10, -0.5, 9.5);
+	temp_name = Form("D2 #mu_{cells};counts;#mu_{cells}",0);
+	D2_no_of_cells = new TH1F(temp_name, temp_name, 36, -0.5, 35.5);
+	temp_name = Form("D2 #mu_{cells} vs. #mu_{planes};#mu_{cells};#mu_{planes}",0);
+	D2_no_planes_vs_cells = new TH2F(temp_name, temp_name, 36, -0.5, 35.5, 10, -0.5, 9.5);
+	// ---LAYERS---
 	for (int i = 0; i < 6; i++)
 	{
-		// preselected
+		// wire distribution
 		temp_name = Form("D2 preselected data layer %d wires;wire;counts", i+1);
 		D2_Preselected_Elements[i] = new TH1F(temp_name, temp_name, 60, -0.5, 59.5);
+		// multiplicity distribution
 		temp_name = Form("D2 preselected layer %d multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		D2_Preselected_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
+		// drift time distribution
 		temp_name = Form("D2 preselected layer %d drift time;drift time [ns];counts", i+1);
 		D2_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
+		// ---WIRES---
 		for (int j = 0; j < 42; j++)
 		{
-		//	temp_name = Form("D1ChannelMultiplicityL%dW%d", i,j);
-		//	D1_channel_multiplicities[i][j] = new TH1F(temp_name, temp_name, 11, -0.5, 10.5);
 			temp_name = Form("D2DriftTimeL%dW%d", i+1,j+1);
 			D2_wires_offsets[i][j] = new TH1F(temp_name,temp_name,400,-400,800);
 		}
+		// correlations between wires
+		if (0==i) // l1l2 - inclined
+		{
+			for (int j = 0; j < 42; j++) // in fact: 35 wires... 42 - max no of wires in d2 detection planes
+			{
+				for (int k = 0; k < 2; k++) // left/right
+				{
+					temp_name = Form("D2L%dW%dL%dW%d", i+1, j+1, i+2, j+k+1);
+					D2_L1L2[j][k] = new TH2F(temp_name, temp_name, 100, -400, 800, 100, -400, 800);
+				}
+			}
+		}
+		if (2==i) // l3l4 - inclined
+		{
+			for (int j = 0; j < 42; j++) 
+			{
+				for (int k = 0; k < 2; k++) // left/right
+				{
+					temp_name = Form("D2L%dW%dL%dW%d", i+1, j+1, i+2, j+k+1);
+					D2_L3L4[j][k] = new TH2F(temp_name, temp_name, 100, -400, 800, 100, -400, 800);
+				}
+			}
+		}
+		if (4==i) // l3l4 - inclined
+		{
+			for (int j = 0; j < 42; j++) 
+			{
+				for (int k = 0; k < 2; k++) // left/right
+				{
+					temp_name = Form("D2L%dW%dL%dW%d", i+1, j+1, i+2, j+k+1);
+					D2_L5L6[j][k] = new TH2F(temp_name, temp_name, 100, -400, 800, 100, -400, 800);
+				}
+			}
+		}
 	}
-
 }
 
 void Hist::init_HEX_histos_rough()
@@ -654,6 +694,8 @@ void Hist::fill_D2_histos_rough(D2_hist_data* _d2_data)
 {
 	if (D2_histos_rough)
 	{
+		int wire1, wire2;
+		Float_t time1, time2, tot;
 		for (int j = 0; j < 6; j++)
 		{
 			for (unsigned int i = 0; i < _d2_data->layer_data[j]->rough_elements.size(); i++)
@@ -662,6 +704,85 @@ void Hist::fill_D2_histos_rough(D2_hist_data* _d2_data)
 				Hist::D2_Rough_DriftTime[j] -> Fill(_d2_data->layer_data[j]->rough_times.at(i));
 			}
 			Hist::D2_Rough_Multiplicity[j] -> Fill(_d2_data->layer_data[j]->rough_elements.size());
+			// correlation histograms are filled in
+			if (0==j)
+			{
+				for (unsigned int i = 0; i < _d2_data->layer_data[j]->preselected_elements.size(); i++)
+				{
+					wire1 = _d2_data->layer_data[j]->preselected_elements.at(i)-1;
+					time1 = _d2_data->layer_data[j]->preselected_times.at(i);
+					//tot = _d2_data->layer_data[j]->tot.at(i);
+					//D1_L1[wire1] -> Fill(time1, tot);				
+					for (unsigned int k = 0; k < _d2_data->layer_data[j+1]->preselected_elements.size(); k++)
+					{
+						wire2 = _d2_data->layer_data[j+1]->preselected_elements.at(k)-1;
+						time2 = _d2_data->layer_data[j+1]->preselected_times.at(k);	
+						if (wire1>=0&&wire1<42)
+						{
+							if (wire2 == wire1)
+							{
+								Hist::D2_L1L2[wire1][0] -> Fill(time1, time2);
+							}
+							if (wire2 == wire1+1)
+							{
+								Hist::D2_L1L2[wire1][1] -> Fill(time1, time2);
+							}
+						}
+					}
+				}
+			}
+			if (2==j)
+			{
+				for (unsigned int i = 0; i < _d2_data->layer_data[j]->preselected_elements.size(); i++)
+				{
+					wire1 = _d2_data->layer_data[j]->preselected_elements.at(i)-1;
+					time1 = _d2_data->layer_data[j]->preselected_times.at(i);
+					//tot = _d2_data->layer_data[j]->tot.at(i);
+					//D1_L1[wire1] -> Fill(time1, tot);				
+					for (unsigned int k = 0; k < _d2_data->layer_data[j+1]->preselected_elements.size(); k++)
+					{
+						wire2 = _d2_data->layer_data[j+1]->preselected_elements.at(k)-1;
+						time2 = _d2_data->layer_data[j+1]->preselected_times.at(k);	
+						if (wire1>=0&&wire1<42)
+						{
+							if (wire2 == wire1)
+							{
+								Hist::D2_L3L4[wire1][0] -> Fill(time1, time2);
+							}
+							if (wire2 == wire1+1)
+							{
+								Hist::D2_L3L4[wire1][1] -> Fill(time1, time2);
+							}
+						}
+					}
+				}
+			}
+			if (4==j)
+			{
+				for (unsigned int i = 0; i < _d2_data->layer_data[j]->preselected_elements.size(); i++)
+				{
+					wire1 = _d2_data->layer_data[j]->preselected_elements.at(i)-1;
+					time1 = _d2_data->layer_data[j]->preselected_times.at(i);
+					//tot = _d2_data->layer_data[j]->tot.at(i);
+					//D1_L1[wire1] -> Fill(time1, tot);				
+					for (unsigned int k = 0; k < _d2_data->layer_data[j+1]->preselected_elements.size(); k++)
+					{
+						wire2 = _d2_data->layer_data[j+1]->preselected_elements.at(k)-1;
+						time2 = _d2_data->layer_data[j+1]->preselected_times.at(k);	
+						if (wire1>=0&&wire1<42)
+						{
+							if (wire2 == wire1)
+							{
+								Hist::D2_L5L6[wire1][0] -> Fill(time1, time2);
+							}
+							if (wire2 == wire1+1)
+							{
+								Hist::D2_L5L6[wire1][1] -> Fill(time1, time2);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
@@ -672,6 +793,9 @@ void Hist::fill_D2_histos_preselected(D2_hist_data* _d2_data)
 	double time1;
 	if (D2_histos_preselected)
 	{
+		D2_no_of_planes -> Fill(_d2_data->D2_no_of_planes_with_hits);
+		D2_no_of_cells -> Fill(_d2_data->D2_no_of_cells_with_hits);
+		D2_no_planes_vs_cells -> Fill(_d2_data->D2_no_of_cells_with_hits,_d2_data->D2_no_of_planes_with_hits);
 		for (int j = 0; j < 6; j++)
 		{
 			for (unsigned int i = 0; i < _d2_data->layer_data[j]->preselected_elements.size(); i++)
@@ -685,6 +809,7 @@ void Hist::fill_D2_histos_preselected(D2_hist_data* _d2_data)
 			Hist::D2_Preselected_Multiplicity[j] -> Fill(_d2_data->layer_data[j]->preselected_elements.size());
 		}
 	}
+
 }
 
 void Hist::fill_HEX_histos_rough(HEX_hist_data* _hex_data)

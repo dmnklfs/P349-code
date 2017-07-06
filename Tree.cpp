@@ -476,6 +476,9 @@ void Tree::save_preselected_histos()
 	if (Hist::D2_histos_preselected)
 	{
 		make_hist_dir("D2",2);
+		D2_no_of_planes -> Write();
+		D2_no_of_cells -> Write();
+		D2_no_planes_vs_cells -> Write();
 		for (int i = 0; i < 6; i++)
 		{
 			Hist::D2_Preselected_Elements[i] -> Write();
@@ -488,6 +491,28 @@ void Tree::save_preselected_histos()
 			for (int j = 0; j < 42; j++)
 			{
 				D2_wires_offsets[i][j] -> Write();
+			}
+		}
+		make_hist_dir("D2CorrWiresDriftTime",2);
+		for (int i = 0; i < 42; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				D2_L1L2[i][j] -> Write();
+			}
+		}
+		for (int i = 0; i < 42; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				D2_L3L4[i][j] -> Write();
+			}
+		}
+		for (int i = 0; i < 42; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				D2_L5L6[i][j] -> Write();
 			}
 		}
 	}
