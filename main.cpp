@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
 	//EventDisplay *event_to_display;
 	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
   //Calibration3d *calibration = new Calibration3d(config);
+  Calibration3d_D2 *calibration_D2 = new Calibration3d_D2(config);
 	std::cout << "* start of the loop over the events" << std::endl;
   int delme_iter = 0;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
@@ -67,7 +68,9 @@ int main(int argc, char *argv[])
   			//tof -> Fill(single_event -> SingleEvent::getTOF());
         //START_Mean_Time  -> Fill(single_event -> SingleEvent::Start::getTime());
         //TOF_Mean_Time  -> Fill(single_event -> SingleEvent::TOF::getTime());
-  			//single_event -> SingleEvent::test_calculate_distances();
+        //std::cout << "test_calculate_distances" << std::endl;
+  			single_event -> SingleEvent::test_calculate_distances();
+
         //D1_HEX_pos_diff -> Fill(single_event -> SingleEvent::test_positions_histogram());
   			//event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
   			//event_to_display -> get_canvas() -> Write(name);
@@ -78,6 +81,9 @@ int main(int argc, char *argv[])
   			//simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
   			//calibration -> get_data( single_event -> SingleEvent::D1::get_data_for_calibration() ); 
         //delete event_to_display;
+        //std::cout << "ok1" << std::endl;
+        calibration_D2 -> get_data( single_event -> SingleEvent::D2::get_data_for_calibration() ); 
+        //std::cout << "ok2" << std::endl;
   			
   		} // end if correct event
 
@@ -92,6 +98,19 @@ int main(int argc, char *argv[])
     TFile test_file("results/res_file.root","UPDATE");
 
     std::cout << "iter " << delme_iter << std::endl;
+
+    calibration_D2 -> tell_no_of_events();
+    calibration_D2 -> set_no_of_bin_in_event();
+    
+    calibration_D2 -> set_no_of_iteration(0);
+    calibration_D2 -> calculate_hit_position();
+    calibration_D2 -> fit_events();
+    calibration_D2 -> save_histograms();
+    calibration_D2 -> fit_delta_projections();
+    calibration_D2 -> set_pos_Xerr();
+    calibration_D2 -> apply_corrections();
+    calibration_D2 -> plot_current_calibration();
+    calibration_D2 -> deletations();
 
     //CALIBRATION
     

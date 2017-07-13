@@ -20,8 +20,11 @@ public:
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();
     void calculate_relative_and_absolute_positions();
+    void calculate_relative_and_absolute_positions_straight();
+    void calculate_relative_and_absolute_positions_inclined();
     void calculate_distances_from_wires();
     double test_get_chosen_position(int _no_of_layer); // dell it 24.12.16
+    data_for_D2_calibration get_data_for_calibration();
 
     // for event display
     bool plot_event();
@@ -37,13 +40,15 @@ public:
     std::vector<double> AllHitsAbsolutePositionZ;
 
 private:
-	DCLayer *Layer[6];
-	int no_of_layers_with_hits;
-	bool correct_event;
+	void calculate_distances_from_wires_in_layer();
+    DCLayer *Layer[6];
+    int no_of_layers_with_hits;
+    bool correct_event;
+    double D2_max_time;
     int D2_no_of_planes_with_hits;
     int D2_no_of_cells_with_hits;
 
-	// config
+    bool fit_with_inclined;
     double half_x_dim;
     double half_z_dim;
     double x_lab_position;
@@ -52,8 +57,11 @@ private:
     double x_offset;
     double y_rotation_angle;
     double layer_wire_frame_offset[6];
+    double layer_angle[6];
+    int    no_of_wires[6];
     double distance_to_1st_layer;
-    double distance_between_wires;
+    double distance_between_straight_wires;
+    double distance_between_inclined_wires;
     double distance_between_layers;
 
     // just for the purpose of the event display - with reversed value of the x coordinate

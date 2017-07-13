@@ -158,6 +158,7 @@ void DCLayer::calculate_distances_from_wires()
 	for (unsigned int i = 0; i < DriftTime.size(); i++)
 	{
 		drift_time = DriftTime.at(i);
+		//std::cout << "drift_time " << drift_time << std::endl;
 		for (int j = 0; j < no_of_calib_bins; j++)
 		{
 			if (drift_time >= CalibrationTimes.at(j) && drift_time < CalibrationTimes.at(j+1))

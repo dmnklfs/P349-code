@@ -42,6 +42,13 @@ struct data_for_D1_calibration
 	double drift_times[8];
 };
 
+struct data_for_D2_calibration
+{
+	double positionsX[6]; // from wires
+	double positionsZ[6];
+	double drift_times[6];
+};
+
 // STRUCTS USED IN Hist CLASS
 struct start_hist_data
 {

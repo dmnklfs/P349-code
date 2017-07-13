@@ -127,6 +127,19 @@ public:
 	std::vector<double> D1_L7_calibration_distances;
 	std::vector<double> D1_L8_calibration_times;
 	std::vector<double> D1_L8_calibration_distances;
+
+	std::vector<double> D2_L1_calibration_times;
+	std::vector<double> D2_L1_calibration_distances;
+	std::vector<double> D2_L2_calibration_times;
+	std::vector<double> D2_L2_calibration_distances;
+	std::vector<double> D2_L3_calibration_times;
+	std::vector<double> D2_L3_calibration_distances;
+	std::vector<double> D2_L4_calibration_times;
+	std::vector<double> D2_L4_calibration_distances;
+	std::vector<double> D2_L5_calibration_times;
+	std::vector<double> D2_L5_calibration_distances;
+	std::vector<double> D2_L6_calibration_times;
+	std::vector<double> D2_L6_calibration_distances;
 	// ---DRIFT CHEMBER D2---
 	// min and max number of hits in layers (if set to -1: any value is ok)
 	std::vector<double> D2_drift_time_offset;
@@ -145,10 +158,14 @@ public:
     double D2_z_offset;
     double D2_x_offset;
     double D2_y_rotation_angle;
-    double D2_layer_wire_frame_offset[7];
+    double D2_layer_wire_frame_offset[6];
     double D2_distance_to_1st_layer; // distance from the DC frame to the 1st layer (looking from the beam direction)
-    double D2_distance_between_wires;
+    double D2_distance_between_straight_wires;
+	double D2_distance_between_inclined_wires;
     double D2_distance_between_layers;
+
+    double D2_layer_angle[6]; // (measured with respect to the y axis) ---- change, 13.01.17
+    int    D2_no_of_wires[6];
 
 	// ---HEX---
 	// min and max number of hits in layers (if set to -1: any value is ok)
