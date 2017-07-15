@@ -54,9 +54,9 @@ private:
 	static LineFit_D2 * _this;
 	int excluded_layer;
 	// z positions of all layers - common
-	double z[8];
+	double z[6];
 	// points - for straight layers
-	double x[4], errors[8];
+	double x[4], errors[6];
 	// hit equations - fo inclined layers
 	double a[4], b[4];
 

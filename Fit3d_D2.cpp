@@ -64,6 +64,10 @@ void Fit3d_D2::fit_straight_layer()
 	results = fit -> MinuitFit::fit_with_minuit();
 	z_x_a[0] = results.at(0);
 	z_x_b[0] = results.at(1);
+	//std::cout << "straight: " << std::endl;
+	//std::cout << "    " << x_straight[0] << " " << x_straight[1] << std::endl;
+	//std::cout << "    " << z_straight[0] << " " << z_straight[1] << std::endl;
+	//std::cout << "  " << z_x_a[0] << " " << z_x_b[0] << std::endl;
 	results.clear();
 }
 
@@ -82,16 +86,27 @@ void Fit3d_D2::fit_inclined_layers()
 	//z_x_b[1] = results.at(1);
 	z_x_a[1] = (z_inclined1[0]-z_inclined1[1])/(x_inclined1[0]-x_inclined1[1]);
 	z_x_b[1] = z_inclined1[0] - z_x_a[1]*x_inclined1[0];
-	//std::cout << " !!! " << std::endl;
+	//std::cout << "inclined1: " << std::endl;
+	//std::cout << "    " << x_inclined1[0] << " " << x_inclined1[1] << std::endl;
+	//std::cout << "    " << z_inclined1[0] << " " << z_inclined1[1] << std::endl;
+	//std::cout << "  " << z_x_a[1] << " " << z_x_b[1] << std::endl;
+	
 
-	MinuitFit * fit2 = MinuitFit::GetInstance();
-	fit2 -> set_no_of_points(2);		
-	fit2 -> MinuitFit::set_values(x_inclined2, z_inclined2, errors_inclined2);
-	fit2 -> MinuitFit::perform_simplified_fit();
-	results = fit2 -> MinuitFit::fit_with_minuit();
+	//MinuitFit * fit2 = MinuitFit::GetInstance();
+	//fit2 -> set_no_of_points(2);		
+	//fit2 -> MinuitFit::set_values(x_inclined2, z_inclined2, errors_inclined2);
+	//fit2 -> MinuitFit::perform_simplified_fit();
+	//results = fit2 -> MinuitFit::fit_with_minuit();
+	//z_x_a[2] = results.at(0);
+	//z_x_b[2] = results.at(1);
 
-	z_x_a[2] = results.at(0);
-	z_x_b[2] = results.at(1);
+	z_x_a[2] = (z_inclined2[0]-z_inclined2[1])/(x_inclined2[0]-x_inclined2[1]);
+	z_x_b[2] = z_inclined2[0] - z_x_a[2]*x_inclined2[0];
+
+	//std::cout << "inclined2: " << std::endl;
+	//std::cout << "    " << x_inclined2[0] << " " << x_inclined2[1] << std::endl;
+	//std::cout << "    " << z_inclined2[0] << " " << z_inclined2[1] << std::endl;
+	//std::cout << "  " << z_x_a[2] << " " << z_x_b[2] << std::endl;
 }
 
 void Fit3d_D2::calculate_xy_functions()
@@ -102,11 +117,11 @@ void Fit3d_D2::calculate_xy_functions()
 	y_x_b[0][0] = 0;
 	y_x_b[0][1] = 0;
 	// inclined 1
-	y_x_a[1] =-TMath::Tan(59*3.14*pow(180,-1));
+	y_x_a[1] = TMath::Tan(59*3.14*pow(180,-1));
 	y_x_b[1][0] = -x_inclined1[0]*y_x_a[1];
 	y_x_b[1][1] = -x_inclined1[1]*y_x_a[1];
 	// inclined 2
-	y_x_a[2] = TMath::Tan(59*3.14*pow(180,-1));
+	y_x_a[2] =-TMath::Tan(59*3.14*pow(180,-1));
 	y_x_b[2][0] = -x_inclined2[0]*y_x_a[2];
 	y_x_b[2][1] = -x_inclined2[1]*y_x_a[2];
 }
@@ -783,6 +798,12 @@ void Fit3d_D2::make_fit_to_lines(bool _unbiased_fit)
 	lineFit3d_D2 -> LineFit_D2::set_x_straight_values(x_straight);
 	lineFit3d_D2 -> LineFit_D2::set_incl_hit_lines_params(a, b);
 	lineFit3d_D2 -> LineFit_D2::set_x_errors(errors);
+	//std::cout << "track3d_point.X() " << track3d_point.X() << std::endl;
+	//std::cout << "track3d_point.Y() " << track3d_point.Y() << std::endl;
+	//std::cout << "track3d_point.Z() " << track3d_point.Z() << std::endl;
+	//std::cout << "track3d_vector.X() " << track3d_vector.X() << std::endl;
+	//std::cout << "track3d_vector.Y() " << track3d_vector.Y() << std::endl;
+	//std::cout << "track3d_vector.Z() " << track3d_vector.Z() << std::endl;
 	lineFit3d_D2 -> LineFit_D2::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
 	lineFit3d_D2 -> LineFit_D2::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z()); //(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
 	lineFit3d_D2 -> LineFit_D2::calculate_start_params();
@@ -797,7 +818,7 @@ void Fit3d_D2::make_fit_to_lines(bool _unbiased_fit)
 	lineFit3d_D2 -> LineFit_D2::~LineFit_D2();
 
 	// unbiased
-	unbiased_fit = true;
+	unbiased_fit = false;
 	LineFit_D2 * lineFit3d_D2_Unbiased[6];
 	for (int i = 0; i < 6; i++)
 	{
@@ -921,11 +942,9 @@ TVector3 Fit3d_D2::return_track_vector(int _layer_no)
 
 void Fit3d_D2::calculate_wire_track_distances()
 {
-	int straight[4];
-	straight[0] = 0;
-	straight[1] = 1;
-	straight[2] = 6;
-	straight[3] = 7;
+	int straight[2];
+	straight[0] = 4;
+	straight[1] = 5;
 
 	double z[4];
 	z[0] = z_inclined1[0];
@@ -949,11 +968,11 @@ void Fit3d_D2::calculate_wire_track_distances()
 	double t, t2;
 	// points in which the line goes through the certain z plane
 	double xi, yi;
-	double xp[8], yp[8], zp[8];
-	double ux[8], uy[8], uz[8];
+	double xp[6], yp[6], zp[6];
+	double ux[6], uy[6], uz[6];
 	if (unbiased_fit==false)
 	{
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			zp[i] = track3d_fit_point.Z();
 			//std::cout << track3d_fit_point.Z() << std::endl;
@@ -968,7 +987,7 @@ void Fit3d_D2::calculate_wire_track_distances()
 	}
 	if (unbiased_fit==true)
 	{
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			zp[i] = track3d_fit_point_unbiased[i].Z();
 			xp[i] = track3d_fit_point_unbiased[i].X();
@@ -980,7 +999,7 @@ void Fit3d_D2::calculate_wire_track_distances()
 		}
 	}
 	
-	for (int i=0;i<4; i++)
+	for (int i=0;i<2; i++)
 	{
 		//delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
 		t = z_straight[i] - zp[ straight[i] ];//TMath::Abs(z[ straight[i] ] - zp);
@@ -994,11 +1013,11 @@ void Fit3d_D2::calculate_wire_track_distances()
 
 	for (int i = 0; i < 4; i++)
 	{
-		t = z[i] - zp[2+i];
-		t2 = 1/uz[i+2];
-		xi = t*t2*ux[i+2] + xp[i+2];
-		yi = t*t2*uy[i+2] + yp[i+2];
-		wire_track_dist[2+i]  = TMath::Abs(a[i]*xi-yi+b[i])*pow(pow((a[i]*a[i]+1),0.5),-1);
+		t = z[i] - zp[i];
+		t2 = 1/uz[i];
+		xi = t*t2*ux[i] + xp[i];
+		yi = t*t2*uy[i] + yp[i];
+		wire_track_dist[i]  = TMath::Abs(a[i]*xi-yi+b[i])*pow(pow((a[i]*a[i]+1),0.5),-1);
 	}
 
 //	for (int i = 0; i < 8; i++)

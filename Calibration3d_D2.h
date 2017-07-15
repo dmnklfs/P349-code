@@ -26,7 +26,7 @@
 #include "Config.h"
 #include "MinuitFit.h"
 #include "Fit3d_D2.h"
-#include "CalibrationLayer3d.h"
+#include "CalibrationLayer3d_D2.h"
 #include <TMath.h>
 
 class Calibration3d_D2
@@ -39,7 +39,7 @@ public:
 
 	void get_data(data_for_D2_calibration _single_event_data);
 	void tell_no_of_events();
-	void solve_lr_ambiguity(const CalibrationLayer3d &layer1, const CalibrationLayer3d &layer2);
+	void solve_lr_ambiguity(const CalibrationLayer3d_D2 &layer1, const CalibrationLayer3d_D2 &layer2);
 	void calculate_hit_position();
 	void save_histograms();
 	void fit_events_in_straight_layers_biased(double _chi2_cut);
@@ -73,7 +73,7 @@ public:
 private:
 	bool fit_with_inclined;
 	bool unbiased_fit;
-	CalibrationLayer3d *Layer[8];
+	CalibrationLayer3d_D2 *Layer[6];
 	int no_of_iteration;
 	int no_of_calib_bins;
 	int no_of_corr_bins;

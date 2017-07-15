@@ -415,8 +415,8 @@ data_for_D2_calibration D2::get_data_for_calibration() // i need here only infor
 	data_for_D2_calibration data_for_calibration;
 	for (int i = 0; i < 6; i++)
 	{
-		//std::cout << "layer " << i << " absolute x position " << std::endl;
-		//std::cout << Layer[i] -> AbsoluteXPosition.at(0) << std::endl;
+		//std::cout << "layer " << i << " absolute x position " << Layer[i] -> AbsoluteXPosition.at(0) << std::endl;
+		//std::cout << "layer " << i << " absolute z position " << Layer[i] -> AbsoluteZPosition.at(0) << std::endl;
 		data_for_calibration.positionsX[i]	= Layer[i] -> AbsoluteXPosition.at(0);
 		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
 		data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);

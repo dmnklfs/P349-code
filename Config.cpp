@@ -67,8 +67,8 @@ Config::Config()
 	D1_no_of_wires[6] = 41;
 	D1_no_of_wires[7] = 41;
 
-	// 12.07.2017 - check it!
-	D2_layer_angle[0] =-31;
+	// 12.07.2017 - check it! -> checked 15.07 - ok
+	D2_layer_angle[0] =-31; // 
 	D2_layer_angle[1] =-31;
 	D2_layer_angle[2] = 31;
 	D2_layer_angle[3] = 31;
@@ -197,6 +197,7 @@ Config::Config()
 		D1_L6_drift_time_offset.push_back(_D1_L6_drift_time_offset[i]);
 		D1_L7_drift_time_offset.push_back(_D1_L7_drift_time_offset[i]);
 		D1_L8_drift_time_offset.push_back(_D1_L8_drift_time_offset[i]);
+
 		D2_L1_drift_time_offset.push_back(_D2_L1_drift_time_offset[i]);
 		D2_L2_drift_time_offset.push_back(_D2_L2_drift_time_offset[i]);
 		D2_L3_drift_time_offset.push_back(_D2_L3_drift_time_offset[i]);

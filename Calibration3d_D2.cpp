@@ -30,17 +30,17 @@ Calibration3d_D2::Calibration3d_D2(const Config &_config)
 
 	// init independent from fit_with_inclined
 	// initialization of the layers
-	Layer[0] = new CalibrationLayer3d(1, _config.D2_L1_calibration_times, _config.D2_L1_calibration_distances);
-	Layer[1] = new CalibrationLayer3d(2, _config.D2_L2_calibration_times, _config.D2_L2_calibration_distances);
-	Layer[2] = new CalibrationLayer3d(3, _config.D2_L3_calibration_times, _config.D2_L3_calibration_distances);
-	Layer[3] = new CalibrationLayer3d(4, _config.D2_L4_calibration_times, _config.D2_L4_calibration_distances);
-	Layer[4] = new CalibrationLayer3d(5, _config.D2_L5_calibration_times, _config.D2_L5_calibration_distances);
-	Layer[5] = new CalibrationLayer3d(6, _config.D2_L6_calibration_times, _config.D2_L6_calibration_distances);
+	Layer[0] = new CalibrationLayer3d_D2(1, _config.D2_L1_calibration_times, _config.D2_L1_calibration_distances);
+	Layer[1] = new CalibrationLayer3d_D2(2, _config.D2_L2_calibration_times, _config.D2_L2_calibration_distances);
+	Layer[2] = new CalibrationLayer3d_D2(3, _config.D2_L3_calibration_times, _config.D2_L3_calibration_distances);
+	Layer[3] = new CalibrationLayer3d_D2(4, _config.D2_L4_calibration_times, _config.D2_L4_calibration_distances);
+	Layer[4] = new CalibrationLayer3d_D2(5, _config.D2_L5_calibration_times, _config.D2_L5_calibration_distances);
+	Layer[5] = new CalibrationLayer3d_D2(6, _config.D2_L6_calibration_times, _config.D2_L6_calibration_distances);
 	for (int i = 0; i < 6; i++)
 	{
-		Layer[i] -> CalibrationLayer3d::set_no_of_corr_bins(no_of_corr_bins);
-		Layer[i] -> CalibrationLayer3d::set_max_time_range(max_time_range);
-		Layer[i] -> CalibrationLayer3d::set_no_of_bin_in_calib();
+		Layer[i] -> CalibrationLayer3d_D2::set_no_of_corr_bins(no_of_corr_bins);
+		Layer[i] -> CalibrationLayer3d_D2::set_max_time_range(max_time_range);
+		Layer[i] -> CalibrationLayer3d_D2::set_no_of_bin_in_calib();
 	}
 
 	TString name;
@@ -175,7 +175,7 @@ void Calibration3d_D2::get_data(data_for_D2_calibration _single_event_data)
 	//std::cout << "b" << std::endl;
 	for (int i = 0; i < 6; i++)
 	{
-		Layer[i] -> CalibrationLayer3d::get_data(_single_event_data.positionsX[i], _single_event_data.positionsZ[i], _single_event_data.drift_times[i], left_right[i]);
+		Layer[i] -> CalibrationLayer3d_D2::get_data(_single_event_data.positionsX[i], _single_event_data.positionsZ[i], _single_event_data.drift_times[i], left_right[i]);
 	}
 }
 
@@ -184,7 +184,7 @@ void Calibration3d_D2::set_no_of_iteration(double _no_of_iteration)
 	no_of_iteration = _no_of_iteration;
 	for (int i = 0; i < 6; i++)
 	{
-		Layer[i] -> CalibrationLayer3d::set_no_of_iteration(_no_of_iteration);
+		Layer[i] -> CalibrationLayer3d_D2::set_no_of_iteration(_no_of_iteration);
 	}
 }
 
@@ -192,7 +192,7 @@ void Calibration3d_D2::calculate_hit_position()
 {
 	for (int i = 0; i < 6; i++)
 	{
-		Layer[i] -> CalibrationLayer3d::calculate_hit_position();
+		Layer[i] -> CalibrationLayer3d_D2::calculate_hit_position();
 	}
 }
 
@@ -200,7 +200,7 @@ void Calibration3d_D2::set_no_of_bin_in_event()
 {
 	for (int i = 0; i < 6; i++)
 	{
-		Layer[i] -> CalibrationLayer3d::set_no_of_bin_in_event();
+		Layer[i] -> CalibrationLayer3d_D2::set_no_of_bin_in_event();
 	}
 }
 
@@ -220,9 +220,9 @@ void Calibration3d_D2::save_histograms()
 	for (int i = 0; i < 6; i++)
 	{
 		name = Form("results/layer%d_delta_iteration_%d.png",i+1, no_of_iteration);
-		Layer[i] -> CalibrationLayer3d::plot_delta() -> SaveAs(name);
+		Layer[i] -> CalibrationLayer3d_D2::plot_delta() -> SaveAs(name);
 		gDirectory->pwd();
-		Layer[i] -> CalibrationLayer3d::plot_delta() -> Write();	
+		Layer[i] -> CalibrationLayer3d_D2::plot_delta() -> Write();	
 		name = Form("results/layer%d_chi2_iteration_%d.png",i+1, no_of_iteration);
 		//plot_chi2(i) -> SaveAs(name);
 		name = Form("results/layer%d_chi2_range_iteration_%d.png",i+1, no_of_iteration);
@@ -270,11 +270,11 @@ double Calibration3d_D2::calculate_theta_y()
 
 void Calibration3d_D2::fit_in_3d()
 {
-	double aSt, bSt, track_angle, temp_chi2, layer_temp_chi2[8], temp_chi2_prob, layer_temp_chi2_prob[8];
-	double wires_positionsX_all[8];
-	double hits_positionsX_all[8];
-	double hits_positionsZ_all[8];
-	double errors_all[8];
+	double aSt, bSt, track_angle, temp_chi2, layer_temp_chi2[6], temp_chi2_prob, layer_temp_chi2_prob[6];
+	double wires_positionsX_all[6];
+	double hits_positionsX_all[6];
+	double hits_positionsZ_all[6];
+	double errors_all[6];
 	unsigned int no_of_chosen_events;
 	no_of_chosen_events = Layer[0] -> CalibrationData.size();
 	std::cout << "Fit in 3d..." << std::endl;
@@ -284,12 +284,17 @@ void Calibration3d_D2::fit_in_3d()
 		//std::cout << i << std::endl;
 		for (int j = 0; j < 6; j++)
 		{
-			//std::cout << "layer " << j << std::endl;
+			//std::cout << "   for fitting... " << std::endl;
+			//std::cout << "   layer " << j << std::endl;
 			wires_positionsX_all[j] = Layer[j]->CalibrationData.at(i).wire_pos_X;
 			hits_positionsX_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_X;
 			hits_positionsZ_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Z;
 			if (no_of_iteration==0) errors_all[j]=1;
 			else errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
+			//std::cout << "   wires_positionsX_all[j] " << wires_positionsX_all[j] << std::endl;
+			//std::cout << "   hits_positionsX_all[j] " << hits_positionsX_all[j] << std::endl;
+			//std::cout << "   hits_positionsZ_all[j] " << hits_positionsZ_all[j] << std::endl;
+			//std::cout << "   errors_all[j] " << errors_all[j] << std::endl;
 		}
 		
 		if (0==i%1000) std::cout << "    " << i << " out of " << no_of_chosen_events << " done" << std::endl;
@@ -349,7 +354,7 @@ void Calibration3d_D2::fit_in_3d()
 				layer_chi2_no_cut[j] -> Fill(layer_temp_chi2[j]);
 			}
 
-			if ( temp_chi2_prob>0.05 ) //was_correct_angle(track_angle) )
+			if ( true ) //was_correct_angle(track_angle) )
 			{
 				//std::cout << " ok 1" << std::endl;
 				angle_distribution -> Fill(track_angle);
@@ -366,7 +371,7 @@ void Calibration3d_D2::fit_in_3d()
 					Layer[j] -> CalibrationData.at(i).distance_wire_track = fit3d_D2 -> Fit3d_D2::get_wire_track_dist(j);
 					//std::cout << " c " << Layer[j] -> CalibrationData.at(i).distance_wire_track << std::endl;
 					Layer[j] -> CalibrationData.at(i).track_angle = track_angle;
-					Layer[j] -> CalibrationLayer3d::calculate_deltas(i);
+					Layer[j] -> CalibrationLayer3d_D2::calculate_deltas(i);
 					layer_angle_distribution[j] -> Fill( fit3d_D2 -> Fit3d_D2::calculate_phi_xz(j) );
 					layer_chi2_pdf[j] -> Fill(layer_temp_chi2_prob[j]);
 					layer_chi2[j] -> Fill(layer_temp_chi2[j]);
@@ -382,7 +387,7 @@ void Calibration3d_D2::deletations()
 {
 	for (int i = 0; i < 6; i++)
 	{
-		Layer[i] -> CalibrationLayer3d::deletations();
+		Layer[i] -> CalibrationLayer3d_D2::deletations();
 	}
 	StraightLayersTracks_apar.clear();
 	StraightLayersTracks_bpar.clear();

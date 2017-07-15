@@ -104,15 +104,18 @@ double LineFit_D2::GlobalFCN(const double * par)
 	// straight
 	// layer 5
 	t = z[4] - zp;
+	//std::cout << "z " << z[4] << std::endl;
+	//std::cout << "z " << z[5] << std::endl;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
-	delta  = x[0] - xi;
+	delta  = x[4] - xi;
+	//std::cout << "delta " << delta << std::endl;
 	layer_chisq[4] = (delta*delta)/(errors[0]*errors[0]);
 	// layer 6
 	t = z[5] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
-	delta  = x[1] - xi;
+	delta  = x[5] - xi;
 	layer_chisq[5] = (delta*delta)/(errors[1]*errors[1]);
 
 	for (int i = 0; i < 4; i++)
@@ -120,11 +123,14 @@ double LineFit_D2::GlobalFCN(const double * par)
 		t = z[i] - zp;
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
+		std::cout << "i " << i << std::endl;
+		std::cout << a[i] << std::endl;
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
 		layer_chisq[i] = delta/(errors[i]*errors[i]);
 	}
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 6; i++)
 	{
+		std::cout << "layer " << i << " chisq: " << layer_chisq[i] << std::endl;
 		if (i!=excluded_layer) chisq = chisq + layer_chisq[i];
 	}
 	return chisq;
@@ -133,7 +139,7 @@ double LineFit_D2::GlobalFCN(const double * par)
 double LineFit_D2::get_chisq()
 {
 	double chisq = 0;
-	double layer_chisq[8];
+	double layer_chisq[6];
 	double delta = 0;
 	int straight[2];
 	straight[0] = 4;
@@ -155,14 +161,14 @@ double LineFit_D2::get_chisq()
 	t = z[4] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
-	delta  = x[0] - xi;
-	layer_chisq[0] = (delta*delta)/(errors[0]*errors[0]);
+	delta  = x[4] - xi;
+	layer_chisq[4] = (delta*delta)/(errors[0]*errors[0]);
 	// layer 2
 	t = z[5] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
-	delta  = x[1] - xi;
-	layer_chisq[1] = (delta*delta)/(errors[1]*errors[1]);
+	delta  = x[5] - xi;
+	layer_chisq[5] = (delta*delta)/(errors[1]*errors[1]);
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -172,8 +178,9 @@ double LineFit_D2::get_chisq()
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
 		layer_chisq[i] = delta/(errors[i]*errors[i]);
 	}
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 6; i++)
 	{
+		//std::cout << "layer " << i << " chisq: " << layer_chisq[i] << std::endl;
 		if (i!=excluded_layer) chisq = chisq + layer_chisq[i];
 	}
 	return chisq;
