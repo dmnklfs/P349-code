@@ -107,10 +107,10 @@ int main(int argc, char *argv[])
     calibration_D2 -> fit_events();
     calibration_D2 -> save_histograms();
     calibration_D2 -> fit_delta_projections();
-    //calibration_D2 -> set_pos_Xerr();
-    //calibration_D2 -> apply_corrections();
-    //calibration_D2 -> plot_current_calibration();
-    //calibration_D2 -> deletations();
+    calibration_D2 -> set_pos_Xerr();
+    calibration_D2 -> apply_corrections();
+    calibration_D2 -> plot_current_calibration();
+    calibration_D2 -> deletations();
 
     //CALIBRATION
     

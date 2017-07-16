@@ -98,15 +98,22 @@ Config::Config()
 	D2_z_offset = 0; // up to the beginning of the detector (not: 1st layer)
 	D2_x_offset = 0;
 	D2_y_rotation_angle = (0)*3.14/180; // rad
-	D2_layer_wire_frame_offset[0] = -31.35;	// x
-	D2_layer_wire_frame_offset[1] = -35.24;
-	D2_layer_wire_frame_offset[2] = 7.18;
-	D2_layer_wire_frame_offset[3] = 4.8433;
-	D2_layer_wire_frame_offset[4] = 3.0;
-	D2_layer_wire_frame_offset[5] = 5.0;
+	//D2_layer_wire_frame_offset[0] = -31.35;	// x
+	//D2_layer_wire_frame_offset[1] = -35.24;
+	//D2_layer_wire_frame_offset[2] = 7.18;
+	//D2_layer_wire_frame_offset[3] = 4.8433;
+	//D2_layer_wire_frame_offset[4] = 3.0;
+	//D2_layer_wire_frame_offset[5] = 5.0;
+	D2_layer_wire_frame_offset[0] = -5.83004;	// x
+	D2_layer_wire_frame_offset[1] = -8.16674;
+	D2_layer_wire_frame_offset[2] = -5.83004;
+	D2_layer_wire_frame_offset[3] = -8.16674;
+	D2_layer_wire_frame_offset[4] =  3.00;
+	D2_layer_wire_frame_offset[5] =  5.00;
+	
 	D2_distance_to_1st_layer = 3.3;	// z
 	D2_distance_between_straight_wires = 4.0;		// x
-	D1_distance_between_inclined_wires = 4.66653;
+	D2_distance_between_inclined_wires = 4.66653;
 	D2_distance_between_layers = 1.8;	// z
 
 	HEX_half_x_dim = 0.5*150.0; // 0.5 * detector dimensions

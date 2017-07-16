@@ -56,7 +56,7 @@ private:
 	// z positions of all layers - common
 	double z[6];
 	// points - for straight layers
-	double x[4], errors[6];
+	double x[2], errors[6];
 	// hit equations - fo inclined layers
 	double a[4], b[4];
 

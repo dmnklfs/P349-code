@@ -28,7 +28,8 @@ void LineFit_D2::set_x_straight_values(double *_x)
 {
 	for (int i = 0; i < 2; i++)
 	{
-		x[i+4] = _x[i+4];
+		x[i] = _x[i];
+		//std::cout << "     " << x[i] << std::endl;
 	}
 }
 
@@ -108,29 +109,28 @@ double LineFit_D2::GlobalFCN(const double * par)
 	//std::cout << "z " << z[5] << std::endl;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
-	delta  = x[4] - xi;
+	delta  = x[0] - xi;
 	//std::cout << "delta " << delta << std::endl;
-	layer_chisq[4] = (delta*delta)/(errors[0]*errors[0]);
+	layer_chisq[4] = (delta*delta)/(errors[4]*errors[4]);
 	// layer 6
 	t = z[5] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
-	delta  = x[5] - xi;
-	layer_chisq[5] = (delta*delta)/(errors[1]*errors[1]);
+	delta  = x[1] - xi;
+	layer_chisq[5] = (delta*delta)/(errors[5]*errors[5]);
 
 	for (int i = 0; i < 4; i++)
 	{
 		t = z[i] - zp;
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
-		std::cout << "i " << i << std::endl;
-		std::cout << a[i] << std::endl;
+		//std::cout << "i " << i << std::endl;
+		//std::cout << a[i] << std::endl;
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
 		layer_chisq[i] = delta/(errors[i]*errors[i]);
 	}
 	for (int i = 0; i < 6; i++)
 	{
-		std::cout << "layer " << i << " chisq: " << layer_chisq[i] << std::endl;
 		if (i!=excluded_layer) chisq = chisq + layer_chisq[i];
 	}
 	return chisq;
@@ -161,13 +161,13 @@ double LineFit_D2::get_chisq()
 	t = z[4] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
-	delta  = x[4] - xi;
+	delta  = x[0] - xi;
 	layer_chisq[4] = (delta*delta)/(errors[0]*errors[0]);
 	// layer 2
 	t = z[5] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
-	delta  = x[5] - xi;
+	delta  = x[1] - xi;
 	layer_chisq[5] = (delta*delta)/(errors[1]*errors[1]);
 
 	for (int i = 0; i < 4; i++)
@@ -181,6 +181,11 @@ double LineFit_D2::get_chisq()
 	for (int i = 0; i < 6; i++)
 	{
 		//std::cout << "layer " << i << " chisq: " << layer_chisq[i] << std::endl;
+		//std::cout << "z " << z[i] << std::endl;
+		//std::cout << "x " << x[i+4] << std::endl;
+		//std::cout << "par[0] " << par[0] << " par[1] " << par[1] << " par[2] " << par[2] << " par[3] " << par[3] << std::endl;
+		
+		
 		if (i!=excluded_layer) chisq = chisq + layer_chisq[i];
 	}
 	return chisq;

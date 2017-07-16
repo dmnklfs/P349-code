@@ -320,7 +320,7 @@ void Calibration3d_D2::fit_in_3d()
 		track3d_fit_vector = fit3d_D2 -> Fit3d_D2::return_track_vector();
 		fit3d_D2 -> Fit3d_D2::calculate_wires_xy_functions();
 		fit3d_D2 -> Fit3d_D2::calculate_wire_track_distances();
-		//fit3d_D2 -> Fit3d_D2::draw_event();
+		fit3d_D2 -> Fit3d_D2::draw_event();
 
 		// cut on convergence of -- ALL ?? -- fits
 		// cut on fit probability -- only for all layers

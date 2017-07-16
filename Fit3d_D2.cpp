@@ -454,22 +454,6 @@ void Fit3d_D2::draw_event()
 	yx_fcn_straight_w2->SetLineWidth(2);
 
 
-	// wire3
-	TPolyLine3D *yx_fcn_straight_w3 = new TPolyLine3D(2);
-	yx_fcn_straight_w3->SetPoint(0, x_straight[2], y_range_min, z_straight[2]);
-	yx_fcn_straight_w3->SetPoint(1, x_straight[2], y_range_max, z_straight[2]);
-	yx_fcn_straight_w3->SetLineColor(color[0]);
-	yx_fcn_straight_w3->SetLineWidth(2);
-
-
-	// wire4
-	TPolyLine3D *yx_fcn_straight_w4 = new TPolyLine3D(2);
-	yx_fcn_straight_w4->SetPoint(0, x_straight[3], y_range_min, z_straight[3]);
-	yx_fcn_straight_w4->SetPoint(1, x_straight[3], y_range_max, z_straight[3]);
-	yx_fcn_straight_w4->SetLineColor(color[0]);
-	yx_fcn_straight_w4->SetLineWidth(2);
-
-
 	// inclined hit plane 1
 	// wire1
 	TPolyLine3D *yx_fcn_inclined1_w1 = new TPolyLine3D(2);
@@ -720,8 +704,6 @@ void Fit3d_D2::draw_event()
 	//drift_chamber -> Draw();
 	yx_fcn_straight_w1->Draw();
 	yx_fcn_straight_w2->Draw();
-	yx_fcn_straight_w3->Draw();
-	yx_fcn_straight_w4->Draw();
 	yx_fcn_inclined1_w1->Draw();
 	yx_fcn_inclined1_h1->Draw();
 	yx_fcn_inclined1_w2->Draw();
@@ -747,11 +729,11 @@ void Fit3d_D2::draw_event()
 	//in1_i1->Draw();
 	//in2_i1->Draw();
 	//track_point->Draw();
-	track3d->Draw();
+	//track3d->Draw();
 	//track3d_proj_straight->Draw();
 	//track3d_proj_inclined1->Draw();
 	//track3d_proj_inclined2->Draw();
-	track3d_8lines_fit -> Draw();
+	//track3d_8lines_fit -> Draw();
 	//track3d_8lines_fit_straight -> Draw();
 	//track3d_8lines_fit_inclined1 -> Draw();
 	//track3d_8lines_fit_inclined2 -> Draw();

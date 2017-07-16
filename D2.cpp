@@ -210,9 +210,9 @@ void D2::calculate_relative_and_absolute_positions_straight()
 			x = calc_position_in_lab(x_prim, x_lab_position, x_offset);
 			z = calc_position_in_lab(z_prim, z_lab_position, z_offset);
 
-			//std::cout << "filled layer: " << no_of_layer << std::endl;
-			//std::cout << x << std::endl;
-			//std::cout << z << std::endl;
+			std::cout << "filled layer: " << no_of_layer << std::endl;
+			std::cout << "x " << x << std::endl;
+			std::cout << "wire " << Layer[no_of_layer]->Wire.at(ii) << std::endl;
 			Layer[no_of_layer]->AbsoluteXPosition.push_back(x);
 			Layer[no_of_layer]->AbsoluteZPosition.push_back(z);
 		}
@@ -271,9 +271,9 @@ void D2::calculate_relative_and_absolute_positions_inclined()
 				z = calc_position_in_lab(z_prim, z_lab_position, z_offset);
 				//std::cout << "3. " << z << std::endl;
 	
-				//std::cout << "filled layer: " << no_of_layer << std::endl;
-				//std::cout << x << std::endl;
-				//std::cout << z << std::endl;
+				std::cout << "filled layer: " << no_of_layer << std::endl;
+				std::cout << "x " << x << std::endl;
+				std::cout << "wire " << Layer[no_of_layer]->Wire.at(ii) << std::endl;
 				Layer[no_of_layer]->AbsoluteXPosition.push_back(x);
 				Layer[no_of_layer]->AbsoluteZPosition.push_back(z);
 			}
@@ -415,7 +415,7 @@ data_for_D2_calibration D2::get_data_for_calibration() // i need here only infor
 	data_for_D2_calibration data_for_calibration;
 	for (int i = 0; i < 6; i++)
 	{
-		//std::cout << "layer " << i << " absolute x position " << Layer[i] -> AbsoluteXPosition.at(0) << std::endl;
+		std::cout << "layer " << i << " absolute x position " << Layer[i] -> AbsoluteXPosition.at(0) << std::endl;
 		//std::cout << "layer " << i << " absolute z position " << Layer[i] -> AbsoluteZPosition.at(0) << std::endl;
 		data_for_calibration.positionsX[i]	= Layer[i] -> AbsoluteXPosition.at(0);
 		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
