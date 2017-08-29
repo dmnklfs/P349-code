@@ -19,17 +19,17 @@ Hist::Hist()
 
 	//init_start_histos_rough();
 	//init_tof_histos_rough();
-	//init_D1_histos_rough();
+	init_D1_histos_rough();
 	init_D2_histos_rough();
-	//init_HEX_histos_rough();
+	init_HEX_histos_rough();
 	//init_fiber_histos_rough();
 	//init_inter_histos_rough();
 
 	//init_start_histos_preselected();
 	//init_tof_histos_preselected();
-	//init_D1_histos_preselected();
+	init_D1_histos_preselected();
 	init_D2_histos_preselected();
-	//init_HEX_histos_preselected();
+	init_HEX_histos_preselected();
 	//init_fiber_histos_preselected();
 	//init_inter_histos_preselected();
 }
@@ -293,8 +293,14 @@ void Hist::init_HEX_histos_rough()
 
 void Hist::init_HEX_histos_preselected()
 {
-	HEX_histos_preselected = true;
+	HEX_histos_rough = true;
 	TString temp_name;
+	temp_name = Form("HEX #mu_{planes};counts;#mu_{planes}",0);
+	HEX_no_of_planes = new TH1F(temp_name, temp_name, 10, -0.5, 9.5);
+	temp_name = Form("HEX #mu_{cells};counts;#mu_{cells}",0);
+	HEX_no_of_cells = new TH1F(temp_name, temp_name, 36, -0.5, 35.5);
+	temp_name = Form("HEX #mu_{cells} vs. #mu_{planes};#mu_{cells};#mu_{planes}",0);
+	HEX_no_planes_vs_cells = new TH2F(temp_name, temp_name, 36, -0.5, 35.5, 10, -0.5, 9.5);
 	// HEX
 	for (int i = 0; i < 7; i++)
 	{
@@ -305,8 +311,13 @@ void Hist::init_HEX_histos_preselected()
 		HEX_Preselected_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
 		temp_name = Form("HEX preselected layer %d drift time;drift time [ns];counts", i+1);
 		HEX_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
+		// ---WIRES---
+		for (int j = 0; j < 80; j++)
+		{
+			temp_name = Form("D2DriftTimeL%dW%d", i+1,j+1);
+			HEX_wires_offsets[i][j] = new TH1F(temp_name,temp_name,400,-400,800);
+		}
 	}
-
 }
 
 void Hist::init_fiber_histos_rough()

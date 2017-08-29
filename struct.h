@@ -49,6 +49,13 @@ struct data_for_D2_calibration
 	double drift_times[6];
 };
 
+struct data_for_HEX_calibration
+{
+	double positionsX[7]; // from wires
+	double positionsZ[7];
+	double drift_times[7];
+};
+
 // STRUCTS USED IN Hist CLASS
 struct start_hist_data
 {
@@ -122,6 +129,8 @@ struct D2_hist_data
 struct HEX_hist_data
 {
 	DCLayer_hist_data* layer_data[7];
+	int HEX_no_of_cells_with_hits;
+	int HEX_no_of_planes_with_hits;
 };
 
 // structure required to fill histos by ... function

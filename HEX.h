@@ -13,6 +13,12 @@
 class HEX
 {
 public:
+    std::vector<double> AllWiresAbsolutePositionX;
+    std::vector<double> AllWiresAbsolutePositionZ;
+
+    std::vector<double> AllHitsAbsolutePositionX;
+    std::vector<double> AllHitsAbsolutePositionZ;
+
 	HEX();
 	HEX(const Config &_config);
 	~HEX();
@@ -20,21 +26,27 @@ public:
 	HEX_hist_data* get_hist_data();
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();
-    void calculate_relative_and_absolute_positions();
+    void calculate_relative_and_absolute_positions_straight();
+    void calculate_relative_and_absolute_positions_inclined();
     double test_get_chosen_position(int _no_of_layer); // dell it 24.12.16
+    data_for_HEX_calibration get_data_for_calibration();
 
-    // for event display
     bool plot_event();
     TGraph* get_all_hits_plot();
     TGraph* get_detector_plot();
     void collect_hits_from_all_layers();
+    void set_hits_absolute_positions();
 
 private:
-	DCLayer *Layer[7];
-	int no_of_layers_with_hits;
-	bool correct_event;
+    void calculate_distances_from_wires();
+    DCLayer *Layer[7];
+    int no_of_layers_with_hits;
+    bool correct_event;
+    double HEX_max_time;
+    int HEX_no_of_planes_with_hits;
+    int HEX_no_of_cells_with_hits;
 
-	// config
+    bool fit_with_inclined;
     double half_x_dim;
     double half_z_dim;
     double x_lab_position;
@@ -42,17 +54,16 @@ private:
     double z_offset;
     double x_offset;
     double y_rotation_angle;
-    double layer_wire_frame_offset[8];
+    double layer_wire_frame_offset[7];
+    double layer_angle[7];
+    int    no_of_wires[7];
     double distance_to_1st_layer;
-    double distance_between_wires;
+    double distance_between_straight_wires;
+    double distance_between_inclined_wires;
     double distance_between_layers;
-
-    std::vector<double> AllHitsAbsolutePositionX;
-    std::vector<double> AllHitsAbsolutePositionZ;
 
     // just for the purpose of the event display - with reversed value of the x coordinate
     std::vector<double> AllHitsAbsolutePositionXEventDisplay;
-
 };
 
 

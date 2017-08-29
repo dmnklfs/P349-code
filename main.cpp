@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	//EventDisplay *event_to_display;
 	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
   //Calibration3d *calibration = new Calibration3d(config);
-  Calibration3d_D2 *calibration_D2 = new Calibration3d_D2(config);
+  //Calibration3d_D2 *calibration_D2 = new Calibration3d_D2(config);
 	std::cout << "* start of the loop over the events" << std::endl;
   int delme_iter = 0;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
   			//calibration -> get_data( single_event -> SingleEvent::D1::get_data_for_calibration() ); 
         //delete event_to_display;
         //std::cout << "ok1" << std::endl;
-        calibration_D2 -> get_data( single_event -> SingleEvent::D2::get_data_for_calibration() ); 
+        //calibration_D2 -> get_data( single_event -> SingleEvent::D2::get_data_for_calibration() ); 
         //std::cout << "ok2" << std::endl;
   			
   		} // end if correct event
@@ -99,10 +99,10 @@ int main(int argc, char *argv[])
 
     std::cout << "iter " << delme_iter << std::endl;
 
-    calibration_D2 -> tell_no_of_events();
-    calibration_D2 -> set_no_of_bin_in_event();
+    //calibration_D2 -> tell_no_of_events();
+    //calibration_D2 -> set_no_of_bin_in_event();
 
-    for (int i = 0; i < 7; i++)
+    /*for (int i = 0; i < 7; i++)
     {
       calibration_D2 -> set_no_of_iteration(i);
       calibration_D2 -> calculate_hit_position();
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
       calibration_D2 -> apply_corrections();
       calibration_D2 -> plot_current_calibration();
       calibration_D2 -> deletations();
-    }
+    }*/
     
 
     //CALIBRATION

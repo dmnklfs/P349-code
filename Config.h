@@ -110,6 +110,14 @@ public:
 	std::vector<double> D2_L5_drift_time_offset;
 	std::vector<double> D2_L6_drift_time_offset;
 
+	std::vector<double> HEX_L1_drift_time_offset;
+	std::vector<double> HEX_L2_drift_time_offset;
+	std::vector<double> HEX_L3_drift_time_offset;
+	std::vector<double> HEX_L4_drift_time_offset;
+	std::vector<double> HEX_L5_drift_time_offset;
+	std::vector<double> HEX_L6_drift_time_offset;
+	std::vector<double> HEX_L7_drift_time_offset;
+
 	// calibration ---> should be different for different layers
 	std::vector<double> D1_L1_calibration_times;
 	std::vector<double> D1_L1_calibration_distances;
@@ -140,6 +148,21 @@ public:
 	std::vector<double> D2_L5_calibration_distances;
 	std::vector<double> D2_L6_calibration_times;
 	std::vector<double> D2_L6_calibration_distances;
+
+	std::vector<double> HEX_L1_calibration_times;
+	std::vector<double> HEX_L1_calibration_distances;
+	std::vector<double> HEX_L2_calibration_times;
+	std::vector<double> HEX_L2_calibration_distances;
+	std::vector<double> HEX_L3_calibration_times;
+	std::vector<double> HEX_L3_calibration_distances;
+	std::vector<double> HEX_L4_calibration_times;
+	std::vector<double> HEX_L4_calibration_distances;
+	std::vector<double> HEX_L5_calibration_times;
+	std::vector<double> HEX_L5_calibration_distances;
+	std::vector<double> HEX_L6_calibration_times;
+	std::vector<double> HEX_L6_calibration_distances;
+	std::vector<double> HEX_L7_calibration_times;
+	std::vector<double> HEX_L7_calibration_distances;
 	// ---DRIFT CHEMBER D2---
 	// min and max number of hits in layers (if set to -1: any value is ok)
 	std::vector<double> D2_drift_time_offset;
@@ -177,7 +200,7 @@ public:
 	double HEX_drift_time_max[7];
 	double HEX_drift_time_min[7];
 
-	// dimessions
+	// dimensions
 	double HEX_half_x_dim;
     double HEX_half_z_dim;
     double HEX_x_lab_position;
@@ -187,8 +210,12 @@ public:
     double HEX_y_rotation_angle;
     double HEX_layer_wire_frame_offset[7];
     double HEX_distance_to_1st_layer; // distance from the DC frame to the 1st layer (looking from the beam direction)
-    double HEX_distance_between_wires;
+    double HEX_distance_between_straight_wires;
+	double HEX_distance_between_inclined_wires;
     double HEX_distance_between_layers;
+
+    double HEX_layer_angle[7]; // (measured with respect to the y axis) ---- change, 13.01.17
+    int    HEX_no_of_wires[7];
 
 	// ---FIBER HODOSCOPE---
 	// ranges of elements

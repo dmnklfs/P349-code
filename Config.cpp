@@ -131,8 +131,24 @@ Config::Config()
 	HEX_layer_wire_frame_offset[5] = 4.4969;
 	HEX_layer_wire_frame_offset[6] = 3.35;
 	HEX_distance_to_1st_layer = 6.0145;	// z
-	HEX_distance_between_wires = 1.8;		// x
+	HEX_distance_between_straight_wires = 1.8;		// x
+	HEX_distance_between_inclined_wires = 1.827767;
 	HEX_distance_between_layers = 2.8785;	// z
+
+	HEX_layer_angle[0] = 0;	//1
+	HEX_layer_angle[1] =+10;	//2
+	HEX_layer_angle[2] =+10;	//3
+	HEX_layer_angle[3] = 0;	//4
+	HEX_layer_angle[4] =-10;	//5
+	HEX_layer_angle[5] =-10;	//6
+	HEX_layer_angle[6] = 0;	//7
+	HEX_no_of_wires[0] = 80;
+	HEX_no_of_wires[1] = 76;
+	HEX_no_of_wires[2] = 76;
+	HEX_no_of_wires[3] = 80;
+	HEX_no_of_wires[4] = 76;
+	HEX_no_of_wires[5] = 76;
+	HEX_no_of_wires[6] = 80;
 
 	// this should be read from somewhere
 	double _D1_L1_drift_time_offset[41] =  {40, 40, 40, 46, 46, 46, 46, 46, 46, 46, 
@@ -192,6 +208,62 @@ Config::Config()
 											40, 46, 43, 43, 46, 43, 46, 46, 40, 43, 
 											40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 
 											40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40};
+	double _HEX_L1_drift_time_offset[80] =  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	double _HEX_L2_drift_time_offset[80] =  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	double _HEX_L3_drift_time_offset[80] =  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	double _HEX_L4_drift_time_offset[80] =  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	double _HEX_L5_drift_time_offset[80] =  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	double _HEX_L6_drift_time_offset[80] =  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	double _HEX_L7_drift_time_offset[80] =  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+											0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	
 
 	for (int i = 0; i < 41; i++)
@@ -211,6 +283,17 @@ Config::Config()
 		D2_L4_drift_time_offset.push_back(_D2_L4_drift_time_offset[i]);
 		D2_L5_drift_time_offset.push_back(_D2_L5_drift_time_offset[i]);
 		D2_L6_drift_time_offset.push_back(_D2_L6_drift_time_offset[i]);
+	}
+
+	for (int i = 0; i < 80; i++)
+	{
+		HEX_L1_drift_time_offset.push_back(_HEX_L1_drift_time_offset[i]);
+		HEX_L2_drift_time_offset.push_back(_HEX_L2_drift_time_offset[i]);
+		HEX_L3_drift_time_offset.push_back(_HEX_L3_drift_time_offset[i]);
+		HEX_L4_drift_time_offset.push_back(_HEX_L4_drift_time_offset[i]);
+		HEX_L5_drift_time_offset.push_back(_HEX_L5_drift_time_offset[i]);
+		HEX_L6_drift_time_offset.push_back(_HEX_L6_drift_time_offset[i]);
+		HEX_L7_drift_time_offset.push_back(_HEX_L7_drift_time_offset[i]);
 	}
 
 	// LINEAR CALIBRATION
@@ -331,8 +414,8 @@ Config::Config()
 		{
 			D2_layer_min_hits[i] = 1;
 			D2_layer_max_hits[i] = 1;
-			D2_drift_time_min[i] = 0;
-			D2_drift_time_max[i] = 609;
+			D2_drift_time_min[i] = -1500;
+			D2_drift_time_max[i] = 1500;
 		}
 		else
 		{
@@ -348,11 +431,11 @@ Config::Config()
 	{
 		//if (i==0||i==3)
 		//if (i==0||i==1)
-		if (false)
+		if (true)
 		{
-			HEX_layer_min_hits[i] = 1;
-			HEX_layer_max_hits[i] = 1;
-			HEX_drift_time_min[i] = -1500;
+			HEX_layer_min_hits[i] = -1;
+			HEX_layer_max_hits[i] = -1;
+			HEX_drift_time_min[i] =-1500;
 			HEX_drift_time_max[i] = 1500;
 		}
 		else
