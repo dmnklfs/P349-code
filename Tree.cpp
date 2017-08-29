@@ -526,6 +526,36 @@ void Tree::save_preselected_histos()
 			Hist::HEX_Preselected_Multiplicity[i] -> Write();
 			Hist::HEX_Preselected_DriftTime[i] -> Write();
 		}
+		make_hist_dir("HEXDriftTimes",2);
+		for (int i = 0; i < 7; i++)
+		{
+			for (int j = 0; j < 80; j++)
+			{
+				HEX_wires_offsets[i][j] -> Write();
+			}
+		}
+		make_hist_dir("HEXCorrWiresDriftTime",2);
+		for (int i = 0; i < 80; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				HEX_L1L4[i][j] -> Write();
+			}
+		}
+		for (int i = 0; i < 80; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				HEX_L2L3[i][j] -> Write();
+			}
+		}
+		for (int i = 0; i < 80; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				HEX_L5L6[i][j] -> Write();
+			}
+		}
 	}
 
 	if (Hist::fiber_histos_preselected)

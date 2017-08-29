@@ -139,8 +139,8 @@ public:
 	TH1F *HEX_Preselected_Multiplicity[7];
 	TH1F *HEX_Preselected_DriftTime[7];;
 	TH1F *HEX_wires_offsets[7][80];
-	TH2F *HEX_L1L2[80][2]; // all wires, left - right
-	TH2F *HEX_L3L4[80][2];
+	TH2F *HEX_L1L4[80][2]; // all wires, left - right
+	TH2F *HEX_L2L3[80][2];
 	TH2F *HEX_L5L6[80][2];
 	TH1F *HEX_no_of_planes;
 	TH1F *HEX_no_of_cells;
