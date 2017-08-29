@@ -35,8 +35,8 @@ Config::Config()
 	D1_z_offset = 0; // up to the beginning of the detector (not: 1st layer)
 	D1_x_offset = 0;
 	D1_y_rotation_angle = (0)*3.14/180; // rad
-	track_angle_min = 30;
-	track_angle_max = 150;
+	track_angle_min = 0;
+	track_angle_max = 180;
 	// layers "offsets" - distances drom the frame
 	D1_layer_wire_frame_offset[0] = 3.0;	// x
 	D1_layer_wire_frame_offset[1] = 5.0;
@@ -301,7 +301,7 @@ Config::Config()
 	}
 	
 	fit_with_inclined = true;
-	unbiased_fit = false;
+	unbiased_fit = true;
 	for (int i = 0; i < 8; i++)
 	{
 		//if (i==0||i==1||i==6||i==7)

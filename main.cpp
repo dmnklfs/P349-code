@@ -101,16 +101,20 @@ int main(int argc, char *argv[])
 
     calibration_D2 -> tell_no_of_events();
     calibration_D2 -> set_no_of_bin_in_event();
+
+    for (int i = 0; i < 7; i++)
+    {
+      calibration_D2 -> set_no_of_iteration(i);
+      calibration_D2 -> calculate_hit_position();
+      calibration_D2 -> fit_events();
+      calibration_D2 -> save_histograms();
+      calibration_D2 -> fit_delta_projections();
+      calibration_D2 -> set_pos_Xerr();
+      calibration_D2 -> apply_corrections();
+      calibration_D2 -> plot_current_calibration();
+      calibration_D2 -> deletations();
+    }
     
-    calibration_D2 -> set_no_of_iteration(0);
-    calibration_D2 -> calculate_hit_position();
-    calibration_D2 -> fit_events();
-    calibration_D2 -> save_histograms();
-    calibration_D2 -> fit_delta_projections();
-    calibration_D2 -> set_pos_Xerr();
-    calibration_D2 -> apply_corrections();
-    calibration_D2 -> plot_current_calibration();
-    calibration_D2 -> deletations();
 
     //CALIBRATION
     

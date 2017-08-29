@@ -45,7 +45,7 @@ Calibration3d_D2::Calibration3d_D2(const Config &_config)
 
 	TString name;
 	name = Form("#chi^{2}",1);
-	chi2 = new TH1F(name, name, 250, -0.25, 25);//80, -0.25, 8);//1000, -0.01, 0.05);  250, -0.25, 25
+	chi2 = new TH1F(name, name, 80, -0.25, 8);//80, -0.25, 8);//1000, -0.01, 0.05);  250, -0.25, 25
 	chi2->GetXaxis()->SetTitle("#chi^{2}");
 	chi2->GetYaxis()->SetTitle("counts");
 	chi2->SetLineWidth(2);
@@ -62,7 +62,7 @@ Calibration3d_D2::Calibration3d_D2(const Config &_config)
 	theta_y->GetYaxis()->SetTitle("counts");
 
 	name = Form("#chi^{2} cut", 1);
-	chi2_no_cut = new TH1F(name, name, 250, -0.25, 25);
+	chi2_no_cut = new TH1F(name, name, 80, -0.25, 8);
 	chi2_no_cut->GetXaxis()->SetTitle("#chi^{2}");
 	chi2_no_cut->GetYaxis()->SetTitle("counts");
 	chi2_no_cut->SetLineColor(kRed);
@@ -320,7 +320,7 @@ void Calibration3d_D2::fit_in_3d()
 		track3d_fit_vector = fit3d_D2 -> Fit3d_D2::return_track_vector();
 		fit3d_D2 -> Fit3d_D2::calculate_wires_xy_functions();
 		fit3d_D2 -> Fit3d_D2::calculate_wire_track_distances();
-		fit3d_D2 -> Fit3d_D2::draw_event();
+		//fit3d_D2 -> Fit3d_D2::draw_event();
 
 		// cut on convergence of -- ALL ?? -- fits
 		// cut on fit probability -- only for all layers
@@ -328,7 +328,7 @@ void Calibration3d_D2::fit_in_3d()
 		{
 
 			temp_chi2 = fit3d_D2 -> Fit3d_D2::get_chisq();
-			temp_chi2_prob = TMath::Prob(temp_chi2,4);
+			temp_chi2_prob = TMath::Prob(temp_chi2,2);
 			//std::cout << "ok" << std::endl;
 			// straight
 			aSt = fit3d_D2 -> Fit3d_D2::get_track_8lines_projection_params(0,0); // remove
@@ -348,13 +348,13 @@ void Calibration3d_D2::fit_in_3d()
 			for (int j = 0; j < 6; j++)
 			{
 				layer_temp_chi2[j] = fit3d_D2 -> Fit3d_D2::get_chisq(j);
-				layer_temp_chi2_prob[j] = TMath::Prob(layer_temp_chi2[j],3);
+				layer_temp_chi2_prob[j] = TMath::Prob(layer_temp_chi2[j],1);
 				layer_angle_distribution_no_cut[j] -> Fill( fit3d_D2 -> Fit3d_D2::calculate_phi_xz(j) );
 				layer_chi2_pdf_no_cut[j] -> Fill(layer_temp_chi2_prob[j]);
 				layer_chi2_no_cut[j] -> Fill(layer_temp_chi2[j]);
 			}
 
-			if ( true ) //was_correct_angle(track_angle) )
+			if ( was_correct_angle(track_angle) ) //was_correct_angle(track_angle) )
 			{
 				//std::cout << " ok 1" << std::endl;
 				angle_distribution -> Fill(track_angle);
@@ -541,14 +541,14 @@ TCanvas* Calibration3d_D2::plot_angle_distribution()
 	gStyle->SetStatH(0.1);
 	gStyle->SetStatY(0.9);
 	gStyle -> SetOptStat(1111111);
-	gPad -> SetLogy();
+	//gPad -> SetLogy();
 	angle_distribution_no_cut -> Draw();
 	angle_distribution -> Draw("same");
 	c->cd(2);
-	gPad -> SetLogy();
+	//gPad -> SetLogy();
 	phi_xz -> Draw();
 	c->cd(3);
-	gPad -> SetLogy();
+	//gPad -> SetLogy();
 	theta_y -> Draw();
 
 	gDirectory->pwd();
@@ -572,14 +572,14 @@ TCanvas* Calibration3d_D2::plot_angle_distribution(int _layer_no)
 	gStyle->SetStatH(0.1);
 	gStyle->SetStatY(0.9);
 	gStyle -> SetOptStat(1111111);
-	gPad -> SetLogy();
+	//gPad -> SetLogy();
 	layer_angle_distribution_no_cut[ _layer_no ] -> Draw();
 	layer_angle_distribution[ _layer_no ] -> Draw("same");
 	c->cd(2);
-	gPad -> SetLogy();
+	//gPad -> SetLogy();
 	phi_xz -> Draw();
 	c->cd(3);
-	gPad -> SetLogy();
+	//gPad -> SetLogy();
 	theta_y -> Draw();
 	return c;
 }

@@ -392,6 +392,7 @@ void Fit3d_D2::calculate_projections_on_hit_planes_fit()
 
 void Fit3d_D2::draw_event()
 {
+	//std::cout << "ok" << std::endl;
 	double tempx,tempy, tempz;
 	TFile f3("file3.root","UPDATE");
 	TString name = Form("test_%d", event_no);
@@ -677,8 +678,8 @@ void Fit3d_D2::draw_event()
 
 	// ==================== 8 lines fit ==================================
 	TPolyLine3D *track3d_8lines_fit = new TPolyLine3D(2);
-	track3d_8lines_fit->SetPoint(0,track3d_fit_point.X(),track3d_fit_point.Y(),track3d_fit_point.Z());
-	track3d_8lines_fit->SetPoint(1,track3d_fit_point.X()+1.5*scale*track3d_fit_vector.X(),track3d_fit_point.Y()+1.5*scale*track3d_fit_vector.Y(),track3d_fit_point.Z()+1.5*scale*track3d_fit_vector.Z());
+	track3d_8lines_fit->SetPoint(0,track3d_fit_point.X()-0.5*scale*track3d_fit_vector.X(),track3d_fit_point.Y()-0.5*scale*track3d_fit_vector.Y(),track3d_fit_point.Z()-0.5*scale*track3d_fit_vector.Z());
+	track3d_8lines_fit->SetPoint(1,track3d_fit_point.X()+0.5*scale*track3d_fit_vector.X(),track3d_fit_point.Y()+0.5*scale*track3d_fit_vector.Y(),track3d_fit_point.Z()+0.5*scale*track3d_fit_vector.Z());
 	track3d_8lines_fit->SetLineWidth(3);
 	track3d_8lines_fit->SetLineColor(kGreen+2);
 
@@ -704,13 +705,13 @@ void Fit3d_D2::draw_event()
 	//drift_chamber -> Draw();
 	yx_fcn_straight_w1->Draw();
 	yx_fcn_straight_w2->Draw();
-	yx_fcn_inclined1_w1->Draw();
+	//yx_fcn_inclined1_w1->Draw();
 	yx_fcn_inclined1_h1->Draw();
-	yx_fcn_inclined1_w2->Draw();
+	//yx_fcn_inclined1_w2->Draw();
 	yx_fcn_inclined1_h2->Draw();
-	yx_fcn_inclined2_w1->Draw();
+	//yx_fcn_inclined2_w1->Draw();
 	yx_fcn_inclined2_h1->Draw();
-	yx_fcn_inclined2_w2->Draw();
+	//yx_fcn_inclined2_w2->Draw();
 	yx_fcn_inclined2_h2->Draw();
 	//straight_hit_plane->Draw();
 	//inclined1_hit_plane->Draw();
@@ -733,7 +734,7 @@ void Fit3d_D2::draw_event()
 	//track3d_proj_straight->Draw();
 	//track3d_proj_inclined1->Draw();
 	//track3d_proj_inclined2->Draw();
-	//track3d_8lines_fit -> Draw();
+	track3d_8lines_fit -> Draw();
 	//track3d_8lines_fit_straight -> Draw();
 	//track3d_8lines_fit_inclined1 -> Draw();
 	//track3d_8lines_fit_inclined2 -> Draw();
@@ -800,12 +801,12 @@ void Fit3d_D2::make_fit_to_lines(bool _unbiased_fit)
 	lineFit3d_D2 -> LineFit_D2::~LineFit_D2();
 
 	// unbiased
-	unbiased_fit = false;
+	unbiased_fit = _unbiased_fit;
 	LineFit_D2 * lineFit3d_D2_Unbiased[6];
 	for (int i = 0; i < 6; i++)
 	{
 		lineFit3d_D2_Unbiased[i] = LineFit_D2::GetInstance();
-		if (no_of_iteration == 8 || no_of_iteration == 9) lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_excluded_layer(-1);
+		if (no_of_iteration == 5 || no_of_iteration == 6) lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_excluded_layer(-1);
 		else lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_excluded_layer(i);
 		lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_z_values(z);
 		lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_x_straight_values(x_straight);
