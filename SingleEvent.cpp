@@ -32,7 +32,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
 	// if ( (start && tof && D1 && D2 && HEX && Start::getTimeUp()<10 && Start::getTimeDown()<10) || stage == 2)
-	if ( (start&&tof) || stage == 2)
+	if ( (start&&HEX&&tof) || stage == 2)
 	{
 		return true;
 	}
@@ -112,8 +112,17 @@ void SingleEvent::test_calculate_distances()
 	//D2::collect_hits_from_all_layers();
 	//D2::set_hits_absolute_positions();
 
-	//HEX::calculate_relative_and_absolute_positions();
-	//HEX::collect_hits_from_all_layers();
+	//std::cout << "D2::calculate_distances_from_wires()" << std::endl;
+	HEX::calculate_distances_from_wires();
+	//std::cout << "D2::calculate_relative_and_absolute_positions_straight();" << std::endl;
+	HEX::calculate_relative_and_absolute_positions_straight();
+	//std::cout << "D2::calculate_relative_and_absolute_positions_inclined();" << std::endl;
+	HEX::calculate_relative_and_absolute_positions_inclined();
+	//std::cout << "D2::collect_hits_from_all_layers();" << std::endl;
+	HEX::collect_hits_from_all_layers();
+	//std::cout << "done there" << std::endl;
+	//HEX::set_hits_absolute_positions(); // check it 13.07.2017
+
 }
 
 double SingleEvent::test_positions_histogram()

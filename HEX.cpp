@@ -7,13 +7,13 @@ HEX::HEX(const Config &_config)
 {
 	fit_with_inclined = _config.fit_with_inclined;
 	// constructors of the layers: drift time offset, calib times, calib dists, time min, time max, hits min, hits max
-	Layer[0] = new DCLayer(1, _config.HEX_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[0],_config.HEX_drift_time_max[0],_config.HEX_layer_min_hits[0],_config.HEX_layer_max_hits[0]);
-	Layer[1] = new DCLayer(2, _config.HEX_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[1],_config.HEX_drift_time_max[1],_config.HEX_layer_min_hits[1],_config.HEX_layer_max_hits[1]);
-	Layer[2] = new DCLayer(3, _config.HEX_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[2],_config.HEX_drift_time_max[2],_config.HEX_layer_min_hits[2],_config.HEX_layer_max_hits[2]);
-	Layer[3] = new DCLayer(4, _config.HEX_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[3],_config.HEX_drift_time_max[3],_config.HEX_layer_min_hits[3],_config.HEX_layer_max_hits[3]);
-	Layer[4] = new DCLayer(5, _config.HEX_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[4],_config.HEX_drift_time_max[4],_config.HEX_layer_min_hits[4],_config.HEX_layer_max_hits[4]);
-	Layer[5] = new DCLayer(6, _config.HEX_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[5],_config.HEX_drift_time_max[5],_config.HEX_layer_min_hits[5],_config.HEX_layer_max_hits[5]);
-	Layer[6] = new DCLayer(7, _config.HEX_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[6],_config.HEX_drift_time_max[6],_config.HEX_layer_min_hits[6],_config.HEX_layer_max_hits[6]);
+	Layer[0] = new DCLayer(1, _config.HEX_L1_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[0],_config.HEX_drift_time_max[0],_config.HEX_layer_min_hits[0],_config.HEX_layer_max_hits[0]);
+	Layer[1] = new DCLayer(2, _config.HEX_L2_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[1],_config.HEX_drift_time_max[1],_config.HEX_layer_min_hits[1],_config.HEX_layer_max_hits[1]);
+	Layer[2] = new DCLayer(3, _config.HEX_L3_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[2],_config.HEX_drift_time_max[2],_config.HEX_layer_min_hits[2],_config.HEX_layer_max_hits[2]);
+	Layer[3] = new DCLayer(4, _config.HEX_L4_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[3],_config.HEX_drift_time_max[3],_config.HEX_layer_min_hits[3],_config.HEX_layer_max_hits[3]);
+	Layer[4] = new DCLayer(5, _config.HEX_L5_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[4],_config.HEX_drift_time_max[4],_config.HEX_layer_min_hits[4],_config.HEX_layer_max_hits[4]);
+	Layer[5] = new DCLayer(6, _config.HEX_L6_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[5],_config.HEX_drift_time_max[5],_config.HEX_layer_min_hits[5],_config.HEX_layer_max_hits[5]);
+	Layer[6] = new DCLayer(7, _config.HEX_L7_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.HEX_drift_time_min[6],_config.HEX_drift_time_max[6],_config.HEX_layer_min_hits[6],_config.HEX_layer_max_hits[6]);
 	for (int i = 0; i < 6; i++)
 	{
 		layer_wire_frame_offset[i] = _config.HEX_layer_wire_frame_offset[i];
@@ -59,7 +59,7 @@ bool HEX::was_correct_event()
 	correct_event = false;
 	no_of_layers_with_hits = 0;
 	bool correct_in_layer[7];
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		correct_in_layer[i] = Layer[i]-> DCLayer::was_correct_event();
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
@@ -69,7 +69,7 @@ bool HEX::was_correct_event()
 			HEX_no_of_cells_with_hits = HEX_no_of_cells_with_hits + Layer[i]-> Wire.size();
 		}
 	}
-	if (no_of_layers_with_hits == 7)
+	if (no_of_layers_with_hits == 6)
 	{
 		correct_event = true;
 	}
@@ -323,7 +323,7 @@ TGraph* HEX::get_detector_plot()
 data_for_HEX_calibration HEX::get_data_for_calibration() // i need here only informations about wires and distances
 {
 	data_for_HEX_calibration data_for_calibration;
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		//std::cout << "layer " << i << " absolute x position " << Layer[i] -> AbsoluteXPosition.at(0) << std::endl;
 		//std::cout << "layer " << i << " absolute z position " << Layer[i] -> AbsoluteZPosition.at(0) << std::endl;

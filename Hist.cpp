@@ -320,7 +320,7 @@ void Hist::init_HEX_histos_preselected()
 		// correlations between wires
 		if (0==i) // l1l4 - straight
 		{
-			for (int j = 0; j < 80; j++) // in fact: 35 wires... 42 - max no of wires in d2 detection planes
+			for (int j = 0; j < 50; j++) // in fact: 35 wires... 42 - max no of wires in d2 detection planes
 			{
 				for (int k = 0; k < 2; k++) // left/right
 				{
@@ -331,7 +331,7 @@ void Hist::init_HEX_histos_preselected()
 		}
 		if (1==i) // l2l3 - inclined
 		{
-			for (int j = 0; j < 80; j++) 
+			for (int j = 0; j < 50; j++) 
 			{
 				for (int k = 0; k < 2; k++) // left/right
 				{
@@ -342,7 +342,7 @@ void Hist::init_HEX_histos_preselected()
 		}
 		if (4==i) // l5l6 - inclined
 		{
-			for (int j = 0; j < 80; j++) 
+			for (int j = 0; j < 50; j++) 
 			{
 				for (int k = 0; k < 2; k++) // left/right
 				{
@@ -888,7 +888,7 @@ void Hist::fill_HEX_histos_preselected(HEX_hist_data* _hex_data)
 				Hist::HEX_wires_offsets[j][wire1] -> Fill(time1);
 			}
 			Hist::HEX_Preselected_Multiplicity[j] -> Fill(_hex_data->layer_data[j]->preselected_elements.size());
-			if (0==j) // strAIGHT 1 & 4
+			if (0==j) // straight 1 & 4
 			{
 				for (unsigned int i = 0; i < _hex_data->layer_data[j]->preselected_elements.size(); i++)
 				{
@@ -904,7 +904,7 @@ void Hist::fill_HEX_histos_preselected(HEX_hist_data* _hex_data)
 							{
 								Hist::HEX_L1L4[wire1][0] -> Fill(time1, time2);
 							}
-							if (wire2-1 == wire1)
+							if (wire2+1 == wire1)
 							{
 								Hist::HEX_L1L4[wire1][1] -> Fill(time1, time2);
 							}
@@ -930,7 +930,7 @@ void Hist::fill_HEX_histos_preselected(HEX_hist_data* _hex_data)
 							{
 								Hist::HEX_L2L3[wire1][0] -> Fill(time1, time2);
 							}
-							if (wire2 == wire1-1)
+							if (wire2 == wire1+1)
 							{
 								Hist::HEX_L2L3[wire1][1] -> Fill(time1, time2);
 							}
@@ -956,7 +956,7 @@ void Hist::fill_HEX_histos_preselected(HEX_hist_data* _hex_data)
 							{
 								Hist::HEX_L5L6[wire1][0] -> Fill(time1, time2);
 							}
-							if (wire2 == wire1+1)
+							if (wire2 == wire1-1)
 							{
 								Hist::HEX_L5L6[wire1][1] -> Fill(time1, time2);
 							}

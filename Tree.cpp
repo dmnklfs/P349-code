@@ -535,21 +535,21 @@ void Tree::save_preselected_histos()
 			}
 		}
 		make_hist_dir("HEXCorrWiresDriftTime",2);
-		for (int i = 0; i < 80; i++)
+		for (int i = 0; i < 50; i++)
 		{
 			for (int j = 0; j < 2; j++)
 			{
 				HEX_L1L4[i][j] -> Write();
 			}
 		}
-		for (int i = 0; i < 80; i++)
+		for (int i = 0; i < 50; i++)
 		{
 			for (int j = 0; j < 2; j++)
 			{
 				HEX_L2L3[i][j] -> Write();
 			}
 		}
-		for (int i = 0; i < 80; i++)
+		for (int i = 0; i < 50; i++)
 		{
 			for (int j = 0; j < 2; j++)
 			{

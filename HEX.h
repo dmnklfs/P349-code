@@ -8,7 +8,7 @@
 #define NHEXL4  4
 #define NHEXL5  3 
 #define NHEXL6  2
-#define NHEXL7  1	// layer 7 is the closest one to D2
+#define NHEXL7  1	// layer 7 is the closest one to HEX
 
 class HEX
 {
@@ -19,15 +19,17 @@ public:
     std::vector<double> AllHitsAbsolutePositionX;
     std::vector<double> AllHitsAbsolutePositionZ;
 
-	HEX();
-	HEX(const Config &_config);
-	~HEX();
-	void fill_good_hits(single_gh_data _good_hit_data);
-	HEX_hist_data* get_hist_data();
-	bool was_correct_event();
-	int get_no_of_layers_with_hits();
+    HEX();
+    HEX(const Config &_config);
+    ~HEX();
+    void fill_good_hits(single_gh_data _good_hit_data);
+    HEX_hist_data* get_hist_data();
+    bool was_correct_event();
+    int get_no_of_layers_with_hits();
+    void calculate_relative_and_absolute_positions();
     void calculate_relative_and_absolute_positions_straight();
     void calculate_relative_and_absolute_positions_inclined();
+    void calculate_distances_from_wires();
     double test_get_chosen_position(int _no_of_layer); // dell it 24.12.16
     data_for_HEX_calibration get_data_for_calibration();
 
@@ -38,7 +40,7 @@ public:
     void set_hits_absolute_positions();
 
 private:
-    void calculate_distances_from_wires();
+    //void calculate_distances_from_wires();
     DCLayer *Layer[7];
     int no_of_layers_with_hits;
     bool correct_event;

@@ -31,6 +31,7 @@
 #include "Calibration2d.h"
 #include "Calibration3d.h"
 #include "Calibration3d_D2.h"
+#include "Calibration3d_HEX.h"
 
 #define START 1
 #define NTOF 10
