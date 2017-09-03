@@ -156,20 +156,26 @@ void Calibration3d_HEX::get_data(data_for_HEX_calibration _single_event_data)
 {
 	double wirepos1, wirepos2;
 	int left_right[6];
-	//std::cout << "a" << std::endl;
+	int layer_pairs[6];
+	layer_pairs[0] = 0;
+	layer_pairs[1] = 3;
+	layer_pairs[2] = 1;
+	layer_pairs[3] = 2;
+	layer_pairs[4] = 4;
+	layer_pairs[5] = 5;
 	for (int i = 0; i < 3; i++)
 	{
-		wirepos1 = _single_event_data.positionsX[2*i];
-		wirepos2 = _single_event_data.positionsX[2*i+1];
+		wirepos1 = _single_event_data.positionsX[layer_pairs[2*i]];
+		wirepos2 = _single_event_data.positionsX[layer_pairs[2*i+1]];
 		if (wirepos1 > wirepos2)
 		{
-			left_right[2*i] 	= -1;
-			left_right[2*i+1] 	= +1;
+			left_right[layer_pairs[2*i]]	= -1;
+			left_right[layer_pairs[2*i+1]] 	= +1;
 		}
 		else
 		{
-			left_right[2*i] 	= +1;
-			left_right[2*i+1] 	= -1;
+			left_right[layer_pairs[2*i]] 	= +1;
+			left_right[layer_pairs[2*i+1]] 	= -1;
 		}
 	}
 	//std::cout << "b" << std::endl;
@@ -280,6 +286,9 @@ void Calibration3d_HEX::fit_in_3d()
 	std::cout << "Fit in 3d..." << std::endl;
 	for (unsigned int i = 0; i < no_of_chosen_events; i++)
 	{
+		//std::cout << Layer[0]->CalibrationData.at(i).wire_pos_X << std::endl;
+		//std::cout << Layer[1]->CalibrationData.at(i).wire_pos_X << std::endl;
+		//std::cout << "r " << Layer[0]->CalibrationData.at(i).wire_pos_X - Layer[1]->CalibrationData.at(i).wire_pos_X << std::endl;
 		//std::cout << "ok " << std::endl;
 		//std::cout << i << std::endl;
 		for (int j = 0; j < 6; j++)
@@ -320,7 +329,7 @@ void Calibration3d_HEX::fit_in_3d()
 		track3d_fit_vector = fit3d_HEX -> Fit3d_HEX::return_track_vector();
 		fit3d_HEX -> Fit3d_HEX::calculate_wires_xy_functions();
 		fit3d_HEX -> Fit3d_HEX::calculate_wire_track_distances();
-		//fit3d_HEX -> Fit3d_HEX::draw_event();
+		fit3d_HEX -> Fit3d_HEX::draw_event();
 
 		// cut on convergence of -- ALL ?? -- fits
 		// cut on fit probability -- only for all layers
@@ -369,7 +378,7 @@ void Calibration3d_HEX::fit_in_3d()
 					Layer[j] -> CalibrationData.at(i).track_B = bSt;
 					Layer[j] -> CalibrationData.at(i).track_C = bSt;
 					Layer[j] -> CalibrationData.at(i).distance_wire_track = fit3d_HEX -> Fit3d_HEX::get_wire_track_dist(j);
-					//std::cout << " c " << Layer[j] -> CalibrationData.at(i).distance_wire_track << std::endl;
+					//std::cout << " c " << j << " " << Layer[j] -> CalibrationData.at(i).distance_wire_track << std::endl;
 					Layer[j] -> CalibrationData.at(i).track_angle = track_angle;
 					Layer[j] -> CalibrationLayer3d_HEX::calculate_deltas(i);
 					layer_angle_distribution[j] -> Fill( fit3d_HEX -> Fit3d_HEX::calculate_phi_xz(j) );

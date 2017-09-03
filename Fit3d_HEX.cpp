@@ -926,8 +926,13 @@ TVector3 Fit3d_HEX::return_track_vector(int _layer_no)
 void Fit3d_HEX::calculate_wire_track_distances()
 {
 	int straight[2];
+	int inclined[4];
 	straight[0] = 0;
 	straight[1] = 3;
+	inclined[0] = 1;
+	inclined[1] = 2;
+	inclined[2] = 4;
+	inclined[3] = 5;
 
 	double z[4];
 	z[0] = z_inclined1[0];
@@ -996,11 +1001,11 @@ void Fit3d_HEX::calculate_wire_track_distances()
 
 	for (int i = 0; i < 4; i++)
 	{
-		t = z[i] - zp[i];
-		t2 = 1/uz[i];
-		xi = t*t2*ux[i] + xp[i];
-		yi = t*t2*uy[i] + yp[i];
-		wire_track_dist[i]  = TMath::Abs(a[i]*xi-yi+b[i])*pow(pow((a[i]*a[i]+1),0.5),-1);
+		t = z[i] - zp[ inclined[i] ];
+		t2 = 1/uz[ inclined[i] ];
+		xi = t*t2*ux[ inclined[i] ] + xp[ inclined[i] ];
+		yi = t*t2*uy[ inclined[i] ] + yp[ inclined[i] ];
+		wire_track_dist[ inclined[i] ]  = TMath::Abs(a[i]*xi-yi+b[i])*pow(pow((a[i]*a[i]+1),0.5),-1);
 	}
 
 //	for (int i = 0; i < 8; i++)

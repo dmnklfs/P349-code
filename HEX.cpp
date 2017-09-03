@@ -69,12 +69,12 @@ bool HEX::was_correct_event()
 			HEX_no_of_cells_with_hits = HEX_no_of_cells_with_hits + Layer[i]-> Wire.size();
 		}
 	}
-	if (no_of_layers_with_hits == 6)
+	/*if (no_of_layers_with_hits == 6)
 	{
 		correct_event = true;
-	}
+	}*/
 
-	/*int wire1;
+	int wire1;
 	int wire2;
 	int wire3;
 	int wire4;
@@ -82,27 +82,24 @@ bool HEX::was_correct_event()
 	int wire6;
 	int wire7;
 	bool pair1, pair2, pair3, pair4;
-	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[2]&&correct_in_layer[3]&&correct_in_layer[4]&&correct_in_layer[5]&&correct_in_layer[6])
+	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[2]&&correct_in_layer[3]&&correct_in_layer[4]&&correct_in_layer[5])
 	{
 		wire1 = Layer[0] -> DCLayer::Wire.at(0);
 		wire2 = Layer[1] -> DCLayer::Wire.at(0);
 		wire3 = Layer[2] -> DCLayer::Wire.at(0);
 		wire4 = Layer[3] -> DCLayer::Wire.at(0);
 		wire5 = Layer[4] -> DCLayer::Wire.at(0);
-		wire6 = Layer[5] -> DCLayer::Wire.at(0);		
-		wire7 = Layer[6] -> DCLayer::Wire.at(0);
+		wire6 = Layer[5] -> DCLayer::Wire.at(0);
 
 		pair1 = false;
 		pair2 = false;
 		pair3 = false;
-		pair4 = false;
-		if (wire2==wire4||wire1==wire4-1) pair1 = true;
-		if (wire2==wire3||wire2==wire3+1) pair2 = true;
-		if (wire5==wire6||wire5==wire6-1) pair3 = true;
-		if (wire2==wire7||wire1==wire7-1) pair4 = true;
+		if (wire4==wire1||wire4+1==wire1) pair1 = true;
+		if (wire2==wire3||wire3==wire2+1) pair2 = true;
+		if (wire5==wire6||wire6==wire5-1) pair3 = true;
 
-		if (pair1&&pair2&&(pair3||pair4)) correct_event = true;
-	}*/
+		if (pair1&&pair2&&(pair3)) correct_event = true;
+	}
 
 	return correct_event;
 }
@@ -162,7 +159,9 @@ void HEX::calculate_relative_and_absolute_positions_straight()
 		for (unsigned int ii = 0; ii < no_of_hits_in_layer; ii++)
 		{
 			// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10
-			x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+			//x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+			x = calc_position_in_detector((Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+			
 			//if(i == 2 || i == 3) x = 2+calc_position_in_detector(41-(Layer[no_of_layer]->Wire.at(ii)), distance_between_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
 			Layer[no_of_layer]->RelativeXPosition.push_back(x);
 	
@@ -218,7 +217,9 @@ void HEX::calculate_relative_and_absolute_positions_inclined()
 			for (unsigned int ii = 0; ii < no_of_hits_in_layer; ii++)
 			{
 				// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10.16
-				x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_inclined_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+				//x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_inclined_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+				x = calc_position_in_detector((Layer[no_of_layer]->Wire.at(ii)), distance_between_inclined_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+				
 				//if(i == 2 || i == 3) x = 2+calc_position_in_detector(41-(Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
 				Layer[no_of_layer]->RelativeXPosition.push_back(x);
 		

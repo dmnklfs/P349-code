@@ -145,7 +145,7 @@ void CalibrationLayer3d_HEX::calculate_hit_position()
 		// distance wire hit = odległosc prostopadla do drutu!!
 		CalibrationData.at(i).distance_wire_hit = drift_time_to_distance(CalibrationData.at(i).calib_bin, drifttime);
 		CalibrationData.at(i).hit_pos_Z = wirez;
-		std::cout << "layer_no: " << layer_no << "z: " << CalibrationData.at(i).hit_pos_Z << " x: " << CalibrationData.at(i).hit_pos_X << std::endl;
+		//std::cout << "layer_no: " << layer_no << " wire: " << wirex << " x: " << CalibrationData.at(i).hit_pos_X << std::endl;
 	}
 }
 
@@ -250,7 +250,7 @@ void CalibrationLayer3d_HEX::fit_delta_projections(const char* folder_name)
 			ProjectionMean.push_back(-1);
 			ProjectionSigma.push_back(0.0);
 		}
-		if (no_of_iteration == 5 || no_of_iteration == 6) c_delta_projection -> SaveAs(ProjectionName);
+		//if (no_of_iteration == 5 || no_of_iteration == 6) c_delta_projection -> SaveAs(ProjectionName);
 		delete c_delta_projection;
 	}
 	delete gaussian;

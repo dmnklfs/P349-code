@@ -39,9 +39,14 @@ void LineFit_HEX::set_x_errors(double *_errors)
 	{
 		errors[i] = _errors[i];
 	}
+	int inclined[4];
+	inclined[0] = 1;
+	inclined[1] = 2;
+	inclined[2] = 4;
+	inclined[3] = 5;
 	for (int i = 0; i < 4; i++)
 	{
-		if (errors[i]!=1) errors[i] = a[i]/(pow(a[i]*a[i]+1,0.5)*TMath::Cos(31*TMath::DegToRad()))*errors[2+i];
+		if (errors[inclined[i]]!=1) errors[inclined[i]] = a[i]/(pow(a[i]*a[i]+1,0.5)*TMath::Cos(10*TMath::DegToRad()))*errors[2+i];
 	}
 
 }
@@ -85,52 +90,53 @@ bool LineFit_HEX::err_flag()
 
 double LineFit_HEX::GlobalFCN(const double * par)
 {
-	const int points = no_of_points;
 	int i;
-	//calculate chisquare
 	double chisq = 0;
-	double delta = 0;
-	
 	double layer_chisq[6];
+	double delta = 0;
 	int straight[2];
-//	int inclined[4];
-	straight[0] = 4;
-	straight[1] = 5;
+	int inclined[4];
+	straight[0] = 0;
+	straight[1] = 3;
+	inclined[0] = 1;
+	inclined[1] = 2;
+	inclined[2] = 4;
+	inclined[3] = 5;
 
 	// scaling
 	double t;
 	// points in which the line goes through the certain z plane
 	double xi, yi;
-		// === calculation of deltas*delta for all layers separately ===
 	// straight
-	// layer 5
-	t = z[4] - zp;
-	//std::cout << "z " << z[4] << std::endl;
-	//std::cout << "z " << z[5] << std::endl;
+	// layer 1
+	t = z[0] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
 	delta  = x[0] - xi;
-	//std::cout << "delta " << delta << std::endl;
-	layer_chisq[4] = (delta*delta)/(errors[4]*errors[4]);
-	// layer 6
-	t = z[5] - zp;
+	layer_chisq[0] = (delta*delta)/(errors[0]*errors[0]);
+	// layer 2
+	t = z[3] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
 	delta  = x[1] - xi;
-	layer_chisq[5] = (delta*delta)/(errors[5]*errors[5]);
+	layer_chisq[3] = (delta*delta)/(errors[3]*errors[3]);
 
 	for (int i = 0; i < 4; i++)
 	{
-		t = z[i] - zp;
+		t = z[inclined[i]] - zp;
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
-		//std::cout << "i " << i << std::endl;
-		//std::cout << a[i] << std::endl;
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
-		layer_chisq[i] = delta/(errors[i]*errors[i]);
+		layer_chisq[inclined[i]] = delta/(errors[inclined[i]]*errors[inclined[i]]);
 	}
 	for (int i = 0; i < 6; i++)
 	{
+		//std::cout << "layer " << i << " chisq: " << layer_chisq[i] << std::endl;
+		//std::cout << "z " << z[i] << std::endl;
+		//std::cout << "x " << x[i+4] << std::endl;
+		//std::cout << "par[0] " << par[0] << " par[1] " << par[1] << " par[2] " << par[2] << " par[3] " << par[3] << std::endl;
+		
+		
 		if (i!=excluded_layer) chisq = chisq + layer_chisq[i];
 	}
 	return chisq;
@@ -142,8 +148,13 @@ double LineFit_HEX::get_chisq()
 	double layer_chisq[6];
 	double delta = 0;
 	int straight[2];
-	straight[0] = 4;
-	straight[1] = 5;
+	int inclined[4];
+	straight[0] = 0;
+	straight[1] = 3;
+	inclined[0] = 1;
+	inclined[1] = 2;
+	inclined[2] = 4;
+	inclined[3] = 5;
 
 	double par[4];
 	par[0] = xp;
@@ -158,25 +169,25 @@ double LineFit_HEX::get_chisq()
 	double xi, yi;
 	// straight
 	// layer 1
-	t = z[4] - zp;
+	t = z[0] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
 	delta  = x[0] - xi;
-	layer_chisq[4] = (delta*delta)/(errors[0]*errors[0]);
+	layer_chisq[0] = (delta*delta)/(errors[0]*errors[0]);
 	// layer 2
-	t = z[5] - zp;
+	t = z[3] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
 	delta  = x[1] - xi;
-	layer_chisq[5] = (delta*delta)/(errors[1]*errors[1]);
+	layer_chisq[3] = (delta*delta)/(errors[3]*errors[3]);
 
 	for (int i = 0; i < 4; i++)
 	{
-		t = z[i] - zp;
+		t = z[inclined[i]] - zp;
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
-		layer_chisq[i] = delta/(errors[i]*errors[i]);
+		layer_chisq[inclined[i]] = delta/(errors[inclined[i]]*errors[inclined[i]]);
 	}
 	for (int i = 0; i < 6; i++)
 	{
