@@ -46,7 +46,7 @@ void LineFit_HEX::set_x_errors(double *_errors)
 	inclined[3] = 5;
 	for (int i = 0; i < 4; i++)
 	{
-		if (errors[inclined[i]]!=1) errors[inclined[i]] = a[i]/(pow(a[i]*a[i]+1,0.5)*TMath::Cos(10*TMath::DegToRad()))*errors[2+i];
+		if (errors[inclined[i]]!=1) errors[inclined[i]] = a[i]/(pow(a[i]*a[i]+1,0.5)*TMath::Cos(10*TMath::DegToRad()))*errors[inclined[i]];
 	}
 
 }
@@ -195,8 +195,6 @@ double LineFit_HEX::get_chisq()
 		//std::cout << "z " << z[i] << std::endl;
 		//std::cout << "x " << x[i+4] << std::endl;
 		//std::cout << "par[0] " << par[0] << " par[1] " << par[1] << " par[2] " << par[2] << " par[3] " << par[3] << std::endl;
-		
-		
 		if (i!=excluded_layer) chisq = chisq + layer_chisq[i];
 	}
 	return chisq;

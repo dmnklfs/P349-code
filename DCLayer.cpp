@@ -173,5 +173,6 @@ void DCLayer::calculate_distances_from_wires()
 		x2 = CalibrationDistances.at(calib_bin+1);
 		distance = x1 + (x2 - x1)*(drift_time - t1)/(t2 - t1);
 		HitsDistancesFromWires.push_back(distance);
+		//std::cout << "distance " << distance << std::endl;
 	}
 }

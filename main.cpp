@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
       calibration_HEX -> calculate_hit_position();
       calibration_HEX -> fit_events();
       calibration_HEX -> save_histograms();
-      //calibration_HEX -> fit_delta_projections();
+      calibration_HEX -> fit_delta_projections();
       //calibration_HEX -> set_pos_Xerr();
       //calibration_HEX -> apply_corrections();
       //calibration_HEX -> plot_current_calibration();

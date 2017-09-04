@@ -144,7 +144,7 @@ void HEX::calculate_relative_and_absolute_positions_straight()
 	int no_of_layer;
 
 	// CALCULATIONS FOR THE STRAIGHT LAYERS
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		no_of_layer = straight_layers[i];
 		no_of_hits_in_layer = Layer[no_of_layer] -> Wire.size();
@@ -244,6 +244,13 @@ void HEX::calculate_relative_and_absolute_positions_inclined()
 				Layer[no_of_layer]->AbsoluteZPosition.push_back(z);
 			}
 		}
+		//std::cout << ".layer " << 1 << " z " << Layer[0]->AbsoluteZPosition.back()  << " x " << Layer[0]->AbsoluteXPosition.back() << std::endl;
+		//std::cout << ".layer " << 2 << " z " << Layer[1]->AbsoluteZPosition.back()  << " x " << Layer[1]->AbsoluteXPosition.back() << std::endl;
+		//std::cout << ".layer " << 3 << " z " << Layer[2]->AbsoluteZPosition.back()  << " x " << Layer[2]->AbsoluteXPosition.back() << std::endl;
+		//std::cout << ".layer " << 4 << " z " << Layer[3]->AbsoluteZPosition.back()  << " x " << Layer[3]->AbsoluteXPosition.back() << std::endl;
+		//std::cout << ".layer " << 5 << " z " << Layer[4]->AbsoluteZPosition.back()  << " x " << Layer[4]->AbsoluteXPosition.back() << std::endl;
+		//std::cout << ".layer " << 6 << " z " << Layer[5]->AbsoluteZPosition.back()  << " x " << Layer[5]->AbsoluteXPosition.back() << std::endl;
+	
 	}
 	
 }
@@ -253,7 +260,7 @@ void HEX::collect_hits_from_all_layers()
 	unsigned int no_of_entries; 
 
 	int no_of_layer;
-	for (int j = 0; j < 7; j++)
+	for (int j = 0; j < 6; j++)
 	{
 		no_of_entries = Layer[ j ] -> AbsoluteXPosition.size();
 		for (unsigned int i = 0; i < no_of_entries; i++)
@@ -264,6 +271,7 @@ void HEX::collect_hits_from_all_layers()
 				AllWiresAbsolutePositionX.push_back(Layer[ j ] -> AbsoluteXPosition.at(i));
 				AllHitsAbsolutePositionXEventDisplay.push_back( -(Layer[ j ] -> AbsoluteXPosition.at(i)) );
 				AllWiresAbsolutePositionZ.push_back(Layer[ j ] -> AbsoluteZPosition.at(i));
+				//std::cout << "layer " << j+1 << " z " << AllWiresAbsolutePositionZ.back()  << " x " << AllWiresAbsolutePositionX.back()<< std::endl;
 			}
 		}
 	}	
@@ -331,7 +339,7 @@ data_for_HEX_calibration HEX::get_data_for_calibration() // i need here only inf
 		data_for_calibration.positionsX[i]	= Layer[i] -> AbsoluteXPosition.at(0);
 		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
 		data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
-		//std::cout << i << " " << Layer[i] -> AbsoluteXPosition.at(0) << " " << Layer[i] -> AbsoluteZPosition.at(0) << " " << Layer[i] -> DriftTime.at(0) << std::endl;
+		//std::cout << i+1 << " " << Layer[i] -> AbsoluteXPosition.at(0) << " " << Layer[i] -> AbsoluteZPosition.at(0) << " " << Layer[i] -> DriftTime.at(0) << std::endl;
 	}
 	return data_for_calibration;
 }

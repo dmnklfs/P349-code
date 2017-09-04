@@ -134,7 +134,7 @@ void Fit3d_HEX::calculate_wires_xy_functions()
 	y_x_b_wire[0][0] = 0;
 	y_x_b_wire[0][1] = 0;
 	// inclined 1
-	y_x_a_wire[1] =-TMath::Tan(80*3.14*pow(180,-1));
+	y_x_a_wire[1] = -TMath::Tan(80*3.14*pow(180,-1));
 	y_x_b_wire[1][0] = -x_inclined1_wires[0]*y_x_a_wire[1];
 	y_x_b_wire[1][1] = -x_inclined1_wires[1]*y_x_a_wire[1];
 	// inclined 2
@@ -279,7 +279,7 @@ void Fit3d_HEX::calculate_3d_track_parameters()
 	track_p_i1i2_1.SetX(inter_point_i1i2.X()+scale*inter_i1i2.X());
 	track_p_i1i2_1.SetY(inter_point_i1i2.Y()+scale*inter_i1i2.Y());
 	// points on the intersection line at z = 3
-	double tempz = 3;
+	double tempz = 0;
 	track_p_si1_2.SetZ(tempz);
 	track_p_si2_2.SetZ(tempz);
 	track_p_i1i2_2.SetZ(tempz);
@@ -705,14 +705,14 @@ void Fit3d_HEX::draw_event()
 	//drift_chamber -> Draw();
 	yx_fcn_straight_w1->Draw();
 	yx_fcn_straight_w2->Draw();
-	//yx_fcn_inclined1_w1->Draw();
-	yx_fcn_inclined1_h1->Draw();
-	//yx_fcn_inclined1_w2->Draw();
-	yx_fcn_inclined1_h2->Draw();
-	//yx_fcn_inclined2_w1->Draw();
-	yx_fcn_inclined2_h1->Draw();
-	//yx_fcn_inclined2_w2->Draw();
-	yx_fcn_inclined2_h2->Draw();
+	yx_fcn_inclined1_w1->Draw();
+	//yx_fcn_inclined1_h1->Draw();
+	yx_fcn_inclined1_w2->Draw();
+	//yx_fcn_inclined1_h2->Draw();
+	yx_fcn_inclined2_w1->Draw();
+	//yx_fcn_inclined2_h1->Draw();
+	yx_fcn_inclined2_w2->Draw();
+	//yx_fcn_inclined2_h2->Draw();
 	//straight_hit_plane->Draw();
 	//inclined1_hit_plane->Draw();
 	//inclined1_hit_plane_center->Draw();
@@ -994,9 +994,10 @@ void Fit3d_HEX::calculate_wire_track_distances()
 		//std::cout << "t: " << t << " z: " << z_straight[i] << std::endl;
 		t2 = 1/uz[ straight[i] ];
 		xi = t*t2*ux[ straight[i] ] + xp[ straight[i] ];
+		//std::cout << "x_straight_wires[i] " << x_straight_wires[i] << " xi " << xi << std::endl;
 		yi = t*t2*uy[ straight[i] ] + yp[ straight[i] ];
 		wire_track_dist[ straight[i] ]  = TMath::Abs(x_straight_wires[i] - xi);
-		//std::cout << t2 << std::endl;
+		//std::cout << "str " << straight[i]+1 << " " << wire_track_dist[ straight[i] ] << std::endl;
 	}
 
 	for (int i = 0; i < 4; i++)
@@ -1006,12 +1007,20 @@ void Fit3d_HEX::calculate_wire_track_distances()
 		xi = t*t2*ux[ inclined[i] ] + xp[ inclined[i] ];
 		yi = t*t2*uy[ inclined[i] ] + yp[ inclined[i] ];
 		wire_track_dist[ inclined[i] ]  = TMath::Abs(a[i]*xi-yi+b[i])*pow(pow((a[i]*a[i]+1),0.5),-1);
+		//std::cout << "incl " << inclined[i]+1 << " " << wire_track_dist[ inclined[i] ] << std::endl;
 	}
 
-//	for (int i = 0; i < 8; i++)
-//	{
-//		std::cout << "d: " << wire_track_dist[i] << std::endl;
-//	}
+	//for (int i = 0; i < 6; i++)
+	//{
+		//std::cout << "l " << i+1 << std::endl;
+		//if (i==0) std::cout << "z " << z_straight[0] << std::endl;
+		//if (i==1) std::cout << "z " << z[0] << std::endl;
+		//if (i==2) std::cout << "z " << z[1] << std::endl;
+		//if (i==3) std::cout << "z " << z_straight[1] << std::endl;
+		//if (i==4) std::cout << "z " << z[2] << std::endl;
+		//if (i==5) std::cout << "z " << z[3] << std::endl;
+		//std::cout << " " << i+1 << " " << wire_track_dist[ i ] << std::endl;
+	//}
 
 }
 

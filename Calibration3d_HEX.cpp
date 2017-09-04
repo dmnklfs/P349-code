@@ -166,7 +166,9 @@ void Calibration3d_HEX::get_data(data_for_HEX_calibration _single_event_data)
 	for (int i = 0; i < 3; i++)
 	{
 		wirepos1 = _single_event_data.positionsX[layer_pairs[2*i]];
+		//std::cout << layer_pairs[2*i] << " " << wirepos1 << std::endl;
 		wirepos2 = _single_event_data.positionsX[layer_pairs[2*i+1]];
+		//std::cout << layer_pairs[2*i+1] << " " << wirepos2 << std::endl;
 		if (wirepos1 > wirepos2)
 		{
 			left_right[layer_pairs[2*i]]	= -1;
@@ -178,7 +180,6 @@ void Calibration3d_HEX::get_data(data_for_HEX_calibration _single_event_data)
 			left_right[layer_pairs[2*i+1]] 	= -1;
 		}
 	}
-	//std::cout << "b" << std::endl;
 	for (int i = 0; i < 6; i++)
 	{
 		Layer[i] -> CalibrationLayer3d_HEX::get_data(_single_event_data.positionsX[i], _single_event_data.positionsZ[i], _single_event_data.drift_times[i], left_right[i]);
@@ -329,7 +330,7 @@ void Calibration3d_HEX::fit_in_3d()
 		track3d_fit_vector = fit3d_HEX -> Fit3d_HEX::return_track_vector();
 		fit3d_HEX -> Fit3d_HEX::calculate_wires_xy_functions();
 		fit3d_HEX -> Fit3d_HEX::calculate_wire_track_distances();
-		fit3d_HEX -> Fit3d_HEX::draw_event();
+		//fit3d_HEX -> Fit3d_HEX::draw_event();
 
 		// cut on convergence of -- ALL ?? -- fits
 		// cut on fit probability -- only for all layers
