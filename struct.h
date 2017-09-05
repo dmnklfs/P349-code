@@ -40,6 +40,7 @@ struct data_for_D1_calibration
 	double positionsX[8]; // from wires
 	double positionsZ[8];
 	double drift_times[8];
+	double errorsX[8];
 };
 
 struct data_for_D2_calibration
@@ -47,6 +48,7 @@ struct data_for_D2_calibration
 	double positionsX[6]; // from wires
 	double positionsZ[6];
 	double drift_times[6];
+	double errorsX[6];
 };
 
 struct data_for_HEX_calibration
@@ -54,6 +56,14 @@ struct data_for_HEX_calibration
 	double positionsX[7]; // from wires
 	double positionsZ[7];
 	double drift_times[7];
+	double errorsX[7];
+};
+
+struct data_for_track_reconstruction
+{
+	data_for_D1_calibration D1;
+	data_for_D2_calibration D2;
+	data_for_HEX_calibration HEX;
 };
 
 // STRUCTS USED IN Hist CLASS

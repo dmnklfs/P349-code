@@ -39,7 +39,6 @@ public:
 
 	void get_data(data_for_HEX_calibration _single_event_data);
 	void tell_no_of_events();
-	void solve_lr_ambiguity(const CalibrationLayer3d_HEX &layer1, const CalibrationLayer3d_HEX &layer2);
 	void calculate_hit_position();
 	void save_histograms();
 	void fit_events_in_straight_layers_biased(double _chi2_cut);

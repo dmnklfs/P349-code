@@ -24,6 +24,7 @@ public:
 	void test_calculate_distances();
 	double test_positions_histogram();
 	TGraph* plot_track_in_D1_D2();
+	data_for_track_reconstruction get_data_for_track_reconstruction();
 
 private:
 	bool correct_event;

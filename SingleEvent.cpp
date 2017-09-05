@@ -32,7 +32,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
 	// if ( (start && tof && D1 && D2 && HEX && Start::getTimeUp()<10 && Start::getTimeDown()<10) || stage == 2)
-	if ( (start&&HEX&&tof) || stage == 2)
+	if ( (start&&D2&&D1&&HEX&&tof) || stage == 2)
 	{
 		return true;
 	}
@@ -81,6 +81,15 @@ event_to_display SingleEvent::get_event_to_display()
 	return event;
 }
 
+data_for_track_reconstruction SingleEvent::get_data_for_track_reconstruction()
+{
+	data_for_track_reconstruction track_reco_data;
+	track_reco_data.D1 = D1::get_data_for_calibration();
+	track_reco_data.D2 = D2::get_data_for_calibration();
+	track_reco_data.HEX = HEX::get_data_for_calibration();
+	return track_reco_data;
+}
+
 double SingleEvent::getTOF()
 {
 	double tof;
@@ -90,20 +99,20 @@ double SingleEvent::getTOF()
 
 void SingleEvent::test_calculate_distances()
 {
-	//D1::calculate_distances_from_wires();
-	//D1::calculate_relative_and_absolute_positions_straight();
-	//D1::calculate_relative_and_absolute_positions_inclined();
-	//D1::collect_hits_from_all_layers();
+	D1::calculate_distances_from_wires();
+	D1::calculate_relative_and_absolute_positions_straight();
+	D1::calculate_relative_and_absolute_positions_inclined();
+	D1::collect_hits_from_all_layers();
 	//D1::set_hits_absolute_positions(); // delme 28.12.16
 
 	//std::cout << "D2::calculate_distances_from_wires()" << std::endl;
-	//D2::calculate_distances_from_wires();
+	D2::calculate_distances_from_wires();
 	//std::cout << "D2::calculate_relative_and_absolute_positions_straight();" << std::endl;
-	//D2::calculate_relative_and_absolute_positions_straight();
+	D2::calculate_relative_and_absolute_positions_straight();
 	//std::cout << "D2::calculate_relative_and_absolute_positions_inclined();" << std::endl;
-	//D2::calculate_relative_and_absolute_positions_inclined();
+	D2::calculate_relative_and_absolute_positions_inclined();
 	//std::cout << "D2::collect_hits_from_all_layers();" << std::endl;
-	//D2::collect_hits_from_all_layers();
+	D2::collect_hits_from_all_layers();
 	//std::cout << "done there" << std::endl;
 	//D2::set_hits_absolute_positions(); // check it 13.07.2017
 

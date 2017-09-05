@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
   //Calibration3d *calibration = new Calibration3d(config);
   //Calibration3d_D2 *calibration_D2 = new Calibration3d_D2(config);
   Calibration3d_HEX *calibration_HEX = new Calibration3d_HEX(config);
+  TrackReconstruction *track_reco = new TrackReconstruction(config);
 	std::cout << "* start of the loop over the events" << std::endl;
   int delme_iter = 0;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
@@ -87,6 +88,7 @@ int main(int argc, char *argv[])
         //std::cout << "ok2" << std::endl;
         //std::cout << "ok1" << std::endl;
         calibration_HEX -> get_data( single_event -> SingleEvent::HEX::get_data_for_calibration() ); 
+        track_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
         //std::cout << "ok2" << std::endl;
   			
   		} // end if correct event
