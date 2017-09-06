@@ -5,12 +5,12 @@ D2::D2()
 
 D2::D2(const Config &_config)
 {
-	Layer[0] = new DCLayer(1, _config.D2_L1_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D2_drift_time_min[0],_config.D2_drift_time_max[0],_config.D2_layer_min_hits[0],_config.D2_layer_max_hits[0]);
-	Layer[1] = new DCLayer(2, _config.D2_L2_drift_time_offset, _config.D1_L2_calibration_times, _config.D1_L2_calibration_distances, _config.D2_drift_time_min[1],_config.D2_drift_time_max[1],_config.D2_layer_min_hits[1],_config.D2_layer_max_hits[1]);
-	Layer[2] = new DCLayer(3, _config.D2_L3_drift_time_offset, _config.D1_L3_calibration_times, _config.D1_L3_calibration_distances, _config.D2_drift_time_min[2],_config.D2_drift_time_max[2],_config.D2_layer_min_hits[2],_config.D2_layer_max_hits[2]);
-	Layer[3] = new DCLayer(4, _config.D2_L4_drift_time_offset, _config.D1_L4_calibration_times, _config.D1_L4_calibration_distances, _config.D2_drift_time_min[3],_config.D2_drift_time_max[3],_config.D2_layer_min_hits[3],_config.D2_layer_max_hits[3]);
-	Layer[4] = new DCLayer(5, _config.D2_L5_drift_time_offset, _config.D1_L5_calibration_times, _config.D1_L5_calibration_distances, _config.D2_drift_time_min[4],_config.D2_drift_time_max[4],_config.D2_layer_min_hits[4],_config.D2_layer_max_hits[4]);
-	Layer[5] = new DCLayer(6, _config.D2_L6_drift_time_offset, _config.D1_L6_calibration_times, _config.D1_L6_calibration_distances, _config.D2_drift_time_min[5],_config.D2_drift_time_max[5],_config.D2_layer_min_hits[5],_config.D2_layer_max_hits[5]);
+	Layer[0] = new DCLayer(1, _config.D2_L1_drift_time_offset, _config.D1_L1_calibration_times, _config.D2_L1_calibration_distances, _config.D2_drift_time_min[0],_config.D2_drift_time_max[0],_config.D2_layer_min_hits[0],_config.D2_layer_max_hits[0]);
+	Layer[1] = new DCLayer(2, _config.D2_L2_drift_time_offset, _config.D1_L2_calibration_times, _config.D2_L2_calibration_distances, _config.D2_drift_time_min[1],_config.D2_drift_time_max[1],_config.D2_layer_min_hits[1],_config.D2_layer_max_hits[1]);
+	Layer[2] = new DCLayer(3, _config.D2_L3_drift_time_offset, _config.D1_L3_calibration_times, _config.D2_L3_calibration_distances, _config.D2_drift_time_min[2],_config.D2_drift_time_max[2],_config.D2_layer_min_hits[2],_config.D2_layer_max_hits[2]);
+	Layer[3] = new DCLayer(4, _config.D2_L4_drift_time_offset, _config.D1_L4_calibration_times, _config.D2_L4_calibration_distances, _config.D2_drift_time_min[3],_config.D2_drift_time_max[3],_config.D2_layer_min_hits[3],_config.D2_layer_max_hits[3]);
+	Layer[4] = new DCLayer(5, _config.D2_L5_drift_time_offset, _config.D1_L5_calibration_times, _config.D2_L5_calibration_distances, _config.D2_drift_time_min[4],_config.D2_drift_time_max[4],_config.D2_layer_min_hits[4],_config.D2_layer_max_hits[4]);
+	Layer[5] = new DCLayer(6, _config.D2_L6_drift_time_offset, _config.D1_L6_calibration_times, _config.D2_L6_calibration_distances, _config.D2_drift_time_min[5],_config.D2_drift_time_max[5],_config.D2_layer_min_hits[5],_config.D2_layer_max_hits[5]);
 		
 	for (int i = 0; i < 6; i++)
 	{
@@ -106,59 +106,6 @@ int D2::get_no_of_layers_with_hits()
 	return no_of_layers_with_hits;
 }
 
-/*void D2::calculate_relative_and_absolute_positions()
-{
-	//std::cout << "D1::calculate_relative_and_absolute_positions" << std::endl;
-	unsigned int no_of_hits_in_layer;
-	double x_prim, z_prim;
-	double x, z;
-	int straight_layers[4];
-	straight_layers[0] =4;
-	straight_layers[1] =5; // there should be one more layer added 24.12.16
-	
-	int no_of_layer;
-
-	// CALCULATIONS FOR THE STRAIGHT LAYERS
-	for (int i = 0; i < 2; i++)
-	{
-		no_of_layer = straight_layers[i];
-		no_of_hits_in_layer = Layer[no_of_layer] -> Wire.size();
-		// std::cout << "no of hits: " << no_of_hits_in_layer << std::endl;
-		// CALCULATION OF POSITIONS IN THE DETECTOR
-		// Z COORDINATE
-		// calculate_position_in_detector(double element_no, double element_width, double offset_in_detector)
-		z = calc_position_in_detector(no_of_layer, distance_between_layers, - half_z_dim + distance_to_1st_layer);
-		Layer[no_of_layer]->RelativeZPosition = z;
-		
-		// X COORDINATE
-		for (unsigned int ii = 0; ii < no_of_hits_in_layer; ii++)
-		{
-			// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10
-			x = calc_position_in_detector(41-(Layer[no_of_layer]->Wire.at(ii)), distance_between_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
-			//if(i == 2 || i == 3) x = 2+calc_position_in_detector(41-(Layer[no_of_layer]->Wire.at(ii)), distance_between_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
-			Layer[no_of_layer]->RelativeXPosition.push_back(x);
-	
-			x = Layer[no_of_layer]->RelativeXPosition.back();
-			z = Layer[no_of_layer]->RelativeZPosition;
-			
-			// CALCULATE POSITION IN THE LAB
-			// MAKE ROTATION AROUND Y AXIS
-			x_prim = get_x_after_rot_Y(x, z, y_rotation_angle);
-			z_prim = get_z_after_rot_Y(x, z, y_rotation_angle);
-
-			// !!! MAKE ROTATION AROUND X AXIS
-
-			// calc_position_in_lab(double position_in_detector, double detector_position, double detector_offset)
-			x = calc_position_in_lab(x_prim, x_lab_position, x_offset);
-			z = calc_position_in_lab(z_prim, z_lab_position, z_offset);
-
-			Layer[no_of_layer]->AbsoluteXPosition.push_back(x);
-			Layer[no_of_layer]->AbsoluteZPosition.push_back(z);
-			//std::cout << "x: " << x << std::endl;
-		}
-	}
-}*/
-
 void D2::calculate_wire_positions_in_detector()
 {
 	//std::cout << "D1::calculate_relative_and_absolute_positions_straight" << std::endl;
@@ -190,102 +137,8 @@ void D2::calculate_wire_positions_in_detector()
 			Layer[no_of_layer]->AbsoluteXWirePosition.push_back(x);
 			Layer[no_of_layer]->AbsoluteZPosition.push_back(z);
 		}
+		//std::cout << Layer[no_of_layer]->AbsoluteXWirePosition.at(0) << std::endl;
 	}
-}
-
-double D2::test_get_chosen_position(int _no_of_layer)
-{
-	return Layer[_no_of_layer]->AbsoluteXWirePosition.at(0);
-}
-
-bool D2::plot_event()
-{
-	bool plot_event = false;
-	if (0!=AllHitsAbsolutePositionXEventDisplay.size()) plot_event = true;
-	//std::cout << AllHitsAbsolutePositionXEventDisplay.size() << std::endl;
-	return plot_event;
-}
-
-TGraph* D2::get_all_hits_plot()
-{
-	TGraph* all_hits = new TGraph(AllHitsAbsolutePositionXEventDisplay.size(), &AllHitsAbsolutePositionXEventDisplay.at(0), &AllHitsAbsolutePositionZ.at(0));
-	all_hits ->  SetMarkerStyle(20);
-	return all_hits;
-}
-
-TGraph* D2::get_detector_plot()
-{
-	TGraph* detector_plot;
-	// coordinates of the corners of the detector
-	double x_detector[5], z_detector[5];
-	double x_lab[5], z_lab[5];
-	double x_prim, z_prim; // after rotation
-	x_detector[0] =(-half_x_dim);
-	x_detector[1] =( half_x_dim);
-	x_detector[2] =( half_x_dim);
-	x_detector[3] =(-half_x_dim);
-	x_detector[4] = x_detector[0];
-	z_detector[0] =(-half_z_dim);
-	z_detector[1] =(-half_z_dim);
-	z_detector[2] =( half_z_dim);
-	z_detector[3] =( half_z_dim);
-	z_detector[4] = z_detector[0];
-	for (int i = 0; i < 5; i++)
-	{
-		x_prim = get_x_after_rot_Y(x_detector[i], z_detector[i], y_rotation_angle);
-		z_prim = get_z_after_rot_Y(x_detector[i], z_detector[i], y_rotation_angle);
-		x_lab[i] = -calc_position_in_lab(x_prim, x_lab_position, x_offset);
-		z_lab[i] = calc_position_in_lab(z_prim, z_lab_position, z_offset);
-	}
-	detector_plot = new TGraph(5, x_lab, z_lab);
-	detector_plot ->SetLineColor(4);
-	detector_plot ->SetLineWidth(4);
-	detector_plot ->SetFillStyle(0);
-
-	return detector_plot;
-}
-
-void D2::collect_hits_from_all_layers()
-{
-	// this function can be called somewhere else, not only in the event display class...
-	// loop over all entries in the certain layer
-	/*int straight_layers[3];
-	straight_layers[0] =4;
-	straight_layers[1] =5;
-	//straight_layers[2] =7;
-	unsigned int no_of_entries; 
-
-	int no_of_layer;
-	for (int j = 0; j < 2; j++)
-	{
-		no_of_layer = straight_layers[j];
-		no_of_entries = Layer[ no_of_layer ] -> AbsoluteXPosition.size();
-		//std::cout << no_of_entries << std::endl;
-		for (unsigned int i = 0; i < no_of_entries; i++)
-		{
-			if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10
-			{
-				AllWiresAbsolutePositionX.push_back(Layer[ no_of_layer ] -> AbsoluteXPosition.at(i));
-				AllHitsAbsolutePositionXEventDisplay.push_back( -(Layer[ no_of_layer ] -> AbsoluteXPosition.at(i)) );
-				AllWiresAbsolutePositionZ.push_back(Layer[ no_of_layer ] -> AbsoluteZPosition.at(i));
-			}
-		}
-	}*/
-	unsigned int no_of_entries; 
-	for (int j = 0; j < 6; j++)
-	{
-		no_of_entries = Layer[ j ] -> AbsoluteXWirePosition.size();
-		for (unsigned int i = 0; i < no_of_entries; i++)
-		{
-			// now positions of wires are plotted
-			if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10.16
-			{
-				AllWiresAbsolutePositionX.push_back(Layer[ j ] -> AbsoluteXWirePosition.at(i));
-				AllHitsAbsolutePositionXEventDisplay.push_back( -(Layer[ j ] -> AbsoluteXWirePosition.at(i)) );
-				AllWiresAbsolutePositionZ.push_back(Layer[ j ] -> AbsoluteZPosition.at(i));
-			}
-		}
-	}	
 }
 
 void D2::calculate_distances_from_wires()

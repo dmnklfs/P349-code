@@ -93,16 +93,9 @@ void TrackReconstruction::fit_in_3d_D1()
 		fit3d -> Fit3d::calculate_intersection_vectors();
 		fit3d -> Fit3d::calculate_intersection_points();
 		fit3d -> Fit3d::calculate_3d_track_parameters();
-		//fit3d -> Fit3d::set_detector_position(x_lab_position, z_lab_position, half_x_dim, half_z_dim, distance_to_1st_layer);
-		//fit3d -> Fit3d::calculate_projections_on_hit_planes_calculations();
-
 		fit3d -> Fit3d::make_fit_to_lines(false);
-		//fit3d -> Fit3d::calculate_projections_on_hit_planes_fit();
 		track3d_fit_point_D1 = fit3d -> Fit3d::return_track_point();
 		track3d_fit_vector_D1 = fit3d -> Fit3d::return_track_vector();
-		//fit3d -> Fit3d::calculate_wires_xy_functions();
-		//fit3d -> Fit3d::calculate_wire_track_distances();
-		//fit3d -> Fit3d::draw_event();
 
 		TrackRecoData.at(i).errflag_D1 = fit3d -> Fit3d::err_flag();
 		if ((!(fit3d -> Fit3d::err_flag())))
@@ -111,12 +104,117 @@ void TrackReconstruction::fit_in_3d_D1()
 			TrackRecoData.at(i).phi_xz_D1 = calculate_phi_xz(track3d_fit_vector_D1.X(), track3d_fit_vector_D1.Z());
 			TrackRecoData.at(i).theta_yz_D1 = calculate_theta_yz(track3d_fit_vector_D1.Y(), track3d_fit_vector_D1.Z());
 			//temp_chi2_prob = TMath::Prob(temp_chi2,4);
-			//std::cout << TrackRecoData.at(i).phi_xz_D1 << std::endl;
+			std::cout << TrackRecoData.at(i).phi_xz_D1 << std::endl;
 			//std::cout << TrackRecoData.at(i).theta_yz_D1 << std::endl;
 		}
 		delete fit3d;
 	}
+}
 
+void TrackReconstruction::fit_in_3d_D2()
+{
+	double aSt, bSt, track_angle, temp_chi2, layer_temp_chi2[6], temp_chi2_prob, layer_temp_chi2_prob[6];
+	double wires_positionsX_all[6];
+	double hits_positionsX_all[6];
+	double hits_positionsZ_all[6];
+	double errors_all[6];
+
+	int no_of_chosen_events = TrackRecoData.size();
+	std::cout << "Fit in D2..." << std::endl;
+
+	for (unsigned int i = 0; i < no_of_chosen_events; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			wires_positionsX_all[j] = TrackRecoData.at(i).x_hit_pos_D2[j];
+			hits_positionsX_all[j] = TrackRecoData.at(i).x_hit_pos_D2[j];
+			hits_positionsZ_all[j] = TrackRecoData.at(i).z_hit_pos_D2[j];
+			errors_all[j]=1;
+		}
+		
+		if (0==i%1000) std::cout << "    " << i << " out of " << no_of_chosen_events << " done" << std::endl;
+
+		Fit3d_D2 *fit3d = new Fit3d_D2(i);
+		fit3d -> Fit3d_D2::set_no_of_iteration(0);
+		fit3d -> Fit3d_D2::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all, wires_positionsX_all);
+		fit3d -> Fit3d_D2::fit_straight_layer();
+		fit3d -> Fit3d_D2::fit_inclined_layers();
+		fit3d -> Fit3d_D2::calculate_xy_functions();
+		fit3d -> Fit3d_D2::set_hit_planes_vectors();
+		fit3d -> Fit3d_D2::calculate_normal_to_hit_planes();
+		fit3d -> Fit3d_D2::calculate_hit_planes_eq();
+		fit3d -> Fit3d_D2::calculate_intersection_vectors();
+		fit3d -> Fit3d_D2::calculate_intersection_points();
+		fit3d -> Fit3d_D2::calculate_3d_track_parameters();
+		fit3d -> Fit3d_D2::make_fit_to_lines(false);
+		track3d_fit_point_D2 = fit3d -> Fit3d_D2::return_track_point();
+		track3d_fit_vector_D2 = fit3d -> Fit3d_D2::return_track_vector();
+
+		TrackRecoData.at(i).errflag_D2 = fit3d -> Fit3d_D2::err_flag();
+		if ((!(fit3d -> Fit3d_D2::err_flag())))
+		{
+			TrackRecoData.at(i).chi2_D2 = fit3d -> Fit3d_D2::get_chisq();
+			TrackRecoData.at(i).phi_xz_D2 = calculate_phi_xz(track3d_fit_vector_D2.X(), track3d_fit_vector_D2.Z());
+			TrackRecoData.at(i).theta_yz_D2 = calculate_theta_yz(track3d_fit_vector_D2.Y(), track3d_fit_vector_D2.Z());
+			//temp_chi2_prob = TMath::Prob(temp_chi2,4);
+			std::cout << TrackRecoData.at(i).phi_xz_D2 << std::endl;
+			//std::cout << TrackRecoData.at(i).theta_yz_D2 << std::endl;
+		}
+		delete fit3d;
+	}
+}
+
+void TrackReconstruction::fit_in_3d_HEX()
+{
+	double aSt, bSt, track_angle, temp_chi2, layer_temp_chi2[6], temp_chi2_prob, layer_temp_chi2_prob[6];
+	double wires_positionsX_all[6];
+	double hits_positionsX_all[6];
+	double hits_positionsZ_all[6];
+	double errors_all[6];
+
+	int no_of_chosen_events = TrackRecoData.size();
+	std::cout << "Fit in HEX..." << std::endl;
+
+	for (unsigned int i = 0; i < no_of_chosen_events; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			wires_positionsX_all[j] = TrackRecoData.at(i).x_hit_pos_HEX[j];
+			hits_positionsX_all[j] = TrackRecoData.at(i).x_hit_pos_HEX[j];
+			hits_positionsZ_all[j] = TrackRecoData.at(i).z_hit_pos_HEX[j];
+			errors_all[j]=1;
+		}
+		
+		if (0==i%1000) std::cout << "    " << i << " out of " << no_of_chosen_events << " done" << std::endl;
+
+		Fit3d_HEX *fit3d = new Fit3d_HEX(i);
+		fit3d -> Fit3d_HEX::set_no_of_iteration(0);
+		fit3d -> Fit3d_HEX::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all, wires_positionsX_all);
+		fit3d -> Fit3d_HEX::fit_straight_layer();
+		fit3d -> Fit3d_HEX::fit_inclined_layers();
+		fit3d -> Fit3d_HEX::calculate_xy_functions();
+		fit3d -> Fit3d_HEX::set_hit_planes_vectors();
+		fit3d -> Fit3d_HEX::calculate_normal_to_hit_planes();
+		fit3d -> Fit3d_HEX::calculate_hit_planes_eq();
+		fit3d -> Fit3d_HEX::calculate_intersection_vectors();
+		fit3d -> Fit3d_HEX::calculate_intersection_points();
+		fit3d -> Fit3d_HEX::calculate_3d_track_parameters();
+		fit3d -> Fit3d_HEX::make_fit_to_lines(false);
+		track3d_fit_point_HEX = fit3d -> Fit3d_HEX::return_track_point();
+		track3d_fit_vector_HEX = fit3d -> Fit3d_HEX::return_track_vector();
+
+		TrackRecoData.at(i).errflag_HEX = fit3d -> Fit3d_HEX::err_flag();
+		if ((!(fit3d -> Fit3d_HEX::err_flag())))
+		{
+			TrackRecoData.at(i).chi2_HEX = fit3d -> Fit3d_HEX::get_chisq();
+			TrackRecoData.at(i).phi_xz_HEX = calculate_phi_xz(track3d_fit_vector_HEX.X(), track3d_fit_vector_HEX.Z());
+			TrackRecoData.at(i).theta_yz_HEX = calculate_theta_yz(track3d_fit_vector_HEX.Y(), track3d_fit_vector_HEX.Z());
+			//temp_chi2_prob = TMath::Prob(temp_chi2,4);
+			std::cout << TrackRecoData.at(i).phi_xz_HEX << std::endl;
+			//std::cout << TrackRecoData.at(i).theta_yz_HEX << std::endl;
+		}
+		delete fit3d;
+	}
 }
 
 double TrackReconstruction::calculate_phi_xz(double vx, double vz)

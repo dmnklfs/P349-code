@@ -93,33 +93,14 @@ void SingleEvent::test_calculate_distances()
 	D1::calculate_distances_from_wires();
 	D1::calculate_wire_positions_in_detector();
 	D1::set_hits_absolute_positions();
-	//D1::collect_hits_from_all_layers();
-	//D1::set_hits_absolute_positions(); // delme 28.12.16
-
-	//std::cout << "D2::calculate_distances_from_wires()" << std::endl;
+	
 	D2::calculate_distances_from_wires();
-	//std::cout << "D2::calculate_relative_and_absolute_positions_straight();" << std::endl;
 	D2::calculate_wire_positions_in_detector();
-	//std::cout << "D2::collect_hits_from_all_layers();" << std::endl;
-	D2::collect_hits_from_all_layers();
 	D2::set_hits_absolute_positions();
-	//std::cout << "done there" << std::endl;
-	//D2::set_hits_absolute_positions(); // check it 13.07.2017
 
-	//D2::calculate_distances_from_wires();
-	//D2::calculate_relative_and_absolute_positions();
-	//D2::collect_hits_from_all_layers();
-	//D2::set_hits_absolute_positions();
-
-	//std::cout << "D2::calculate_distances_from_wires()" << std::endl;
 	HEX::calculate_distances_from_wires();
-	//std::cout << "D2::calculate_relative_and_absolute_positions_straight();" << std::endl;
 	HEX::calculate_wire_positions_in_detector();
-	//std::cout << "D2::collect_hits_from_all_layers();" << std::endl;
-	HEX::collect_hits_from_all_layers();
 	HEX::set_hits_absolute_positions();
-	//std::cout << "done there" << std::endl;
-	//HEX::set_hits_absolute_positions(); // check it 13.07.2017
 
 }
 

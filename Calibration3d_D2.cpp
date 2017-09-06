@@ -552,8 +552,8 @@ TCanvas* Calibration3d_D2::plot_angle_distribution()
 	theta_y -> Draw();
 
 	gDirectory->pwd();
-	if (no_of_iteration==9) phi_xz -> Write();
-	if (no_of_iteration==9) theta_y -> Write();
+	if (no_of_iteration==6) phi_xz -> Write();
+	if (no_of_iteration==6) theta_y -> Write();
 
 	return c;
 }

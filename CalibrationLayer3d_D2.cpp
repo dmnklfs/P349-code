@@ -378,7 +378,7 @@ TCanvas* CalibrationLayer3d_D2::plot_current_calibration()
 		gDirectory->pwd();
 		initial_calibration -> Write();
 	}
-	if (no_of_iteration == 9)
+	if (no_of_iteration == 6)
 	{
 		gDirectory->pwd();
 		c_current_calibration -> Write();

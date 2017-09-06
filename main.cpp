@@ -107,6 +107,8 @@ int main(int argc, char *argv[])
 
     track_reco -> tell_no_of_events();
     track_reco -> fit_in_3d_D1();
+    track_reco -> fit_in_3d_D2();
+    track_reco -> fit_in_3d_HEX();
 
     /*calibration_HEX -> tell_no_of_events();
     calibration_HEX -> set_no_of_bin_in_event();
@@ -128,7 +130,7 @@ int main(int argc, char *argv[])
     /*calibration_D2 -> tell_no_of_events();
     calibration_D2 -> set_no_of_bin_in_event();
 
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < 6; i++)
     {
       calibration_D2 -> set_no_of_iteration(i);
       calibration_D2 -> calculate_hit_position();

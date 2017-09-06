@@ -42,13 +42,13 @@ struct track_reco_data
 	double x_hit_pos_D2[6];
 	double x_err_hit_pos_D2[6];
 	double z_hit_pos_D2[6];
-	double chi2_D2;
+	double chi2_D2, phi_xz_D2, theta_yz_D2;
 	bool errflag_D2;
 
 	double x_hit_pos_HEX[7];
 	double x_err_hit_pos_HEX[7];
 	double z_hit_pos_HEX[7];
-	double chi2_HEX;
+	double chi2_HEX, phi_xz_HEX, theta_yz_HEX;
 	bool errflag_HEX;
 
 	track_reco_data() // make correct init for errflags
@@ -58,6 +58,10 @@ struct track_reco_data
 		chi2_HEX = -1;
 		phi_xz_D1 = -1;
 		theta_yz_D1 = -1;
+		phi_xz_D2 = -1;
+		theta_yz_D2 = -1;
+		phi_xz_HEX = -1;
+		theta_yz_HEX = -1;
 	}
 };
 

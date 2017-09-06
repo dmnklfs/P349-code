@@ -34,9 +34,6 @@ public:
     data_for_HEX_calibration get_data_for_calibration();
 
     bool plot_event();
-    TGraph* get_all_hits_plot();
-    TGraph* get_detector_plot();
-    void collect_hits_from_all_layers();
     void set_hits_absolute_positions();
     data_for_HEX_track_reco get_data_for_track_reco();
 
