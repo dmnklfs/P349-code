@@ -159,32 +159,24 @@ int D2::get_no_of_layers_with_hits()
 	}
 }*/
 
-void D2::calculate_relative_and_absolute_positions_straight()
+void D2::calculate_wire_positions_in_detector()
 {
 	//std::cout << "D1::calculate_relative_and_absolute_positions_straight" << std::endl;
 	unsigned int no_of_hits_in_layer;
 	double x_prim, z_prim;
 	double x, z;
-	int straight_layers[2];
-	straight_layers[0] =4;
-	straight_layers[1] =5;
-	
 	int no_of_layer;
 
 	// CALCULATIONS FOR THE STRAIGHT LAYERS
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 6; i++)
 	{
-		no_of_layer = straight_layers[i];
+		no_of_layer = i;
 		no_of_hits_in_layer = Layer[no_of_layer] -> Wire.size();
 
-		//std::cout << "straight layers calc: " << std::endl;
-		
-		
 		// CALCULATION OF POSITIONS IN THE DETECTOR
 		// Z COORDINATE
 		// calculate_position_in_detector(double element_no, double element_width, double offset_in_detector)
 		z = calc_position_in_detector(no_of_layer, distance_between_layers, - half_z_dim + distance_to_1st_layer);
-		Layer[no_of_layer]->RelativeZPosition = z;
 		
 		// X COORDINATE
 		for (unsigned int ii = 0; ii < no_of_hits_in_layer; ii++)
@@ -192,99 +184,18 @@ void D2::calculate_relative_and_absolute_positions_straight()
 			//std::cout << "no_of_wires[no_of_layer] " << no_of_wires[no_of_layer] << std::endl;
 			//std::cout << "Wire.at(ii) " << Layer[no_of_layer]->Wire.at(ii) << std::endl;
 			// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10
-			x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
-			//if(i == 2 || i == 3) x = 2+calc_position_in_detector(41-(Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
-			Layer[no_of_layer]->RelativeXPosition.push_back(x);
-	
-			x = Layer[no_of_layer]->RelativeXPosition.back();
-			z = Layer[no_of_layer]->RelativeZPosition;
-			
-			// CALCULATE POSITION IN THE LAB
-			// MAKE ROTATION AROUND Y AXIS
-			x_prim = get_x_after_rot_Y(x, z, y_rotation_angle);
-			z_prim = get_z_after_rot_Y(x, z, y_rotation_angle);
+			if (i==4||i==5) x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+			else x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_inclined_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
 
-			// !!! MAKE ROTATION AROUND X AXIS
-
-			// calc_position_in_lab(double position_in_detector, double detector_position, double detector_offset)
-			x = calc_position_in_lab(x_prim, x_lab_position, x_offset);
-			z = calc_position_in_lab(z_prim, z_lab_position, z_offset);
-
-			//std::cout << "filled layer: " << no_of_layer << std::endl;
-			//std::cout << "x " << x << std::endl;
-			//std::cout << "wire " << Layer[no_of_layer]->Wire.at(ii) << std::endl;
-			Layer[no_of_layer]->AbsoluteXPosition.push_back(x);
+			Layer[no_of_layer]->AbsoluteXWirePosition.push_back(x);
 			Layer[no_of_layer]->AbsoluteZPosition.push_back(z);
 		}
 	}
 }
 
-void D2::calculate_relative_and_absolute_positions_inclined()
-{
-	if(true)
-	{
-		unsigned int no_of_hits_in_layer;
-		double x_prim, z_prim;
-		double x, z;
-		int straight_layers[4];
-		straight_layers[0] =0;
-		straight_layers[1] =1;
-		straight_layers[2] =2;
-		straight_layers[3] =3;
-		
-		int no_of_layer;
-	
-		// CALCULATIONS FOR THE --inclined-- LAYERS
-		for (int i = 0; i < 4; i++)
-		{
-			no_of_layer = straight_layers[i];
-			no_of_hits_in_layer = Layer[no_of_layer] -> Wire.size();
-			
-			// CALCULATION OF POSITIONS IN THE DETECTOR
-			// Z COORDINATE
-			// calculate_position_in_detector(double element_no, double element_width, double offset_in_detector)
-			z = calc_position_in_detector(no_of_layer, distance_between_layers, - half_z_dim + distance_to_1st_layer);
-			Layer[no_of_layer]->RelativeZPosition = z;
-			
-			// X COORDINATE
-			for (unsigned int ii = 0; ii < no_of_hits_in_layer; ii++)
-			{
-				// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10.16
-				x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_inclined_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
-				//if(i == 2 || i == 3) x = 2+calc_position_in_detector(41-(Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
-				Layer[no_of_layer]->RelativeXPosition.push_back(x);
-		
-				x = Layer[no_of_layer]->RelativeXPosition.back();
-				z = Layer[no_of_layer]->RelativeZPosition;
-				//std::cout << "1. " << z << std::endl;
-				
-				// CALCULATE POSITION IN THE LAB
-				// MAKE ROTATION AROUND Y AXIS
-				x_prim = get_x_after_rot_Y(x, z, y_rotation_angle);
-				z_prim = get_z_after_rot_Y(x, z, y_rotation_angle);
-				//std::cout << "2. " << z_prim << std::endl;
-	
-				// !!! MAKE ROTATION AROUND X AXIS
-	
-				// calc_position_in_lab(double position_in_detector, double detector_position, double detector_offset)
-				x = calc_position_in_lab(x_prim, x_lab_position, x_offset);
-				z = calc_position_in_lab(z_prim, z_lab_position, z_offset);
-				//std::cout << "3. " << z << std::endl;
-	
-				//std::cout << "filled layer: " << no_of_layer << std::endl;
-				//std::cout << "x " << x << std::endl;
-				//std::cout << "wire " << Layer[no_of_layer]->Wire.at(ii) << std::endl;
-				Layer[no_of_layer]->AbsoluteXPosition.push_back(x);
-				Layer[no_of_layer]->AbsoluteZPosition.push_back(z);
-			}
-		}
-	}
-	
-}
-
 double D2::test_get_chosen_position(int _no_of_layer)
 {
-	return Layer[_no_of_layer]->AbsoluteXPosition.at(0);
+	return Layer[_no_of_layer]->AbsoluteXWirePosition.at(0);
 }
 
 bool D2::plot_event()
@@ -363,14 +274,14 @@ void D2::collect_hits_from_all_layers()
 	unsigned int no_of_entries; 
 	for (int j = 0; j < 6; j++)
 	{
-		no_of_entries = Layer[ j ] -> AbsoluteXPosition.size();
+		no_of_entries = Layer[ j ] -> AbsoluteXWirePosition.size();
 		for (unsigned int i = 0; i < no_of_entries; i++)
 		{
 			// now positions of wires are plotted
 			if (true)// there should be a condition which tells wheter a hit contributes to track or not - 04.10.16
 			{
-				AllWiresAbsolutePositionX.push_back(Layer[ j ] -> AbsoluteXPosition.at(i));
-				AllHitsAbsolutePositionXEventDisplay.push_back( -(Layer[ j ] -> AbsoluteXPosition.at(i)) );
+				AllWiresAbsolutePositionX.push_back(Layer[ j ] -> AbsoluteXWirePosition.at(i));
+				AllHitsAbsolutePositionXEventDisplay.push_back( -(Layer[ j ] -> AbsoluteXWirePosition.at(i)) );
 				AllWiresAbsolutePositionZ.push_back(Layer[ j ] -> AbsoluteZPosition.at(i));
 			}
 		}
@@ -388,26 +299,36 @@ void D2::calculate_distances_from_wires()
 
 void D2::set_hits_absolute_positions()
 {
-	double wirepos1, wirepos2; 
-	int left_right[2];
-	wirepos1 = Layer[4] -> AbsoluteXPosition.at(0);
-	wirepos2 = Layer[5] -> AbsoluteXPosition.at(0); 
-	if (wirepos1 > wirepos2)
-	{
-		left_right[0] 	= -1;
-		left_right[1] 	= +1;
-	}
-	else
-	{
-		left_right[0] 	= +1;
-		left_right[1] 	= -1;
-	}
-	AllHitsAbsolutePositionX.push_back(wirepos1 + left_right[0]*(Layer[4] -> HitsDistancesFromWires.at(0)));
-	AllHitsAbsolutePositionX.push_back(wirepos2 + left_right[1]*(Layer[5] -> HitsDistancesFromWires.at(0)));
+	double wirepos1, wirepos2;
+	double hitx, wirex, dist_from_wire;
+	int left_right[6];
 
-	// Z positions - for wires. --- what if there are rotations - check?? 28.12.16
-	AllHitsAbsolutePositionZ.push_back(Layer[4] -> AbsoluteZPosition.at(0));
-	AllHitsAbsolutePositionZ.push_back(Layer[5] -> AbsoluteZPosition.at(0));
+	for (int i = 0; i < 3; i++)
+	{
+		wirepos1 = Layer[2*i  ]->AbsoluteXWirePosition.at(0);
+		wirepos2 = Layer[2*i+1]->AbsoluteXWirePosition.at(0);
+		if (wirepos1 > wirepos2)
+		{
+			left_right[2*i] 	= -1;
+			left_right[2*i+1] 	= +1;
+		}
+		else
+		{
+			left_right[2*i] 	= +1;
+			left_right[2*i+1] 	= -1;
+		}
+	}
+
+	for (int i = 0; i < 6; i++)
+	{
+		wirex = Layer[i]-> AbsoluteXWirePosition.at(0);
+		dist_from_wire = Layer[i]-> HitsDistancesFromWires.at(0);
+		if (i==4||i==5) hitx = wirex+left_right[i]*dist_from_wire;//*pow(TMath::Cos(31*TMath::DegToRad()),-1);
+		if (i==0||i==1||i==2||i==3) hitx = wirex+left_right[i]*dist_from_wire*pow(TMath::Cos(31*TMath::DegToRad()),-1);
+		Layer[i]->AbsoluteXHitPosition.push_back(hitx);
+		//std::cout << "layer " << i << " " << Layer[i]->AbsoluteXHitPosition.at(0) << std::endl;
+	}
+
 }
 
 data_for_D2_calibration D2::get_data_for_calibration() // i need here only informations about wires and distances
@@ -417,10 +338,23 @@ data_for_D2_calibration D2::get_data_for_calibration() // i need here only infor
 	{
 		//std::cout << "layer " << i << " absolute x position " << Layer[i] -> AbsoluteXPosition.at(0) << std::endl;
 		//std::cout << "layer " << i << " absolute z position " << Layer[i] -> AbsoluteZPosition.at(0) << std::endl;
-		data_for_calibration.positionsX[i]	= Layer[i] -> AbsoluteXPosition.at(0);
+		data_for_calibration.positionsX[i]	= Layer[i] -> AbsoluteXWirePosition.at(0);
 		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
 		data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
 		//std::cout << i << " " << Layer[i] -> AbsoluteXPosition.at(0) << " " << Layer[i] -> AbsoluteZPosition.at(0) << " " << Layer[i] -> DriftTime.at(0) << std::endl;
+	}
+	return data_for_calibration;
+}
+
+data_for_D2_track_reco D2::get_data_for_track_reco() // i need here only informations about wires and distances
+{
+	data_for_D2_track_reco data_for_calibration;
+	for (int i = 0; i < 6; i++)
+	{
+		data_for_calibration.positionsHitsX[i]	= Layer[i] -> AbsoluteXHitPosition.at(0);
+		//std::cout << "a" << std::endl;
+		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
+		data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
 	}
 	return data_for_calibration;
 }

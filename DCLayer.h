@@ -33,7 +33,8 @@ public:
 	std::vector<double> RelativeXPosition;
 	double RelativeZPosition;
 	// absolute hits positions
-	std::vector<double> AbsoluteXPosition;
+	std::vector<double> AbsoluteXWirePosition;
+	std::vector<double> AbsoluteXHitPosition;
 	std::vector<double> AbsoluteZPosition;
 
 	// only for the simple calibration

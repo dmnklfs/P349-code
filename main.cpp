@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
   //Calibration3d *calibration = new Calibration3d(config);
   //Calibration3d_D2 *calibration_D2 = new Calibration3d_D2(config);
-  Calibration3d_HEX *calibration_HEX = new Calibration3d_HEX(config);
+  //Calibration3d_HEX *calibration_HEX = new Calibration3d_HEX(config);
   TrackReconstruction *track_reco = new TrackReconstruction(config);
 	std::cout << "* start of the loop over the events" << std::endl;
   int delme_iter = 0;
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
         //calibration_D2 -> get_data( single_event -> SingleEvent::D2::get_data_for_calibration() ); 
         //std::cout << "ok2" << std::endl;
         //std::cout << "ok1" << std::endl;
-        calibration_HEX -> get_data( single_event -> SingleEvent::HEX::get_data_for_calibration() ); 
+        //calibration_HEX -> get_data( single_event -> SingleEvent::HEX::get_data_for_calibration() ); 
         track_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
         //std::cout << "ok2" << std::endl;
   			
@@ -105,7 +105,10 @@ int main(int argc, char *argv[])
 
     std::cout << "iter " << delme_iter << std::endl;
 
-    calibration_HEX -> tell_no_of_events();
+    track_reco -> tell_no_of_events();
+    track_reco -> fit_in_3d_D1();
+
+    /*calibration_HEX -> tell_no_of_events();
     calibration_HEX -> set_no_of_bin_in_event();
 
     for (int i = 0; i < 1; i++)
@@ -119,13 +122,13 @@ int main(int argc, char *argv[])
       //calibration_HEX -> apply_corrections();
       //calibration_HEX -> plot_current_calibration();
       calibration_HEX -> deletations();
-    }
+    }*/
     
 
-    //calibration_D2 -> tell_no_of_events();
-    //calibration_D2 -> set_no_of_bin_in_event();
+    /*calibration_D2 -> tell_no_of_events();
+    calibration_D2 -> set_no_of_bin_in_event();
 
-    /*for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 1; i++)
     {
       calibration_D2 -> set_no_of_iteration(i);
       calibration_D2 -> calculate_hit_position();

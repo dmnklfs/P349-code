@@ -1,6 +1,7 @@
 #ifndef D2_H
 #define D2_H
 #include "DCLayer.h"
+#include "MinuitFit.h"
 
 #define ND2L1  1	// layer 1 is the closest one to HEX
 #define ND2L2  2
@@ -20,11 +21,11 @@ public:
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();
     void calculate_relative_and_absolute_positions();
-    void calculate_relative_and_absolute_positions_straight();
-    void calculate_relative_and_absolute_positions_inclined();
+    void calculate_wire_positions_in_detector();
     void calculate_distances_from_wires();
     double test_get_chosen_position(int _no_of_layer); // dell it 24.12.16
     data_for_D2_calibration get_data_for_calibration();
+    data_for_D2_track_reco get_data_for_track_reco();
 
     // for event display
     bool plot_event();

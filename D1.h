@@ -24,22 +24,13 @@ public:
     TGraph* get_detector_plot();
     data_for_D1_simple_calibration get_data_for_simple_calibration();
     data_for_D1_calibration get_data_for_calibration();
+    data_for_D1_track_reco get_data_for_track_reco();
     bool plot_event();
 	bool was_correct_event();
 	int get_no_of_layers_with_hits();
     void calculate_distances_from_wires();
-    void calculate_relative_and_absolute_positions_straight(); // now in the function collect_hits_from_all_layers!!
-    void calculate_relative_and_absolute_positions_inclined();
-    void collect_hits_from_all_layers();
-    double test_get_chosen_position(int _no_of_layer, int _add_in_layer);
-    TGraph* plot_track_in_D1();
+    void calculate_wire_positions_in_detector();
     void set_hits_absolute_positions();
-
-    std::vector<double> AllWiresAbsolutePositionX;
-    std::vector<double> AllWiresAbsolutePositionZ;
-
-    std::vector<double> AllHitsAbsolutePositionX;
-    std::vector<double> AllHitsAbsolutePositionZ;
 
 private:
     void calculate_distances_from_wires_in_layer();
@@ -65,12 +56,6 @@ private:
     double distance_between_straight_wires;
     double distance_between_inclined_wires;
     double distance_between_layers;
-
-    // just for the purpose of the event display - with reversed value of the x coordinate
-    std::vector<double> AllHitsAbsolutePositionXEventDisplay;
-
-	// config
-
 };
 
 

@@ -1,6 +1,7 @@
 #ifndef HEX_H
 #define HEX_H
 #include "DCLayer.h"
+#include "MinuitFit.h"
 
 #define NHEXL1  7	// layer 1 is the closest one to START
 #define NHEXL2  6
@@ -27,8 +28,7 @@ public:
     bool was_correct_event();
     int get_no_of_layers_with_hits();
     void calculate_relative_and_absolute_positions();
-    void calculate_relative_and_absolute_positions_straight();
-    void calculate_relative_and_absolute_positions_inclined();
+    void calculate_wire_positions_in_detector();
     void calculate_distances_from_wires();
     double test_get_chosen_position(int _no_of_layer); // dell it 24.12.16
     data_for_HEX_calibration get_data_for_calibration();
@@ -38,6 +38,7 @@ public:
     TGraph* get_detector_plot();
     void collect_hits_from_all_layers();
     void set_hits_absolute_positions();
+    data_for_HEX_track_reco get_data_for_track_reco();
 
 private:
     //void calculate_distances_from_wires();

@@ -36,7 +36,7 @@ struct track_reco_data
 	double x_hit_pos_D1[8];
 	double x_err_hit_pos_D1[8];
 	double z_hit_pos_D1[8];
-	double chi2_D1;
+	double chi2_D1, phi_xz_D1, theta_yz_D1;
 	bool errflag_D1;
 
 	double x_hit_pos_D2[6];
@@ -56,6 +56,8 @@ struct track_reco_data
 		chi2_D1 = -1;
 		chi2_D2 = -1;
 		chi2_HEX = -1;
+		phi_xz_D1 = -1;
+		theta_yz_D1 = -1;
 	}
 };
 
@@ -77,8 +79,8 @@ public:
 	void fit_in_3d_HEX();
 	void deletations();
 
-	double calculate_phi_xz();
-	double calculate_theta_y();
+	double calculate_phi_xz(double vx, double vz);
+	double calculate_theta_yz(double vy, double vz);
 
 private:
 	// ReconstructionLayer_D1 *Layer[8];
