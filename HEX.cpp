@@ -153,8 +153,8 @@ void HEX::calculate_wire_positions_in_detector()
 		for (unsigned int ii = 0; ii < no_of_hits_in_layer; ii++)
 		{
 			// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10
-			if (i==0||i==3||i==6) x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
-			else x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_inclined_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+			if (i==0||i==3||i==6) x = calc_position_in_detector(-(49-(Layer[no_of_layer]->Wire.at(ii))), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+			else x = calc_position_in_detector(-(49-(Layer[no_of_layer]->Wire.at(ii))), distance_between_inclined_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
 
 			Layer[no_of_layer]->AbsoluteXWirePosition.push_back(x);
 			Layer[no_of_layer]->AbsoluteZPosition.push_back(z);

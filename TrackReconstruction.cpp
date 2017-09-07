@@ -19,12 +19,15 @@ TrackReconstruction::TrackReconstruction(const Config &_config)
 	x_lab_position_HEX = _config.HEX_x_lab_position;
 	z_lab_position_HEX = _config.HEX_z_lab_position;
 
-	D1D2_phi_corr = new TH2F("D1D2_phi_corr","D1D2_phi_corr;D1_phi (deg);D2_phi (deg)", 200,75,105,200,75,105);
-	D1HEX_phi_corr = new TH2F("D1HEX_phi_corr","D1HEX_phi_corr;D1_phi (deg);HEX_phi (deg)", 200,75,105,200,75,105);
-	D1D2_theta_corr = new TH2F("D1D2_theta_corr","D1D2_theta_corr;D1_theta (deg);D2_theta (deg)", 200,75,105,200,75,105);
+	D1D2_phi_corr = new TH2F("D1D2_phi_corr","D1D2_phi_corr;D1_phi [deg];D2_phi [deg]", 200,75,105,200,75,105);
+	D1HEX_phi_corr = new TH2F("D1HEX_phi_corr","D1HEX_phi_corr;D1_phi [deg];HEX_phi [deg]", 200,75,105,200,75,105);
+	D1D2_theta_corr = new TH2F("D1D2_theta_corr","D1D2_theta_corr;D1_theta [deg];D2_theta [deg]", 200,75,105,200,75,105);
 	D1_chisq = new TH1F("D1 #chi^{2}","D1 #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
 	D2_chisq = new TH1F("D2 #chi^{2}","D2 #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
-	reco_D2_exp_D1 = new TH2F("recD2_exp_D1","recD2_exp_D1; reconstructed from D1 (cm); expected from D1",400,-20,20,400,-20,20);
+	x_reco_D2_exp_D1 = new TH2F("x_recD2_exp_D1","x_recD2_exp_D1; reconstructed from D1 (cm); expected from D1",400,-20,20,400,-20,20);
+	y_reco_D2_exp_D1 = new TH2F("y_recD2_exp_D1","y_recD2_exp_D1; reconstructed from D1 (cm); expected from D1",400,-20,20,400,-20,20);
+	x_reco_D2_minus_exp_D1 = new TH1F("x_rec_D2_minus_exp_D1","x_rec_D2_minus_exp_D1;difference [cm];N", 200, -1.5, 1);
+	y_reco_D2_minus_exp_D1 = new TH1F("y_rec_D2_minus_exp_D1","y_rec_D2_minus_exp_D1;difference [cm];N", 200, -4, 4);
 }
 
 TrackReconstruction::~TrackReconstruction() { } 
@@ -308,7 +311,10 @@ void TrackReconstruction::save_histos()
 	D2_chisq->Write();
 	D1D2_phi_corr->Write();
 	D1D2_theta_corr->Write();
-	reco_D2_exp_D1->Write();
+	x_reco_D2_exp_D1->Write();
+	y_reco_D2_exp_D1->Write();
+	x_reco_D2_minus_exp_D1->Write();
+	y_reco_D2_minus_exp_D1->Write();
 }
 
 void TrackReconstruction::reconstructed_D2_vs_expected_D1()
@@ -333,6 +339,9 @@ void TrackReconstruction::reconstructed_D2_vs_expected_D1()
 		x_from_D2 = scale*D2_track_vector.X() + D2_track_point.X();
 		y_from_D2 = scale*D2_track_vector.Y() + D2_track_point.Y();
 		//std::cout << x_from_D1 << " " << x_from_D2 << std::endl;
-		reco_D2_exp_D1 -> Fill(y_from_D2, y_from_D1);
+		x_reco_D2_exp_D1 -> Fill(x_from_D2, x_from_D1);
+		y_reco_D2_exp_D1 -> Fill(y_from_D2, y_from_D1);
+		x_reco_D2_minus_exp_D1->Fill(x_from_D2-x_from_D1);
+		y_reco_D2_minus_exp_D1->Fill(y_from_D2-y_from_D1);
 	}
 }

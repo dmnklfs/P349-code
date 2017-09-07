@@ -116,13 +116,13 @@ Config::Config()
 	HEX_z_offset = 0; // up to the beginning of the detector (not: 1st layer)
 	HEX_x_offset = 0;
 	HEX_y_rotation_angle = (0)*3.14/180; // rad
-	HEX_layer_wire_frame_offset[0] = 3.55+4.2;//3.45;
-	HEX_layer_wire_frame_offset[1] = 7.96;//10.65;
-	HEX_layer_wire_frame_offset[2] = 7.06;//9.75;
-	HEX_layer_wire_frame_offset[3] = 3.55+5.1;//4.35;
-	HEX_layer_wire_frame_offset[4] = 7.64;//3.5969;
-	HEX_layer_wire_frame_offset[5] = 8.54;//4.4969;
-	HEX_layer_wire_frame_offset[6] = 3.55+5.1;//4.35;
+	HEX_layer_wire_frame_offset[0] = -26.35;//3.55+4.2;//3.45;
+	HEX_layer_wire_frame_offset[1] = -27.10674122027;//7.96;//10.65;
+	HEX_layer_wire_frame_offset[2] = -28.00674122027;//7.06;//9.75;
+	HEX_layer_wire_frame_offset[3] = -25.45;//3.55+5.1;//4.35;
+	HEX_layer_wire_frame_offset[4] = -30.89325877973;//7.64;//3.5969;
+	HEX_layer_wire_frame_offset[5] = -30.09325877973;//8.54;//4.4969;
+	HEX_layer_wire_frame_offset[6] = -25.45;//3.55+5.1;//4.35;
 	HEX_distance_to_1st_layer = 6.0145;	// z
 	HEX_distance_between_straight_wires = 1.8;		// x
 	HEX_distance_between_inclined_wires = 1.8;
@@ -135,13 +135,13 @@ Config::Config()
 	HEX_layer_angle[4] =-10;	//5
 	HEX_layer_angle[5] =-10;	//6
 	HEX_layer_angle[6] = 0;	//7
-	HEX_no_of_wires[0] = 0;//48;//80;
-	HEX_no_of_wires[1] = 0;//45;//76;
-	HEX_no_of_wires[2] = 0;//45;//76;
-	HEX_no_of_wires[3] = 0;//48;//80;
-	HEX_no_of_wires[4] = 0;//48;//77;
-	HEX_no_of_wires[5] = 0;//48;//77;
-	HEX_no_of_wires[6] = 0;//48;//80;
+	HEX_no_of_wires[0] = 80;
+	HEX_no_of_wires[1] = 77;
+	HEX_no_of_wires[2] = 77;
+	HEX_no_of_wires[3] = 80;
+	HEX_no_of_wires[4] = 76;
+	HEX_no_of_wires[5] = 76;
+	HEX_no_of_wires[6] = 80;
 
 	// this should be read from somewhere
 	double _D1_L1_drift_time_offset[41] =  {40, 40, 40, 46, 46, 46, 46, 46, 46, 46, 

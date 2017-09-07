@@ -102,7 +102,11 @@ private:
 	TH2F *D1D2_theta_corr;
 	TH1F *D1_chisq, *D2_chisq;
 	TH2F *D1HEX_phi_corr;
-	TH2F *reco_D2_exp_D1;
+	TH2F *x_reco_D2_exp_D1;
+	TH2F *y_reco_D2_exp_D1;
+	TH1F *x_reco_D2_minus_exp_D1;
+	TH1F *y_reco_D2_minus_exp_D1;
+
 
 	std::vector<track_reco_data> TrackRecoData;
 
