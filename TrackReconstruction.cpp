@@ -18,6 +18,13 @@ TrackReconstruction::TrackReconstruction(const Config &_config)
 	half_z_dim_HEX = _config.HEX_half_z_dim;
 	x_lab_position_HEX = _config.HEX_x_lab_position;
 	z_lab_position_HEX = _config.HEX_z_lab_position;
+
+	D1D2_phi_corr = new TH2F("D1D2_phi_corr","D1D2_phi_corr;D1_phi (deg);D2_phi (deg)", 200,75,105,200,75,105);
+	D1HEX_phi_corr = new TH2F("D1HEX_phi_corr","D1HEX_phi_corr;D1_phi (deg);HEX_phi (deg)", 200,75,105,200,75,105);
+	D1D2_theta_corr = new TH2F("D1D2_theta_corr","D1D2_theta_corr;D1_theta (deg);D2_theta (deg)", 200,75,105,200,75,105);
+	D1_chisq = new TH1F("D1 #chi^{2}","D1 #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
+	D2_chisq = new TH1F("D2 #chi^{2}","D2 #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
+	reco_D2_exp_D1 = new TH2F("recD2_exp_D1","recD2_exp_D1; reconstructed from D1 (cm); expected from D1",400,-20,20,400,-20,20);
 }
 
 TrackReconstruction::~TrackReconstruction() { } 
@@ -37,7 +44,6 @@ void TrackReconstruction::get_data(data_for_track_reconstruction _single_event_d
 		single_event_data.x_hit_pos_D1[i] = _single_event_data.D1.positionsHitsX[i];
 		single_event_data.x_err_hit_pos_D1[i] = _single_event_data.D1.errorsX[i];
 		single_event_data.z_hit_pos_D1[i] = _single_event_data.D1.positionsZ[i];
-		//std::cout << single_event_data.x_hit_pos_D1[i] << std::endl;
 	}
 	for (int i = 0; i < 6; i++)
 	{
@@ -45,13 +51,45 @@ void TrackReconstruction::get_data(data_for_track_reconstruction _single_event_d
 		single_event_data.x_err_hit_pos_D2[i] = _single_event_data.D2.errorsX[i];
 		single_event_data.z_hit_pos_D2[i] = _single_event_data.D2.positionsZ[i];
 	}
-	for (int i = 0; i < 6; i++)
-	{
-		single_event_data.x_hit_pos_HEX[i] = _single_event_data.HEX.positionsHitsX[i];
-		single_event_data.x_err_hit_pos_HEX[i] = _single_event_data.HEX.errorsX[i];
-		single_event_data.z_hit_pos_HEX[i] = _single_event_data.HEX.positionsZ[i];
-	}
+//	for (int i = 0; i < 6; i++)
+//	{
+//		single_event_data.x_hit_pos_HEX[i] = _single_event_data.HEX.positionsHitsX[i];
+//		single_event_data.x_err_hit_pos_HEX[i] = _single_event_data.HEX.errorsX[i];
+//		single_event_data.z_hit_pos_HEX[i] = _single_event_data.HEX.positionsZ[i];
+//	}
 	TrackRecoData.push_back(single_event_data);
+}
+
+void TrackReconstruction::set_detectors_positions_on_vectors()
+{
+	for (int i = 0; i < TrackRecoData.size(); i++)
+	{
+		TrackRecoData.at(i).track3d_fit_point_D1.SetX(x_lab_position_D1 + TrackRecoData.at(i).track3d_fit_point_D1.X());
+		TrackRecoData.at(i).track3d_fit_point_D1.SetZ(z_lab_position_D1 + TrackRecoData.at(i).track3d_fit_point_D1.Z());
+		TrackRecoData.at(i).track3d_fit_point_D2.SetX(x_lab_position_D2 + TrackRecoData.at(i).track3d_fit_point_D2.X());
+		TrackRecoData.at(i).track3d_fit_point_D2.SetZ(z_lab_position_D2 + TrackRecoData.at(i).track3d_fit_point_D2.Z());
+	}
+}
+
+void TrackReconstruction::set_detectors_positions_on_points()
+{
+	for (unsigned int i = 0; i < TrackRecoData.size(); i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			//std::cout << i << " " << j << " " << TrackRecoData.at(i).x_hit_pos_D1[j] << std::endl;
+			TrackRecoData.at(i).x_hit_pos_D1[j] = TrackRecoData.at(i).x_hit_pos_D1[j] + x_lab_position_D1;
+			//std::cout << i << " " << j << " " << TrackRecoData.at(i).x_hit_pos_D1[j] << std::endl;
+			TrackRecoData.at(i).z_hit_pos_D1[j] = TrackRecoData.at(i).z_hit_pos_D1[j] + z_lab_position_D1;
+		}
+		for (int j = 0; j < 6; j++)
+		{
+			TrackRecoData.at(i).x_hit_pos_D2[j] = TrackRecoData.at(i).x_hit_pos_D2[j]+ x_lab_position_D2;
+			//std::cout << i << " " << j << " " << TrackRecoData.at(i).x_hit_pos_D1[j] << std::endl;
+			TrackRecoData.at(i).z_hit_pos_D2[j] = TrackRecoData.at(i).z_hit_pos_D2[j]+ z_lab_position_D2;
+			//std::cout << i << " " << j << " " << TrackRecoData.at(i).x_hit_pos_D1[j] << std::endl;
+		}
+	}
 }
 
 void TrackReconstruction::fit_in_3d_D1()
@@ -94,17 +132,21 @@ void TrackReconstruction::fit_in_3d_D1()
 		fit3d -> Fit3d::calculate_intersection_points();
 		fit3d -> Fit3d::calculate_3d_track_parameters();
 		fit3d -> Fit3d::make_fit_to_lines(false);
-		track3d_fit_point_D1 = fit3d -> Fit3d::return_track_point();
-		track3d_fit_vector_D1 = fit3d -> Fit3d::return_track_vector();
+		TrackRecoData.at(i).track3d_fit_point_D1 = fit3d -> Fit3d::return_track_point();
+		TrackRecoData.at(i).track3d_fit_vector_D1 = fit3d -> Fit3d::return_track_vector();
+		//std::cout << "D1 " << TrackRecoData.at(i).track3d_fit_point_D1.X() << std::endl;
+		//std::cout << "D1 " << TrackRecoData.at(i).track3d_fit_point_D1.Y() << std::endl;
+		//std::cout << "D1 " << TrackRecoData.at(i).track3d_fit_point_D1.Z() << std::endl;
 
 		TrackRecoData.at(i).errflag_D1 = fit3d -> Fit3d::err_flag();
 		if ((!(fit3d -> Fit3d::err_flag())))
 		{
 			TrackRecoData.at(i).chi2_D1 = fit3d -> Fit3d::get_chisq();
-			TrackRecoData.at(i).phi_xz_D1 = calculate_phi_xz(track3d_fit_vector_D1.X(), track3d_fit_vector_D1.Z());
-			TrackRecoData.at(i).theta_yz_D1 = calculate_theta_yz(track3d_fit_vector_D1.Y(), track3d_fit_vector_D1.Z());
+			D1_chisq->Fill(TrackRecoData.at(i).chi2_D1);
+			TrackRecoData.at(i).phi_xz_D1 = calculate_phi_xz(TrackRecoData.at(i).track3d_fit_vector_D1.X(), TrackRecoData.at(i).track3d_fit_vector_D1.Z());
+			TrackRecoData.at(i).theta_yz_D1 = calculate_theta_yz(TrackRecoData.at(i).track3d_fit_vector_D1.Y(), TrackRecoData.at(i).track3d_fit_vector_D1.Z());
 			//temp_chi2_prob = TMath::Prob(temp_chi2,4);
-			std::cout << TrackRecoData.at(i).phi_xz_D1 << std::endl;
+			//std::cout << TrackRecoData.at(i).phi_xz_D1 << std::endl;
 			//std::cout << TrackRecoData.at(i).theta_yz_D1 << std::endl;
 		}
 		delete fit3d;
@@ -147,17 +189,21 @@ void TrackReconstruction::fit_in_3d_D2()
 		fit3d -> Fit3d_D2::calculate_intersection_points();
 		fit3d -> Fit3d_D2::calculate_3d_track_parameters();
 		fit3d -> Fit3d_D2::make_fit_to_lines(false);
-		track3d_fit_point_D2 = fit3d -> Fit3d_D2::return_track_point();
-		track3d_fit_vector_D2 = fit3d -> Fit3d_D2::return_track_vector();
+		TrackRecoData.at(i).track3d_fit_point_D2 = fit3d -> Fit3d_D2::return_track_point();
+		TrackRecoData.at(i).track3d_fit_vector_D2 = fit3d -> Fit3d_D2::return_track_vector();
+		//std::cout << "D2 " << TrackRecoData.at(i).track3d_fit_point_D2.X() << std::endl;
+		//std::cout << "D2 " << TrackRecoData.at(i).track3d_fit_point_D2.Y() << std::endl;
+		//std::cout << "D2 " << TrackRecoData.at(i).track3d_fit_point_D2.Z() << std::endl;
 
 		TrackRecoData.at(i).errflag_D2 = fit3d -> Fit3d_D2::err_flag();
 		if ((!(fit3d -> Fit3d_D2::err_flag())))
 		{
 			TrackRecoData.at(i).chi2_D2 = fit3d -> Fit3d_D2::get_chisq();
-			TrackRecoData.at(i).phi_xz_D2 = calculate_phi_xz(track3d_fit_vector_D2.X(), track3d_fit_vector_D2.Z());
-			TrackRecoData.at(i).theta_yz_D2 = calculate_theta_yz(track3d_fit_vector_D2.Y(), track3d_fit_vector_D2.Z());
+			D2_chisq->Fill(TrackRecoData.at(i).chi2_D2);
+			TrackRecoData.at(i).phi_xz_D2 = calculate_phi_xz(TrackRecoData.at(i).track3d_fit_vector_D2.X(), TrackRecoData.at(i).track3d_fit_vector_D2.Z());
+			TrackRecoData.at(i).theta_yz_D2 = calculate_theta_yz(TrackRecoData.at(i).track3d_fit_vector_D2.Y(), TrackRecoData.at(i).track3d_fit_vector_D2.Z());
 			//temp_chi2_prob = TMath::Prob(temp_chi2,4);
-			std::cout << TrackRecoData.at(i).phi_xz_D2 << std::endl;
+			//std::cout << TrackRecoData.at(i).phi_xz_D2 << std::endl;
 			//std::cout << TrackRecoData.at(i).theta_yz_D2 << std::endl;
 		}
 		delete fit3d;
@@ -200,17 +246,17 @@ void TrackReconstruction::fit_in_3d_HEX()
 		fit3d -> Fit3d_HEX::calculate_intersection_points();
 		fit3d -> Fit3d_HEX::calculate_3d_track_parameters();
 		fit3d -> Fit3d_HEX::make_fit_to_lines(false);
-		track3d_fit_point_HEX = fit3d -> Fit3d_HEX::return_track_point();
-		track3d_fit_vector_HEX = fit3d -> Fit3d_HEX::return_track_vector();
+		TrackRecoData.at(i).track3d_fit_point_HEX = fit3d -> Fit3d_HEX::return_track_point();
+		TrackRecoData.at(i).track3d_fit_vector_HEX = fit3d -> Fit3d_HEX::return_track_vector();
 
 		TrackRecoData.at(i).errflag_HEX = fit3d -> Fit3d_HEX::err_flag();
 		if ((!(fit3d -> Fit3d_HEX::err_flag())))
 		{
 			TrackRecoData.at(i).chi2_HEX = fit3d -> Fit3d_HEX::get_chisq();
-			TrackRecoData.at(i).phi_xz_HEX = calculate_phi_xz(track3d_fit_vector_HEX.X(), track3d_fit_vector_HEX.Z());
-			TrackRecoData.at(i).theta_yz_HEX = calculate_theta_yz(track3d_fit_vector_HEX.Y(), track3d_fit_vector_HEX.Z());
+			TrackRecoData.at(i).phi_xz_HEX = calculate_phi_xz(TrackRecoData.at(i).track3d_fit_vector_HEX.X(), TrackRecoData.at(i).track3d_fit_vector_HEX.Z());
+			TrackRecoData.at(i).theta_yz_HEX = calculate_theta_yz(TrackRecoData.at(i).track3d_fit_vector_HEX.Y(), TrackRecoData.at(i).track3d_fit_vector_HEX.Z());
 			//temp_chi2_prob = TMath::Prob(temp_chi2,4);
-			std::cout << TrackRecoData.at(i).phi_xz_HEX << std::endl;
+			//std::cout << TrackRecoData.at(i).phi_xz_HEX << std::endl;
 			//std::cout << TrackRecoData.at(i).theta_yz_HEX << std::endl;
 		}
 		delete fit3d;
@@ -237,4 +283,56 @@ double TrackReconstruction::calculate_theta_yz(double vy, double vz)
 	vy = vy*pow(norm,-1);
 	theta_yz = TMath::ACos(vy)*180*pow(3.14,-1);
 	return theta_yz;
+}
+
+void TrackReconstruction::plot_D1_d2_phi_corr()
+{
+	for (unsigned int i = 0; i < TrackRecoData.size(); i++)
+	{
+		D1D2_phi_corr -> Fill(TrackRecoData.at(i).phi_xz_D1, TrackRecoData.at(i).phi_xz_D2);
+		D1D2_theta_corr -> Fill(TrackRecoData.at(i).theta_yz_D1, TrackRecoData.at(i).theta_yz_D2);
+		//D1HEX_phi_corr -> Fill(TrackRecoData.at(i).phi_xz_D1, TrackRecoData.at(i).phi_xz_HEX);
+	}
+	//TCanvas *c1 = new TCanvas("a","",500,500);
+	//D1D2_phi_corr -> Draw("colz");
+	//TCanvas *c2 = new TCanvas("b","",500,500);
+	//D1D2_theta_corr -> Draw("colz");
+	//c1 -> SaveAs("results/D1D2_phi_corr.root");
+	//c2 -> SaveAs("results/D1D2_theta_corr.png");
+}
+
+void TrackReconstruction::save_histos()
+{
+	gDirectory->pwd();
+	D1_chisq->Write();
+	D2_chisq->Write();
+	D1D2_phi_corr->Write();
+	D1D2_theta_corr->Write();
+	reco_D2_exp_D1->Write();
+}
+
+void TrackReconstruction::reconstructed_D2_vs_expected_D1()
+{
+	TVector3 D1_track_vector, D2_track_vector, D1_track_point, D2_track_point;
+	double z_distance, scale;
+	double x_from_D1, y_from_D1, x_from_D2, y_from_D2;
+	for (unsigned int i = 0; i < TrackRecoData.size(); i++)
+	{
+		D1_track_vector = TrackRecoData.at(i).track3d_fit_vector_D1;
+		D2_track_vector = TrackRecoData.at(i).track3d_fit_vector_D2;
+		D1_track_point = TrackRecoData.at(i).track3d_fit_point_D1;
+		D2_track_point = TrackRecoData.at(i).track3d_fit_point_D2;
+		//std::cout << "D1_track_point " << D1_track_point.Z() << std::endl;
+		//std::cout << "D2_track_point " << D2_track_point.Z() << std::endl;
+		//std::cout << "D1_track_vector " << D1_track_vector.Z() << std::endl;
+		//std::cout << "D2_track_vector " << D2_track_vector.Z() << std::endl;
+		scale = D1_track_point.Z() - 59.6;
+		x_from_D1 = scale*D1_track_vector.X() + D1_track_point.X();
+		y_from_D1 = scale*D1_track_vector.Y() + D1_track_point.Y();
+		scale = 7.8;
+		x_from_D2 = scale*D2_track_vector.X() + D2_track_point.X();
+		y_from_D2 = scale*D2_track_vector.Y() + D2_track_point.Y();
+		//std::cout << x_from_D1 << " " << x_from_D2 << std::endl;
+		reco_D2_exp_D1 -> Fill(y_from_D2, y_from_D1);
+	}
 }

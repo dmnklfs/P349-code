@@ -51,6 +51,10 @@ struct track_reco_data
 	double chi2_HEX, phi_xz_HEX, theta_yz_HEX;
 	bool errflag_HEX;
 
+	TVector3 track3d_fit_point_D1, track3d_fit_vector_D1;
+	TVector3 track3d_fit_point_D2, track3d_fit_vector_D2;
+	TVector3 track3d_fit_point_HEX, track3d_fit_vector_HEX;
+
 	track_reco_data() // make correct init for errflags
 	{
 		chi2_D1 = -1;
@@ -86,21 +90,21 @@ public:
 	double calculate_phi_xz(double vx, double vz);
 	double calculate_theta_yz(double vy, double vz);
 
+	void plot_D1_d2_phi_corr();
+	void save_histos();
+
+	void set_detectors_positions_on_vectors();
+	void set_detectors_positions_on_points();
+	void reconstructed_D2_vs_expected_D1(); // expected in D2 from reconstruction in D1
+
 private:
-	// ReconstructionLayer_D1 *Layer[8];
-	// ReconstructionLayer_D2 *Layer[6];
-	// ReconstructionLayer_HEX *Layer[7];
+	TH2F *D1D2_phi_corr;
+	TH2F *D1D2_theta_corr;
+	TH1F *D1_chisq, *D2_chisq;
+	TH2F *D1HEX_phi_corr;
+	TH2F *reco_D2_exp_D1;
 
 	std::vector<track_reco_data> TrackRecoData;
-
-	TVector3 track3d_fit_point_D1, track3d_fit_vector_D1;
-	TVector3 track3d_fit_point_D2, track3d_fit_vector_D2;
-	TVector3 track3d_fit_point_HEX, track3d_fit_vector_HEX;
-
-	std::vector<double> chisq_D1; // remove? 05.09.2017
-	std::vector<double> chisq_D2;
-	std::vector<double> chisq_HEX;
-
 
 	double half_x_dim_D1;
 	double half_x_dim_D2;
