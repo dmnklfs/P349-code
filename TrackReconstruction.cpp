@@ -19,13 +19,17 @@ TrackReconstruction::TrackReconstruction(const Config &_config)
 	x_lab_position_HEX = _config.HEX_x_lab_position;
 	z_lab_position_HEX = _config.HEX_z_lab_position;
 
+	D1_phi = new TH1F("D1_phi", "D1_phi; phi_xz [deg]; N", 200, 75, 105);
+	D1_theta = new TH1F("D1_theta", "D1_theta; theta_xz [deg]; N", 200, 75, 105);
+	D2_phi = new TH1F("D2_phi", "D2_phi; phi_xz [deg]; N", 200, 75, 105);
+	D2_theta = new TH1F("D2_theta", "D2_theta; theta_yz [deg]; N", 200, 75, 105);
 	D1D2_phi_corr = new TH2F("D1D2_phi_corr","D1D2_phi_corr;D1_phi [deg];D2_phi [deg]", 200,75,105,200,75,105);
 	D1HEX_phi_corr = new TH2F("D1HEX_phi_corr","D1HEX_phi_corr;D1_phi [deg];HEX_phi [deg]", 200,75,105,200,75,105);
 	D1D2_theta_corr = new TH2F("D1D2_theta_corr","D1D2_theta_corr;D1_theta [deg];D2_theta [deg]", 200,75,105,200,75,105);
 	D1_chisq = new TH1F("D1 #chi^{2}","D1 #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
 	D2_chisq = new TH1F("D2 #chi^{2}","D2 #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
-	x_reco_D2_exp_D1 = new TH2F("x_recD2_exp_D1","x_recD2_exp_D1; reconstructed from D1 (cm); expected from D1",400,-20,20,400,-20,20);
-	y_reco_D2_exp_D1 = new TH2F("y_recD2_exp_D1","y_recD2_exp_D1; reconstructed from D1 (cm); expected from D1",400,-20,20,400,-20,20);
+	x_reco_D2_exp_D1 = new TH2F("x_recD2_exp_D1","x_recD2_exp_D1; reconstructed from D2 (cm); expected from D1",400,-20,20,400,-20,20);
+	y_reco_D2_exp_D1 = new TH2F("y_recD2_exp_D1","y_recD2_exp_D1; reconstructed from D2 (cm); expected from D1",400,-20,20,400,-20,20);
 	x_reco_D2_minus_exp_D1 = new TH1F("x_rec_D2_minus_exp_D1","x_rec_D2_minus_exp_D1;difference [cm];N", 200, -1.5, 1);
 	y_reco_D2_minus_exp_D1 = new TH1F("y_rec_D2_minus_exp_D1","y_rec_D2_minus_exp_D1;difference [cm];N", 200, -4, 4);
 }
@@ -294,6 +298,10 @@ void TrackReconstruction::plot_D1_d2_phi_corr()
 	{
 		D1D2_phi_corr -> Fill(TrackRecoData.at(i).phi_xz_D1, TrackRecoData.at(i).phi_xz_D2);
 		D1D2_theta_corr -> Fill(TrackRecoData.at(i).theta_yz_D1, TrackRecoData.at(i).theta_yz_D2);
+		D1_phi -> Fill(TrackRecoData.at(i).phi_xz_D1);
+		D1_theta -> Fill(TrackRecoData.at(i).theta_yz_D1);
+		D2_phi -> Fill(TrackRecoData.at(i).phi_xz_D2);
+		D2_theta -> Fill(TrackRecoData.at(i).theta_yz_D2);
 		//D1HEX_phi_corr -> Fill(TrackRecoData.at(i).phi_xz_D1, TrackRecoData.at(i).phi_xz_HEX);
 	}
 	//TCanvas *c1 = new TCanvas("a","",500,500);
@@ -309,9 +317,15 @@ void TrackReconstruction::save_histos()
 	gDirectory->pwd();
 	D1_chisq->Write();
 	D2_chisq->Write();
+	D1_phi -> Write();
+	D1_theta -> Write();
+	D2_phi -> Write();
+	D2_theta -> Write();
 	D1D2_phi_corr->Write();
 	D1D2_theta_corr->Write();
 	x_reco_D2_exp_D1->Write();
+	x_reco_D2_exp_D1->ProjectionX()->Write();
+	x_reco_D2_exp_D1->ProjectionY()->Write();
 	y_reco_D2_exp_D1->Write();
 	x_reco_D2_minus_exp_D1->Write();
 	y_reco_D2_minus_exp_D1->Write();

@@ -25,10 +25,10 @@ Hist::Hist()
 	//init_fiber_histos_rough();
 	//init_inter_histos_rough();
 
-	//init_start_histos_preselected();
-	//init_tof_histos_preselected();
-	//init_D1_histos_preselected();
-	//init_D2_histos_preselected();
+	init_start_histos_preselected();
+	init_tof_histos_preselected();
+	init_D1_histos_preselected();
+	init_D2_histos_preselected();
 	//init_HEX_histos_preselected();
 	//init_fiber_histos_preselected();
 	//init_inter_histos_preselected();

@@ -98,6 +98,7 @@ public:
 	void reconstructed_D2_vs_expected_D1(); // expected in D2 from reconstruction in D1
 
 private:
+	TH1F *D1_phi, *D1_theta, *D2_phi, *D2_theta;
 	TH2F *D1D2_phi_corr;
 	TH2F *D1D2_theta_corr;
 	TH1F *D1_chisq, *D2_chisq;

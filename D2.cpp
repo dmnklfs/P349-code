@@ -131,7 +131,10 @@ void D2::calculate_wire_positions_in_detector()
 			//std::cout << "no_of_wires[no_of_layer] " << no_of_wires[no_of_layer] << std::endl;
 			//std::cout << "Wire.at(ii) " << Layer[no_of_layer]->Wire.at(ii) << std::endl;
 			// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10
-			if (i==4||i==5) x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+			if (i==4||i==5)
+			{
+				x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+			}
 			else x = calc_position_in_detector(no_of_wires[no_of_layer]-(Layer[no_of_layer]->Wire.at(ii)), distance_between_inclined_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
 
 			Layer[no_of_layer]->AbsoluteXWirePosition.push_back(x);

@@ -86,7 +86,7 @@ Config::Config()
 	D2_half_z_dim = 0.5*15.6;
 	//D2_x_lab_position = 0;
     //D2_z_lab_position = 0;
-	D2_x_lab_position = -18.4;
+	D2_x_lab_position = -18.4 + 0.5143;
     D2_z_lab_position = -67.4;
 	D2_z_offset = 0; // up to the beginning of the detector (not: 1st layer)
 	D2_x_offset = 0;
