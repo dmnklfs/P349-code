@@ -153,9 +153,10 @@ void HEX::calculate_wire_positions_in_detector()
 		for (unsigned int ii = 0; ii < no_of_hits_in_layer; ii++)
 		{
 			// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10
-			if (i==0||i==3||i==6) x = calc_position_in_detector(-(49-(Layer[no_of_layer]->Wire.at(ii))), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
-			else x = calc_position_in_detector(-(49-(Layer[no_of_layer]->Wire.at(ii))), distance_between_inclined_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
-
+			//std::cout << "ok" << std::endl;
+			x = calc_position_in_detector((Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
+			//std::cout << "wires " << i << " " << Layer[no_of_layer]->Wire.at(ii) << " " << x << std::endl;
+			//std::cout << "wires r " << i << " " << no_of_wires[no_of_layer]-(49-Layer[no_of_layer]->Wire.at(ii)) << " " << x << std::endl;
 			Layer[no_of_layer]->AbsoluteXWirePosition.push_back(x);
 			Layer[no_of_layer]->AbsoluteZPosition.push_back(z);
 		}
@@ -176,8 +177,9 @@ void HEX::set_hits_absolute_positions() // works only if there is exactly one hi
 	layer_pairs[5] = 5;
 	for (int i = 0; i < 3; i++)
 	{
-		wirepos1 = Layer[2*i  ]->AbsoluteXWirePosition.at(0);
-		wirepos2 = Layer[2*i+1]->AbsoluteXWirePosition.at(0);
+		wirepos1 = Layer[layer_pairs[2*i]]  ->AbsoluteXWirePosition.at(0);
+		wirepos2 = Layer[layer_pairs[2*i+1]]->AbsoluteXWirePosition.at(0);
+		//if (i==2) std::cout << wirepos1 << " " << wirepos2 << std::endl;
 		if (wirepos1 > wirepos2)
 		{
 			left_right[layer_pairs[2*i]]	= -1;
@@ -189,18 +191,15 @@ void HEX::set_hits_absolute_positions() // works only if there is exactly one hi
 			left_right[layer_pairs[2*i+1]] 	= -1;
 		}
 	}
-
+	//std::cout << left_right[0] << left_right[3] << std::endl;
 	for (int i = 0; i < 6; i++)
 	{
 		wirex = Layer[i]-> AbsoluteXWirePosition.at(0);
-		//std::cout << " ok " << std::endl;
-		//std::cout << left_right[i] << std::endl;
-		//std::cout << wirex << std::endl;
-		//std::cout << " ok2 " << std::endl;
 		dist_from_wire = Layer[i]-> HitsDistancesFromWires.at(0);
 		if (i==0||i==3||i==6)       hitx = wirex+left_right[i]*dist_from_wire;//*pow(TMath::Cos(31*TMath::DegToRad()),-1);
-		if (i==1||i==2||i==4||i==5) hitx = wirex+left_right[i]*dist_from_wire*pow(TMath::Cos(10*TMath::DegToRad()),-1);
+		else hitx = wirex+left_right[i]*dist_from_wire*1.773*pow(1.8,-1)*pow(TMath::Cos(10*TMath::DegToRad()),-1);
 		Layer[i]->AbsoluteXHitPosition.push_back(hitx);
+		//std::cout << i << " " << hitx << std::endl;
 		//std::cout << "layer " << i << " " << Layer[i]->AbsoluteXHitPosition.at(0) << std::endl;
 	}
 }

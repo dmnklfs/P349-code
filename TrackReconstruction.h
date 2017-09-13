@@ -77,6 +77,10 @@ public:
 	TrackReconstruction(const Config &_config);
 	~TrackReconstruction();
 
+	void set_rec_in_D1(bool lval);
+	void set_rec_in_D2(bool lval);
+	void set_rec_in_HEX(bool lval);
+
 	void get_data(data_for_track_reconstruction _single_event_data);
 	void tell_no_of_events();
 	void fit_events_in_D1();
@@ -98,15 +102,21 @@ public:
 	void reconstructed_D2_vs_expected_D1(); // expected in D2 from reconstruction in D1
 
 private:
-	TH1F *D1_phi, *D1_theta, *D2_phi, *D2_theta;
+	bool rec_D1, rec_D2, rec_HEX;
+
+	TH1F *D1_phi, *D1_theta, *D2_phi, *D2_theta, *HEX_phi, *HEX_theta;
 	TH2F *D1D2_phi_corr;
 	TH2F *D1D2_theta_corr;
-	TH1F *D1_chisq, *D2_chisq;
+	TH1F *D1_chisq, *D2_chisq, *HEX_chisq;
 	TH2F *D1HEX_phi_corr;
 	TH2F *x_reco_D2_exp_D1;
 	TH2F *y_reco_D2_exp_D1;
 	TH1F *x_reco_D2_minus_exp_D1;
+	TH2F *x_reco_HEX_exp_D1;
+	TH2F *y_reco_HEX_exp_D1;
 	TH1F *y_reco_D2_minus_exp_D1;
+	TH1F *distances[6];
+
 
 
 	std::vector<track_reco_data> TrackRecoData;

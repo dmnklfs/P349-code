@@ -165,6 +165,7 @@ void Calibration3d_HEX::get_data(data_for_HEX_calibration _single_event_data)
 	layer_pairs[5] = 5;
 	for (int i = 0; i < 3; i++)
 	{
+		//std::cout << "pair " << i << std::endl;
 		wirepos1 = _single_event_data.positionsX[layer_pairs[2*i]];
 		//std::cout << layer_pairs[2*i] << " " << wirepos1 << std::endl;
 		wirepos2 = _single_event_data.positionsX[layer_pairs[2*i+1]];
@@ -179,6 +180,7 @@ void Calibration3d_HEX::get_data(data_for_HEX_calibration _single_event_data)
 			left_right[layer_pairs[2*i]] 	= +1;
 			left_right[layer_pairs[2*i+1]] 	= -1;
 		}
+		//std::cout << left_right[layer_pairs[2*i]] << " " << left_right[layer_pairs[2*i+1]] << std::endl;
 	}
 	for (int i = 0; i < 6; i++)
 	{
@@ -295,14 +297,14 @@ void Calibration3d_HEX::fit_in_3d()
 		for (int j = 0; j < 6; j++)
 		{
 			//std::cout << "   for fitting... " << std::endl;
-			//std::cout << "   layer " << j << std::endl;
+			std::cout << "   layer " << j << std::endl;
 			wires_positionsX_all[j] = Layer[j]->CalibrationData.at(i).wire_pos_X;
 			hits_positionsX_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_X;
 			hits_positionsZ_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Z;
 			if (no_of_iteration==0) errors_all[j]=1;
 			else errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
-			//std::cout << "   wires_positionsX_all[j] " << wires_positionsX_all[j] << std::endl;
-			//std::cout << "   hits_positionsX_all[j] " << hits_positionsX_all[j] << std::endl;
+			std::cout << "   wires_positionsX_all[j] " << wires_positionsX_all[j] << std::endl;
+			std::cout << "   hits_positionsX_all[j] " << hits_positionsX_all[j] << std::endl;
 			//std::cout << "   hits_positionsZ_all[j] " << hits_positionsZ_all[j] << std::endl;
 			//std::cout << "   errors_all[j] " << errors_all[j] << std::endl;
 		}
