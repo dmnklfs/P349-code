@@ -32,7 +32,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
 	// if ( (start && tof && D1 && D2 && HEX && Start::getTimeUp()<10 && Start::getTimeDown()<10) || stage == 2)
-	if ( (start&&D2&&HEX&&D1&&tof) || stage == 2)
+	if ( (start&&HEX&&tof) || stage == 2)
 	{
 		return true;
 	}
@@ -90,13 +90,13 @@ double SingleEvent::getTOF()
 
 void SingleEvent::test_calculate_distances()
 {
-	D1::calculate_distances_from_wires();
-	D1::calculate_wire_positions_in_detector();
-	D1::set_hits_absolute_positions();
-	
-	D2::calculate_distances_from_wires();
-	D2::calculate_wire_positions_in_detector();
-	D2::set_hits_absolute_positions();
+//	D1::calculate_distances_from_wires();
+//	D1::calculate_wire_positions_in_detector();
+//	D1::set_hits_absolute_positions();
+//	
+//	D2::calculate_distances_from_wires();
+//	D2::calculate_wire_positions_in_detector();
+//	D2::set_hits_absolute_positions();
 
 	HEX::calculate_distances_from_wires();
 	HEX::calculate_wire_positions_in_detector();

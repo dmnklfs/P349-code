@@ -95,9 +95,10 @@ bool HEX::was_correct_event()
 		pair2 = false;
 		pair3 = false;
 		if (wire4==wire1||wire4+1==wire1) pair1 = true;
+		//if ((wire2==wire1-1||wire2==wire1-2)&&(wire3==wire1||wire3==wire1-1)&&(wire2==wire3||wire3==wire2+1)) pair2 = true;
+		//if ((wire5==wire1+1||wire5==wire1+2)&&(wire6==wire1||wire6==wire1+1)&&(wire5==wire6||wire6==wire5-1)) pair3 = true;
 		if (wire2==wire3||wire3==wire2+1) pair2 = true;
 		if (wire5==wire6||wire6==wire5-1) pair3 = true;
-
 		if (pair1&&pair2&&(pair3)) correct_event = true;
 	}
 
@@ -224,6 +225,7 @@ data_for_HEX_track_reco HEX::get_data_for_track_reco() // i need here only infor
 	data_for_HEX_track_reco data_for_calibration;
 	for (int i = 0; i < 6; i++)
 	{
+		data_for_calibration.positionsWiresX[i]	= Layer[i] -> Wire.at(0);
 		data_for_calibration.positionsHitsX[i]	= Layer[i] -> AbsoluteXHitPosition.at(0);
 		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
 		data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);

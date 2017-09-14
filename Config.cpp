@@ -111,17 +111,17 @@ Config::Config()
 
 	HEX_half_x_dim = 0.5*150.0; // 0.5 * detector dimensions
 	HEX_half_z_dim = 0.5*29.3;
-	HEX_x_lab_position = 35;
-    HEX_z_lab_position = -117.4;
+	HEX_x_lab_position = 35+0.17;
+    HEX_z_lab_position = -139.8;
 	HEX_z_offset = 0; // up to the beginning of the detector (not: 1st layer)
 	HEX_x_offset = 0;
 	HEX_y_rotation_angle = (0)*3.14/180; // rad
 	HEX_layer_wire_frame_offset[0] = 0.0;//-1.8;//3.55+4.2;//3.45;
-	HEX_layer_wire_frame_offset[1] = 3.67-1.8+0.3;//0.93;//3.5265396142;//7.96;//10.65;
-	HEX_layer_wire_frame_offset[2] = 2.77-1.8+0.3;//1.83;//2.6265396142;//7.06;//9.75;
+	HEX_layer_wire_frame_offset[1] = 2.17;//2.7;//2.17;//3.67-1.8+0.3;//0.93;//3.5265396142;//7.96;//10.65;
+	HEX_layer_wire_frame_offset[2] = 1.27;//1.8;//1.27;//2.77-1.8+0.3;//1.83;//2.6265396142;//7.06;//9.75;
 	HEX_layer_wire_frame_offset[3] = 0.9;//-0.9;//3.55+5.1;//4.35;
-	HEX_layer_wire_frame_offset[4] = 3.53-5.8+0.1;//4.54;//-12.4265396142;//7.64;//3.5969;
-	HEX_layer_wire_frame_offset[5] = 4.43-5.8+0.1;//3.77;//-11.6265396142;//8.54;//4.4969;
+	HEX_layer_wire_frame_offset[4] =-2.17;//-2.25;//-2.17;//3.53-5.8+0.1;//4.54;//-12.4265396142;//7.64;//3.5969;
+	HEX_layer_wire_frame_offset[5] =-1.27;//-1.35;//-1.27;//4.43-5.8+0.1;//3.77;//-11.6265396142;//8.54;//4.4969;
 	HEX_layer_wire_frame_offset[6] = 0.9;//-0.9;//3.55+5.1;//4.35;
 	HEX_distance_to_1st_layer = 6.0145;	// z
 	HEX_distance_between_straight_wires = 1.8;		// x

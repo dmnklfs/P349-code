@@ -45,7 +45,7 @@ struct track_reco_data
 	double chi2_D2, phi_xz_D2, theta_yz_D2;
 	bool errflag_D2;
 
-	double x_hit_pos_HEX[7];
+	double x_hit_pos_HEX[7],x_wire_pos_HEX[7];
 	double x_err_hit_pos_HEX[7];
 	double z_hit_pos_HEX[7];
 	double chi2_HEX, phi_xz_HEX, theta_yz_HEX;
@@ -104,18 +104,19 @@ public:
 private:
 	bool rec_D1, rec_D2, rec_HEX;
 
-	TH1F *D1_phi, *D1_theta, *D2_phi, *D2_theta, *HEX_phi, *HEX_theta;
-	TH2F *D1D2_phi_corr;
-	TH2F *D1D2_theta_corr;
 	TH1F *D1_chisq, *D2_chisq, *HEX_chisq;
-	TH2F *D1HEX_phi_corr;
-	TH2F *x_reco_D2_exp_D1;
-	TH2F *y_reco_D2_exp_D1;
-	TH1F *x_reco_D2_minus_exp_D1;
-	TH2F *x_reco_HEX_exp_D1;
-	TH2F *y_reco_HEX_exp_D1;
-	TH1F *y_reco_D2_minus_exp_D1;
+	TH1F *D1_phi, *D1_theta, *D2_phi, *D2_theta, *HEX_phi, *HEX_theta;
+	TH2F *D1D2_phi_corr, *D1D2_theta_corr;
+	TH2F *D1HEX_phi_corr, *D1HEX_theta_corr;;
+	TH2F *x_reco_D2_exp_D1, *y_reco_D2_exp_D1;
+	TH1F *x_reco_D2_minus_exp_D1, *y_reco_D2_minus_exp_D1;
+	TH2F *x_reco_HEX_exp_D1, *y_reco_HEX_exp_D1;
+	TH1F *x_reco_HEX_minus_exp_D1, *y_reco_HEX_minus_exp_D1;
 	TH1F *distances[6];
+	TH2F *wire_corrs[6];
+	TH2F *hits_corrs[6];
+	TH1F *wire_no_diffs[6];
+
 
 
 

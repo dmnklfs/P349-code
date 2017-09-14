@@ -23,30 +23,54 @@ TrackReconstruction::TrackReconstruction(const Config &_config)
 	x_lab_position_HEX = _config.HEX_x_lab_position;
 	z_lab_position_HEX = _config.HEX_z_lab_position;
 
+	// D1
+	D1_chisq = new TH1F("D1 #chi^{2}","D1 #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
 	D1_phi = new TH1F("D1_phi", "D1_phi; phi_xz [deg]; N", 200, 75, 105);
 	D1_theta = new TH1F("D1_theta", "D1_theta; theta_xz [deg]; N", 200, 75, 105);
+
+	//D2
+	D2_chisq = new TH1F("D2 #chi^{2}","D2 #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
 	D2_phi = new TH1F("D2_phi", "D2_phi; phi_xz [deg]; N", 200, 75, 105);
 	D2_theta = new TH1F("D2_theta", "D2_theta; theta_yz [deg]; N", 200, 75, 105);
+
+	//HEX
 	HEX_phi = new TH1F("HEX_phi", "HEX_phi; phi_xz [deg]; N", 200, 75, 105);
-	HEX_theta = new TH1F("HEX_theta", "HEX_theta; theta_yz [deg]; N", 1000, 0, 180);	
-	D1D2_phi_corr = new TH2F("D1D2_phi_corr","D1D2_phi_corr;D1_phi [deg];D2_phi [deg]", 200,75,105,200,75,105);
-	D1HEX_phi_corr = new TH2F("D1HEX_phi_corr","D1HEX_phi_corr;D1_phi [deg];HEX_phi [deg]", 200,75,105,200,75,105);
-	D1D2_theta_corr = new TH2F("D1D2_theta_corr","D1D2_theta_corr;D1_theta [deg];D2_theta [deg]", 200,75,105,200,75,105);
-	D1_chisq = new TH1F("D1 #chi^{2}","D1 #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
-	D2_chisq = new TH1F("D2 #chi^{2}","D2 #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
+	HEX_theta = new TH1F("HEX_theta", "HEX_theta; theta_yz [deg]; N", 200, 75, 105);
 	HEX_chisq = new TH1F("HEX #chi^{2}","HEX #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
+
+	// correlations	
+	// ---D1D2
+	//    angles
+	D1D2_phi_corr = new TH2F("D1D2_phi_corr","D1D2_phi_corr;D1_phi [deg];D2_phi [deg]", 200,75,105,200,75,105);
+	D1D2_theta_corr = new TH2F("D1D2_theta_corr","D1D2_theta_corr;D1_theta [deg];D2_theta [deg]", 200,75,105,200,75,105);
+	//    positions
 	x_reco_D2_exp_D1 = new TH2F("x_recD2_exp_D1","x_recD2_exp_D1; reconstructed from D2 (cm); expected from D1",400,-20,20,400,-20,20);
-	x_reco_HEX_exp_D1 = new TH2F("x_recHEX_exp_D1","x_recHEX_exp_D1; reconstructed from HEX (cm); expected from D1",400,-20,20,400,-20,20);
 	y_reco_D2_exp_D1 = new TH2F("y_recD2_exp_D1","y_recD2_exp_D1; reconstructed from D2 (cm); expected from D1",400,-20,20,400,-20,20);
-	y_reco_HEX_exp_D1 = new TH2F("y_recHEX_exp_D1","y_recHEX_exp_D1; reconstructed from HEX (cm); expected from D1",400,-20,20,400,-20,20);
 	x_reco_D2_minus_exp_D1 = new TH1F("x_rec_D2_minus_exp_D1","x_rec_D2_minus_exp_D1;difference [cm];N", 200, -1.5, 1);
 	y_reco_D2_minus_exp_D1 = new TH1F("y_rec_D2_minus_exp_D1","y_rec_D2_minus_exp_D1;difference [cm];N", 200, -4, 4);
-	//y_reco_HEX_minus_exp_D1 = new TH1F("y_rec_HEX_minus_exp_D1","y_rec_HEX_minus_exp_D1;difference [cm];N", 200, -4, 4);
+
+	// ---D1HEX
+	//    angles
+	D1HEX_phi_corr = new TH2F("D1HEX_phi_corr","D1HEX_phi_corr;D1_phi [deg];HEX_phi [deg]", 200,75,105,200,75,105);
+	D1HEX_theta_corr = new TH2F("D1HEX_theta_corr","D1HEX_theta_corr;D1_theta [deg];HEX_theta [deg]", 200,75,105,200,75,105);
+	
+	//    positions
+	x_reco_HEX_exp_D1 = new TH2F("x_recHEX_exp_D1","x_recHEX_exp_D1; reconstructed from HEX (cm); expected from D1",400,-20,20,400,-20,20);
+	y_reco_HEX_exp_D1 = new TH2F("y_recHEX_exp_D1","y_recHEX_exp_D1; reconstructed from HEX (cm); expected from D1",400,-20,20,400,-20,20);
+	x_reco_HEX_minus_exp_D1 = new TH1F("x_rec_HEX_minus_exp_D1","x_rec_HEX_minus_exp_D1;difference [cm];N", 200, -1.5, 1);
+	y_reco_HEX_minus_exp_D1 = new TH1F("y_rec_HEX_minus_exp_D1","y_rec_HEX_minus_exp_D1;difference [cm];N", 200, -4, 4);
+
 	TString name;
 	for (int i = 0; i < 6; i++)
 	{
-		name = Form("dist_1_%d", i);
+		name = Form("dist_1_%d", i+1);
 		distances[i] = new TH1F(name, name, 500, -8, 8);
+		name = Form("wire_corr_1_%d", i+1);
+		wire_corrs[i] = new TH2F(name, name, 49, 0.5, 49.5, 49, 0.5, 49.5);
+		name = Form("hits_corr_1_%d", i+1);
+		hits_corrs[i] = new TH2F(name, name, 400,-60,-20, 400,-60,-20);
+		name = Form("wire_no_diffs_1_%d", i+1);
+		wire_no_diffs[i] = new TH1F(name, name, 11,-5.5,5.5);
 	}
 
 }
@@ -93,6 +117,7 @@ void TrackReconstruction::get_data(data_for_track_reconstruction _single_event_d
 	}
 	for (int i = 0; i < 6; i++)
 	{
+		single_event_data.x_wire_pos_HEX[i] = _single_event_data.HEX.positionsWiresX[i];
 		single_event_data.x_hit_pos_HEX[i] = _single_event_data.HEX.positionsHitsX[i];
 		single_event_data.x_err_hit_pos_HEX[i] = _single_event_data.HEX.errorsX[i];
 		single_event_data.z_hit_pos_HEX[i] = _single_event_data.HEX.positionsZ[i];
@@ -330,33 +355,37 @@ double TrackReconstruction::calculate_theta_yz(double vy, double vz)
 
 void TrackReconstruction::plot_D1_d2_phi_corr()
 {
-	double x_pos_layer_1, x_pos_layer_2;
+	double x_pos_layer_1, x_pos_layer_2, wire1, wire2;
 	for (unsigned int i = 0; i < TrackRecoData.size(); i++)
 	{
 		D1HEX_phi_corr -> Fill(TrackRecoData.at(i).phi_xz_D1, TrackRecoData.at(i).phi_xz_HEX);
+		D1HEX_theta_corr -> Fill(TrackRecoData.at(i).theta_yz_D1, TrackRecoData.at(i).theta_yz_D1);
+
 		D1D2_phi_corr -> Fill(TrackRecoData.at(i).phi_xz_D1, TrackRecoData.at(i).phi_xz_D2);
 		D1D2_theta_corr -> Fill(TrackRecoData.at(i).theta_yz_D1, TrackRecoData.at(i).theta_yz_D2);
+
 		D1_phi -> Fill(TrackRecoData.at(i).phi_xz_D1);
 		D1_theta -> Fill(TrackRecoData.at(i).theta_yz_D1);
+
 		D2_phi -> Fill(TrackRecoData.at(i).phi_xz_D2);
 		D2_theta -> Fill(TrackRecoData.at(i).theta_yz_D2);
+		
 		HEX_phi -> Fill(TrackRecoData.at(i).phi_xz_HEX);
 		HEX_theta -> Fill(TrackRecoData.at(i).theta_yz_HEX);
 
 		x_pos_layer_1 = TrackRecoData.at(i).x_hit_pos_HEX[0];
+		wire1 = TrackRecoData.at(i).x_wire_pos_HEX[0];
 		for (int j = 0; j < 6; j++)
 		{
 			x_pos_layer_2 = TrackRecoData.at(i).x_hit_pos_HEX[j];
 			distances[j] -> Fill( x_pos_layer_2 - x_pos_layer_1 );
+			hits_corrs[j] -> Fill(x_pos_layer_1, x_pos_layer_2);
+			wire2 = TrackRecoData.at(i).x_wire_pos_HEX[j];
+			wire_corrs[j] -> Fill(wire1, wire2);
+			wire_no_diffs[j] -> Fill(wire2 - wire1);
 		}
 		
 	}
-	//TCanvas *c1 = new TCanvas("a","",500,500);
-	//D1D2_phi_corr -> Draw("colz");
-	//TCanvas *c2 = new TCanvas("b","",500,500);
-	//D1D2_theta_corr -> Draw("colz");
-	//c1 -> SaveAs("results/D1D2_phi_corr.root");
-	//c2 -> SaveAs("results/D1D2_theta_corr.png");
 }
 
 void TrackReconstruction::save_histos()
@@ -382,10 +411,15 @@ void TrackReconstruction::save_histos()
 	y_reco_HEX_exp_D1->Write();
 	x_reco_D2_minus_exp_D1->Write();
 	y_reco_D2_minus_exp_D1->Write();
-//	for (int j = 0; j < 6; j++)
-//	{;
-//		distances[j] -> Write();
-//	}
+	x_reco_HEX_minus_exp_D1->Write();
+	y_reco_HEX_minus_exp_D1->Write();
+	for (int j = 0; j < 6; j++)
+	{;
+		distances[j] -> Write();
+		wire_corrs[j] -> Write();
+		hits_corrs[j] -> Write();
+		wire_no_diffs[j] -> Write();
+	}
 }
 
 void TrackReconstruction::reconstructed_D2_vs_expected_D1()
@@ -395,13 +429,16 @@ void TrackReconstruction::reconstructed_D2_vs_expected_D1()
 	double x_from_D1, y_from_D1, x_from_D2, y_from_D2, x_from_HEX, y_from_HEX;
 	for (unsigned int i = 0; i < TrackRecoData.size(); i++)
 	{
+		// points
 		D1_track_vector = TrackRecoData.at(i).track3d_fit_vector_D1;
 		D2_track_vector = TrackRecoData.at(i).track3d_fit_vector_D2;
 		HEX_track_vector = TrackRecoData.at(i).track3d_fit_vector_HEX;
+		// vectors
 		D1_track_point = TrackRecoData.at(i).track3d_fit_point_D1;
 		D2_track_point = TrackRecoData.at(i).track3d_fit_point_D2;
 		HEX_track_point = TrackRecoData.at(i).track3d_fit_point_HEX;
 
+		// D1D2
 		scale = D1_track_point.Z() - 59.6;
 		x_from_D1 = scale*D1_track_vector.X() + D1_track_point.X();
 		y_from_D1 = scale*D1_track_vector.Y() + D1_track_point.Y();
@@ -412,10 +449,11 @@ void TrackReconstruction::reconstructed_D2_vs_expected_D1()
 		x_reco_D2_exp_D1 -> Fill(x_from_D2, x_from_D1);
 		y_reco_D2_exp_D1 -> Fill(y_from_D2, y_from_D1);
 		x_reco_D2_minus_exp_D1->Fill(x_from_D2-x_from_D1);
+		std::cout << x_from_D2 << " " << x_from_D1 << " " << x_from_D2-x_from_D1 << std::endl;
 		y_reco_D2_minus_exp_D1->Fill(y_from_D2-y_from_D1);
 
-		// HEX
-		scale = D1_track_point.Z() - 117.4;
+		// D1HEX
+		scale = D1_track_point.Z() - 125.2;
 		x_from_D1 = scale*D1_track_vector.X() + D1_track_point.X();
 		y_from_D1 = scale*D1_track_vector.Y() + D1_track_point.Y();
 		scale = 14.6;
@@ -424,6 +462,7 @@ void TrackReconstruction::reconstructed_D2_vs_expected_D1()
 		//std::cout << x_from_D1 << " " << x_from_D2 << std::endl;
 		x_reco_HEX_exp_D1 -> Fill(x_from_HEX, x_from_D1);
 		y_reco_HEX_exp_D1 -> Fill(y_from_HEX, y_from_D1);
-		std::cout << x_from_HEX - x_from_D1 << std::endl;
+		x_reco_HEX_minus_exp_D1 -> Fill(x_from_HEX-x_from_D1);
+		y_reco_HEX_minus_exp_D1 -> Fill(y_from_HEX-y_from_D1);
 	}
 }

@@ -8,7 +8,7 @@ Calibration3d_HEX::Calibration3d_HEX()
 Calibration3d_HEX::Calibration3d_HEX(const Config &_config)
 {
 	fit_with_inclined = _config.fit_with_inclined;
-	unbiased_fit = _config.unbiased_fit;
+	unbiased_fit = false;//_config.unbiased_fit;
 	// for drawing
 	half_x_dim = _config.HEX_half_x_dim;
 	half_z_dim = _config.HEX_half_z_dim;
@@ -297,14 +297,14 @@ void Calibration3d_HEX::fit_in_3d()
 		for (int j = 0; j < 6; j++)
 		{
 			//std::cout << "   for fitting... " << std::endl;
-			std::cout << "   layer " << j << std::endl;
+			//std::cout << "   layer " << j << std::endl;
 			wires_positionsX_all[j] = Layer[j]->CalibrationData.at(i).wire_pos_X;
 			hits_positionsX_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_X;
 			hits_positionsZ_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Z;
 			if (no_of_iteration==0) errors_all[j]=1;
 			else errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
-			std::cout << "   wires_positionsX_all[j] " << wires_positionsX_all[j] << std::endl;
-			std::cout << "   hits_positionsX_all[j] " << hits_positionsX_all[j] << std::endl;
+			//std::cout << "   wires_positionsX_all[j] " << wires_positionsX_all[j] << std::endl;
+			//std::cout << "   hits_positionsX_all[j] " << hits_positionsX_all[j] << std::endl;
 			//std::cout << "   hits_positionsZ_all[j] " << hits_positionsZ_all[j] << std::endl;
 			//std::cout << "   errors_all[j] " << errors_all[j] << std::endl;
 		}

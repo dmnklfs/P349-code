@@ -74,6 +74,7 @@ struct data_for_D2_track_reco
 
 struct data_for_HEX_track_reco
 {
+	double positionsWiresX[7];
 	double positionsHitsX[7];
 	double positionsZ[7];
 	double drift_times[7];
