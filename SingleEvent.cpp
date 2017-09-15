@@ -32,7 +32,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
 	// if ( (start && tof && D1 && D2 && HEX && Start::getTimeUp()<10 && Start::getTimeDown()<10) || stage == 2)
-	if ( (start&&HEX&&tof) || stage == 2)
+	if ( (start&&D1&&D2&&tof) || stage == 2)
 	{
 		return true;
 	}
@@ -71,7 +71,7 @@ data_for_track_reconstruction SingleEvent::get_data_for_track_reconstruction()
 	//std::cout << "ok1 " << std::endl;
 	track_reco_data.D2 = D2::get_data_for_track_reco();
 	//std::cout << "ok2 " << std::endl;
-	track_reco_data.HEX = HEX::get_data_for_track_reco();
+//	track_reco_data.HEX = HEX::get_data_for_track_reco();
 	//std::cout << "ok3 " << std::endl;
 	//for (int i = 0; i < 8; i++)
 	//{
@@ -79,6 +79,26 @@ data_for_track_reconstruction SingleEvent::get_data_for_track_reconstruction()
 	//}
 	
 	return track_reco_data;
+}
+
+data_for_D1D2_calibration SingleEvent::get_data_for_D1D2_calibration()
+{
+	data_for_D1D2_calibration d1d2_calib_data;
+	data_for_D1_calibration D1 = D1::get_data_for_calibration();
+	data_for_D2_calibration D2 = D2::get_data_for_calibration();
+	for (int i = 0; i < 6; i++)
+	{
+		d1d2_calib_data.positionsX[i] = D2.positionsX[i];
+		d1d2_calib_data.positionsZ[i] = D2.positionsZ[i];
+		d1d2_calib_data.drift_times[i] = D2.drift_times[i];
+	}
+	for (int i = 6; i < 14; i++)
+	{
+		d1d2_calib_data.positionsX[i] = D1.positionsX[i-6];
+		d1d2_calib_data.positionsZ[i] = D1.positionsZ[i-6];
+		d1d2_calib_data.drift_times[i] = D1.drift_times[i-6];
+	}
+	return d1d2_calib_data;	
 }
 
 double SingleEvent::getTOF()
@@ -90,17 +110,17 @@ double SingleEvent::getTOF()
 
 void SingleEvent::test_calculate_distances()
 {
-//	D1::calculate_distances_from_wires();
-//	D1::calculate_wire_positions_in_detector();
-//	D1::set_hits_absolute_positions();
-//	
-//	D2::calculate_distances_from_wires();
-//	D2::calculate_wire_positions_in_detector();
-//	D2::set_hits_absolute_positions();
+	D1::calculate_distances_from_wires();
+	D1::calculate_wire_positions_in_detector();
+	D1::set_hits_absolute_positions();
+	
+	D2::calculate_distances_from_wires();
+	D2::calculate_wire_positions_in_detector();
+	D2::set_hits_absolute_positions();
 
-	HEX::calculate_distances_from_wires();
-	HEX::calculate_wire_positions_in_detector();
-	HEX::set_hits_absolute_positions();
+//	HEX::calculate_distances_from_wires();
+//	HEX::calculate_wire_positions_in_detector();
+//	HEX::set_hits_absolute_positions();
 
 }
 

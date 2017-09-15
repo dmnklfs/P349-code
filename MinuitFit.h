@@ -45,7 +45,7 @@ public:
 private:
 	int no_of_points;
 	static MinuitFit * _this;
-	double x[4], y[4], errors[4];
+	double x[8], y[8], errors[8];
 	bool errflag;
 	double a_start, b_start;
 	TF1 *linear_fit;

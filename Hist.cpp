@@ -29,7 +29,7 @@ Hist::Hist()
 	init_tof_histos_preselected();
 	init_D1_histos_preselected();
 	init_D2_histos_preselected();
-	//init_HEX_histos_preselected();
+	init_HEX_histos_preselected();
 	//init_fiber_histos_preselected();
 	//init_inter_histos_preselected();
 }

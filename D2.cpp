@@ -22,8 +22,6 @@ D2::D2(const Config &_config)
 	D2_no_of_cells_with_hits = 0;
 	half_x_dim = _config.D2_half_x_dim;
 	half_z_dim = _config.D2_half_z_dim;
-	x_lab_position = _config.D2_x_lab_position;
-	z_lab_position = _config.D2_z_lab_position;
 	z_offset = _config.D2_z_offset;
 	x_offset = _config.D2_x_offset;
 	y_rotation_angle = _config.D2_y_rotation_angle;

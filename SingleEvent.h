@@ -25,6 +25,7 @@ public:
 	double test_positions_histogram();
 	TGraph* plot_track_in_D1_D2();
 	data_for_track_reconstruction get_data_for_track_reconstruction();
+	data_for_D1D2_calibration get_data_for_D1D2_calibration();
 
 private:
 	bool correct_event;

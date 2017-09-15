@@ -49,6 +49,13 @@ struct data_for_D2_calibration
 	double drift_times[6];
 };
 
+struct data_for_D1D2_calibration
+{
+	double positionsX[14]; // of wires
+	double positionsZ[14];
+	double drift_times[14];
+};
+
 struct data_for_HEX_calibration
 {
 	double positionsX[7]; // of wires

@@ -32,6 +32,7 @@
 #include "Calibration3d.h"
 #include "Calibration3d_D2.h"
 #include "Calibration3d_HEX.h"
+#include "CalibrationD1D2.h"
 #include "TrackReconstruction.h"
 
 #define START 1

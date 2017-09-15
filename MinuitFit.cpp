@@ -11,7 +11,7 @@ MinuitFit * MinuitFit::GetInstance(){
 
 MinuitFit::MinuitFit()
 {
-	no_of_points = 4;
+	no_of_points = 6;
 }
 
 void MinuitFit::set_no_of_points(int npoints)
@@ -22,11 +22,13 @@ void MinuitFit::set_no_of_points(int npoints)
 
 void MinuitFit::set_values(double *_x, double *_y, double *_errors)
 {
+	std::cout << "set values " << std::endl;
 	for (int i = 0; i < no_of_points; i++)
 	{
 		x[i] = _x[i];
 		y[i] = _y[i];
 		errors[i] = _errors[i];
+		std::cout << "x[i] " << x[i] << " " << y[i] << " " << errors[i] << std::endl;
 	}
 }
 
@@ -48,6 +50,7 @@ double MinuitFit::GlobalFCN(const double * par)
 		//std::cout << errors[i] << std::endl;
 		delta  = (((y[i]-par[1])/par[0])-x[i])/errors[i];
 		chisq += delta*delta;
+		//std::cout << i << " delta " << delta << std::endl;
 	}
 	//std::cout << "chisq " << chisq << std::endl;
 	return chisq;
@@ -132,18 +135,21 @@ void MinuitFit::perform_simplified_fit()
 	linear_fit_graph -> Fit(linear_fit, "Q");
 	a_start = linear_fit -> GetParameter(0);
 	b_start = linear_fit -> GetParameter(1);
+	std::cout << "a" << a_start << " " << b_start << std::endl;
 	delete linear_fit;
 	delete linear_fit_graph;
 }
 
 void MinuitFit::perform_simplified_fit_calc_coeff()
 {
+	std::cout << " perform_simplified_fit_calc_coeff " << std::endl;
 	double sx = 0;
 	double sy = 0; 
 	double sx2 = 0;
 	double sxy = 0;
 	for (int i = 0; i < no_of_points; i++)
 	{
+		std::cout << "x[i]" << x[i] << " y[i] " << y[i] << std::endl;
 		sx  = sx  + x[i];
 		sx2 = sx2 + x[i]*x[i];
 		sy  = sy  + y[i];
@@ -151,5 +157,6 @@ void MinuitFit::perform_simplified_fit_calc_coeff()
 	}
 	a_start = (no_of_points*sxy - sx*sy)*pow(no_of_points*sx2 - sx*sx ,-1);
 	b_start = (sy - a_start*sx)*pow(no_of_points,-1);
+	std::cout << "a " << a_start << " " << b_start << std::endl;
 
 }

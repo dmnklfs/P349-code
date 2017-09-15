@@ -25,7 +25,8 @@ int main(int argc, char *argv[])
 	//SimpleCalibration *simple_calibration = new SimpleCalibration(config);
   //Calibration3d *calibration = new Calibration3d(config);
   //Calibration3d_D2 *calibration_D2 = new Calibration3d_D2(config);
-  Calibration3d_HEX *calibration_HEX = new Calibration3d_HEX(config);
+  //Calibration3d_HEX *calibration_HEX = new Calibration3d_HEX(config);
+  CalibrationD1D2 *calibrationd1d2 = new CalibrationD1D2(config);
   TrackReconstruction *track_reco = new TrackReconstruction(config);
 	std::cout << "* start of the loop over the events" << std::endl;
   int delme_iter = 0;
@@ -87,9 +88,11 @@ int main(int argc, char *argv[])
         //calibration_D2 -> get_data( single_event -> SingleEvent::D2::get_data_for_calibration() ); 
         //std::cout << "ok2" << std::endl;
         //std::cout << "ok1" << std::endl;
-        calibration_HEX -> get_data( single_event -> SingleEvent::HEX::get_data_for_calibration() ); 
+        //calibration_HEX -> get_data( single_event -> SingleEvent::HEX::get_data_for_calibration() ); 
         //track_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
-        //std::cout << "ok2" << std::endl;
+        //std::cout << "ok0 " << std::endl;
+        calibrationd1d2 -> get_data(single_event -> SingleEvent::get_data_for_D1D2_calibration());
+        //std::cout << "ok01" << std::endl;
   			
   		} // end if correct event
 
@@ -105,31 +108,49 @@ int main(int argc, char *argv[])
 
     std::cout << "iter " << delme_iter << std::endl;
 
+    calibrationd1d2  -> tell_no_of_events();
+    calibrationd1d2 -> set_no_of_bin_in_event();
+
+    for (int i = 0; i < 1; i++)
+    {
+      calibrationd1d2 -> set_no_of_iteration(i);
+      //std::cout << " ok0 " << std::endl;
+      calibrationd1d2 -> calculate_hit_position();
+      //std::cout << " ok1 " << std::endl;
+      calibrationd1d2 -> fit_events();
+      //calibrationd1d2 -> save_histograms();
+      //calibrationd1d2 -> fit_delta_projections();
+      //calibrationd1d2 -> set_pos_Xerr();
+      //calibrationd1d2 -> apply_corrections();
+      //calibrationd1d2 -> plot_current_calibration();
+      //calibrationd1d2 -> deletations();
+    }
+
 //    track_reco -> tell_no_of_events();
 //    //!track_reco -> set_detectors_positions_on_points();
 //    track_reco -> fit_in_3d_D1();
 //    track_reco -> fit_in_3d_D2();
-//    track_reco -> fit_in_3d_HEX();
+//    //track_reco -> fit_in_3d_HEX();
 //    track_reco -> plot_D1_d2_phi_corr();
 //    track_reco -> set_detectors_positions_on_vectors();
 //    track_reco -> reconstructed_D2_vs_expected_D1();
 //    track_reco -> save_histos();
 
-    calibration_HEX -> tell_no_of_events();
-    calibration_HEX -> set_no_of_bin_in_event();
-
-    for (int i = 0; i < 2; i++)
-    {
-      calibration_HEX -> set_no_of_iteration(i);
-      calibration_HEX -> calculate_hit_position();
-      calibration_HEX -> fit_events();
-      calibration_HEX -> save_histograms();
-      calibration_HEX -> fit_delta_projections();
-      calibration_HEX -> set_pos_Xerr();
-      calibration_HEX -> apply_corrections();
-      calibration_HEX -> plot_current_calibration();
-      calibration_HEX -> deletations();
-    }
+//    calibration_HEX -> tell_no_of_events();
+//    calibration_HEX -> set_no_of_bin_in_event();
+//
+//    for (int i = 0; i < 2; i++)
+//    {
+//      calibration_HEX -> set_no_of_iteration(i);
+//      calibration_HEX -> calculate_hit_position();
+//      calibration_HEX -> fit_events();
+//      calibration_HEX -> save_histograms();
+//      calibration_HEX -> fit_delta_projections();
+//      calibration_HEX -> set_pos_Xerr();
+//      calibration_HEX -> apply_corrections();
+//      calibration_HEX -> plot_current_calibration();
+//      calibration_HEX -> deletations();
+//    }
     
 
     /*calibration_D2 -> tell_no_of_events();
