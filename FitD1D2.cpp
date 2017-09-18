@@ -102,19 +102,17 @@ void FitD1D2::fit_straight_layer()
 	std::vector<double> results;
 	MinuitFit * fit = MinuitFit::GetInstance();
 	fit -> MinuitFit::set_no_of_points(6);	
-	std::cout << "--------------------------" << std::endl;	
 	fit -> MinuitFit::set_values(x_straight, z_straight, errors_straight);
-	std::cout << "--------------------------" << std::endl;
 	fit -> MinuitFit::perform_simplified_fit_calc_coeff();//perform_simplified_fit();
-	std::cout << "--------------------------" << std::endl;
 	results = fit -> MinuitFit::fit_with_minuit();
 	z_x_a[0] = results.at(0);
 	z_x_b[0] = results.at(1);
-	for (int i = 0; i < 6; i++)
-	{
-		std::cout << "{" << x_straight[i] << "," << z_straight[i] << "}" << std::endl;
-	}
-	std::cout << z_x_a[0] << " " << z_x_b[0] << std::endl;
+	//std::cout << z_x_a[0] << " " << z_x_b[0] << std::endl;
+//	for (int i = 0; i < 6; i++)
+//	{
+//		std::cout << "{" << x_straight[i] << "," << z_straight[i] << "}" << std::endl;
+//	}
+	//std::cout << z_x_a[0] << " " << z_x_b[0] << std::endl;
 	results.clear();
 }
 
@@ -127,7 +125,6 @@ void FitD1D2::fit_inclined_layers()
 	fit1 -> MinuitFit::set_values(x_inclined1, z_inclined1, errors_inclined1);
 	fit1 -> MinuitFit::perform_simplified_fit();
 	results = fit1 -> MinuitFit::fit_with_minuit();
-	
 	z_x_a[1] = results.at(0);
 	z_x_b[1] = results.at(1);
 	
@@ -136,7 +133,6 @@ void FitD1D2::fit_inclined_layers()
 	fit2 -> MinuitFit::set_values(x_inclined2, z_inclined2, errors_inclined2);
 	fit2 -> MinuitFit::perform_simplified_fit();
 	results = fit2 -> MinuitFit::fit_with_minuit();
-
 	z_x_a[2] = results.at(0);
 	z_x_b[2] = results.at(1);
 }
@@ -148,14 +144,20 @@ void FitD1D2::calculate_xy_functions()
 	y_x_a[0] = 0;
 	y_x_b[0][0] = 0;
 	y_x_b[0][1] = 0;
+	y_x_b[0][2] = 0;
+	y_x_b[0][3] = 0;
 	// inclined 1
 	y_x_a[1] = TMath::Tan(59*3.14*pow(180,-1));
 	y_x_b[1][0] = -x_inclined1[0]*y_x_a[1];
 	y_x_b[1][1] = -x_inclined1[1]*y_x_a[1];
+	y_x_b[1][2] = -x_inclined1[2]*y_x_a[1];
+	y_x_b[1][3] = -x_inclined1[3]*y_x_a[1];
 	// inclined 2
 	y_x_a[2] =-TMath::Tan(59*3.14*pow(180,-1));
 	y_x_b[2][0] = -x_inclined2[0]*y_x_a[2];
 	y_x_b[2][1] = -x_inclined2[1]*y_x_a[2];
+	y_x_b[2][2] = -x_inclined2[2]*y_x_a[2];
+	y_x_b[2][3] = -x_inclined2[3]*y_x_a[2];
 }
 
 void FitD1D2::calculate_wires_xy_functions()
@@ -457,7 +459,7 @@ void FitD1D2::make_fit_to_lines(bool _unbiased_fit)
 	// std::cout << "err " << errors[0] << std::endl;
 
 	// for inclined, in the order
-	double a[4];
+	double a[8];
 	a[0] = y_x_a[1];
 	a[1] = y_x_a[1];
 	a[2] = y_x_a[2];
@@ -467,7 +469,7 @@ void FitD1D2::make_fit_to_lines(bool _unbiased_fit)
 	a[6] = y_x_a[2];
 	a[7] = y_x_a[2];
 
-	double b[4];
+	double b[8];
 	b[0] = y_x_b[1][0];
 	b[1] = y_x_b[1][1];
 	b[2] = y_x_b[2][0];
@@ -477,50 +479,56 @@ void FitD1D2::make_fit_to_lines(bool _unbiased_fit)
 	b[6] = y_x_b[2][2];
 	b[7] = y_x_b[2][3];
 
+
+//	for (int i = 0; i < 8; i++)
+//	{
+//		std::cout << "b[i] " << b[i] << std::endl;
+//	}
+
 	// biased
-	LineFit * lineFitD1D2 = LineFit::GetInstance();
-	lineFitD1D2 -> LineFit::set_z_values(z);
-	lineFitD1D2 -> LineFit::set_x_straight_values(x_straight);
-	lineFitD1D2 -> LineFit::set_incl_hit_lines_params(a, b);
-	lineFitD1D2 -> LineFit::set_x_errors(errors);
-	lineFitD1D2 -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
-	lineFitD1D2 -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z()); //(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
-	lineFitD1D2 -> LineFit::calculate_start_params();
-	lineFitD1D2 -> LineFit::set_excluded_layer(-1);
-	lineFitD1D2 -> LineFit::fit_with_minuit();
-	track3d_fit_point = lineFitD1D2 -> LineFit::return_track_point();
+	LineFitD1D2 * lineFitD1D2 = LineFitD1D2::GetInstance();
+	lineFitD1D2 -> LineFitD1D2::set_z_values(z);
+	lineFitD1D2 -> LineFitD1D2::set_x_straight_values(x_straight);
+	lineFitD1D2 -> LineFitD1D2::set_incl_hit_lines_params(a, b);
+	lineFitD1D2 -> LineFitD1D2::set_x_errors(errors);
+	lineFitD1D2 -> LineFitD1D2::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
+	lineFitD1D2 -> LineFitD1D2::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z()); //(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
+	lineFitD1D2 -> LineFitD1D2::calculate_start_params();
+	lineFitD1D2 -> LineFitD1D2::set_excluded_layer(-1);
+	lineFitD1D2 -> LineFitD1D2::fit_with_minuit();
+	track3d_fit_point = lineFitD1D2 -> LineFitD1D2::return_track_point();
 	// /*std::cout << "in fit " << track3d_fit_point.Y() << std::endl;*/
-	track3d_fit_vector = lineFitD1D2 -> LineFit::return_track_vector(); // normalized to 1 (NOT to uz = 1)
-	errflag = lineFitD1D2 -> LineFit::err_flag();
-	chisq = lineFitD1D2 -> LineFit::get_chisq();
+	track3d_fit_vector = lineFitD1D2 -> LineFitD1D2::return_track_vector(); // normalized to 1 (NOT to uz = 1)
+	errflag = lineFitD1D2 -> LineFitD1D2::err_flag();
+	chisq = lineFitD1D2 -> LineFitD1D2::get_chisq();
 	//std::cout << " all " << chisq << std::endl;
-	lineFitD1D2 -> LineFit::~LineFit();
+	lineFitD1D2 -> LineFitD1D2::~LineFitD1D2();
 
 	// unbiased
 	//unbiased_fit = true;
-	if (_unbiased_fit == true)
-	{
-		LineFit * lineFitD1D2Unbiased[8];
-		for (int i = 0; i < 8; i++)
-		{
-			lineFitD1D2Unbiased[i] = LineFit::GetInstance();
-			if (no_of_iteration == 8 || no_of_iteration == 9) lineFitD1D2Unbiased[i] -> LineFit::set_excluded_layer(-1);
-			else lineFitD1D2Unbiased[i] -> LineFit::set_excluded_layer(i);
-			lineFitD1D2Unbiased[i] -> LineFit::set_z_values(z);
-			lineFitD1D2Unbiased[i] -> LineFit::set_x_straight_values(x_straight);
-			lineFitD1D2Unbiased[i] -> LineFit::set_incl_hit_lines_params(a, b);
-			lineFitD1D2Unbiased[i] -> LineFit::set_x_errors(errors);
-			lineFitD1D2Unbiased[i] -> LineFit::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
-			lineFitD1D2Unbiased[i] -> LineFit::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
-			lineFitD1D2Unbiased[i] -> LineFit::calculate_start_params();
-			lineFitD1D2Unbiased[i] -> LineFit::fit_with_minuit();
-			track3d_fit_point_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFit::return_track_point();
-			track3d_fit_vector_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFit::return_track_vector();
-			errflag_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFit::err_flag();
-			chisq_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFit::get_chisq();
-			lineFitD1D2Unbiased[i] -> LineFit::~LineFit();
-		}
-	}
+//	if (_unbiased_fit == true)
+//	{
+//		LineFitD1D2 * lineFitD1D2Unbiased[8];
+//		for (int i = 0; i < 8; i++)
+//		{
+//			lineFitD1D2Unbiased[i] = LineFitD1D2::GetInstance();
+//			if (no_of_iteration == 8 || no_of_iteration == 9) lineFitD1D2Unbiased[i] -> LineFitD1D2::set_excluded_layer(-1);
+//			else lineFitD1D2Unbiased[i] -> LineFitD1D2::set_excluded_layer(i);
+//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_z_values(z);
+//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_x_straight_values(x_straight);
+//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_incl_hit_lines_params(a, b);
+//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_x_errors(errors);
+//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
+//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
+//			lineFitD1D2Unbiased[i] -> LineFitD1D2::calculate_start_params();
+//			lineFitD1D2Unbiased[i] -> LineFitD1D2::fit_with_minuit();
+//			track3d_fit_point_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::return_track_point();
+//			track3d_fit_vector_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::return_track_vector();
+//			errflag_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::err_flag();
+//			chisq_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::get_chisq();
+//			lineFitD1D2Unbiased[i] -> LineFitD1D2::~LineFitD1D2();
+//		}
+//	}
 	
 	// UncorrelatedOpt * track_optimization = UncorrelatedOpt::GetInstance();
 	// track_optimization -> UncorrelatedOpt::set_z_values(z);
@@ -630,8 +638,8 @@ void FitD1D2::calculate_wire_track_distances()
 	straight[1] = 5;
 	straight[2] = 6;
 	straight[3] = 7;
-	straight[2] =12;
-	straight[3] =13;
+	straight[4] =12;
+	straight[5] =13;
 
 	int inclined[8];
 	inclined[0] = 0;
@@ -655,11 +663,15 @@ void FitD1D2::calculate_wire_track_distances()
 	z[6] = z_inclined2[2];
 	z[7] = z_inclined2[3];
 
-	double a[4];
+	double a[8];
 	a[0] = y_x_a_wire[1];
 	a[1] = y_x_a_wire[1];
 	a[2] = y_x_a_wire[2];
 	a[3] = y_x_a_wire[2];
+	a[4] = y_x_a_wire[1];
+	a[5] = y_x_a_wire[1];
+	a[6] = y_x_a_wire[2];
+	a[7] = y_x_a_wire[2];
 
 	double b[8];
 	b[0] = y_x_b_wire[1][0];
@@ -715,7 +727,7 @@ void FitD1D2::calculate_wire_track_distances()
 		xi = t*t2*ux[ straight[i] ] + xp[ straight[i] ];
 		yi = t*t2*uy[ straight[i] ] + yp[ straight[i] ];
 		wire_track_dist[ straight[i] ]  = TMath::Abs(x_straight_wires[i] - xi);
-		//std::cout << t2 << std::endl;
+		//std::cout << straight[i] << " " << wire_track_dist[ straight[i] ] << std::endl;
 	}
 
 	for (int i = 0; i < 8; i++)
@@ -725,13 +737,8 @@ void FitD1D2::calculate_wire_track_distances()
 		xi = t*t2*ux[ inclined[i] ] + xp[ inclined[i] ];
 		yi = t*t2*uy[ inclined[i] ] + yp[ inclined[i] ];
 		wire_track_dist[ inclined[i] ]  = TMath::Abs(a[i]*xi-yi+b[i])*pow(pow((a[i]*a[i]+1),0.5),-1);
+		//std::cout << inclined[i] << " " << wire_track_dist[ inclined[i] ] << std::endl;
 	}
-
-	for (int i = 0; i < 14; i++)
-	{
-		std::cout << "d: " << wire_track_dist[i] << std::endl;
-	}
-
 }
 
 double FitD1D2::get_wire_track_dist(int _layer_no)

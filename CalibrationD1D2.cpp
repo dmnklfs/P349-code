@@ -332,7 +332,7 @@ void CalibrationD1D2::fit_in_3d()
 		// cut on fit probability -- only for all layers
 		if ((!(fitD1D2 -> FitD1D2::err_flag())))//&&((temp_chi2_prob>0.05)||no_of_iteration==0))
 		{
-
+			//std::cout << " ---------------------------------------- " << std::endl;
 			temp_chi2 = fitD1D2 -> FitD1D2::get_chisq();
 			temp_chi2_prob = TMath::Prob(temp_chi2,10);
 

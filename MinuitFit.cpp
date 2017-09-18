@@ -22,13 +22,13 @@ void MinuitFit::set_no_of_points(int npoints)
 
 void MinuitFit::set_values(double *_x, double *_y, double *_errors)
 {
-	std::cout << "set values " << std::endl;
+	//std::cout << "set values " << std::endl;
 	for (int i = 0; i < no_of_points; i++)
 	{
 		x[i] = _x[i];
 		y[i] = _y[i];
 		errors[i] = _errors[i];
-		std::cout << "x[i] " << x[i] << " " << y[i] << " " << errors[i] << std::endl;
+		//std::cout << "{" << x[i] << ", " << y[i] << "}" << std::endl;
 	}
 }
 
@@ -119,6 +119,8 @@ std::vector<double> MinuitFit::fit_with_minuit()
 	output.push_back(params[1]);
 	output.push_back(chisq);
 
+	//std::cout << params[0] << "x + " << params[1] << std::endl;
+
 	delete gMinuit;
 
 	return output;
@@ -135,21 +137,21 @@ void MinuitFit::perform_simplified_fit()
 	linear_fit_graph -> Fit(linear_fit, "Q");
 	a_start = linear_fit -> GetParameter(0);
 	b_start = linear_fit -> GetParameter(1);
-	std::cout << "a" << a_start << " " << b_start << std::endl;
+	//std::cout << "a" << a_start << " " << b_start << std::endl;
 	delete linear_fit;
 	delete linear_fit_graph;
 }
 
 void MinuitFit::perform_simplified_fit_calc_coeff()
 {
-	std::cout << " perform_simplified_fit_calc_coeff " << std::endl;
+	//std::cout << " perform_simplified_fit_calc_coeff " << std::endl;
 	double sx = 0;
 	double sy = 0; 
 	double sx2 = 0;
 	double sxy = 0;
 	for (int i = 0; i < no_of_points; i++)
 	{
-		std::cout << "x[i]" << x[i] << " y[i] " << y[i] << std::endl;
+		//std::cout << "x[i]" << x[i] << " y[i] " << y[i] << std::endl;
 		sx  = sx  + x[i];
 		sx2 = sx2 + x[i]*x[i];
 		sy  = sy  + y[i];
@@ -157,6 +159,6 @@ void MinuitFit::perform_simplified_fit_calc_coeff()
 	}
 	a_start = (no_of_points*sxy - sx*sy)*pow(no_of_points*sx2 - sx*sx ,-1);
 	b_start = (sy - a_start*sx)*pow(no_of_points,-1);
-	std::cout << "a " << a_start << " " << b_start << std::endl;
+	//std::cout << "a " << a_start << " " << b_start << std::endl;
 
 }

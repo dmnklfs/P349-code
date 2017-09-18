@@ -29,7 +29,7 @@
 #include <TMarker3DBox.h>
 #include <TPolyLine3D.h>
 #include "MinuitFit.h"
-#include "LineFit.h"
+#include "LineFitD1D2.h"
 #include "UncorrelatedOpt.h"
 #include "TView3D.h"
 #include "TView.h"
@@ -90,7 +90,7 @@ private:
 	
 	// results of the fit in the zx plane
 	double z_x_a[3], z_x_b[3]; // 0 - straight, 1 - inclined \, 2 - inclined /
-	double y_x_a[3], y_x_b[3][2];
+	double y_x_a[3], y_x_b[3][4];
 
 	// 0 - straight, 1 - inclined1 \, 2 - inclined2 /
 	double y_x_a_wire[3], y_x_b_wire[3][4];

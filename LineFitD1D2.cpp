@@ -21,7 +21,7 @@ void LineFitD1D2::set_z_values(double *_z)
 	{
 		z[i] = _z[i];
 	}
-	zp = 0;//z[0]-20; !!!
+	zp = (z[0]+z[13])/2;
 }
 
 void LineFitD1D2::set_x_straight_values(double *_x)
@@ -48,9 +48,9 @@ void LineFitD1D2::set_x_errors(double *_errors)
 	inclined[5] = 9;
 	inclined[6] =10;
 	inclined[7] =11;
-	for (int i = 0; i < 14; i++)
+	for (int i = 0; i < 8; i++)
 	{
-		if (errors[inclined[i]]!=1) errors[inclined[i]] = a[i]/(pow(a[i]*a[i]+1,0.5)*TMath::Cos(31*TMath::DegToRad()))*errors[inclined[i]];
+		if (errors[inclined[i]]!=-1) errors[inclined[i]] = a[i]/(pow(a[i]*a[i]+1,0.5)*TMath::Cos(31*TMath::DegToRad()))*errors[inclined[i]];
 	}
 
 }
@@ -106,8 +106,8 @@ double LineFitD1D2::GlobalFCN(const double * par)
 	straight[1] = 5;
 	straight[2] = 6;
 	straight[3] = 7;
-	straight[2] =12;
-	straight[3] =13;
+	straight[4] =12;
+	straight[5] =13;
 
 	int inclined[8];
 	inclined[0] = 0;
@@ -130,8 +130,9 @@ double LineFitD1D2::GlobalFCN(const double * par)
 		t = z[ straight[i] ] - zp;
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
-		delta  = x[ straight[i] ] - xi;
+		delta  = x[ i ] - xi;
 		layer_chisq[ straight[i] ] = (delta*delta)/(errors[ straight[i] ]*errors[ straight[i] ]);
+		//std::cout << "str " << delta << std::endl;
 	}
 
 	for (int i = 0; i < 8; i++)
@@ -159,8 +160,8 @@ double LineFitD1D2::get_chisq()
 	straight[1] = 5;
 	straight[2] = 6;
 	straight[3] = 7;
-	straight[2] =12;
-	straight[3] =13;
+	straight[4] =12;
+	straight[5] =13;
 
 	int inclined[8];
 	inclined[0] = 0;
@@ -189,8 +190,9 @@ double LineFitD1D2::get_chisq()
 		t = z[ straight[i] ] - zp;
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
-		delta  = x[ straight[i] ] - xi;
+		delta  = x[ i ] - xi;
 		layer_chisq[ straight[i] ] = (delta*delta)/(errors[ straight[i] ]*errors[ straight[i] ]);
+		//std::cout << "str " << delta << std::endl;
 	}
 
 	for (int i = 0; i < 8; i++)
@@ -200,12 +202,15 @@ double LineFitD1D2::get_chisq()
 		yi = t*par[3] + par[1];
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
 		layer_chisq[ inclined[i] ] = delta/(errors[ inclined[i] ]*errors[ inclined[i] ]);
+		//std::cout << "incl " << delta << std::endl;
 	}
 
 	for (int i = 0; i < 14; i++)
 	{
 		if (i!=excluded_layer) chisq = chisq + layer_chisq[i];
+		//std::cout << i+1 << " " << layer_chisq[i] << std::endl;
 	}
+	//std::cout << "chisq " << chisq << std::endl;
 	return chisq;
 }
 

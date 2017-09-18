@@ -111,19 +111,19 @@ int main(int argc, char *argv[])
     calibrationd1d2  -> tell_no_of_events();
     calibrationd1d2 -> set_no_of_bin_in_event();
 
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < 2; i++)
     {
       calibrationd1d2 -> set_no_of_iteration(i);
       //std::cout << " ok0 " << std::endl;
       calibrationd1d2 -> calculate_hit_position();
       //std::cout << " ok1 " << std::endl;
       calibrationd1d2 -> fit_events();
-      //calibrationd1d2 -> save_histograms();
-      //calibrationd1d2 -> fit_delta_projections();
-      //calibrationd1d2 -> set_pos_Xerr();
-      //calibrationd1d2 -> apply_corrections();
-      //calibrationd1d2 -> plot_current_calibration();
-      //calibrationd1d2 -> deletations();
+      calibrationd1d2 -> save_histograms();
+      calibrationd1d2 -> fit_delta_projections();
+      calibrationd1d2 -> set_pos_Xerr();
+      calibrationd1d2 -> apply_corrections();
+      calibrationd1d2 -> plot_current_calibration();
+      calibrationd1d2 -> deletations();
     }
 
 //    track_reco -> tell_no_of_events();
