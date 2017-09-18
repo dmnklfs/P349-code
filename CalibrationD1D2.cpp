@@ -297,7 +297,8 @@ void CalibrationD1D2::fit_in_3d()
 			wires_positionsX_all[j] = Layer[j]->CalibrationData.at(i).wire_pos_X;
 			hits_positionsX_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_X;
 			hits_positionsZ_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Z;
-			if (no_of_iteration==0) errors_all[j]=1;
+			if (true) errors_all[j]=1;
+			//if (no_of_iteration==0) errors_all[j]=1;
 			else errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
 			//std::cout << "wires_positionsX_all[j] " << Layer[j]->CalibrationData.at(i).wire_pos_X << std::endl;
 			//std::cout << "hits_positionsX_all[j]  " << Layer[j]->CalibrationData.at(i).hit_pos_X << std::endl;

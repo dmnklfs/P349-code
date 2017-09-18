@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
     calibrationd1d2  -> tell_no_of_events();
     calibrationd1d2 -> set_no_of_bin_in_event();
 
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 10; i++)
     {
       calibrationd1d2 -> set_no_of_iteration(i);
       //std::cout << " ok0 " << std::endl;

@@ -220,8 +220,8 @@ void CalibrationLayerD1D2::fit_delta_projections(const char* folder_name)
 		delta_projection -> Draw();
 		if (no_of_entries_in_projection > 39)
 		{
-
-			if ( (i < 6 && no_of_iteration == 0) || i <= 2 )
+			if (i <= 3)
+			//if ( (i < 6 && no_of_iteration == 0) || i <= 2 )
 			{
 				counter = 0;
 				for (int j = 0; j < delta_projection -> GetNbinsX(); j++)
@@ -233,7 +233,7 @@ void CalibrationLayerD1D2::fit_delta_projections(const char* folder_name)
 					}
 				}
 				gaussian -> SetParameters(delta_projection -> GetMaximum(), 0, 0.3);
-				delta_projection->Fit("gaussian","QEMI","", 0,hist_center+0.15);
+				delta_projection->Fit("gaussian","QEMI","", hist_center-0.05,hist_center+0.15);
 			}
 			else
 			{
@@ -253,7 +253,7 @@ void CalibrationLayerD1D2::fit_delta_projections(const char* folder_name)
 			ProjectionMean.push_back(-1);
 			ProjectionSigma.push_back(0.0);
 		}
-		if (no_of_iteration == 0 || no_of_iteration == 1 || no_of_iteration == 7 || no_of_iteration == 8 || no_of_iteration == 9) c_delta_projection -> SaveAs(ProjectionName);
+		if (no_of_iteration == 9) c_delta_projection -> SaveAs(ProjectionName);
 		delete c_delta_projection;
 	}
 	delete gaussian;
@@ -344,15 +344,15 @@ TCanvas* CalibrationLayerD1D2::plot_current_calibration()
 
 	TString name;
 	// save calibration as a txt file. move to separate method
-//	name = Form("results/layer%d_calibration_iteration_%d.txt", layer_no, no_of_iteration);
-//	ofstream calibdata;
-//	calibdata.open(name);
-//	for (int i = 0; i < DriftTimes.size()-1; i++)
-//	{
-//		calibdata << DriftTimes.at(i) << " " << Distances.at(i) << " " << XErrors.at(i) << " " << SigmaForCalibration.at(i) << std::endl;
-//	}
-//
-//	calibdata.close();
+	name = Form("results/layer%d_calibration_iteration_%d.txt", layer_no, no_of_iteration);
+	ofstream calibdata;
+	calibdata.open(name);
+	for (int i = 0; i < DriftTimes.size(); i++)
+	{
+		calibdata << DriftTimes.at(i) << " " << Distances.at(i) <<  " " << SigmaForCalibration.at(i) << std::endl;
+	}
+
+	calibdata.close();
 
 	name = Form("c layer%d current calibration iteration %d", layer_no, no_of_iteration);
 	//TGraph* current_calibration;
