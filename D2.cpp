@@ -5,12 +5,12 @@ D2::D2()
 
 D2::D2(const Config &_config)
 {
-	Layer[0] = new DCLayer(1, _config.D2_L1_drift_time_offset, _config.D1_L1_calibration_times, _config.D2_L1_calibration_distances, _config.D2_drift_time_min[0],_config.D2_drift_time_max[0],_config.D2_layer_min_hits[0],_config.D2_layer_max_hits[0]);
-	Layer[1] = new DCLayer(2, _config.D2_L2_drift_time_offset, _config.D1_L2_calibration_times, _config.D2_L2_calibration_distances, _config.D2_drift_time_min[1],_config.D2_drift_time_max[1],_config.D2_layer_min_hits[1],_config.D2_layer_max_hits[1]);
-	Layer[2] = new DCLayer(3, _config.D2_L3_drift_time_offset, _config.D1_L3_calibration_times, _config.D2_L3_calibration_distances, _config.D2_drift_time_min[2],_config.D2_drift_time_max[2],_config.D2_layer_min_hits[2],_config.D2_layer_max_hits[2]);
-	Layer[3] = new DCLayer(4, _config.D2_L4_drift_time_offset, _config.D1_L4_calibration_times, _config.D2_L4_calibration_distances, _config.D2_drift_time_min[3],_config.D2_drift_time_max[3],_config.D2_layer_min_hits[3],_config.D2_layer_max_hits[3]);
-	Layer[4] = new DCLayer(5, _config.D2_L5_drift_time_offset, _config.D1_L5_calibration_times, _config.D2_L5_calibration_distances, _config.D2_drift_time_min[4],_config.D2_drift_time_max[4],_config.D2_layer_min_hits[4],_config.D2_layer_max_hits[4]);
-	Layer[5] = new DCLayer(6, _config.D2_L6_drift_time_offset, _config.D1_L6_calibration_times, _config.D2_L6_calibration_distances, _config.D2_drift_time_min[5],_config.D2_drift_time_max[5],_config.D2_layer_min_hits[5],_config.D2_layer_max_hits[5]);
+	Layer[0] = new DCLayer(1, _config.D2_L1_drift_time_offset, _config.D1_L1_calibration_times, _config.D2_L1_calibration_distances, _config.D1_L1_calibration_errors, _config.D2_drift_time_min[0],_config.D2_drift_time_max[0],_config.D2_layer_min_hits[0],_config.D2_layer_max_hits[0]);
+	Layer[1] = new DCLayer(2, _config.D2_L2_drift_time_offset, _config.D1_L2_calibration_times, _config.D2_L2_calibration_distances, _config.D1_L2_calibration_errors, _config.D2_drift_time_min[1],_config.D2_drift_time_max[1],_config.D2_layer_min_hits[1],_config.D2_layer_max_hits[1]);
+	Layer[2] = new DCLayer(3, _config.D2_L3_drift_time_offset, _config.D1_L3_calibration_times, _config.D2_L3_calibration_distances, _config.D1_L3_calibration_errors, _config.D2_drift_time_min[2],_config.D2_drift_time_max[2],_config.D2_layer_min_hits[2],_config.D2_layer_max_hits[2]);
+	Layer[3] = new DCLayer(4, _config.D2_L4_drift_time_offset, _config.D1_L4_calibration_times, _config.D2_L4_calibration_distances, _config.D1_L4_calibration_errors, _config.D2_drift_time_min[3],_config.D2_drift_time_max[3],_config.D2_layer_min_hits[3],_config.D2_layer_max_hits[3]);
+	Layer[4] = new DCLayer(5, _config.D2_L5_drift_time_offset, _config.D1_L5_calibration_times, _config.D2_L5_calibration_distances, _config.D1_L5_calibration_errors, _config.D2_drift_time_min[4],_config.D2_drift_time_max[4],_config.D2_layer_min_hits[4],_config.D2_layer_max_hits[4]);
+	Layer[5] = new DCLayer(6, _config.D2_L6_drift_time_offset, _config.D1_L6_calibration_times, _config.D2_L6_calibration_distances, _config.D1_L6_calibration_errors, _config.D2_drift_time_min[5],_config.D2_drift_time_max[5],_config.D2_layer_min_hits[5],_config.D2_layer_max_hits[5]);
 		
 	for (int i = 0; i < 6; i++)
 	{
@@ -66,10 +66,10 @@ bool D2::was_correct_event()
 			D2_no_of_cells_with_hits = D2_no_of_cells_with_hits + Layer[i]-> Wire.size();
 		}
 	}
-	if (no_of_layers_with_hits == 6)
-	{
-		correct_event = true;
-	}
+//	if (no_of_layers_with_hits == 6)
+//	{
+//		correct_event = true;
+//	}
 
 //	int wire1;
 //	int wire2;
@@ -83,6 +83,31 @@ bool D2::was_correct_event()
 //			correct_event = true;
 //		}
 //	}
+	int wire1;
+	int wire2;
+	int wire3;
+	int wire4;
+	int wire5;
+	int wire6;
+	bool pair1, pair2, pair3, pair4;
+	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[2]&&correct_in_layer[3]&&correct_in_layer[4]&&correct_in_layer[5])
+	{
+		wire1 = Layer[0] -> DCLayer::Wire.at(0);
+		wire2 = Layer[1] -> DCLayer::Wire.at(0);
+		wire3 = Layer[2] -> DCLayer::Wire.at(0);
+		wire4 = Layer[3] -> DCLayer::Wire.at(0);
+		wire5 = Layer[4] -> DCLayer::Wire.at(0);
+		wire6 = Layer[5] -> DCLayer::Wire.at(0);
+
+		pair1 = false;
+		pair2 = false;
+		pair3 = false;
+		if (wire2==wire1||wire2-1==wire1) pair1 = true;
+		if (wire3==wire4||wire3==wire4-1) pair2 = true;
+		if (wire5==wire6||wire5==wire6-1) pair3 = true;
+
+		if (pair1&&pair2&&pair3) correct_event = true;
+	}
 
 	return correct_event;
 }
@@ -206,9 +231,9 @@ data_for_D2_track_reco D2::get_data_for_track_reco() // i need here only informa
 	for (int i = 0; i < 6; i++)
 	{
 		data_for_calibration.positionsHitsX[i]	= Layer[i] -> AbsoluteXHitPosition.at(0);
-		//std::cout << "a" << std::endl;
 		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
 		data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
+		data_for_calibration.errorsX[i]	= Layer[i] -> HitPositionError.at(0);
 	}
 	return data_for_calibration;
 }

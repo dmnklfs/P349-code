@@ -235,7 +235,7 @@ void LineFitD1D2::calculate_start_params()
 
 void LineFitD1D2::fit_with_minuit()
 {
-	errflag = true;
+	errflag = 1;
 	std::vector<double> output;
 	TMinuit *gMinuit = new TMinuit(7);  //initialize TMinuit with a maximum of 5 params
 	gMinuit->SetFCN(d1d2fcn);
@@ -268,8 +268,9 @@ void LineFitD1D2::fit_with_minuit()
 	arglist[0] = 500; //was 500
 	arglist[1] = 1.;
 	gMinuit->mnexcm("MINIMIZE", arglist ,1,ierflg);
+	//std::cout << errflag << std::endl;
 	errflag = ierflg; // IERFLG=0 if no problems
-
+	//std::cout << errflag << std::endl;
 	// acces the results
 	TString name[4];
 	name[0] = "xp";

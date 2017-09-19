@@ -747,6 +747,7 @@ void Fit3d_D2::draw_event()
 // =================== fit line to 8 lines ===========================
 void Fit3d_D2::make_fit_to_lines(bool _unbiased_fit)
 {
+	unbiased_fit = _unbiased_fit;
 	double z[6];
 	z[0] = z_inclined1[0];
 	z[1] = z_inclined1[1];
@@ -837,10 +838,10 @@ void Fit3d_D2::make_fit_to_lines(bool _unbiased_fit)
 
 bool Fit3d_D2::err_flag()
 {
-	if(unbiased_fit)
-	{
-		errflag = errflag_unbiased[0]&&errflag_unbiased[1]&&errflag_unbiased[2]&&errflag_unbiased[3]&&errflag_unbiased[4]&&errflag_unbiased[5];
-	}
+//	if(unbiased_fit)
+//	{
+//		errflag = errflag_unbiased[0]&&errflag_unbiased[1]&&errflag_unbiased[2]&&errflag_unbiased[3]&&errflag_unbiased[4]&&errflag_unbiased[5];
+//	}
 	return errflag;
 }
 

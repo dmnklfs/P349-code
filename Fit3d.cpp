@@ -755,6 +755,7 @@ void Fit3d::draw_event()
 // =================== fit line to 8 lines ===========================
 void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 {
+	unbiased_fit = _unbiased_fit;
 	double z[8];
 	z[0] = z_straight[0];
 	z[1] = z_straight[1];

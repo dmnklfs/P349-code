@@ -3,11 +3,12 @@
 DCLayer::DCLayer()
 { }
 
-DCLayer::DCLayer(int _layer_no, const std::vector<double> &_drift_time_offset, const std::vector<double> &_calib_time, const std::vector<double> &_calib_dist, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no)
+DCLayer::DCLayer(int _layer_no, const std::vector<double> &_drift_time_offset, const std::vector<double> &_calib_time, const std::vector<double> &_calib_dist, const std::vector<double> &_calib_err, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no)
 {
 	DriftTimeOffset = _drift_time_offset;
 	CalibrationTimes = _calib_time;
 	CalibrationDistances = _calib_dist;
+	CalibationError = _calib_err;
 	min_drift_time = _min_drift_time;
 	max_drift_time = _max_drift_time;
 	min_no = _min_no;
@@ -173,5 +174,6 @@ void DCLayer::calculate_distances_from_wires()
 		x2 = CalibrationDistances.at(calib_bin+1);
 		distance = x1 + (x2 - x1)*(drift_time - t1)/(t2 - t1);
 		HitsDistancesFromWires.push_back(distance);
+		HitPositionError.push_back(CalibationError.at(calib_bin));
 	}
 }

@@ -9,7 +9,7 @@ class DCLayer
 {
 public:
 	DCLayer();
-	DCLayer(int _layer_no, const std::vector<double> &_drift_time_offset, const std::vector<double> &_calib_time, const std::vector<double> &_calib_dist, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no);
+	DCLayer(int _layer_no, const std::vector<double> &_drift_time_offset, const std::vector<double> &_calib_time, const std::vector<double> &_calib_dist, const std::vector<double> &_calib_err, const double _min_drift_time, const double _max_drift_time, const int _min_no, const int _max_no);
 	~DCLayer();
 	void fill_rough_data(single_gh_data _good_hit_data);
 	DCLayer_hist_data* get_hist_data();
@@ -19,6 +19,7 @@ public:
 	// calibration -> niepotrzebne? potrzebne - 04.10.16
 	std::vector<double> CalibrationTimes;
 	std::vector<double> CalibrationDistances;
+	std::vector<double> CalibationError;
 
 	// vector of drift times offsets
 	std::vector<double> DriftTimeOffset;
@@ -35,6 +36,7 @@ public:
 	// absolute hits positions
 	std::vector<double> AbsoluteXWirePosition;
 	std::vector<double> AbsoluteXHitPosition;
+	std::vector<double> HitPositionError;
 	std::vector<double> AbsoluteZPosition;
 
 	// only for the simple calibration

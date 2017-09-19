@@ -424,6 +424,7 @@ void FitD1D2::calculate_projections_on_hit_planes_fit()
 // =================== fit line to 8 lines ===========================
 void FitD1D2::make_fit_to_lines(bool _unbiased_fit)
 {
+	unbiased_fit = _unbiased_fit;
 	double z[14];
 	z[0]  = z_inclined1[0];
 	z[1]  = z_inclined1[1];
@@ -504,9 +505,7 @@ void FitD1D2::make_fit_to_lines(bool _unbiased_fit)
 	//std::cout << " all " << chisq << std::endl;
 	lineFitD1D2 -> LineFitD1D2::~LineFitD1D2();
 
-	// unbiased
-	unbiased_fit = true;
-	if (_unbiased_fit == true)
+	if (_unbiased_fit)
 	{
 		LineFitD1D2 * lineFitD1D2Unbiased[14];
 		for (int i = 0; i < 14; i++)

@@ -34,6 +34,7 @@
 #include "Calibration3d_HEX.h"
 #include "CalibrationD1D2.h"
 #include "TrackReconstruction.h"
+#include "D1D2Reconstruction.h"
 
 #define START 1
 #define NTOF 10

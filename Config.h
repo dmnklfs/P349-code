@@ -118,51 +118,71 @@ public:
 	std::vector<double> HEX_L6_drift_time_offset;
 	std::vector<double> HEX_L7_drift_time_offset;
 
-	// calibration ---> should be different for different layers
 	std::vector<double> D1_L1_calibration_times;
 	std::vector<double> D1_L1_calibration_distances;
+	std::vector<double> D1_L1_calibration_errors;
 	std::vector<double> D1_L2_calibration_times;
 	std::vector<double> D1_L2_calibration_distances;
+	std::vector<double> D1_L2_calibration_errors;
 	std::vector<double> D1_L3_calibration_times;
 	std::vector<double> D1_L3_calibration_distances;
+	std::vector<double> D1_L3_calibration_errors;
 	std::vector<double> D1_L4_calibration_times;
 	std::vector<double> D1_L4_calibration_distances;
+	std::vector<double> D1_L4_calibration_errors;
 	std::vector<double> D1_L5_calibration_times;
 	std::vector<double> D1_L5_calibration_distances;
+	std::vector<double> D1_L5_calibration_errors;
 	std::vector<double> D1_L6_calibration_times;
 	std::vector<double> D1_L6_calibration_distances;
+	std::vector<double> D1_L6_calibration_errors;
 	std::vector<double> D1_L7_calibration_times;
 	std::vector<double> D1_L7_calibration_distances;
+	std::vector<double> D1_L7_calibration_errors;
 	std::vector<double> D1_L8_calibration_times;
 	std::vector<double> D1_L8_calibration_distances;
+	std::vector<double> D1_L8_calibration_errors;
 
 	std::vector<double> D2_L1_calibration_times;
 	std::vector<double> D2_L1_calibration_distances;
+	std::vector<double> D2_L1_calibration_errors;
 	std::vector<double> D2_L2_calibration_times;
 	std::vector<double> D2_L2_calibration_distances;
+	std::vector<double> D2_L2_calibration_errors;
 	std::vector<double> D2_L3_calibration_times;
 	std::vector<double> D2_L3_calibration_distances;
+	std::vector<double> D2_L3_calibration_errors;
 	std::vector<double> D2_L4_calibration_times;
 	std::vector<double> D2_L4_calibration_distances;
+	std::vector<double> D2_L4_calibration_errors;
 	std::vector<double> D2_L5_calibration_times;
 	std::vector<double> D2_L5_calibration_distances;
+	std::vector<double> D2_L5_calibration_errors;
 	std::vector<double> D2_L6_calibration_times;
 	std::vector<double> D2_L6_calibration_distances;
+	std::vector<double> D2_L6_calibration_errors;
 
 	std::vector<double> HEX_L1_calibration_times;
 	std::vector<double> HEX_L1_calibration_distances;
+	std::vector<double> HEX_L1_calibrationerrors;
 	std::vector<double> HEX_L2_calibration_times;
 	std::vector<double> HEX_L2_calibration_distances;
+	std::vector<double> HEX_L2_calibrationerrors;
 	std::vector<double> HEX_L3_calibration_times;
 	std::vector<double> HEX_L3_calibration_distances;
+	std::vector<double> HEX_L3_calibrationerrors;
 	std::vector<double> HEX_L4_calibration_times;
 	std::vector<double> HEX_L4_calibration_distances;
+	std::vector<double> HEX_L4_calibrationerrors;
 	std::vector<double> HEX_L5_calibration_times;
 	std::vector<double> HEX_L5_calibration_distances;
+	std::vector<double> HEX_L5_calibrationerrors;
 	std::vector<double> HEX_L6_calibration_times;
 	std::vector<double> HEX_L6_calibration_distances;
+	std::vector<double> HEX_L6_calibrationerrors;
 	std::vector<double> HEX_L7_calibration_times;
 	std::vector<double> HEX_L7_calibration_distances;
+	std::vector<double> HEX_L7_calibrationerrors;
 	
 	// ---DRIFT CHEMBER D2---
 	// min and max number of hits in layers (if set to -1: any value is ok)

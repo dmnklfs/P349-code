@@ -7,14 +7,14 @@ D1::D1(const Config &_config)
 {
 	fit_with_inclined = _config.fit_with_inclined;
 	// constructors of the layers: drift time offset, calib times, calib dists, time min, time max, hits min, hits max
-	Layer[0] = new DCLayer(1, _config.D1_L1_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D1_drift_time_min[0],_config.D1_drift_time_max[0],_config.D1_layer_min_hits[0],_config.D1_layer_max_hits[0]);
-	Layer[1] = new DCLayer(2, _config.D1_L2_drift_time_offset, _config.D1_L2_calibration_times, _config.D1_L2_calibration_distances, _config.D1_drift_time_min[1],_config.D1_drift_time_max[1],_config.D1_layer_min_hits[1],_config.D1_layer_max_hits[1]);
-	Layer[2] = new DCLayer(3, _config.D1_L3_drift_time_offset, _config.D1_L3_calibration_times, _config.D1_L3_calibration_distances, _config.D1_drift_time_min[2],_config.D1_drift_time_max[2],_config.D1_layer_min_hits[2],_config.D1_layer_max_hits[2]);
-	Layer[3] = new DCLayer(4, _config.D1_L4_drift_time_offset, _config.D1_L4_calibration_times, _config.D1_L4_calibration_distances, _config.D1_drift_time_min[3],_config.D1_drift_time_max[3],_config.D1_layer_min_hits[3],_config.D1_layer_max_hits[3]);
-	Layer[4] = new DCLayer(5, _config.D1_L5_drift_time_offset, _config.D1_L5_calibration_times, _config.D1_L5_calibration_distances, _config.D1_drift_time_min[4],_config.D1_drift_time_max[4],_config.D1_layer_min_hits[4],_config.D1_layer_max_hits[4]);
-	Layer[5] = new DCLayer(6, _config.D1_L6_drift_time_offset, _config.D1_L6_calibration_times, _config.D1_L6_calibration_distances, _config.D1_drift_time_min[5],_config.D1_drift_time_max[5],_config.D1_layer_min_hits[5],_config.D1_layer_max_hits[5]);
-	Layer[6] = new DCLayer(7, _config.D1_L7_drift_time_offset, _config.D1_L7_calibration_times, _config.D1_L7_calibration_distances, _config.D1_drift_time_min[6],_config.D1_drift_time_max[6],_config.D1_layer_min_hits[6],_config.D1_layer_max_hits[6]);
-	Layer[7] = new DCLayer(8, _config.D1_L8_drift_time_offset, _config.D1_L8_calibration_times, _config.D1_L8_calibration_distances, _config.D1_drift_time_min[7],_config.D1_drift_time_max[7],_config.D1_layer_min_hits[7],_config.D1_layer_max_hits[7]);
+	Layer[0] = new DCLayer(1, _config.D1_L1_drift_time_offset, _config.D1_L1_calibration_times, _config.D1_L1_calibration_distances, _config.D1_L1_calibration_errors, _config.D1_drift_time_min[0],_config.D1_drift_time_max[0],_config.D1_layer_min_hits[0],_config.D1_layer_max_hits[0]);
+	Layer[1] = new DCLayer(2, _config.D1_L2_drift_time_offset, _config.D1_L2_calibration_times, _config.D1_L2_calibration_distances, _config.D1_L2_calibration_errors, _config.D1_drift_time_min[1],_config.D1_drift_time_max[1],_config.D1_layer_min_hits[1],_config.D1_layer_max_hits[1]);
+	Layer[2] = new DCLayer(3, _config.D1_L3_drift_time_offset, _config.D1_L3_calibration_times, _config.D1_L3_calibration_distances, _config.D1_L3_calibration_errors, _config.D1_drift_time_min[2],_config.D1_drift_time_max[2],_config.D1_layer_min_hits[2],_config.D1_layer_max_hits[2]);
+	Layer[3] = new DCLayer(4, _config.D1_L4_drift_time_offset, _config.D1_L4_calibration_times, _config.D1_L4_calibration_distances, _config.D1_L4_calibration_errors, _config.D1_drift_time_min[3],_config.D1_drift_time_max[3],_config.D1_layer_min_hits[3],_config.D1_layer_max_hits[3]);
+	Layer[4] = new DCLayer(5, _config.D1_L5_drift_time_offset, _config.D1_L5_calibration_times, _config.D1_L5_calibration_distances, _config.D1_L5_calibration_errors, _config.D1_drift_time_min[4],_config.D1_drift_time_max[4],_config.D1_layer_min_hits[4],_config.D1_layer_max_hits[4]);
+	Layer[5] = new DCLayer(6, _config.D1_L6_drift_time_offset, _config.D1_L6_calibration_times, _config.D1_L6_calibration_distances, _config.D1_L6_calibration_errors, _config.D1_drift_time_min[5],_config.D1_drift_time_max[5],_config.D1_layer_min_hits[5],_config.D1_layer_max_hits[5]);
+	Layer[6] = new DCLayer(7, _config.D1_L7_drift_time_offset, _config.D1_L7_calibration_times, _config.D1_L7_calibration_distances, _config.D1_L7_calibration_errors, _config.D1_drift_time_min[6],_config.D1_drift_time_max[6],_config.D1_layer_min_hits[6],_config.D1_layer_max_hits[6]);
+	Layer[7] = new DCLayer(8, _config.D1_L8_drift_time_offset, _config.D1_L8_calibration_times, _config.D1_L8_calibration_distances, _config.D1_L8_calibration_errors, _config.D1_drift_time_min[7],_config.D1_drift_time_max[7],_config.D1_layer_min_hits[7],_config.D1_layer_max_hits[7]);
 	for (int i = 0; i < 8; i++)
 	{
 		// init for inclined wires
@@ -74,10 +74,10 @@ bool D1::was_correct_event()
 			D1_no_of_cells_with_hits = D1_no_of_cells_with_hits + Layer[i]-> Wire.size();
 		}
 	}
-	if (no_of_layers_with_hits == 8)
-	{
-		correct_event = true;
-	}
+//	if (no_of_layers_with_hits == 8)
+//	{
+//		correct_event = true;
+//	}
 
 	// dell it, choice of coincidences if one wire parametrized
 //	double edge_val1, edge_val2, dtime1, dtime2;
@@ -110,7 +110,7 @@ bool D1::was_correct_event()
 //		//correct_event = true;
 //	}
 
-/*	int wire1;
+	int wire1;
 	int wire2;
 	int wire3;
 	int wire4;
@@ -129,11 +129,7 @@ bool D1::was_correct_event()
 		wire6 = Layer[5] -> DCLayer::Wire.at(0);		
 		wire7 = Layer[6] -> DCLayer::Wire.at(0);
 		wire8 = Layer[7] -> DCLayer::Wire.at(0);
-		//std::cout << wire1 << " " << wire2 << " " << wire7 << " " << wire8 << std::endl;
-//		if ((wire2==wire1||wire2==wire1+1)&&(wire8==wire7||wire8==wire7+1))// wire1==19&&wire7==19&&wire2==20&&wire8==20) // ||wire2==wire1+1 ||wire8==wire7+1
-//		{
-//			correct_event = true;
-//		}
+
 		pair1 = false;
 		pair2 = false;
 		pair3 = false;
@@ -145,7 +141,7 @@ bool D1::was_correct_event()
 
 		if (pair1&&pair2&&pair3&&pair4) correct_event = true;
 	}
-*/	
+
 	return correct_event;
 }
 
@@ -288,6 +284,7 @@ data_for_D1_track_reco D1::get_data_for_track_reco() // i need here only informa
 		data_for_calibration.positionsHitsX[i]	= Layer[i] -> AbsoluteXHitPosition.at(0);
 		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
 		data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
+		data_for_calibration.errorsX[i]	= Layer[i] -> HitPositionError.at(0);
 	}
 	return data_for_calibration;
 }
