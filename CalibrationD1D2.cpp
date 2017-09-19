@@ -297,8 +297,8 @@ void CalibrationD1D2::fit_in_3d()
 			wires_positionsX_all[j] = Layer[j]->CalibrationData.at(i).wire_pos_X;
 			hits_positionsX_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_X;
 			hits_positionsZ_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Z;
-			if (true) errors_all[j]=1;
-			//if (no_of_iteration==0) errors_all[j]=1;
+			//if (true) errors_all[j]=1;
+			if (no_of_iteration==0) errors_all[j]=1;
 			else errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
 			//std::cout << "wires_positionsX_all[j] " << Layer[j]->CalibrationData.at(i).wire_pos_X << std::endl;
 			//std::cout << "hits_positionsX_all[j]  " << Layer[j]->CalibrationData.at(i).hit_pos_X << std::endl;
@@ -321,7 +321,8 @@ void CalibrationD1D2::fit_in_3d()
 		fitD1D2 -> FitD1D2::calculate_3d_track_parameters();
 		fitD1D2 -> FitD1D2::calculate_projections_on_hit_planes_calculations();
 
-		fitD1D2 -> FitD1D2::make_fit_to_lines(unbiased_fit);
+		//fitD1D2 -> FitD1D2::make_fit_to_lines(unbiased_fit);
+		fitD1D2 -> FitD1D2::make_fit_to_lines(true);
 		fitD1D2 -> FitD1D2::calculate_projections_on_hit_planes_fit();
 		track3d_fit_point = fitD1D2 -> FitD1D2::return_track_point();
 		track3d_fit_vector = fitD1D2 -> FitD1D2::return_track_vector();

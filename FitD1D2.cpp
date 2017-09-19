@@ -505,30 +505,30 @@ void FitD1D2::make_fit_to_lines(bool _unbiased_fit)
 	lineFitD1D2 -> LineFitD1D2::~LineFitD1D2();
 
 	// unbiased
-	//unbiased_fit = true;
-//	if (_unbiased_fit == true)
-//	{
-//		LineFitD1D2 * lineFitD1D2Unbiased[8];
-//		for (int i = 0; i < 8; i++)
-//		{
-//			lineFitD1D2Unbiased[i] = LineFitD1D2::GetInstance();
-//			if (no_of_iteration == 8 || no_of_iteration == 9) lineFitD1D2Unbiased[i] -> LineFitD1D2::set_excluded_layer(-1);
-//			else lineFitD1D2Unbiased[i] -> LineFitD1D2::set_excluded_layer(i);
-//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_z_values(z);
-//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_x_straight_values(x_straight);
-//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_incl_hit_lines_params(a, b);
-//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_x_errors(errors);
-//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
-//			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
-//			lineFitD1D2Unbiased[i] -> LineFitD1D2::calculate_start_params();
-//			lineFitD1D2Unbiased[i] -> LineFitD1D2::fit_with_minuit();
-//			track3d_fit_point_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::return_track_point();
-//			track3d_fit_vector_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::return_track_vector();
-//			errflag_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::err_flag();
-//			chisq_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::get_chisq();
-//			lineFitD1D2Unbiased[i] -> LineFitD1D2::~LineFitD1D2();
-//		}
-//	}
+	unbiased_fit = true;
+	if (_unbiased_fit == true)
+	{
+		LineFitD1D2 * lineFitD1D2Unbiased[14];
+		for (int i = 0; i < 14; i++)
+		{
+			lineFitD1D2Unbiased[i] = LineFitD1D2::GetInstance();
+			if (no_of_iteration == 4 || no_of_iteration == 5) lineFitD1D2Unbiased[i] -> LineFitD1D2::set_excluded_layer(-1);
+			else lineFitD1D2Unbiased[i] -> LineFitD1D2::set_excluded_layer(i);
+			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_z_values(z);
+			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_x_straight_values(x_straight);
+			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_incl_hit_lines_params(a, b);
+			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_x_errors(errors);
+			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_track_point(track3d_point.X(), track3d_point.Y(), track3d_point.Z());
+			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_track_vector(track3d_vector.X(), track3d_vector.Y(), track3d_vector.Z());
+			lineFitD1D2Unbiased[i] -> LineFitD1D2::calculate_start_params();
+			lineFitD1D2Unbiased[i] -> LineFitD1D2::fit_with_minuit();
+			track3d_fit_point_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::return_track_point();
+			track3d_fit_vector_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::return_track_vector();
+			errflag_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::err_flag();
+			chisq_unbiased[i] = lineFitD1D2Unbiased[i] -> LineFitD1D2::get_chisq();
+			lineFitD1D2Unbiased[i] -> LineFitD1D2::~LineFitD1D2();
+		}
+	}
 	
 	// UncorrelatedOpt * track_optimization = UncorrelatedOpt::GetInstance();
 	// track_optimization -> UncorrelatedOpt::set_z_values(z);

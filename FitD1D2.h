@@ -124,7 +124,7 @@ private:
 	TVector3 track3d_point;
 	// from fit to 8 planes
 	TVector3 track3d_fit_point, track3d_fit_vector;
-	TVector3 track3d_fit_point_unbiased[8], track3d_fit_vector_unbiased[8];
+	TVector3 track3d_fit_point_unbiased[14], track3d_fit_vector_unbiased[14];
 
 	// projections of the track on the planes
 	//   vertors (directions)
