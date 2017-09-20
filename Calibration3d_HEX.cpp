@@ -313,6 +313,7 @@ void Calibration3d_HEX::fit_in_3d()
 
 		Fit3d_HEX *fit3d_HEX = new Fit3d_HEX(i);
 		fit3d_HEX -> Fit3d_HEX::set_no_of_iteration(no_of_iteration);
+		fit3d_HEX -> Fit3d_HEX::set_z_reference(0);
 		fit3d_HEX -> Fit3d_HEX::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all, wires_positionsX_all);
 		fit3d_HEX -> Fit3d_HEX::fit_straight_layer();
 		fit3d_HEX -> Fit3d_HEX::fit_inclined_layers();

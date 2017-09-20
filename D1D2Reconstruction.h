@@ -22,6 +22,7 @@
 #include <string>
 #include <sstream>
 #include <ctime>
+#include <string>
 #include "struct.h"
 #include "Config.h"
 #include "MinuitFit.h"
@@ -91,11 +92,13 @@ public:
 	void plot_D1_d2_phi_corr();
 	void save_histos();
 
-	void set_detectors_shift_on_D2_vectors(double xshift, double zshift);
+	void set_x_offset(double xoffset);
+	void set_z_offset(double zoffset);
+	//void set_detectors_shift_on_D2_vectors(double xshift, double zshift); remove? 20.09.2017
 	void reconstructed_D2_vs_expected_D1(); // expected in D2 from reconstruction in D1
 
 private:
-	TH1F *D1_chisq, *D2_chisq, *chisq, *probability, *chi2_resc, *chi2_resc_cut, *probability_cut;
+	TH1F *D1_chisq, *D2_chisq, *chisq, *chisq_ndf, *probability, *chi2_resc, *chi2_resc_cut, *probability_cut;
 	TH1F *D1_phi, *D1_theta, *D2_phi, *D2_theta, *phi, *theta;
 	TH2F *D1D2_phi_corr, *D1D2_theta_corr;
 	TH2F *x_reco_D2_exp_D1, *y_reco_D2_exp_D1;

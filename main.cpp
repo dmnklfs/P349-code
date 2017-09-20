@@ -114,13 +114,27 @@ int main(int argc, char *argv[])
     //calibrationd1d2 -> set_no_of_bin_in_event();
 
     d1d2_reco -> tell_no_of_events();
-    d1d2_reco -> fit_in_3d_D1();
-    d1d2_reco -> fit_in_3d_D2();
-    d1d2_reco -> fit();
-    d1d2_reco -> plot_D1_d2_phi_corr();
-    //d1d2_reco -> reconstructed_D2_vs_expected_D1();
-    d1d2_reco -> save_histos();
-    std::cout << "mean chisq: " << d1d2_reco -> get_mean_chisq() << std::endl;
+    double offset[200], chisq[200], off, chi;
+    for (int i = 0; i < 200; i++)
+    {
+      std::cout << "offset determination... " << i + 1 << " out of " << 200 << " done"
+      if (i==0) off = -1.0;
+      else off = 0.01;
+      d1d2_reco -> set_x_offset(off);
+      d1d2_reco -> set_z_offset(0);
+      d1d2_reco -> fit_in_3d_D1();
+      d1d2_reco -> fit_in_3d_D2();
+      d1d2_reco -> fit();
+      d1d2_reco -> plot_D1_d2_phi_corr();
+      d1d2_reco -> save_histos();
+      d1d2_reco -> deletations();
+      chi = d1d2_reco -> get_mean_chisq();
+      offset[i] = -1.0+i*0.01;
+      chisq[i] = chi;
+    }
+    TGraph *graph = new TGraph(200,offset,chisq);
+    //graph -> Draw("AP");
+    graph->Write();
 
 //    for (int i = 0; i < 6; i++)
 //    {

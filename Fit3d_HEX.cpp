@@ -7,6 +7,7 @@ Fit3d_HEX::Fit3d_HEX()
 
 Fit3d_HEX::Fit3d_HEX(int _event_no)
 {
+	z_reference = 0;
 	event_no = _event_no;
 	unbiased_fit = false;
 }
@@ -52,6 +53,11 @@ void Fit3d_HEX::set_values(double *_x, double *_y, double *_errors, double *_x_w
 	x_straight_wires[1] = _x_wires[3];
 	z_straight[1]       = _y[3];
 	errors_straight[1]  = _errors[3];
+}
+
+void Fit3d_HEX::set_z_reference(double z)
+{
+	z_reference = z;
 }
 
 void Fit3d_HEX::fit_straight_layer()
@@ -778,6 +784,7 @@ void Fit3d_HEX::make_fit_to_lines(bool _unbiased_fit)
 	// biased
 	LineFit_HEX * lineFit3d_HEX = LineFit_HEX::GetInstance();
 	lineFit3d_HEX -> LineFit_HEX::set_z_values(z);
+	lineFit3d_HEX -> LineFit_HEX::set_z_reference(z_reference);
 	lineFit3d_HEX -> LineFit_HEX::set_x_straight_values(x_straight);
 	lineFit3d_HEX -> LineFit_HEX::set_incl_hit_lines_params(a, b);
 	lineFit3d_HEX -> LineFit_HEX::set_x_errors(errors);
@@ -809,6 +816,7 @@ void Fit3d_HEX::make_fit_to_lines(bool _unbiased_fit)
 		if (no_of_iteration == 0 || no_of_iteration == 6) lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_excluded_layer(-1);
 		else lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_excluded_layer(i);
 		lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_z_values(z);
+		lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_z_reference(z_reference);
 		lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_x_straight_values(x_straight);
 		lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_incl_hit_lines_params(a, b);
 		lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_x_errors(errors);

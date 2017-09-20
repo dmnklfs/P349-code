@@ -7,6 +7,7 @@ Fit3d_D2::Fit3d_D2()
 
 Fit3d_D2::Fit3d_D2(int _event_no)
 {
+	z_reference = 0;
 	event_no = _event_no;
 	unbiased_fit = false;
 }
@@ -744,6 +745,11 @@ void Fit3d_D2::draw_event()
 	f3.Close();
 }
 
+void Fit3d_D2::set_z_reference(double z)
+{
+	z_reference = z;
+}
+
 // =================== fit line to 8 lines ===========================
 void Fit3d_D2::make_fit_to_lines(bool _unbiased_fit)
 {
@@ -779,6 +785,7 @@ void Fit3d_D2::make_fit_to_lines(bool _unbiased_fit)
 	// biased
 	LineFit_D2 * lineFit3d_D2 = LineFit_D2::GetInstance();
 	lineFit3d_D2 -> LineFit_D2::set_z_values(z);
+	lineFit3d_D2 -> LineFit_D2::set_z_reference(z_reference);
 	lineFit3d_D2 -> LineFit_D2::set_x_straight_values(x_straight);
 	lineFit3d_D2 -> LineFit_D2::set_incl_hit_lines_params(a, b);
 	lineFit3d_D2 -> LineFit_D2::set_x_errors(errors);
@@ -810,6 +817,7 @@ void Fit3d_D2::make_fit_to_lines(bool _unbiased_fit)
 		if (no_of_iteration == 5 || no_of_iteration == 6) lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_excluded_layer(-1);
 		else lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_excluded_layer(i);
 		lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_z_values(z);
+		lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_z_reference(z_reference);
 		lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_x_straight_values(x_straight);
 		lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_incl_hit_lines_params(a, b);
 		lineFit3d_D2_Unbiased[i] -> LineFit_D2::set_x_errors(errors);

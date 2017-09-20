@@ -42,6 +42,7 @@ public:
 	void set_track_point(double _track_x, double _track_y, double _track_z);
 	void set_track_vector(double _track_ux, double _track_uy, double _track_uz);
 	void set_excluded_layer(int _excluded_layer);
+	void set_z_reference(double z);
 	void calculate_start_params();
 	TVector3 return_track_point();
 	TVector3 return_track_vector();

@@ -44,6 +44,7 @@ public:
 	FitD1D2(int _event_no);
 	~FitD1D2();
 	void set_values(double *_x, double *_y, double *_errors, double *_x_wires);
+	void set_z_reference(double z);
 	void fit_straight_layer();
 	void fit_inclined_layers();
 	void calculate_xy_functions();
@@ -78,6 +79,7 @@ public:
 	void set_no_of_iteration(int _no_of_iteration);
 
 private:
+	double z_reference;
 	int event_no;
 	bool unbiased_fit;
 	// data for fit

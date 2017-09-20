@@ -14,7 +14,7 @@ D1D2Reconstruction::D1D2Reconstruction(const Config &_config)
 	x_lab_position_D2 = _config.D2_x_lab_position;
 	z_lab_position_D2 = _config.D2_z_lab_position;
 
-	D2_x_offset = -0.15;
+	D2_x_offset = 0;
 	D2_z_offset = 0;
 
 	// D1
@@ -30,8 +30,8 @@ D1D2Reconstruction::D1D2Reconstruction(const Config &_config)
 	//common
 	phi = new TH1F("phi", "phi; phi_xz [deg]; N", 200, 75, 105);
 	theta = new TH1F("theta", "theta; theta_yz [deg]; N", 200, 75, 105);
-	//chisq = new TH1F("#chi^{2}/ndf","#chi^{2}/ndf;#chi^{2}/ndf;N", 1000, -0.001, 0.05);
-	chisq = new TH1F("#chi^{2}/ndf","#chi^{2}/ndf;#chi^{2}/ndf;N", 250, -0.025, 2.5);
+	chisq = new TH1F("#chi^{2}","#chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
+	chisq_ndf = new TH1F("#chi^{2}/ndf","#chi^{2}/ndf;#chi^{2}/ndf;N", 250, -0.025, 2.5);
 	chi2_resc = new TH1F("#chi^{2}","#chi^{2};#chi^{2};N", 250, -0.25, 25);
 	chi2_resc_cut = new TH1F("#chi^{2} cut","#chi^{2} cut;#chi^{2};N", 250, -0.25, 25);
 	probability = new TH1F("#chi^{2} prob", "#chi^{2} prob,;#chi^{2} prob;N", 100, -0.1, 1.1);
@@ -59,22 +59,50 @@ void D1D2Reconstruction::tell_no_of_events()
 	std::cout << "NO OF EVENTS FOR TRACK RECONSTRUCTION: " << no_of_chosen_events << std::endl;
 }
 
+void D1D2Reconstruction::set_x_offset(double xoffset)
+{
+	D2_x_offset = D2_x_offset + xoffset;
+	for (int i = 0; i < TrackRecoData.size(); i++)
+	{	
+		for (int j = 0; j < 6; j++)
+		{
+			TrackRecoData.at(i).x_hit_pos[j] += xoffset;
+			TrackRecoData.at(i).x_hit_pos_D2[j] += xoffset;
+		}
+	}
+}
+
+void D1D2Reconstruction::set_z_offset(double zoffset)
+{
+	D2_z_offset = D2_z_offset+zoffset;
+	for (int i = 0; i < TrackRecoData.size(); i++)
+	{	
+		for (int j = 0; j < 6; j++)
+		{
+			TrackRecoData.at(i).z_hit_pos[j] += zoffset;
+			TrackRecoData.at(i).z_hit_pos_D2[j] += zoffset;
+		}
+	}
+}
+
+
+// all rotations etc can take place here
 void D1D2Reconstruction::get_data(data_for_track_reconstruction _single_event_data)
 {
 	d1d2_reco_data single_event_data;
 	// positions of hits with respect to the dc center
 	for (int i = 0; i < 6; i++)
 	{
-		single_event_data.x_hit_pos_D2[i] = _single_event_data.D2.positionsHitsX[i];
-		single_event_data.x_err_hit_pos_D2[i] = _single_event_data.D2.errorsX[i];
-		single_event_data.z_hit_pos_D2[i] = _single_event_data.D2.positionsZ[i];
+		single_event_data.x_hit_pos_D2[i] = _single_event_data.D2.positionsHitsX[i] + x_lab_position_D2 + D2_x_offset;
+		single_event_data.x_err_hit_pos_D2[i] = 1;//_single_event_data.D2.errorsX[i];
+		single_event_data.z_hit_pos_D2[i] = _single_event_data.D2.positionsZ[i] + z_lab_position_D2 + D2_z_offset;
 	}
 
 	// positions of hits - with respect to the dc center
 	for (int i = 0; i < 8; i++)
 	{
 		single_event_data.x_hit_pos_D1[i] = _single_event_data.D1.positionsHitsX[i];
-		single_event_data.x_err_hit_pos_D1[i] = _single_event_data.D1.errorsX[i];
+		single_event_data.x_err_hit_pos_D1[i] = 1;//_single_event_data.D1.errorsX[i];
 		single_event_data.z_hit_pos_D1[i] = _single_event_data.D1.positionsZ[i];
 	}
 
@@ -83,9 +111,9 @@ void D1D2Reconstruction::get_data(data_for_track_reconstruction _single_event_da
 	{
 		if (i < 6)
 		{
-			single_event_data.x_hit_pos[i] = _single_event_data.D2.positionsHitsX[i] + x_lab_position_D2 + D2_x_offset;
+			single_event_data.x_hit_pos[i] = _single_event_data.D2.positionsHitsX[i] + x_lab_position_D2;
 			single_event_data.x_err_hit_pos[i] = 1;//_single_event_data.D2.errorsX[i];
-			single_event_data.z_hit_pos[i] = _single_event_data.D2.positionsZ[i] + z_lab_position_D2 + D2_z_offset;
+			single_event_data.z_hit_pos[i] = _single_event_data.D2.positionsZ[i] + z_lab_position_D2;
 			//std::cout << i+1 << " " << single_event_data.x_err_hit_pos[i] << std::endl;
 		}
 		else
@@ -101,19 +129,20 @@ void D1D2Reconstruction::get_data(data_for_track_reconstruction _single_event_da
 	TrackRecoData.push_back(single_event_data);
 }
 
-void D1D2Reconstruction::set_detectors_shift_on_D2_vectors(double xshift, double zshift)
-{
-	for (int i = 0; i < TrackRecoData.size(); i++)
-	{	
-		TrackRecoData.at(i).track3d_fit_point_D2.SetX(xshift + TrackRecoData.at(i).track3d_fit_point_D2.X());
-		TrackRecoData.at(i).track3d_fit_point_D2.SetZ(zshift + TrackRecoData.at(i).track3d_fit_point_D2.Z());
-	}
-	half_x_dim_D2 = half_x_dim_D2 + xshift;
-	half_x_dim_D2 = half_x_dim_D2 + zshift;
-
-	D2_x_offset = D2_z_offset + xshift;
-	D2_z_offset = D2_z_offset + zshift;
-}
+// should not be used!
+//void D1D2Reconstruction::set_detectors_shift_on_D2_vectors(double xshift, double zshift)
+//{
+//	for (int i = 0; i < TrackRecoData.size(); i++)
+//	{	
+//		TrackRecoData.at(i).track3d_fit_point_D2.SetX(xshift + TrackRecoData.at(i).track3d_fit_point_D2.X());
+//		TrackRecoData.at(i).track3d_fit_point_D2.SetZ(zshift + TrackRecoData.at(i).track3d_fit_point_D2.Z());
+//	}
+//	half_x_dim_D2 = half_x_dim_D2 + xshift;
+//	half_x_dim_D2 = half_x_dim_D2 + zshift;
+//
+//	D2_x_offset = D2_z_offset + xshift;
+//	D2_z_offset = D2_z_offset + zshift;
+//}
 
 double D1D2Reconstruction::get_mean_chisq()
 {
@@ -158,17 +187,18 @@ void D1D2Reconstruction::plot_D1_d2_phi_corr()
 	TVector3 D1_track_vector, D2_track_vector, D1_track_point, D2_track_point;
 	double z_distance, scale;
 	double x_from_D1, y_from_D1, x_from_D2, y_from_D2;
-	set_detectors_shift_on_D2_vectors(x_lab_position_D2+D2_x_offset, z_lab_position_D2+D2_z_offset);
+	//set_detectors_shift_on_D2_vectors(x_lab_position_D2+D2_x_offset, z_lab_position_D2+D2_z_offset);
 
 	for (unsigned int i = 0; i < TrackRecoData.size(); i++)
 	{
 
 		if (!TrackRecoData.at(i).errflag)
 		{
-			chisq->Fill(0.01*TrackRecoData.at(i).chi2);
+			chisq_ndf->Fill(0.01*TrackRecoData.at(i).chi2);
+			chisq->Fill(TrackRecoData.at(i).chi2);
 			chi2_resc->Fill(TrackRecoData.at(i).chi2);
 			probability -> Fill(TMath::Prob(TrackRecoData.at(i).chi2,10));
-			if (TMath::Prob(TrackRecoData.at(i).chi2,10) > 0.01)
+			if (TMath::Prob(TrackRecoData.at(i).chi2,10) > 0.0)
 			{
 				chi2_resc_cut->Fill(TrackRecoData.at(i).chi2);
 				probability_cut -> Fill(TMath::Prob(TrackRecoData.at(i).chi2,10));
@@ -222,27 +252,74 @@ void D1D2Reconstruction::plot_D1_d2_phi_corr()
 void D1D2Reconstruction::save_histos()
 {
 	gDirectory->pwd();
-	//D1_chisq->Write();
-	//D2_chisq->Write();
-	chisq->Write();
-	chi2_resc->Write();
-	chi2_resc_cut->Write();
-	probability->Write();
-	probability_cut->Write();
-	D1_phi -> Write();
-	D1_theta -> Write();
-	D2_phi -> Write();
-	D2_theta -> Write();
-	phi -> Write();
-	theta -> Write();
-	D1D2_phi_corr->Write();
-	D1D2_theta_corr->Write();
-	x_reco_D2_exp_D1->Write();
-	x_reco_D2_exp_D1->ProjectionX()->Write();
-	y_reco_D2_exp_D1->Write();
-	x_reco_D2_exp_D1->ProjectionY()->Write();
-	x_reco_D2_minus_exp_D1->Write();
-	y_reco_D2_minus_exp_D1->Write();
+	std::string name(D1_chisq -> GetName());
+	TString aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//D1_chisq->Write(aname);
+
+	//name = (D2_chisq->GetName());
+	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//D2_chisq->Write(aname);
+
+
+	name = (chisq->GetName());
+	aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	chisq->Write(aname);
+	//name = (chisq_ndf->GetName());
+	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//chisq_ndf->Write();
+	//name = (chi2_resc->GetName());
+	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//chi2_resc->Write();
+	//name = (chi2_resc_cut->GetName());
+	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//chi2_resc_cut->Write();
+
+	//probability->Write();
+	//probability_cut->Write();
+	//D1_phi -> Write();
+	//D1_theta -> Write();
+	//D2_phi -> Write();
+	//D2_theta -> Write();
+
+	name = (phi->GetName());
+	aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	phi -> Write(aname);
+
+	name = (theta->GetName());
+	aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	theta -> Write(aname);
+
+	//name = (D1D2_phi_corr->GetName());
+	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//D1D2_phi_corr->Write(aname);
+
+	//name = (D1D2_theta_corr->GetName());
+	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//D1D2_theta_corr->Write(aname);
+
+	name = (x_reco_D2_exp_D1->GetName());
+	aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	x_reco_D2_exp_D1->Write(aname);
+
+	//name = (x_reco_D2_exp_D1->GetName());
+	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//x_reco_D2_exp_D1->ProjectionX()->Write(aname);
+
+	//name = (y_reco_D2_exp_D1->GetName());
+	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//y_reco_D2_exp_D1->Write(aname);
+
+	//name = (x_reco_D2_exp_D1->GetName());
+	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//x_reco_D2_exp_D1->ProjectionY()->Write(aname);
+
+	name = (x_reco_D2_minus_exp_D1->GetName());
+	aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	x_reco_D2_minus_exp_D1->Write(aname);
+
+	//name = (y_reco_D2_minus_exp_D1->GetName());
+	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//y_reco_D2_minus_exp_D1->Write(aname);
 }
 
 void D1D2Reconstruction::reconstructed_D2_vs_expected_D1()
@@ -250,7 +327,7 @@ void D1D2Reconstruction::reconstructed_D2_vs_expected_D1()
 	TVector3 D1_track_vector, D2_track_vector, D1_track_point, D2_track_point;
 	double z_distance, scale;
 	double x_from_D1, y_from_D1, x_from_D2, y_from_D2;
-	set_detectors_shift_on_D2_vectors(x_lab_position_D2, z_lab_position_D2);
+	//set_detectors_shift_on_D2_vectors(x_lab_position_D2, z_lab_position_D2);
 	for (unsigned int i = 0; i < TrackRecoData.size(); i++)
 	{
 		// points
@@ -347,6 +424,7 @@ void D1D2Reconstruction::fit_in_3d_D2()
 		Fit3d_D2 *fit3d = new Fit3d_D2(i);
 		fit3d -> Fit3d_D2::set_no_of_iteration(0);
 		fit3d -> Fit3d_D2::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all, wires_positionsX_all);
+		fit3d -> Fit3d_D2::set_z_reference((hits_positionsZ_all[0]+hits_positionsZ_all[5])/2);
 		fit3d -> Fit3d_D2::fit_straight_layer();
 		fit3d -> Fit3d_D2::fit_inclined_layers();
 		fit3d -> Fit3d_D2::calculate_xy_functions();
@@ -394,6 +472,7 @@ void D1D2Reconstruction::fit()
 		FitD1D2 *fitD1D2 = new FitD1D2(i);
 		fitD1D2 -> FitD1D2::set_no_of_iteration(0);
 		fitD1D2 -> FitD1D2::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all, wires_positionsX_all);
+		fitD1D2 -> FitD1D2::set_z_reference((6*(hits_positionsZ_all[0]+hits_positionsZ_all[5])/2+8*(hits_positionsZ_all[6]+hits_positionsZ_all[13])/2)/14);
 		fitD1D2 -> FitD1D2::fit_straight_layer();
 		fitD1D2 -> FitD1D2::fit_inclined_layers();
 		fitD1D2 -> FitD1D2::calculate_xy_functions();
@@ -417,4 +496,28 @@ void D1D2Reconstruction::fit()
 		}
 		delete fitD1D2;
 	}
+}
+
+void D1D2Reconstruction::deletations()
+{
+	D1_chisq -> Reset();
+	D1_phi -> Reset();
+	D1_theta -> Reset();
+	D2_chisq -> Reset();
+	D2_phi -> Reset();
+	D2_theta -> Reset();
+	phi -> Reset();
+	theta -> Reset();
+	chisq -> Reset();
+	chisq_ndf -> Reset();
+	chi2_resc -> Reset();
+	chi2_resc_cut -> Reset();
+	probability -> Reset();
+	probability_cut -> Reset();
+	D1D2_phi_corr -> Reset();
+	D1D2_theta_corr -> Reset();
+	x_reco_D2_exp_D1 -> Reset();
+	y_reco_D2_exp_D1 -> Reset();
+	x_reco_D2_minus_exp_D1 -> Reset();
+	y_reco_D2_minus_exp_D1 -> Reset();
 }

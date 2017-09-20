@@ -11,6 +11,7 @@ LineFit * LineFit::GetInstance(){
 
 LineFit::LineFit()
 {
+	zp = 0;
 	no_of_points = 8;
 	excluded_layer = -1;
 }
@@ -21,7 +22,11 @@ void LineFit::set_z_values(double *_z)
 	{
 		z[i] = _z[i];
 	}
-	zp = 0;//z[0]-20;
+}
+
+void LineFit::set_z_reference(double z)
+{
+	zp = z;
 }
 
 void LineFit::set_x_straight_values(double *_x)

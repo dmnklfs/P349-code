@@ -9,6 +9,7 @@ FitD1D2::FitD1D2(int _event_no)
 {
 	event_no = _event_no;
 	unbiased_fit = false;
+	z_reference = 0;
 }
 
 FitD1D2::~FitD1D2()
@@ -95,6 +96,11 @@ void FitD1D2::set_values(double *_x, double *_y, double *_errors, double *_x_wir
 	x_inclined2_wires[3] = _x_wires[11];
 	z_inclined2[3]       = _y[11];
 	errors_inclined2[3]  = _errors[11];
+}
+
+void FitD1D2::set_z_reference(double z)
+{
+	z_reference = z;
 }
 
 void FitD1D2::fit_straight_layer()
@@ -489,6 +495,7 @@ void FitD1D2::make_fit_to_lines(bool _unbiased_fit)
 	// biased
 	LineFitD1D2 * lineFitD1D2 = LineFitD1D2::GetInstance();
 	lineFitD1D2 -> LineFitD1D2::set_z_values(z);
+	lineFitD1D2 -> LineFitD1D2::set_z_reference(z_reference);
 	lineFitD1D2 -> LineFitD1D2::set_x_straight_values(x_straight);
 	lineFitD1D2 -> LineFitD1D2::set_incl_hit_lines_params(a, b);
 	lineFitD1D2 -> LineFitD1D2::set_x_errors(errors);
@@ -514,6 +521,7 @@ void FitD1D2::make_fit_to_lines(bool _unbiased_fit)
 			if (no_of_iteration == 4 || no_of_iteration == 5) lineFitD1D2Unbiased[i] -> LineFitD1D2::set_excluded_layer(-1);
 			else lineFitD1D2Unbiased[i] -> LineFitD1D2::set_excluded_layer(i);
 			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_z_values(z);
+			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_z_reference(z_reference);
 			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_x_straight_values(x_straight);
 			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_incl_hit_lines_params(a, b);
 			lineFitD1D2Unbiased[i] -> LineFitD1D2::set_x_errors(errors);

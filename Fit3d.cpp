@@ -7,6 +7,7 @@ Fit3d::Fit3d()
 
 Fit3d::Fit3d(int _event_no)
 {
+	z_reference = 0;
 	event_no = _event_no;
 	unbiased_fit = false;
 }
@@ -58,6 +59,11 @@ void Fit3d::set_values(double *_x, double *_y, double *_errors, double *_x_wires
 	x_inclined2_wires[1] = _x_wires[5];
 	z_inclined2[1] = _y[5];
 	errors_inclined2[1] = _errors[5];
+}
+
+void Fit3d::set_z_reference(double z)
+{
+	z_reference = z;
 }
 
 void Fit3d::fit_straight_layer()
@@ -793,6 +799,7 @@ void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 	// biased
 	LineFit * lineFit3d = LineFit::GetInstance();
 	lineFit3d -> LineFit::set_z_values(z);
+	lineFit3d -> LineFit::set_z_reference(z_reference);
 	lineFit3d -> LineFit::set_x_straight_values(x_straight);
 	lineFit3d -> LineFit::set_incl_hit_lines_params(a, b);
 	lineFit3d -> LineFit::set_x_errors(errors);
@@ -820,6 +827,7 @@ void Fit3d::make_fit_to_lines(bool _unbiased_fit)
 			if (no_of_iteration == 8 || no_of_iteration == 9) lineFit3dUnbiased[i] -> LineFit::set_excluded_layer(-1);
 			else lineFit3dUnbiased[i] -> LineFit::set_excluded_layer(i);
 			lineFit3dUnbiased[i] -> LineFit::set_z_values(z);
+			lineFit3dUnbiased[i] -> LineFit::set_z_reference(z_reference);
 			lineFit3dUnbiased[i] -> LineFit::set_x_straight_values(x_straight);
 			lineFit3dUnbiased[i] -> LineFit::set_incl_hit_lines_params(a, b);
 			lineFit3dUnbiased[i] -> LineFit::set_x_errors(errors);

@@ -299,6 +299,7 @@ void Calibration3d::fit_in_3d()
 
 		Fit3d *fit3d = new Fit3d(i);
 		fit3d -> Fit3d::set_no_of_iteration(no_of_iteration);
+		fit3d -> Fit3d::set_z_reference(0);
 		fit3d -> Fit3d::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all, wires_positionsX_all);
 		fit3d -> Fit3d::fit_straight_layer();
 		fit3d -> Fit3d::fit_inclined_layers();

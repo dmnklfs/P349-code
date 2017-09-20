@@ -21,7 +21,11 @@ void LineFitD1D2::set_z_values(double *_z)
 	{
 		z[i] = _z[i];
 	}
-	zp = (6*(z[0]+z[5])/2+8*(z[6]+z[13])/2)/14;
+}
+
+void LineFitD1D2::set_z_reference(double z)
+{
+	zp = z;
 }
 
 void LineFitD1D2::set_x_straight_values(double *_x)

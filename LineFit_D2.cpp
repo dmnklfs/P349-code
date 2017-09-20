@@ -13,6 +13,7 @@ LineFit_D2::LineFit_D2()
 {
 	no_of_points = 6;
 	excluded_layer = -1;
+	zp = 0;
 }
 
 void LineFit_D2::set_z_values(double *_z)
@@ -21,7 +22,11 @@ void LineFit_D2::set_z_values(double *_z)
 	{
 		z[i] = _z[i];
 	}
-	zp = 0;//z[0]-20;
+}
+
+void LineFit_D2::set_z_reference(double z)
+{
+	zp = z;
 }
 
 void LineFit_D2::set_x_straight_values(double *_x)

@@ -11,6 +11,7 @@ LineFit_HEX * LineFit_HEX::GetInstance(){
 
 LineFit_HEX::LineFit_HEX()
 {
+	zp = 0;
 	no_of_points = 6;
 	excluded_layer = -1;
 }
@@ -21,7 +22,11 @@ void LineFit_HEX::set_z_values(double *_z)
 	{
 		z[i] = _z[i];
 	}
-	zp = 0;//z[0]-20;
+}
+
+void LineFit_HEX::set_z_reference(double z)
+{
+	zp = z;
 }
 
 void LineFit_HEX::set_x_straight_values(double *_x)
