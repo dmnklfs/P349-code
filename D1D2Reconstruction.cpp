@@ -16,6 +16,7 @@ D1D2Reconstruction::D1D2Reconstruction(const Config &_config)
 
 	D2_x_offset = 0;
 	D2_z_offset = 0;
+	D2_y_offset = 0;
 
 	// D1
 	D1_chisq = new TH1F("D1 #chi^{2}","D1 #chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
@@ -70,6 +71,11 @@ void D1D2Reconstruction::set_x_offset(double xoffset)
 			TrackRecoData.at(i).x_hit_pos_D2[j] += xoffset;
 		}
 	}
+}
+
+void D1D2Reconstruction::set_y_offset(double yoffset)
+{
+	D2_y_offset = yoffset;
 }
 
 void D1D2Reconstruction::set_z_offset(double zoffset)
@@ -128,21 +134,6 @@ void D1D2Reconstruction::get_data(data_for_track_reconstruction _single_event_da
 
 	TrackRecoData.push_back(single_event_data);
 }
-
-// should not be used!
-//void D1D2Reconstruction::set_detectors_shift_on_D2_vectors(double xshift, double zshift)
-//{
-//	for (int i = 0; i < TrackRecoData.size(); i++)
-//	{	
-//		TrackRecoData.at(i).track3d_fit_point_D2.SetX(xshift + TrackRecoData.at(i).track3d_fit_point_D2.X());
-//		TrackRecoData.at(i).track3d_fit_point_D2.SetZ(zshift + TrackRecoData.at(i).track3d_fit_point_D2.Z());
-//	}
-//	half_x_dim_D2 = half_x_dim_D2 + xshift;
-//	half_x_dim_D2 = half_x_dim_D2 + zshift;
-//
-//	D2_x_offset = D2_z_offset + xshift;
-//	D2_z_offset = D2_z_offset + zshift;
-//}
 
 double D1D2Reconstruction::get_mean_chisq()
 {
@@ -253,73 +244,73 @@ void D1D2Reconstruction::save_histos()
 {
 	gDirectory->pwd();
 	std::string name(D1_chisq -> GetName());
-	TString aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	TString aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
 	//D1_chisq->Write(aname);
 
 	//name = (D2_chisq->GetName());
-	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	//aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
 	//D2_chisq->Write(aname);
 
 
 	name = (chisq->GetName());
-	aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
 	chisq->Write(aname);
-	//name = (chisq_ndf->GetName());
-	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
-	//chisq_ndf->Write();
-	//name = (chi2_resc->GetName());
-	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
-	//chi2_resc->Write();
-	//name = (chi2_resc_cut->GetName());
-	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
-	//chi2_resc_cut->Write();
+	name = (chisq_ndf->GetName());
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
+	chisq_ndf->Write();
+	name = (chi2_resc->GetName());
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
+	chi2_resc->Write();
+	name = (chi2_resc_cut->GetName());
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
+	chi2_resc_cut->Write();
 
-	//probability->Write();
-	//probability_cut->Write();
-	//D1_phi -> Write();
-	//D1_theta -> Write();
-	//D2_phi -> Write();
-	//D2_theta -> Write();
+	probability->Write();
+	probability_cut->Write();
+	D1_phi -> Write();
+	D1_theta -> Write();
+	D2_phi -> Write();
+	D2_theta -> Write();
 
 	name = (phi->GetName());
-	aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
 	phi -> Write(aname);
 
 	name = (theta->GetName());
-	aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
 	theta -> Write(aname);
 
-	//name = (D1D2_phi_corr->GetName());
-	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
-	//D1D2_phi_corr->Write(aname);
+	name = (D1D2_phi_corr->GetName());
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
+	D1D2_phi_corr->Write(aname);
 
-	//name = (D1D2_theta_corr->GetName());
-	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
-	//D1D2_theta_corr->Write(aname);
+	name = (D1D2_theta_corr->GetName());
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
+	D1D2_theta_corr->Write(aname);
 
 	name = (x_reco_D2_exp_D1->GetName());
-	aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
 	x_reco_D2_exp_D1->Write(aname);
 
-	//name = (x_reco_D2_exp_D1->GetName());
-	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
-	//x_reco_D2_exp_D1->ProjectionX()->Write(aname);
+	name = (x_reco_D2_exp_D1->GetName());
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
+	x_reco_D2_exp_D1->ProjectionX()->Write(aname);
 
-	//name = (y_reco_D2_exp_D1->GetName());
-	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
-	//y_reco_D2_exp_D1->Write(aname);
+	name = (y_reco_D2_exp_D1->GetName());
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
+	y_reco_D2_exp_D1->Write(aname);
 
-	//name = (x_reco_D2_exp_D1->GetName());
-	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
-	//x_reco_D2_exp_D1->ProjectionY()->Write(aname);
+	name = (x_reco_D2_exp_D1->GetName());
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
+	x_reco_D2_exp_D1->ProjectionY()->Write(aname);
 
 	name = (x_reco_D2_minus_exp_D1->GetName());
-	aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
 	x_reco_D2_minus_exp_D1->Write(aname);
 
-	//name = (y_reco_D2_minus_exp_D1->GetName());
-	//aname = Form("%0.3lf_%0.3lf ", D2_x_offset, D2_z_offset) + name;
-	//y_reco_D2_minus_exp_D1->Write(aname);
+	name = (y_reco_D2_minus_exp_D1->GetName());
+	aname = Form("%0.3lf_%0.3lf_%0.3lf_", D2_x_offset, D2_y_offset, D2_z_offset) + name;
+	y_reco_D2_minus_exp_D1->Write(aname);
 }
 
 void D1D2Reconstruction::reconstructed_D2_vs_expected_D1()
@@ -476,6 +467,7 @@ void D1D2Reconstruction::fit()
 		fitD1D2 -> FitD1D2::fit_straight_layer();
 		fitD1D2 -> FitD1D2::fit_inclined_layers();
 		fitD1D2 -> FitD1D2::calculate_xy_functions();
+		fitD1D2 -> FitD1D2::set_yoffsets(D2_y_offset);
 		fitD1D2 -> FitD1D2::set_hit_planes_vectors();
 		fitD1D2 -> FitD1D2::calculate_normal_to_hit_planes();
 		fitD1D2 -> FitD1D2::calculate_hit_planes_eq();

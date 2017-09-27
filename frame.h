@@ -35,6 +35,7 @@
 #include "CalibrationD1D2.h"
 #include "TrackReconstruction.h"
 #include "D1D2Reconstruction.h"
+#include "D1D23d.h"
 
 #define START 1
 #define NTOF 10

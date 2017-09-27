@@ -28,7 +28,8 @@ int main(int argc, char *argv[])
   //Calibration3d_HEX *calibration_HEX = new Calibration3d_HEX(config);
   //CalibrationD1D2 *calibrationd1d2 = new CalibrationD1D2(config);
   //TrackReconstruction *track_reco = new TrackReconstruction(config);
-  D1D2Reconstruction  *d1d2_reco = new D1D2Reconstruction(config);
+  //D1D2Reconstruction  *d1d2_reco = new D1D2Reconstruction(config);
+  D1D23d *d1d2 = new D1D23d(config);
 	std::cout << "* start of the loop over the events" << std::endl;
   int delme_iter = 0;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
@@ -91,7 +92,8 @@ int main(int argc, char *argv[])
         //std::cout << "ok1" << std::endl;
         //calibration_HEX -> get_data( single_event -> SingleEvent::HEX::get_data_for_calibration() ); 
         //track_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
-        d1d2_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
+        //d1d2_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
+        d1d2 -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
         //std::cout << "ok0 " << std::endl;
         //calibrationd1d2 -> get_data(single_event -> SingleEvent::get_data_for_D1D2_calibration());
         //std::cout << "ok01" << std::endl;
@@ -110,36 +112,45 @@ int main(int argc, char *argv[])
 
     std::cout << "iter " << delme_iter << std::endl;
 
-    //calibrationd1d2  -> tell_no_of_events();
-    //calibrationd1d2 -> set_no_of_bin_in_event();
+    d1d2 -> tell_no_of_events();
+    d1d2 -> fit();
 
-    d1d2_reco -> tell_no_of_events();
-    double offset[200], chisq[200], off, chi,first_offset, step;
-    int no_of_iter;
-    no_of_iter = 200;
-    first_offset = -8.5;
-    step = 0.04;
-    d1d2_reco -> set_x_offset(-0.1713);
-    for (int i = 0; i < no_of_iter; i++)
-    {
-      std::cout << "offset determination... " << i + 1 << " out of " << no_of_iter << " done" << std::endl;
-      if (i==0) off = first_offset;
-      else off = step;
-      d1d2_reco -> set_z_offset(off);
-      d1d2_reco -> fit_in_3d_D1();
-      d1d2_reco -> fit_in_3d_D2();
-      d1d2_reco -> fit();
-      d1d2_reco -> plot_D1_d2_phi_corr();
-      d1d2_reco -> save_histos();
-      d1d2_reco -> deletations();
-      chi = d1d2_reco -> get_mean_chisq();
-      offset[i] = first_offset+i*step;
-      chisq[i] = chi;
-    }
-    TGraph *graph = new TGraph(no_of_iter,offset,chisq);
-    //graph -> Draw("AP");
-    graph->Write();
+    
 
+    // in D1D2Reconstruction offsets for y and for x/z work differently. y is set on hit functions, x/z are set on data
+    // therefore - y there should be given an absolute value of shift (not a change)
+//t    d1d2_reco -> tell_no_of_events();
+//t    double offset[200], chisq[200], off, chi,first_offset, step;
+//t    int no_of_iter;
+//t    no_of_iter = 1;
+//t    first_offset = 0.34323;
+//t    step = 0.0;
+//t    d1d2_reco -> set_x_offset(0);
+//t    for (int i = 0; i < no_of_iter; i++)
+//t    {
+//t      std::cout << "offset determination... " << i + 1 << " out of " << no_of_iter << " done" << std::endl;
+//t      if (i==0) off = first_offset;
+//t      //else off = step; x/z
+//t      else off += step;
+//t      //d1d2_reco -> set_z_offset(off);
+//t      d1d2_reco -> fit_in_3d_D1();
+//t      d1d2_reco -> fit_in_3d_D2();
+//t      d1d2_reco -> set_y_offset(off);
+//t      d1d2_reco -> fit();
+//t      d1d2_reco -> plot_D1_d2_phi_corr();
+//t      d1d2_reco -> save_histos();
+//t      d1d2_reco -> deletations();
+//t      chi = d1d2_reco -> get_mean_chisq();
+//t      offset[i] = first_offset+i*step;
+//t      chisq[i] = chi;
+//t    }
+//t    TGraph *graph = new TGraph(no_of_iter,offset,chisq);
+//t    //graph -> Draw("AP");
+//t    graph->Write();
+
+//    calibrationd1d2  -> tell_no_of_events();
+//    calibrationd1d2 -> set_no_of_bin_in_event();
+//
 //    for (int i = 0; i < 6; i++)
 //    {
 //      calibrationd1d2 -> set_no_of_iteration(i);
@@ -157,7 +168,7 @@ int main(int argc, char *argv[])
 //    //!track_reco -> set_detectors_positions_on_points();
 //    track_reco -> fit_in_3d_D1();
 //    track_reco -> fit_in_3d_D2();
-//    //track_reco -> fit_in_3d_HEX();
+//    track_reco -> fit_in_3d_HEX();
 //    track_reco -> plot_D1_d2_phi_corr();
 //    track_reco -> set_detectors_positions_on_vectors();
 //    track_reco -> reconstructed_D2_vs_expected_D1();
@@ -166,7 +177,7 @@ int main(int argc, char *argv[])
 //    calibration_HEX -> tell_no_of_events();
 //    calibration_HEX -> set_no_of_bin_in_event();
 //
-//    for (int i = 0; i < 2; i++)
+//    for (int i = 0; i < 5; i++)
 //    {
 //      calibration_HEX -> set_no_of_iteration(i);
 //      calibration_HEX -> calculate_hit_position();

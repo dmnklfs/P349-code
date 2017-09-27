@@ -250,7 +250,7 @@ void CalibrationLayer3d_HEX::fit_delta_projections(const char* folder_name)
 			ProjectionMean.push_back(-1);
 			ProjectionSigma.push_back(0.0);
 		}
-		if (no_of_iteration == 0 || no_of_iteration == 6) c_delta_projection -> SaveAs(ProjectionName);
+		if (no_of_iteration == 0 || no_of_iteration == 4) c_delta_projection -> SaveAs(ProjectionName);
 		delete c_delta_projection;
 	}
 	delete gaussian;
@@ -264,7 +264,7 @@ void CalibrationLayer3d_HEX::apply_corrections()
 		corr_bin = Bins.at(i);
 		if(-1!=ProjectionMean.at(corr_bin))
 		{
-			if (no_of_iteration!=5 && no_of_iteration!=6) Distances.at(i) = Distances.at(i) + ProjectionMean.at(corr_bin);
+			if (no_of_iteration!=0) Distances.at(i) = Distances.at(i) + ProjectionMean.at(corr_bin);
 			else Distances.at(i) = Distances.at(i);
 			SigmaForCalibration.push_back(ProjectionSigma.at(corr_bin));
 		}
@@ -367,7 +367,7 @@ TCanvas* CalibrationLayer3d_HEX::plot_current_calibration()
 	initial_calibration -> SetLineColor(kBlue);
 	initial_calibration -> SetLineWidth(3);
 	initial_calibration -> SetMinimum(0);
-   	initial_calibration -> SetMaximum(2.5);
+   	initial_calibration -> SetMaximum(1.1);
    	initial_calibration -> GetXaxis()->SetTitle("drift time [ns]");
 	initial_calibration -> GetYaxis()->SetTitle("distance [cm]");
 	TCanvas *c_current_calibration = new TCanvas(name,name);

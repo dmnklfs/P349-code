@@ -1,5 +1,5 @@
-#ifndef FITD1D2_H
-#define FITD1D2_H 
+#ifndef FITTOLINES_H
+#define FITTOLINES_H 
 
 #include "TFile.h"
 #include "TH1.h"
@@ -37,14 +37,13 @@
 #include <TPolyMarker3D.h>
 //#include "GSLError.h"
 
-class FitD1D2
+class FitToLines
 {
 public:
-	FitD1D2();
-	FitD1D2(int _event_no);
-	~FitD1D2();
+	FitToLines();
+	FitToLines(int _event_no);
+	~FitToLines();
 	void set_values(double *_x, double *_y, double *_errors, double *_x_wires);
-	void set_yoffsets(double y_offset);
 	void set_z_reference(double z);
 	void fit_straight_layer();
 	void fit_inclined_layers();
@@ -57,26 +56,16 @@ public:
 	void calculate_intersection_points();
 	void calculate_3d_track_parameters();void calculate_projections_on_hit_planes_calculations();
 	void calculate_projections_on_hit_planes_fit();
-	void make_fit_to_lines(bool _unbiased_fit);
-	double get_track_8lines_projection_params(int direction, int a_b);
-	double get_wires_params(int layer, int a_b);
 	bool err_flag();
-	void calculate_wire_track_distances();
 
 	void draw_event();
 
 	// from 3d fitting (not calculation)
 	TVector3 return_track_point();
-	TVector3 return_track_point(int _layer);
 	TVector3 return_track_vector();
-	TVector3 return_track_vector(int _layer);
-	double get_wire_track_dist(int _layer_no);
 	double get_chisq();
-	double get_chisq(int _layer);
 	double calculate_phi_xz();
-	double calculate_phi_xz(int _layer_no);
 	double calculate_theta_y();
-	double calculate_theta_y(int _layer_no);
 	void set_no_of_iteration(int _no_of_iteration);
 
 private:
@@ -122,12 +111,9 @@ private:
 
 	// 3d track parameters
 	//    vector
-	TVector3 track3d_vector;
+	TVector3 calculated_track3d_vector;
 	//    point
-	TVector3 track3d_point;
-	// from fit to 8 planes
-	TVector3 track3d_fit_point, track3d_fit_vector;
-	TVector3 track3d_fit_point_unbiased[14], track3d_fit_vector_unbiased[14];
+	TVector3 calculated_track3d_point;
 
 	// projections of the track on the planes
 	//   vertors (directions)
@@ -137,22 +123,15 @@ private:
 	double proj_z_x_a[3];
 	double proj_z_x_b[3];
 
-	// for plotting
+	// for plotting - only? 27.09.17
 	double half_x_dim;
 	double half_z_dim;
 	double x_lab_position;
 	double z_lab_position;
 	double distance_to_1st_layer;
 	bool errflag;
-	bool errflag_unbiased[14];
-
-	double wire_track_dist[14];
-	double chisq;
-	double chisq_unbiased[14];
 
 	int no_of_iteration;
-
-	double y_offset[4];
 
 };
 
