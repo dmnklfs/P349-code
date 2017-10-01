@@ -26,6 +26,7 @@
 #include "struct.h"
 #include "Config.h"
 #include "MinuitFit.h"
+#include "TrackCalc.h"
 #include "FitToLines.h"
 #include <TMath.h>
 
@@ -49,9 +50,9 @@ struct d1d2_3d_data
 //	double chi2_D2, phi_xz_D2, theta_yz_D2;
 //	bool errflag_D2;
 
-	TVector3 track3d_fit_point, track3d_fit_vector;
-//	TVector3 track3d_fit_point_D1, track3d_fit_vector_D1;
-//	TVector3 track3d_fit_point_D2, track3d_fit_vector_D2;
+	TVector3 HitPoints[14], HitVectors[14];
+	TVector3 ApproxTrackPoint, ApproxTrackVector;
+	TVector3 TrackPoint, TrackVector;
 
 	d1d2_3d_data() // make correct init for errflags
 	{
@@ -77,28 +78,27 @@ public:
 
 	void get_data(data_for_track_reconstruction _single_event_data);
 	void tell_no_of_events();
-//	void fit_in_3d_D1();
-//	void fit_in_3d_D2();
-	void fit();
-	void deletations();
-
-	double get_mean_chisq();
-
+	void calculate_init_params();
+	void set_config_positions();
+	void rotateD1(double _ax, double _ay, double _az);
+	void rotateD2(double _ax, double _ay, double _az);
+	void shiftD1(double _sx, double _sy, double _sz);
+	void shiftD2(double _sx, double _sy, double _sz);
+	void fit_in_3d();
+	void fill_histos();
 	double calculate_phi_xz(double vx, double vz);
 	double calculate_theta_yz(double vy, double vz);
 
-//	void plot_D1_d2_phi_corr();
+
+	void deletations();
+
+	double get_mean_chisq();
 	void save_histos();
-
-	void set_x_offset(double xoffset);
-	void set_y_offset(double yoffset);
-	void set_z_offset(double zoffset);
-
-	void Save_histos();
 
 private:
 	TH1F *chi2, *chi2_resc, *phi, *theta;
 	TH1F *calc_px, *calc_py, *calc_pz, *calc_vx, *calc_vy, *calc_vz;
+	TH1F *track_px, *track_py, *track_pz, *track_vx, *track_vy, *track_vz;
 
 	std::vector<d1d2_3d_data> TrackRecoData;
 
@@ -114,11 +114,11 @@ private:
 	double z_lab_position_D1;
 	double z_lab_position_D2;
 
+	TVector3 D1point, D2point;
+	TVector3 D1vectorX, D1vectorY, D1vectorZ, D2vectorX, D2vectorY, D2vectorZ;
 	// obroty wzgledem osi komory
 	double D1_x_rot, D1_y_rot, D1_z_rot;
 	double D2_x_rot, D2_y_rot, D2_z_rot;
-
-	TVector3 ApproxTrackPoint, ApproxTrackVector;
 };
 
 #endif

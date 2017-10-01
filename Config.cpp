@@ -88,7 +88,7 @@ Config::Config()
 	//D2_x_lab_position = 0;
     //D2_z_lab_position = 0;
 	D2_x_lab_position = -18.4 + 0.5143 + 0.16 -0.1713 - 0.02277;
-	D2_y_lab_position = 0;
+	D2_y_lab_position = 0.34323;
     D2_z_lab_position = -67.4 -3.7106 -0.1103;
 
     D2_x_rotation_angle = (0)*3.14/180;

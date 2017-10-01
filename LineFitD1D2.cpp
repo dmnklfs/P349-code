@@ -2,8 +2,10 @@
 
 LineFitD1D2 * LineFitD1D2::_this = NULL;
 
-LineFitD1D2 * LineFitD1D2::GetInstance(){ 
-  if( _this == NULL ){
+LineFitD1D2 * LineFitD1D2::GetInstance()
+{ 
+  if( _this == NULL )
+  {
     _this = new LineFitD1D2();
   }
   return _this; 

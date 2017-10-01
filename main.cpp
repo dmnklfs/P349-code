@@ -113,9 +113,12 @@ int main(int argc, char *argv[])
     std::cout << "iter " << delme_iter << std::endl;
 
     d1d2 -> tell_no_of_events();
-    d1d2 -> fit();
-
-    d1d2 -> Save_histos();
+    d1d2 -> calculate_init_params();
+    d1d2 -> set_config_positions();
+    //d1d2 -> rotateD1(90,0,0);
+    d1d2 -> fit_in_3d();
+    d1d2 -> fill_histos();
+    d1d2 -> save_histos();
 
     
 
