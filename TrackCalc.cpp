@@ -339,33 +339,6 @@ void TrackCalc::calculate_3d_track_parameters()
 
 }
 
-void TrackCalc::calculate_projections_on_hit_planes_calculations() // unused, expect from drawings
-{
-	// to get the direction it is enough to remove from the track vetor
-	// the part which is perpendicular to the certain plane
-
-	double angle;
-
-	// straight
-	projection_straight.SetX(calculated_track3d_vector.X());
-	projection_straight.SetY(0);
-	projection_straight.SetZ(calculated_track3d_vector.Z());
-	projection_straight.Unit();
-	
-	// inclined1
-	angle = 31*TMath::DegToRad();
-	TVector3 wire_direction_inclined1;
-	wire_direction_inclined1.SetXYZ(TMath::Sin(angle), TMath::Cos(angle), 0);
-	projection_inclined1 = calculated_track3d_vector - calculated_track3d_vector.Dot(wire_direction_inclined1)*wire_direction_inclined1;
-	projection_inclined1.Unit();
-
-	TVector3 wire_direction_inclined2;
-	wire_direction_inclined2.SetXYZ(-TMath::Sin(angle), TMath::Cos(angle), 0);
-	projection_inclined2 = calculated_track3d_vector - calculated_track3d_vector.Dot(wire_direction_inclined2)*wire_direction_inclined2;
-	projection_inclined2.Unit();
-	
-}
-
 TVector3 TrackCalc::return_approx_track_point()
 {
 	return calculated_track3d_point;

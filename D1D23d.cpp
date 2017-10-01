@@ -81,12 +81,12 @@ void D1D23d::get_data(data_for_track_reconstruction _single_event_data)
 			if (i==0||i==1)
 			{
 				single_event_data.HitVectors[i].SetX(TMath::Cos(59*TMath::DegToRad()));
-				single_event_data.HitVectors[i].SetY(TMath::Sin(31*TMath::DegToRad()));
+				single_event_data.HitVectors[i].SetY(TMath::Sin(59*TMath::DegToRad()));
 			}
 			if (i==2||i==3)
 			{
 				single_event_data.HitVectors[i].SetX(-TMath::Cos(59*TMath::DegToRad()));
-				single_event_data.HitVectors[i].SetY( TMath::Sin(31*TMath::DegToRad()));
+				single_event_data.HitVectors[i].SetY( TMath::Sin(59*TMath::DegToRad()));
 			}
 			if (i==4||i==5)
 			{
@@ -128,8 +128,8 @@ void D1D23d::set_config_positions()
 	rotateD1(D1_x_rot,D1_y_rot,D1_z_rot);
 	rotateD2(D2_x_rot,D2_y_rot,D2_z_rot);
 	// shifts
-	shiftD1(x_lab_position_D1,y_lab_position_D1,z_lab_position_D1);
-	shiftD2(x_lab_position_D2,y_lab_position_D2,z_lab_position_D2);
+	shiftD1(x_lab_position_D1, y_lab_position_D1, z_lab_position_D1);
+	shiftD2(x_lab_position_D2, y_lab_position_D2, z_lab_position_D2);
 }
 
 void D1D23d::rotateD1(double _ax, double _ay, double _az)
@@ -317,7 +317,7 @@ void D1D23d::calculate_init_params()
 			
 		}
 		
-		if (0==i%1000) std::cout << "    " << i << " out of " << no_of_chosen_events << " done" << std::endl;
+		if (0==i%10000) std::cout << "    " << i << " out of " << no_of_chosen_events << " done" << std::endl;
 
 		TrackCalc *trackcalc = new TrackCalc(i);
 		trackcalc -> TrackCalc::set_no_of_iteration(0);
@@ -332,7 +332,7 @@ void D1D23d::calculate_init_params()
 		trackcalc -> TrackCalc::calculate_intersection_vectors();
 		trackcalc -> TrackCalc::calculate_intersection_points();
 		trackcalc -> TrackCalc::calculate_3d_track_parameters();
-		TrackRecoData.at(i).ApproxTrackPoint = trackcalc -> TrackCalc::return_approx_track_point();
+		TrackRecoData.at(i).ApproxTrackPoint  = trackcalc -> TrackCalc::return_approx_track_point();
 		TrackRecoData.at(i).ApproxTrackVector = trackcalc -> TrackCalc::return_approx_track_vector();
 		calc_px -> Fill(TrackRecoData.at(i).ApproxTrackPoint.X());
 		calc_py -> Fill(TrackRecoData.at(i).ApproxTrackPoint.Y());
