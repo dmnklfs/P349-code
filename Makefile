@@ -5,6 +5,7 @@ LDFLAGS= -Wl,--no-as-needed -Wall $(shell root-config --libs) -m64 -lboost_syste
 SOURCES= MinuitFit.cpp FitToLines.cpp FitD1D2.cpp LineFitD1D2.cpp LineFit.cpp LineFit_D2.cpp LineFit_HEX.cpp CalibrationD1D2.cpp CalibrationLayerD1D2.cpp Calibration3d.cpp Calibration3d_D2.cpp Calibration3d_HEX.cpp CalibrationLayer3d.cpp CalibrationLayer3d_D2.cpp CalibrationLayer3d_HEX.cpp Config.cpp main.cpp  Tree.cpp Start.cpp TOF.cpp Intermediate.cpp Fiber.cpp D1.cpp D2.cpp HEX.cpp DCLayer.cpp P349_data.cpp SingleEvent.cpp dictp349_data.cpp Hist.cpp CommonFunctions.cpp Fit3d.cpp Fit3d_D2.cpp Fit3d_HEX.cpp D1D2Reconstruction.cpp TrackReconstruction.cpp D1D23d.cpp
 # OBJECTS=easyparser_timecut.o P349_data.o  dictp349_data.o
 # UncorrelatedOpt.cpp Calibration2d.cpp CalibrationLayer2d.cpp SimpleCalibration.cpp
+# 
 OBJECTS=$(SOURCES:.cpp=.o) 
 EXECUTABLE=test.exe
 LIBP349SO=libP349_data.so

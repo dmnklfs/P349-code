@@ -813,8 +813,8 @@ void Fit3d_HEX::make_fit_to_lines(bool _unbiased_fit)
 	for (int i = 0; i < 6; i++)
 	{
 		lineFit3d_HEX_Unbiased[i] = LineFit_HEX::GetInstance();
-		if (true) lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_excluded_layer(-1);
-		else lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_excluded_layer(i);
+		if (unbiased_fit) lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_excluded_layer(i);
+		else lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_excluded_layer(-1);
 		lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_z_values(z);
 		lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_z_reference(z_reference);
 		lineFit3d_HEX_Unbiased[i] -> LineFit_HEX::set_x_straight_values(x_straight);

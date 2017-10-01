@@ -28,8 +28,6 @@ D1::D1(const Config &_config)
 	D1_no_of_cells_with_hits = 0;
 	half_x_dim = _config.D1_half_x_dim;
 	half_z_dim = _config.D1_half_z_dim;
-	z_offset = _config.D1_z_offset;
-	x_offset = _config.D1_x_offset;
 	y_rotation_angle = _config.D1_y_rotation_angle;
 	distance_to_1st_layer = _config.D1_distance_to_1st_layer;
 	distance_between_straight_wires = _config.D1_distance_between_straight_wires;

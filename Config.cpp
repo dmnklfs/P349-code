@@ -26,15 +26,16 @@ Config::Config()
 	Intermediate_element_min = 1;
 	Intermediate_element_max = 16;
 
-	// ---------DRIFT CHEMBER D1---------
+	// ---------DRIFT CHAMBER D1---------
 	// detector position (all in cm)
 	D1_half_x_dim = 0.5*168.0; // 0.5 * detector dimensions
 	D1_half_z_dim = 0.5*19.2;
 	D1_x_lab_position = 0;
+	D1_y_lab_position = 0;
     D1_z_lab_position = 0;
-	D1_z_offset = 0; // up to the beginning of the detector (not: 1st layer)
-	D1_x_offset = 0;
+	D1_x_rotation_angle = (0)*3.14/180;
 	D1_y_rotation_angle = (0)*3.14/180; // rad
+	D1_z_rotation_angle = (0)*3.14/180;
 	track_angle_min = 0;
 	track_angle_max = 180;
 	// layers "offsets" - distances drom the frame
@@ -87,10 +88,12 @@ Config::Config()
 	//D2_x_lab_position = 0;
     //D2_z_lab_position = 0;
 	D2_x_lab_position = -18.4 + 0.5143 + 0.16 -0.1713 - 0.02277;
+	D2_y_lab_position = 0;
     D2_z_lab_position = -67.4 -3.7106 -0.1103;
-	D2_z_offset = 0; // up to the beginning of the detector (not: 1st layer)
-	D2_x_offset = 0;
+
+    D2_x_rotation_angle = (0)*3.14/180;
 	D2_y_rotation_angle = (0)*3.14/180; // rad
+	D2_z_rotation_angle = (0)*3.14/180;
 	//D2_layer_wire_frame_offset[0] = -31.35;	// x
 	//D2_layer_wire_frame_offset[1] = -35.24;
 	//D2_layer_wire_frame_offset[2] = 7.18;

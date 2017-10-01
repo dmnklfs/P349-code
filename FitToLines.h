@@ -67,6 +67,8 @@ public:
 	double calculate_phi_xz();
 	double calculate_theta_y();
 	void set_no_of_iteration(int _no_of_iteration);
+	TVector3 return_approx_track_point();
+	TVector3 return_approx_track_vector();
 
 private:
 	double z_reference;

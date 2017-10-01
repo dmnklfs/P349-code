@@ -77,10 +77,11 @@ public:
 	double D1_half_x_dim;
     double D1_half_z_dim;
     double D1_x_lab_position;
+    double D1_y_lab_position;
     double D1_z_lab_position;
-    double D1_z_offset;
-    double D1_x_offset;
+    double D1_x_rotation_angle;
     double D1_y_rotation_angle;
+    double D1_z_rotation_angle;
     double D1_layer_wire_frame_offset[8];
     double D1_distance_to_1st_layer; // distance from the DC frame to the 1st layer (looking from the beam direction)
     double D1_distance_between_straight_wires;
@@ -198,10 +199,11 @@ public:
 	double D2_half_x_dim;
     double D2_half_z_dim;
     double D2_x_lab_position;
+    double D2_y_lab_position;
     double D2_z_lab_position;
-    double D2_z_offset;
-    double D2_x_offset;
+    double D2_x_rotation_angle;
     double D2_y_rotation_angle;
+    double D2_z_rotation_angle;
     double D2_layer_wire_frame_offset[6];
     double D2_distance_to_1st_layer; // distance from the DC frame to the 1st layer (looking from the beam direction)
     double D2_distance_between_straight_wires;

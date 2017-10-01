@@ -32,7 +32,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
 	// if ( (start && tof && D1 && D2 && HEX && Start::getTimeUp()<10 && Start::getTimeDown()<10) || stage == 2)
-	if ( (start&&D2&&D1&&tof) || stage == 2)
+	if ( (start&&D1&&D2&&tof) || stage == 2)
 	{
 		return true;
 	}

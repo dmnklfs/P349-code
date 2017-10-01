@@ -27,7 +27,6 @@
 #include "Config.h"
 #include "MinuitFit.h"
 #include "FitToLines.h"
-#include "FitD1D2.h"
 #include <TMath.h>
 
 struct d1d2_3d_data
@@ -94,16 +93,12 @@ public:
 	void set_x_offset(double xoffset);
 	void set_y_offset(double yoffset);
 	void set_z_offset(double zoffset);
-	//void set_detectors_shift_on_D2_vectors(double xshift, double zshift); remove? 20.09.2017
-//	void reconstructed_D2_vs_expected_D1(); // expected in D2 from reconstruction in D1
+
+	void Save_histos();
 
 private:
-//	TH1F *D1_chisq, *D2_chisq, *chisq, *chisq_ndf, *probability, *chi2_resc, *chi2_resc_cut, *probability_cut;
-//	TH1F *D1_phi, *D1_theta, *D2_phi, *D2_theta, *phi, *theta;
-//	TH2F *D1D2_phi_corr, *D1D2_theta_corr;
-//	TH2F *x_reco_D2_exp_D1, *y_reco_D2_exp_D1;
-//	TH1F *x_reco_D2_minus_exp_D1, *y_reco_D2_minus_exp_D1;
 	TH1F *chi2, *chi2_resc, *phi, *theta;
+	TH1F *calc_px, *calc_py, *calc_pz, *calc_vx, *calc_vy, *calc_vz;
 
 	std::vector<d1d2_3d_data> TrackRecoData;
 
@@ -114,10 +109,14 @@ private:
 
 	double x_lab_position_D1;
 	double x_lab_position_D2;
+	double y_lab_position_D1;
+	double y_lab_position_D2;
 	double z_lab_position_D1;
 	double z_lab_position_D2;
 
-	double D2_x_offset, D2_y_offset, D2_z_offset;
+	// obroty wzgledem osi komory
+	double D1_x_rot, D1_y_rot, D1_z_rot;
+	double D2_x_rot, D2_y_rot, D2_z_rot;
 
 	TVector3 ApproxTrackPoint, ApproxTrackVector;
 };

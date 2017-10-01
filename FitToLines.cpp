@@ -285,27 +285,27 @@ void FitToLines::calculate_intersection_vectors() // intersection line: vectors
 
 void FitToLines::calculate_intersection_points()// intersection line: points
 {
-	inter_point_si1.SetZ(0);
-	inter_point_si2.SetZ(0);
-	inter_point_i1i2.SetZ(0);
+	inter_point_si1.SetZ(z_reference);
+	inter_point_si2.SetZ(z_reference);
+	inter_point_i1i2.SetZ(z_reference);
 
-	inter_point_si1.SetX((hit_plane_B[1]*hit_plane_D[0] - hit_plane_B[0]*hit_plane_D[1])*pow(hit_plane_A[1]*hit_plane_B[0] - hit_plane_A[0]*hit_plane_B[1],-1));
-	inter_point_i1i2.SetX((hit_plane_B[2]*hit_plane_D[1] - hit_plane_B[1]*hit_plane_D[2])*pow(hit_plane_A[2]*hit_plane_B[1] - hit_plane_A[1]*hit_plane_B[2],-1));
-	inter_point_si2.SetX((hit_plane_B[2]*hit_plane_D[0] - hit_plane_B[0]*hit_plane_D[2])*pow(hit_plane_A[2]*hit_plane_B[0] - hit_plane_A[0]*hit_plane_B[2],-1));
+	inter_point_si1.SetX((hit_plane_B[1]*(hit_plane_D[0] + z_reference*hit_plane_C[0]) - hit_plane_B[0]*(hit_plane_D[1] + z_reference*hit_plane_C[1]))*pow(hit_plane_A[1]*hit_plane_B[0] - hit_plane_A[0]*hit_plane_B[1],-1));
+	inter_point_i1i2.SetX((hit_plane_B[2]*(hit_plane_D[1] + z_reference*hit_plane_C[1]) - hit_plane_B[1]*(hit_plane_D[2] + z_reference*hit_plane_C[2]))*pow(hit_plane_A[2]*hit_plane_B[1] - hit_plane_A[1]*hit_plane_B[2],-1));
+	inter_point_si2.SetX((hit_plane_B[2]*(hit_plane_D[0] + z_reference*hit_plane_C[0]) - hit_plane_B[0]*(hit_plane_D[2] + z_reference*hit_plane_C[2]))*pow(hit_plane_A[2]*hit_plane_B[0] - hit_plane_A[0]*hit_plane_B[2],-1));
 
-	inter_point_si1.SetY((-hit_plane_A[0]*hit_plane_D[1] + hit_plane_A[1]*hit_plane_D[0])*pow(hit_plane_A[0]*hit_plane_B[1] - hit_plane_A[1]*hit_plane_B[0],-1));
-	inter_point_i1i2.SetY((-hit_plane_A[1]*hit_plane_D[2] + hit_plane_A[2]*hit_plane_D[1])*pow(hit_plane_A[1]*hit_plane_B[2] - hit_plane_A[2]*hit_plane_B[1],-1));
-	inter_point_si2.SetY((-hit_plane_A[2]*hit_plane_D[0] + hit_plane_A[0]*hit_plane_D[2])*pow(hit_plane_A[2]*hit_plane_B[0] - hit_plane_A[0]*hit_plane_B[2],-1));
+	inter_point_si1.SetY((-hit_plane_A[0]*(hit_plane_D[1] + z_reference*hit_plane_C[1]) + hit_plane_A[1]*(hit_plane_D[0] + z_reference*hit_plane_C[0]))*pow(hit_plane_A[0]*hit_plane_B[1] - hit_plane_A[1]*hit_plane_B[0],-1));
+	inter_point_i1i2.SetY((-hit_plane_A[1]*(hit_plane_D[2] + z_reference*hit_plane_C[2]) + hit_plane_A[2]*(hit_plane_D[1] + z_reference*hit_plane_C[1]))*pow(hit_plane_A[1]*hit_plane_B[2] - hit_plane_A[2]*hit_plane_B[1],-1));
+	inter_point_si2.SetY((-hit_plane_A[2]*(hit_plane_D[0] + z_reference*hit_plane_C[0]) + hit_plane_A[0]*(hit_plane_D[2] + z_reference*hit_plane_C[2]))*pow(hit_plane_A[2]*hit_plane_B[0] - hit_plane_A[0]*hit_plane_B[2],-1));
 }
 
 void FitToLines::calculate_3d_track_parameters()
 {
 	TVector3 track_p_si1_1, track_p_si1_2, track_p_si2_1, track_p_si2_2, track_p_i1i2_1, track_p_i1i2_2;
 	double scale;
-	// points on the intersection line at z = 0
-	track_p_si1_1.SetZ(0);
-	track_p_si2_1.SetZ(0);
-	track_p_i1i2_1.SetZ(0);
+	// points on the intersection line at z = reference
+	track_p_si1_1.SetZ(z_reference);
+	track_p_si2_1.SetZ(z_reference);
+	track_p_i1i2_1.SetZ(z_reference);
 	//    s i1 // 10.05.17 - dlaczego ujemne?
 	scale = -inter_point_si1.Z()/inter_si1.Z();
 	track_p_si1_1.SetX(inter_point_si1.X()+scale*inter_si1.X());
@@ -318,50 +318,20 @@ void FitToLines::calculate_3d_track_parameters()
 	scale = -inter_point_i1i2.Z()/inter_i1i2.Z();
 	track_p_i1i2_1.SetX(inter_point_i1i2.X()+scale*inter_i1i2.X());
 	track_p_i1i2_1.SetY(inter_point_i1i2.Y()+scale*inter_i1i2.Y());
-	// points on the intersection line at z = 3
-	double tempz = 3;
-	track_p_si1_2.SetZ(tempz);
-	track_p_si2_2.SetZ(tempz);
-	track_p_i1i2_2.SetZ(tempz);
-	//    s i1
-	scale = (tempz-inter_point_si1.Z())/inter_si1.Z();
-	track_p_si1_2.SetX(inter_point_si1.X()+scale*inter_si1.X());
-	track_p_si1_2.SetY(inter_point_si1.Y()+scale*inter_si1.Y());
-	//    s i2
-	scale = (tempz-inter_point_si2.Z())/inter_si2.Z();
-	track_p_si2_2.SetX(inter_point_si2.X()+scale*inter_si2.X());
-	track_p_si2_2.SetY(inter_point_si2.Y()+scale*inter_si2.Y());
-	//    i1 i2
-	scale = (tempz-inter_point_i1i2.Z())/inter_i1i2.Z();
-	track_p_i1i2_2.SetX(inter_point_i1i2.X()+scale*inter_i1i2.X());
-	track_p_i1i2_2.SetY(inter_point_i1i2.Y()+scale*inter_i1i2.Y());
-
-	calculated_track3d_point.SetX((track_p_si1_1.X() + track_p_si2_1.X() + track_p_i1i2_1.X())/3);
-	calculated_track3d_point.SetY((track_p_si1_1.Y() + track_p_si2_1.Y() + track_p_i1i2_1.Y())/3);
-	calculated_track3d_point.SetZ((track_p_si1_1.Z() + track_p_si2_1.Z() + track_p_i1i2_1.Z())/3);
-
-	TVector3 calculated_track3d_point2;
-	calculated_track3d_point2.SetX((track_p_si1_2.X() + track_p_si2_2.X() + track_p_i1i2_2.X())/3);
-	calculated_track3d_point2.SetY((track_p_si1_2.Y() + track_p_si2_2.Y() + track_p_i1i2_2.Y())/3);
-	calculated_track3d_point2.SetZ((track_p_si1_2.Z() + track_p_si2_2.Z() + track_p_i1i2_2.Z())/3);
-
-	calculated_track3d_vector.SetX(calculated_track3d_point2.X() - calculated_track3d_point.X());
-	calculated_track3d_vector.SetY(calculated_track3d_point2.Y() - calculated_track3d_point.Y());
-	calculated_track3d_vector.SetZ(calculated_track3d_point2.Z() - calculated_track3d_point.Z());
 
 	// alternative method of calculation of parameters
 	TVector3 alt_vector, alt_point;
 	alt_vector.SetX((inter_si1.X() + inter_si2.X() + inter_i1i2.X())/3);
 	alt_vector.SetY((inter_si1.Y() + inter_si2.Y() + inter_i1i2.Y())/3);
 	alt_vector.SetZ((inter_si1.Z() + inter_si2.Z() + inter_i1i2.Z())/3);
-	alt_vector.Unit();
 
-	alt_point.SetX((inter_point_si1.X() + inter_point_i1i2.X() + inter_point_si2.X())/3);
-	alt_point.SetY((inter_point_si1.Y() + inter_point_i1i2.Y() + inter_point_si2.Y())/3);
-	alt_point.SetZ((inter_point_si1.Z() + inter_point_i1i2.Z() + inter_point_si2.Z())/3);
 
-	calculated_track3d_vector = alt_vector.Unit();//calculated_track3d_vector.Unit();
+	calculated_track3d_point.SetX((track_p_si1_1.X() + track_p_si2_1.X() + track_p_i1i2_1.X())/3);
+	calculated_track3d_point.SetY((track_p_si1_1.Y() + track_p_si2_1.Y() + track_p_i1i2_1.Y())/3);
+	calculated_track3d_point.SetZ((track_p_si1_1.Z() + track_p_si2_1.Z() + track_p_i1i2_1.Z())/3);
 
+	calculated_track3d_vector = alt_vector.Unit();
+	//calculated_track3d_vector.Unit();
 	//std::cout << "1 " << alt_vector.X() << std::endl;
 	//std::cout << "2ux " << calculated_track3d_vector.X() << std::endl;
 	//std::cout << "p1 " << alt_point.X() << " " << alt_point.Y() << std::endl;
@@ -396,150 +366,13 @@ void FitToLines::calculate_projections_on_hit_planes_calculations() // unused, e
 	
 }
 
-void FitToLines::calculate_projections_on_hit_planes_fit()
+TVector3 FitToLines::return_approx_track_point()
 {
-	double angle;
-
-	// straight
-	//std::cout << "track " << track3d_fit_vector.X() << std::endl;
-	projection_straight_fit.SetX(track3d_fit_vector.X());
-	projection_straight_fit.SetY(0);
-	projection_straight_fit.SetZ(track3d_fit_vector.Z());
-	projection_straight_fit.Unit();
-	//std::cout << "projection track " << projection_straight_fit.X() << std::endl;
-	
-	// inclined1
-	angle = 31*TMath::DegToRad();
-	TVector3 wire_direction_inclined1;
-	wire_direction_inclined1.SetXYZ(TMath::Sin(angle), TMath::Cos(angle), 0);
-	projection_inclined1_fit = track3d_fit_vector - track3d_fit_vector.Dot(wire_direction_inclined1)*wire_direction_inclined1;
-	projection_inclined1_fit.Unit();
-
-	TVector3 wire_direction_inclined2;
-	wire_direction_inclined2.SetXYZ(-TMath::Sin(angle), TMath::Cos(angle), 0);
-	projection_inclined2_fit = track3d_fit_vector - track3d_fit_vector.Dot(wire_direction_inclined2)*wire_direction_inclined2;
-	projection_inclined2_fit.Unit();
+	return calculated_track3d_point;
 }
 
-// =================== fit line to 8 lines ===========================
-void FitToLines::make_fit_to_lines(bool _unbiased_fit)
+TVector3 FitToLines::return_approx_track_vector()
 {
-	unbiased_fit = _unbiased_fit;
-	double z[14];
-	z[0]  = z_inclined1[0];
-	z[1]  = z_inclined1[1];
-	z[2]  = z_inclined2[0];
-	z[3]  = z_inclined2[1];
-	z[4]  = z_straight[0];
-	z[5]  = z_straight[1];
-	z[6]  = z_straight[2];
-	z[7]  = z_straight[3];
-	z[8]  = z_inclined1[2];
-	z[9]  = z_inclined1[3];
-	z[10] = z_inclined2[2];
-	z[11] = z_inclined2[3];
-	z[12] = z_straight[4];
-	z[13] = z_straight[5];
-
-	double errors[14];
-	errors[0]  = errors_inclined1[0];
-	errors[1]  = errors_inclined1[1];
-	errors[2]  = errors_inclined2[0];
-	errors[3]  = errors_inclined2[1];
-	errors[4]  = errors_straight[0];
-	errors[5]  = errors_straight[1];
-	errors[6]  = errors_straight[2];
-	errors[7]  = errors_straight[3];
-	errors[8]  = errors_inclined1[2];
-	errors[9]  = errors_inclined1[3];
-	errors[10] = errors_inclined2[2];
-	errors[11] = errors_inclined2[3];
-	errors[12] = errors_straight[4];
-	errors[13] = errors_straight[5];
-
-	// for inclined, in the order
-	double a[8];
-	a[0] = y_x_a[1];
-	a[1] = y_x_a[1];
-	a[2] = y_x_a[2];
-	a[3] = y_x_a[2];
-	a[4] = y_x_a[1];
-	a[5] = y_x_a[1];
-	a[6] = y_x_a[2];
-	a[7] = y_x_a[2];
-
-	double b[8];
-	b[0] = y_x_b[1][0];
-	b[1] = y_x_b[1][1];
-	b[2] = y_x_b[2][0];
-	b[3] = y_x_b[2][1];
-	b[4] = y_x_b[1][2];
-	b[5] = y_x_b[1][3];
-	b[6] = y_x_b[2][2];
-	b[7] = y_x_b[2][3];
-
-	LineFitD1D2 * lineFitD1D2 = LineFitD1D2::GetInstance();
-	lineFitD1D2 -> LineFitD1D2::set_z_values(z);
-	lineFitD1D2 -> LineFitD1D2::set_z_reference(z_reference);
-	lineFitD1D2 -> LineFitD1D2::set_x_straight_values(x_straight);
-	lineFitD1D2 -> LineFitD1D2::set_incl_hit_lines_params(a, b);
-	lineFitD1D2 -> LineFitD1D2::set_x_errors(errors);
-	lineFitD1D2 -> LineFitD1D2::set_track_point(calculated_track3d_point.X(), calculated_track3d_point.Y(), calculated_track3d_point.Z());
-	lineFitD1D2 -> LineFitD1D2::set_track_vector(calculated_track3d_vector.X(), calculated_track3d_vector.Y(), calculated_track3d_vector.Z());
-	lineFitD1D2 -> LineFitD1D2::calculate_start_params();
-}
-	
-
-TVector3 FitToLines::return_track_point()
-{
-	return track3d_fit_point;
+	return calculated_track3d_vector;
 }
 
-TVector3 FitToLines::return_track_point(int _layer_no)
-{
-	return track3d_fit_point_unbiased[ _layer_no ];
-}
-
-TVector3 FitToLines::return_track_vector()
-{
-	return track3d_fit_vector;
-}
-
-TVector3 FitToLines::return_track_vector(int _layer_no)
-{
-	return track3d_fit_vector_unbiased[ _layer_no ];
-}
-
-double FitToLines::get_wire_track_dist(int _layer_no)
-{
-	return wire_track_dist[_layer_no];
-}
-
-double FitToLines::calculate_phi_xz()
-{
-	double phi_xz;
-	// calculate vector projected onto xz plane
-	double vx, vz, norm;
-	vx = track3d_fit_vector.X();
-	vz = track3d_fit_vector.Z();
-	norm = pow(vx*vx+vz*vz,0.5);
-	vx = vx*pow(norm,-1);
-	vz = vz*pow(norm,-1);
-	// calculate angle between Ox and vector
-	phi_xz = TMath::ACos(vx)*180*pow(3.14,-1);
-	return phi_xz;
-}
-
-double FitToLines::calculate_theta_y()
-{
-	double theta_y = 0;
-	double vz, vy, norm;
-	vz = track3d_fit_vector.Z();
-	vy = track3d_fit_vector.Y();
-	norm = pow(vz*vz+vy*vy,0.5);
-	vz = vz*pow(norm,-1);
-	vy = vy*pow(norm,-1);
-	// calculate angle between Ox and vector
-	theta_y = TMath::ACos(vy)*180*pow(3.14,-1);
-	return theta_y;
-}
