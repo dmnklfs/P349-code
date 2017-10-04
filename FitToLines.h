@@ -59,9 +59,9 @@ public:
 	TVector3 get_track_vector();
 	TVector3 get_track_point();
 	bool err_flag();
-
-private:
 	bool errflag;
+private:
+	
 	static FitToLines * _this;
 	int event_no;
 	double z_reference;

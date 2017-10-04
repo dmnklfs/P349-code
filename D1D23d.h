@@ -82,8 +82,8 @@ public:
 	void set_config_positions();
 	void rotateD1(double _ax, double _ay, double _az);
 	void rotateD2(double _ax, double _ay, double _az);
-	void shiftD1(double _sx, double _sy, double _sz);
-	void shiftD2(double _sx, double _sy, double _sz);
+	void shiftD1(double _sx, double _sy, double _sz, bool change_lab);
+	void shiftD2(double _sx, double _sy, double _sz, bool change_lab);
 	void fit_in_3d();
 	void fill_histos();
 	double calculate_phi_xz(double vx, double vz);
@@ -94,6 +94,8 @@ public:
 
 	double get_mean_chisq();
 	void save_histos();
+
+	double draw_chambers();
 
 private:
 	TH1F *chi2, *chi2_resc, *phi, *theta;

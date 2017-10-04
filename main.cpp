@@ -115,43 +115,118 @@ int main(int argc, char *argv[])
     d1d2 -> tell_no_of_events();
     d1d2 -> calculate_init_params();
     d1d2 -> set_config_positions();
-    //d1d2 -> rotateD1(90,0,0);
-    d1d2 -> fit_in_3d();
-    d1d2 -> fill_histos();
-    d1d2 -> save_histos();
 
-    
+    // 2d shift/rotations determination
+    double first_offset1, first_offset2, step1, step2;
+    int no_of_iter1, no_of_iter2;
 
-    // in D1D2Reconstruction offsets for y and for x/z work differently. y is set on hit functions, x/z are set on data
-    // therefore - y there should be given an absolute value of shift (not a change)
-//t    d1d2_reco -> tell_no_of_events();
-//t    double offset[200], chisq[200], off, chi,first_offset, step;
-//t    int no_of_iter;
-//t    no_of_iter = 1;
-//t    first_offset = 0.34323;
-//t    step = 0.0;
-//t    d1d2_reco -> set_x_offset(0);
-//t    for (int i = 0; i < no_of_iter; i++)
-//t    {
-//t      std::cout << "offset determination... " << i + 1 << " out of " << no_of_iter << " done" << std::endl;
-//t      if (i==0) off = first_offset;
-//t      //else off = step; x/z
-//t      else off += step;
-//t      //d1d2_reco -> set_z_offset(off);
-//t      d1d2_reco -> fit_in_3d_D1();
-//t      d1d2_reco -> fit_in_3d_D2();
-//t      d1d2_reco -> set_y_offset(off);
-//t      d1d2_reco -> fit();
-//t      d1d2_reco -> plot_D1_d2_phi_corr();
-//t      d1d2_reco -> save_histos();
-//t      d1d2_reco -> deletations();
-//t      chi = d1d2_reco -> get_mean_chisq();
-//t      offset[i] = first_offset+i*step;
-//t      chisq[i] = chi;
-//t    }
-//t    TGraph *graph = new TGraph(no_of_iter,offset,chisq);
-//t    //graph -> Draw("AP");
-//t    graph->Write();
+    // z
+    first_offset1 = -3.5;
+    step1 = 0.01;
+    no_of_iter1 = 100;
+
+    // x
+    first_offset2 = -0.05;
+    step2 = 0.01;
+    no_of_iter2 = 10;
+
+    const int npoints2d = no_of_iter1*no_of_iter2;
+    double var1[npoints2d], var2[npoints2d], off1, off2, chi[npoints2d];
+//
+//    //std::cout << "offset determination... " << i + 1 << " out of " << no_of_iter << " done" << std::endl;
+//    for (int j = 0; j < no_of_iter1; j++)
+//    {
+//      if (j==0) off1 = first_offset1;
+//      else off1 = step1;
+//      d1d2 -> shiftD2(0,0,off1,1);
+//      if (j!=0) d1d2 -> shiftD2(-(no_of_iter2-1)*step2,0,0,1);
+//      //d1d2 -> rotateD2(0,0,0);
+//      for (int k = 0; k < no_of_iter2; k++)
+//      {
+//        //std::cout << j*no_of_iter2+k << std::endl;
+//        if ((j*no_of_iter2+k)%10 == 0) std::cout << j*no_of_iter2+k << " out of " << no_of_iter1*no_of_iter2 << " done " << std::endl;
+//        if (k==0)
+//        {
+//          if(j==0) off2 = first_offset2;
+//          else off2 = 0;
+//        }
+//        else off2 = step2;
+//        d1d2 -> shiftD2(off2,0,0,1);
+//        d1d2 -> fit_in_3d();
+//        chi[j*no_of_iter2+k] = d1d2 -> get_mean_chisq();
+//        var1[j*no_of_iter2+k] = first_offset1 + j*step1;
+//        var2[j*no_of_iter2+k] = first_offset2 + k*step2;
+//      }
+//    }
+////    gDirectory->pwd();
+//    TGraph2D *graph = new TGraph2D(npoints2d,var1,var2,chi);
+//    graph->GetXaxis()->SetTitle("z shift");
+//    graph->GetYaxis()->SetTitle("x shift");
+//    graph->Write();
+
+    // one dimensional shifts/rotations
+    first_offset1 = 0;
+    step1 = 0.1;
+    no_of_iter1 = 1;
+
+    const int npoints = no_of_iter1;
+    double var[npoints], chisq[npoints];
+
+    d1d2 -> shiftD2(0.05, 0, 0, 1);
+    d1d2 -> shiftD2(0, 0.389,0, 1);
+    d1d2 -> shiftD2(0, 0, 0.95, 1);
+    d1d2 -> rotateD2(0.513, 0, 0);
+    d1d2 -> rotateD2(0, 0.0031, 0);
+    d1d2 -> rotateD2(0, 0, 0.1475/2);
+    d1d2 -> rotateD1(0, 0,-0.072);
+    //std::cout << "offset determination... " << i + 1 << " out of " << no_of_iter << " done" << std::endl;
+    for (int j = 0; j < no_of_iter1; j++)
+    {
+      if (j%10 == 0) { std::cout << j << " out of " << no_of_iter1 << " done " << std::endl; }
+      if (j==0) off1 = first_offset1;
+      else off1 = step1;
+      d1d2 -> rotateD2(0,0,off1);
+      d1d2 -> fit_in_3d();
+      chisq[j] = d1d2 -> get_mean_chisq();
+      var1[j] = first_offset1 + j*step1;
+    }
+
+    TGraph *graph1d = new TGraph(npoints,var1,chisq);
+    TF1 *parabola = new TF1("parabola","[0]*x*x+[1]*x+[2]", first_offset1, first_offset1 + no_of_iter1*step1);
+    graph1d->Fit("parabola");
+    graph1d->Write(argv[1]);
+    d1d2 -> draw_chambers();
+
+//    // in D1D2Reconstruction offsets for y and for x/z work differently. y is set on hit functions, x/z are set on data
+//    // therefore - y there should be given an absolute value of shift (not a change)
+//    d1d2_reco -> tell_no_of_events();
+//    double offset[20], chisq[20], off, chi,first_offset, step;
+//    int no_of_iter;
+//    no_of_iter = 20;
+//    first_offset = -1;
+//    step = 0.1;
+//    d1d2_reco -> set_x_offset(0);
+//    for (int i = 0; i < no_of_iter; i++)
+//    {
+//      std::cout << "offset determination... " << i + 1 << " out of " << no_of_iter << " done" << std::endl;
+//      if (i==0) off = first_offset;
+//      else off = step;
+//      //else off += step;
+//      d1d2_reco -> set_z_offset(off);
+//      //d1d2_reco -> fit_in_3d_D1();
+//      //d1d2_reco -> fit_in_3d_D2();
+//      //d1d2_reco -> set_y_offset(off);
+//      d1d2_reco -> fit();
+//      //d1d2_reco -> plot_D1_d2_phi_corr();
+//      //d1d2_reco -> save_histos();
+//      d1d2_reco -> deletations();
+//      chi = d1d2_reco -> get_mean_chisq();
+//      offset[i] = first_offset+i*step;
+//      chisq[i] = chi;
+//    }
+//    TGraph *graph = new TGraph(no_of_iter,offset,chisq);
+//    //graph -> Draw("AP");
+//    graph->Write();
 
 //    calibrationd1d2  -> tell_no_of_events();
 //    calibrationd1d2 -> set_no_of_bin_in_event();

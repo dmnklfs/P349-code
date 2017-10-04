@@ -463,7 +463,7 @@ void D1D2Reconstruction::fit()
 		FitD1D2 *fitD1D2 = new FitD1D2(i);
 		fitD1D2 -> FitD1D2::set_no_of_iteration(0);
 		fitD1D2 -> FitD1D2::set_values(hits_positionsX_all,hits_positionsZ_all,errors_all, wires_positionsX_all);
-		fitD1D2 -> FitD1D2::set_z_reference((6*(hits_positionsZ_all[0]+hits_positionsZ_all[5])/2+8*(hits_positionsZ_all[6]+hits_positionsZ_all[13])/2)/14);
+		fitD1D2 -> FitD1D2::set_z_reference((8*z_lab_position_D1 + 6*z_lab_position_D2)*pow(14,-1));
 		fitD1D2 -> FitD1D2::fit_straight_layer();
 		fitD1D2 -> FitD1D2::fit_inclined_layers();
 		fitD1D2 -> FitD1D2::calculate_xy_functions();

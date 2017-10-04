@@ -128,8 +128,8 @@ void D1D23d::set_config_positions()
 	rotateD1(D1_x_rot,D1_y_rot,D1_z_rot);
 	rotateD2(D2_x_rot,D2_y_rot,D2_z_rot);
 	// shifts
-	shiftD1(x_lab_position_D1, y_lab_position_D1, z_lab_position_D1);
-	shiftD2(x_lab_position_D2, y_lab_position_D2, z_lab_position_D2);
+	shiftD1(x_lab_position_D1, y_lab_position_D1, z_lab_position_D1, 0);
+	shiftD2(x_lab_position_D2, y_lab_position_D2, z_lab_position_D2, 0);
 }
 
 void D1D23d::rotateD1(double _ax, double _ay, double _az)
@@ -140,7 +140,7 @@ void D1D23d::rotateD1(double _ax, double _ay, double _az)
 	ay = _ay*TMath::DegToRad();
 	az = _az*TMath::DegToRad();
 	int no_of_chosen_events = TrackRecoData.size();
-	std::cout << "Rotating D1..." << std::endl;
+	//std::cout << "Rotating D1..." << std::endl;
 
 	TVector3 RefAxis0, RefAxis1, RefAxis2;	
 
@@ -195,7 +195,7 @@ void D1D23d::rotateD2(double _ax, double _ay, double _az)
 	ay = _ay*TMath::DegToRad();
 	az = _az*TMath::DegToRad();
 	int no_of_chosen_events = TrackRecoData.size();
-	std::cout << "Rotating D2..." << std::endl;
+	//std::cout << "Rotating D2..." << std::endl;
 
 	TVector3 RefAxis0, RefAxis1, RefAxis2;	
 
@@ -238,15 +238,21 @@ void D1D23d::rotateD2(double _ax, double _ay, double _az)
 	}
 }
 
-void D1D23d::shiftD1(double _sx, double _sy, double _sz)
+void D1D23d::shiftD1(double _sx, double _sy, double _sz, bool change_lab)
 {
+	if (change_lab)
+	{
+		z_lab_position_D2 += _sx;
+		z_lab_position_D2 += _sy;
+		z_lab_position_D2 += _sz;
+	}
 	D1point.SetX(D1point.X()+ _sx);
 	D1point.SetY(D1point.Y()+ _sy);
 	D1point.SetZ(D1point.Z()+ _sz);
 	double x,y,z;
 
 	int no_of_chosen_events = TrackRecoData.size();
-	std::cout << "Shifting D1..." << std::endl;
+	//std::cout << "Shifting D1..." << std::endl;
 	for (unsigned int i = 0; i < no_of_chosen_events; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -261,15 +267,22 @@ void D1D23d::shiftD1(double _sx, double _sy, double _sz)
 	}
 }
 
-void D1D23d::shiftD2(double _sx, double _sy, double _sz)
+void D1D23d::shiftD2(double _sx, double _sy, double _sz, bool change_lab)
 {
+	if (change_lab)
+	{
+		z_lab_position_D2 += _sx;
+		z_lab_position_D2 += _sy;
+		z_lab_position_D2 += _sz;
+	}
+
 	D2point.SetX(D2point.X()+ _sx);
 	D2point.SetY(D2point.Y()+ _sy);
 	D2point.SetZ(D2point.Z()+ _sz);
 	double x,y,z;
 
 	int no_of_chosen_events = TrackRecoData.size();
-	std::cout << "Shifting D2..." << std::endl;
+	//std::cout << "Shifting D2..." << std::endl;
 	for (unsigned int i = 0; i < no_of_chosen_events; i++)
 	{
 		for (int j = 0; j < 6; j++)
@@ -346,7 +359,6 @@ void D1D23d::calculate_init_params()
 void D1D23d::fit_in_3d()
 {
 	FitToLines * fit;
-
 	unsigned int no_of_chosen_events = TrackRecoData.size();
 	for (unsigned int i = 0; i < no_of_chosen_events; i++)
 	{
@@ -357,12 +369,31 @@ void D1D23d::fit_in_3d()
 		}
 		fit -> set_init_params(TrackRecoData.at(i).ApproxTrackPoint,TrackRecoData.at(i).ApproxTrackVector);
 		fit -> set_z_reference((8*z_lab_position_D1 + 6*z_lab_position_D2)*pow(14,-1));
+		//std::cout << (8*z_lab_position_D1 + 6*z_lab_position_D2)*pow(14,-1) << std::endl;
 		fit -> fit_with_minuit();
+		TrackRecoData.at(i).errflag = fit -> err_flag();
 		TrackRecoData.at(i).TrackPoint = fit -> get_track_point();
 		TrackRecoData.at(i).TrackVector = fit -> get_track_vector();
 		TrackRecoData.at(i).chi2 = fit -> calculate_chisq();
 		delete fit;
 	}
+}
+
+double D1D23d::get_mean_chisq()
+{
+	double mean_chisq = 0;
+	for (int i = 0; i < TrackRecoData.size(); i++)
+	{		
+		if (!TrackRecoData.at(i).errflag)
+		{
+			mean_chisq = mean_chisq + TrackRecoData.at(i).chi2;
+			//std::cout << TrackRecoData.at(i).chi2 << std::endl;
+		}
+	}
+	//std::cout << TrackRecoData.size() << std::endl;
+	//std::cout << mean_chisq << std::endl;
+	mean_chisq = mean_chisq*pow(TrackRecoData.size(),-1);
+	return mean_chisq;
 }
 
 void D1D23d::fill_histos()
@@ -423,4 +454,38 @@ double D1D23d::calculate_theta_yz(double vy, double vz)
 	vy = vy*pow(norm,-1);
 	theta_yz = TMath::ACos(vy)*180*pow(3.14,-1);
 	return theta_yz;
+}
+
+double D1D23d::draw_chambers()
+{
+	TCanvas *test = new TCanvas("name","name");
+	test->SetFillColor(0);
+	test->SetBorderMode(0);
+	test->SetBorderSize(2);
+	test->SetFrameBorderMode(0);
+	TView3D *view = (TView3D*) TView::CreateView(1);
+	view->SetRange(-70,-20,-70,70,20,20);
+	view->ShowAxis();
+	TAxis3D *axis = TAxis3D::GetPadAxis(); // Get pointer to axis
+    if(axis) {
+        axis->SetLabelSize(0.02);
+        axis->SetLabelOffset(-0.02, "z");
+        axis->SetLabelColor(1);
+        axis->SetAxisColor(1);
+        axis->SetXTitle("X");
+        axis->SetYTitle("Y");
+        axis->SetZTitle("Z");
+    }
+
+    TPolyLine3D *D1vecX = new TPolyLine3D(2);
+	D1vecX->SetPoint(0,D1point.X(), D1point.Y(), D1point.Z());
+	D1vecX->SetPoint(1,D1point.X()+D1vectorX.X(), D1point.Y()+D1vectorX.Y(), D1point.Z()+D1vectorX.Z());
+	D1vecX->SetLineColor(kBlue);
+	D1vecX->SetLineWidth(2);
+	D1vecX->Draw();
+
+	gDirectory -> pwd();
+    //test -> Write();
+    view -> Write();
+
 }

@@ -66,6 +66,7 @@ struct d1d2_reco_data
 		theta_yz_D2 = -1;
 		phi_xz = -1;
 		theta_yz = -1;
+		errflag = 1;
 	}
 };
 

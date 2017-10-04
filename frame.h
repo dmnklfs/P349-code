@@ -10,6 +10,7 @@
 #include "TClonesArray.h"
 #include "TMinuit.h"
 #include <TGraph.h>
+#include <TGraph2D.h>
 #include <TMultiGraph.h>
 #include <TGaxis.h>
 #include <TF1.h>

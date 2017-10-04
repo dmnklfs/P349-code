@@ -11,7 +11,7 @@ FitToLines * FitToLines::GetInstance()
   return _this; 
 }
 
-FitToLines::FitToLines(){ }
+FitToLines::FitToLines(){  }
 
 void d1d23dfcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 {
