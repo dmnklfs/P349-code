@@ -33,79 +33,75 @@ int main(int argc, char *argv[])
 	std::cout << "* start of the loop over the events" << std::endl;
   int delme_iter = 0;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
-  	{
-  		//std::cout << entry << std::endl;
-  		single_event = new SingleEvent(config);
-  		if(0==entry%10000) std::cout << entry << std::endl;
-  		in_out -> Tree::get_entry(entry);
-  		// start of the loop over good hits in the single event
-  		for (Int_t i = 0; i < in_out -> Tree::no_of_good_hits() ; i++)
-	    {
-	    	// reading data
-		   	in_out -> Tree::get_good_hit(i);
-		   	single_gh_data good_hit_data; // if more data needs to be read - modify single_gh_data struct
-		   	good_hit_data.detector = in_out -> Tree::get_det();
-		   	good_hit_data.layer = in_out -> Tree::get_layer();
-  			good_hit_data.element = in_out -> Tree::get_element();
-  			good_hit_data.edge = in_out -> Tree::get_edge();
-  			good_hit_data.treal = in_out -> Tree::get_treal();
-
-			// filling detectors variables
-		   	if (good_hit_data.detector == START) single_event -> Start::fill_good_hits(good_hit_data);
-		   	if (good_hit_data.detector == NTOF) single_event -> TOF::fill_good_hits(good_hit_data);	
-		   	if (good_hit_data.detector == ND1) single_event -> D1::fill_good_hits(good_hit_data);
-		   	if (good_hit_data.detector == ND2) single_event -> D2::fill_good_hits(good_hit_data);
-		   	if (good_hit_data.detector == NHEX) single_event -> HEX::fill_good_hits(good_hit_data);
-		   	if (good_hit_data.detector == NINTER) single_event -> Intermediate::fill_good_hits(good_hit_data);
-		   	if (good_hit_data.detector == NFIBER) single_event -> Fiber::fill_good_hits(good_hit_data);		
+  {
+ 		//std::cout << entry << std::endl;
+ 		single_event = new SingleEvent(config);
+ 		if(0==entry%10000) std::cout << entry << std::endl;
+ 		in_out -> Tree::get_entry(entry);
+ 		// start of the loop over good hits in the single event
+ 		for (Int_t i = 0; i < in_out -> Tree::no_of_good_hits() ; i++)
+    {
+    	// reading data
+	   	in_out -> Tree::get_good_hit(i);
+	   	single_gh_data good_hit_data; // if more data needs to be read - modify single_gh_data struct
+	   	good_hit_data.detector = in_out -> Tree::get_det();
+	   	good_hit_data.layer = in_out -> Tree::get_layer();
+ 			good_hit_data.element = in_out -> Tree::get_element();
+ 			good_hit_data.edge = in_out -> Tree::get_edge();
+ 			good_hit_data.treal = in_out -> Tree::get_treal();
+		  // filling detectors variables
+	   	if (good_hit_data.detector == START) single_event -> Start::fill_good_hits(good_hit_data);
+	   	if (good_hit_data.detector == NTOF) single_event -> TOF::fill_good_hits(good_hit_data);	
+	   	if (good_hit_data.detector == ND1) single_event -> D1::fill_good_hits(good_hit_data);
+	   	if (good_hit_data.detector == ND2) single_event -> D2::fill_good_hits(good_hit_data);
+	   	if (good_hit_data.detector == NHEX) single_event -> HEX::fill_good_hits(good_hit_data);
+	   	if (good_hit_data.detector == NINTER) single_event -> Intermediate::fill_good_hits(good_hit_data);
+	   	if (good_hit_data.detector == NFIBER) single_event -> Fiber::fill_good_hits(good_hit_data);		
 		} // end of loop over good hits
 
     //std::cout << "-------" << entry << std::endl;
-		if (single_event -> SingleEvent::was_correct_event(analysis_stage))
-  		{
+		if (single_event -> SingleEvent::was_correct_event(analysis_stage) && entry > 0)// && entry > 50000 && entry < 60000
+ 		{
+       delme_iter++;
+ 			// filling control histos for preselected data
+ 			// checking if preselected tree = 1/0 and filling the tree or not
+ 			name = Form("Event_%ld", entry);
+      single_event -> SingleEvent::test_calculate_distances();
+ 			in_out -> Tree::fill_preselected_data_tree();
+      in_out -> Tree::fill_preselected_histos(single_event -> SingleEvent::get_hist_data());
+ 			//tof -> Fill(single_event -> SingleEvent::getTOF());
+       //START_Mean_Time  -> Fill(single_event -> SingleEvent::Start::getTime());
+       //TOF_Mean_Time  -> Fill(single_event -> SingleEvent::TOF::getTime());
+       //std::cout << "test_calculate_distances" << std::endl;
+       //D1_HEX_pos_diff -> Fill(single_event -> SingleEvent::test_positions_histogram());
+ 			//event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
+ 			//event_to_display -> get_canvas() -> Write(name);
+ 			//name = Form("results/Event_%ld.png", entry);
+ 			//event_to_display -> get_canvas() -> SaveAs(name);
+ 			//data for the simple calibration
+ 			//simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
+ 			//calibration -> get_data( single_event -> SingleEvent::D1::get_data_for_calibration() ); 
+       //delete event_to_display;
+       //std::cout << "ok1" << std::endl;
+       //calibration_D2 -> get_data( single_event -> SingleEvent::D2::get_data_for_calibration() ); 
+       //std::cout << "ok2" << std::endl;
+       //std::cout << "ok1" << std::endl;
+       //calibration_HEX -> get_data( single_event -> SingleEvent::HEX::get_data_for_calibration() ); 
+       //track_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
+       //d1d2_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
+       d1d2 -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
+       //std::cout << "ok0 " << std::endl;
+       //calibrationd1d2 -> get_data(single_event -> SingleEvent::get_data_for_D1D2_calibration());
+       //std::cout << "ok01" << std::endl;
+ 			
+ 		} // end if correct event
 
-        delme_iter++;
-  			// filling control histos for preselected data
-  			// checking if preselected tree = 1/0 and filling the tree or not
-  			name = Form("Event_%ld", entry);
-  			in_out -> Tree::fill_preselected_data_tree();
-        in_out -> Tree::fill_preselected_histos(single_event -> SingleEvent::get_hist_data());
-  			//tof -> Fill(single_event -> SingleEvent::getTOF());
-        //START_Mean_Time  -> Fill(single_event -> SingleEvent::Start::getTime());
-        //TOF_Mean_Time  -> Fill(single_event -> SingleEvent::TOF::getTime());
-        //std::cout << "test_calculate_distances" << std::endl;
-  			single_event -> SingleEvent::test_calculate_distances();
-
-        //D1_HEX_pos_diff -> Fill(single_event -> SingleEvent::test_positions_histogram());
-  			//event_to_display = new EventDisplay(entry, config, single_event -> get_event_to_display());
-  			//event_to_display -> get_canvas() -> Write(name);
-  			//name = Form("results/Event_%ld.png", entry);
-  			//event_to_display -> get_canvas() -> SaveAs(name);
-
-  			//data for the simple calibration
-  			//simple_calibration -> SimpleCalibration::get_data(single_event -> SingleEvent::D1::get_data_for_simple_calibration());
-  			//calibration -> get_data( single_event -> SingleEvent::D1::get_data_for_calibration() ); 
-        //delete event_to_display;
-        //std::cout << "ok1" << std::endl;
-        //calibration_D2 -> get_data( single_event -> SingleEvent::D2::get_data_for_calibration() ); 
-        //std::cout << "ok2" << std::endl;
-        //std::cout << "ok1" << std::endl;
-        //calibration_HEX -> get_data( single_event -> SingleEvent::HEX::get_data_for_calibration() ); 
-        //track_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
-        //d1d2_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
-        d1d2 -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
-        //std::cout << "ok0 " << std::endl;
-        //calibrationd1d2 -> get_data(single_event -> SingleEvent::get_data_for_D1D2_calibration());
-        //std::cout << "ok01" << std::endl;
-  			
-  		} // end if correct event
-
-  		// filling control histos for rough data
-  		// checking if rough tree = 1/0 and filling the tree or not
-  		in_out -> Tree::fill_rough_data_tree();
-      in_out -> Tree::fill_rough_histos(single_event -> SingleEvent::get_hist_data());
-  		delete single_event;
-  	} // end of loop over events
+ 		// filling control histos for rough data
+ 		// checking if rough tree = 1/0 and filling the tree or not
+ 		in_out -> Tree::fill_rough_data_tree();
+    in_out -> Tree::fill_rough_histos(single_event -> SingleEvent::get_hist_data());
+ 		delete single_event;
+  } // end of loop over events
     in_out -> Tree::save_output_file();
 
     TFile test_file("results/res_file.root","UPDATE");
@@ -166,36 +162,71 @@ int main(int argc, char *argv[])
 
     // one dimensional shifts/rotations
     first_offset1 = 0;
-    step1 = 0.1;
+    step1 = 0;
     no_of_iter1 = 1;
 
     const int npoints = no_of_iter1;
     double var[npoints], chisq[npoints];
 
-    d1d2 -> shiftD2(0.05, 0, 0, 1);
-    d1d2 -> shiftD2(0, 0.389,0, 1);
-    d1d2 -> shiftD2(0, 0, 0.95, 1);
-    d1d2 -> rotateD2(0.513, 0, 0);
-    d1d2 -> rotateD2(0, 0.0031, 0);
-    d1d2 -> rotateD2(0, 0, 0.1475/2);
-    d1d2 -> rotateD1(0, 0,-0.072);
+    //d1d2 -> shiftD2(0.05, 0, 0, 1);
+    //d1d2 -> shiftD2(0, 0.389,0, 1);
+    //d1d2 -> shiftD2(0, 0, 0.95, 1);
+    //d1d2 -> rotateD2(0.513, 0, 0);
+    //d1d2 -> rotateD2(0, 0.0031, 0);
+    //d1d2 -> rotateD2(0, 0, 0.1475/2);
+    //d1d2 -> rotateD1(0, 0,-0.072);
+    //d1d2 -> rotateD1(10, 10, 10);
+    //d1d2 -> shiftD1();
+    //d1d2 -> rotateD2(-10, -10, -10);
     //std::cout << "offset determination... " << i + 1 << " out of " << no_of_iter << " done" << std::endl;
+    //d1d2 -> shiftD2(0,0,30,1);
+    //d1d2 -> rotateD2(-10, -10, -10);
+
+    //d1d2 -> fit_in_3d();
+    //d1d2 -> get_mean_chisq();
+
+    d1d2 -> shiftD2(0.0406,0,0,1);
+    d1d2 -> shiftD2(0,0,2.35,1);
+    d1d2 -> shiftD2(0,-0.36,0,1);
+    d1d2 -> shiftD2(0,0,0.10,1);
+    d1d2 -> rotateD2(0, -0.006, 0);
+    d1d2 -> rotateD2(0.094,0 , 0);
+    d1d2 -> rotateD2(0 ,0 , 0.013);
+
+
     for (int j = 0; j < no_of_iter1; j++)
     {
       if (j%10 == 0) { std::cout << j << " out of " << no_of_iter1 << " done " << std::endl; }
       if (j==0) off1 = first_offset1;
       else off1 = step1;
-      d1d2 -> rotateD2(0,0,off1);
+      //d1d2 -> shiftD2(0,0,off1,1);
+      //d1d2 -> rotateD2(0, 0, off1);
       d1d2 -> fit_in_3d();
       chisq[j] = d1d2 -> get_mean_chisq();
       var1[j] = first_offset1 + j*step1;
+
     }
 
+    TCanvas *fitcanvas = new TCanvas("#chi^{2}","#chi^{2}",500,500);
     TGraph *graph1d = new TGraph(npoints,var1,chisq);
     TF1 *parabola = new TF1("parabola","[0]*x*x+[1]*x+[2]", first_offset1, first_offset1 + no_of_iter1*step1);
+    parabola->SetParName(0,"a");
+    parabola->SetParName(1,"b");
+    parabola->SetParName(2,"c");
+    double a, b, shift;
+    graph1d->SetMarkerStyle(20);
     graph1d->Fit("parabola");
-    graph1d->Write(argv[1]);
-    d1d2 -> draw_chambers();
+    a = parabola->GetParameter(0);
+    b = parabola->GetParameter(1);
+    shift = -b/(2*a);
+    std::cout << shift << std::endl;
+    graph1d->Draw();
+    fitcanvas->Write(argv[1]);
+
+    d1d2 -> draw_chambers(0);
+    d1d2->fill_histos();
+    d1d2->save_histos();
+
 
 //    // in D1D2Reconstruction offsets for y and for x/z work differently. y is set on hit functions, x/z are set on data
 //    // therefore - y there should be given an absolute value of shift (not a change)

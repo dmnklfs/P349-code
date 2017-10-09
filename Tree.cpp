@@ -437,6 +437,7 @@ void Tree::save_preselected_histos()
 			for (int j = 0; j < 2; j++)
 			{
 				D1_L1L2[i][j] -> Write();
+				D1_L1L2_distances[i][j] -> Write();
 				//D1_L1L2[i][j] -> ProjectionX("",0,-1)-> Write();
 				//D1_L1L2[i][j] -> ProjectionY("",0,-1)-> Write();
 			}
@@ -445,7 +446,28 @@ void Tree::save_preselected_histos()
 		{
 			for (int j = 0; j < 2; j++)
 			{
+				D1_L3L4[i][j] -> Write();
+				D1_L3L4_distances[i][j] -> Write();
+				//D1_L7L8[i][j] -> ProjectionX("",0,-1)-> Write();
+				//D1_L7L8[i][j] -> ProjectionY("",0,-1)-> Write();
+			}
+		}
+		for (int i = 0; i < 42; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				D1_L5L6[i][j] -> Write();
+				D1_L5L6_distances[i][j] -> Write();
+				//D1_L7L8[i][j] -> ProjectionX("",0,-1)-> Write();
+				//D1_L7L8[i][j] -> ProjectionY("",0,-1)-> Write();
+			}
+		}
+		for (int i = 0; i < 42; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
 				D1_L7L8[i][j] -> Write();
+				D1_L7L8_distances[i][j] -> Write();
 				//D1_L7L8[i][j] -> ProjectionX("",0,-1)-> Write();
 				//D1_L7L8[i][j] -> ProjectionY("",0,-1)-> Write();
 			}
@@ -499,6 +521,7 @@ void Tree::save_preselected_histos()
 			for (int j = 0; j < 2; j++)
 			{
 				D2_L1L2[i][j] -> Write();
+				D2_L1L2_distances[i][j] -> Write();
 			}
 		}
 		for (int i = 0; i < 42; i++)
@@ -506,6 +529,7 @@ void Tree::save_preselected_histos()
 			for (int j = 0; j < 2; j++)
 			{
 				D2_L3L4[i][j] -> Write();
+				D2_L3L4_distances[i][j] -> Write();
 			}
 		}
 		for (int i = 0; i < 42; i++)
@@ -513,7 +537,9 @@ void Tree::save_preselected_histos()
 			for (int j = 0; j < 2; j++)
 			{
 				D2_L5L6[i][j] -> Write();
+				D2_L5L6_distances[i][j] -> Write();
 			}
+
 		}
 	}
 

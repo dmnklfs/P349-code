@@ -10,6 +10,7 @@
 #include "TClonesArray.h"
 #include "TMinuit.h"
 #include <TGraph.h>
+#include <TMath.h>
 #include <TMultiGraph.h>
 #include <TGaxis.h>
 #include <TF1.h>
@@ -28,7 +29,6 @@
 #include "MinuitFit.h"
 #include "TrackCalc.h"
 #include "FitToLines.h"
-#include <TMath.h>
 
 struct d1d2_3d_data
 {
@@ -37,6 +37,7 @@ struct d1d2_3d_data
 	double z_hit_pos[14];
 	double chi2, phi_xz, theta_yz;
 	bool errflag;
+	int take_to_mean;
 
 //	double x_hit_pos_D1[8];
 //	double x_err_hit_pos_D1[8];
@@ -65,6 +66,9 @@ struct d1d2_3d_data
 //		theta_yz_D2 = -1;
 		phi_xz = -1;
 		theta_yz = -1;
+		take_to_mean = -1;
+		errflag = 1;
+		take_to_mean = -1;
 	}
 };
 
@@ -95,7 +99,7 @@ public:
 	double get_mean_chisq();
 	void save_histos();
 
-	double draw_chambers();
+	double draw_chambers(int event_no);
 
 private:
 	TH1F *chi2, *chi2_resc, *phi, *theta;

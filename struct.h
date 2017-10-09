@@ -140,8 +140,8 @@ struct Fiber_hist_data
 
 struct DCLayer_hist_data
 {
-	DCLayer_hist_data(std::vector<int>& _rough_elements, std::vector<int>& _preselected_elements, std::vector<double>& _rough_times, std::vector<double>& _preselected_times, std::vector<double>& _tot)
-		: rough_elements(_rough_elements), preselected_elements(_preselected_elements), rough_times(_rough_times), preselected_times(_preselected_times), tot(_tot) {}
+	DCLayer_hist_data(std::vector<int>& _rough_elements, std::vector<int>& _preselected_elements, std::vector<double>& _rough_times, std::vector<double>& _preselected_times, std::vector<double>& _tot, std::vector<double>& _distances_from_wire)
+		: rough_elements(_rough_elements), preselected_elements(_preselected_elements), rough_times(_rough_times), preselected_times(_preselected_times), tot(_tot), distances_from_wire(_distances_from_wire) {}
 	unsigned int rough_multiplicity; 
 	unsigned int preselected_multiplicity;
 	std::vector<int> &rough_elements;
@@ -149,6 +149,7 @@ struct DCLayer_hist_data
 	std::vector<double> &rough_times;
 	std::vector<double> &preselected_times;
 	std::vector<double> &tot;
+	std::vector<double> &distances_from_wire;
 };
 
 struct D1_hist_data

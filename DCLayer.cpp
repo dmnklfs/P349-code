@@ -110,7 +110,8 @@ bool DCLayer::check_size(unsigned int preselected_data_size)
 
 DCLayer_hist_data* DCLayer::get_hist_data()
 {
-	DCLayer_hist_data *DCLayer_data = new DCLayer_hist_data(RoughWire, Wire, RoughDriftTime, DriftTime, TOT);
+	//std::cout << HitsDistancesFromWires.size() << std::endl;
+	DCLayer_hist_data *DCLayer_data = new DCLayer_hist_data(RoughWire, Wire, RoughDriftTime, DriftTime, TOT, HitsDistancesFromWires);
 	DCLayer_data -> rough_multiplicity = RoughWire.size();
 	DCLayer_data -> preselected_multiplicity = Wire.size();
 	return DCLayer_data;

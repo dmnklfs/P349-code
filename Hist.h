@@ -105,7 +105,13 @@ public:
 	TH1F *D1_Preselected_Multiplicity[8];
 	TH1F *D1_Preselected_DriftTime[8];
 	TH2F *D1_L1L2[42][2]; // all wires, left - right
+	TH2F *D1_L3L4[42][2];
+	TH2F *D1_L5L6[42][2];
 	TH2F *D1_L7L8[42][2];
+	TH2F *D1_L1L2_distances[42][2]; // all wires, left - right
+	TH2F *D1_L3L4_distances[42][2];
+	TH2F *D1_L5L6_distances[42][2];
+	TH2F *D1_L7L8_distances[42][2];
 	//TH2F *D1_L1[42];
 	//TH2F *D1_L2[42];
 	//TH2F *D1_L7[42];
@@ -127,6 +133,9 @@ public:
 	TH2F *D2_L1L2[42][2]; // all wires, left - right
 	TH2F *D2_L3L4[42][2];
 	TH2F *D2_L5L6[42][2];
+	TH2F *D2_L1L2_distances[42][2]; // all wires, left - right
+	TH2F *D2_L3L4_distances[42][2];
+	TH2F *D2_L5L6_distances[42][2];
 	TH1F *D2_no_of_planes;
 	TH1F *D2_no_of_cells;
 	TH2F *D2_no_planes_vs_cells;
