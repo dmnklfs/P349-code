@@ -302,7 +302,7 @@ void Calibration3d_HEX::fit_in_3d()
 			hits_positionsX_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_X;
 			hits_positionsZ_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Z;
 			if (no_of_iteration==0) errors_all[j]=1;
-			else errors_all[j] = Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
+			else errors_all[j] = 1;//Layer[j]->CalibrationData.at(i).hit_pos_Xerr;
 			//std::cout << "   wires_positionsX_all[j] " << wires_positionsX_all[j] << std::endl;
 			//std::cout << "   hits_positionsX_all[j] " << hits_positionsX_all[j] << std::endl;
 			//std::cout << "   hits_positionsZ_all[j] " << hits_positionsZ_all[j] << std::endl;
@@ -328,7 +328,7 @@ void Calibration3d_HEX::fit_in_3d()
 		fit3d_HEX -> Fit3d_HEX::set_detector_position(x_lab_position, z_lab_position, half_x_dim, half_z_dim, distance_to_1st_layer);
 		fit3d_HEX -> Fit3d_HEX::calculate_projections_on_hit_planes_calculations();
 
-		fit3d_HEX -> Fit3d_HEX::make_fit_to_lines(true);
+		fit3d_HEX -> Fit3d_HEX::make_fit_to_lines(false);
 		fit3d_HEX -> Fit3d_HEX::calculate_projections_on_hit_planes_fit();
 		track3d_fit_point = fit3d_HEX -> Fit3d_HEX::return_track_point();
 		track3d_fit_vector = fit3d_HEX -> Fit3d_HEX::return_track_vector();

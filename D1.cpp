@@ -45,6 +45,7 @@ D1::~D1()
 
 void D1::fill_good_hits(single_gh_data _good_hit_data)
 {
+	//std::cout << "det " << _good_hit_data.detector << " lay " << _good_hit_data.layer << " el " << _good_hit_data.element << " edge " << _good_hit_data.edge << " treal " << _good_hit_data.treal << std::endl;
 	if (ND1L1 == _good_hit_data.layer) Layer[0] -> DCLayer::fill_rough_data(_good_hit_data);
 	if (ND1L2 == _good_hit_data.layer) Layer[1] -> DCLayer::fill_rough_data(_good_hit_data);
 	if (ND1L3 == _good_hit_data.layer) Layer[2] -> DCLayer::fill_rough_data(_good_hit_data);
@@ -64,6 +65,7 @@ bool D1::was_correct_event()
 	D1_no_of_cells_with_hits = 0;
 	for (int i = 0; i < 8; i++)
 	{
+		//std::cout << i << std::endl;
 		correct_in_layer[i] = Layer[i]-> DCLayer::was_correct_event();
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
 		if (0!= Layer[i]-> Wire.size())
@@ -149,6 +151,7 @@ D1_hist_data* D1::get_hist_data()
 	for (int i = 0; i < 8; i++)
 	{
 		d1_data -> layer_data[i] = Layer[i]-> DCLayer::get_hist_data();
+		//std::cout << "D1 chosen: layer " << i+1 << " wire " << d1_data -> layer_data[i]->preselected_elements.at(0) << " drift time " << d1_data -> layer_data[i]->preselected_times.at(0) << std::endl;
 	}
 	d1_data -> D1_no_of_cells_with_hits = D1_no_of_cells_with_hits;
 	d1_data -> D1_no_of_planes_with_hits = D1_no_of_planes_with_hits;

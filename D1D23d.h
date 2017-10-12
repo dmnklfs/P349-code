@@ -39,6 +39,12 @@ struct d1d2_3d_data
 	bool errflag;
 	int take_to_mean;
 
+	//delme
+	double wire_posX[7];
+	double wire_posZ[7];
+	double drift_time[7];
+	double wire_number[7];
+
 //	double x_hit_pos_D1[8];
 //	double x_err_hit_pos_D1[8];
 //	double z_hit_pos_D1[8];
@@ -72,6 +78,12 @@ struct d1d2_3d_data
 	}
 };
 
+struct wire
+{
+	std::vector<double> DriftTime;
+	std::vector<double> Distance;
+};
+
 class D1D23d
 {
 public:
@@ -92,6 +104,7 @@ public:
 	void fill_histos();
 	double calculate_phi_xz(double vx, double vz);
 	double calculate_theta_yz(double vy, double vz);
+	void calibrate_wires_HEX();
 
 
 	void deletations();
@@ -120,11 +133,19 @@ private:
 	double z_lab_position_D1;
 	double z_lab_position_D2;
 
+	double x_lab_position_HEX;
+	double z_lab_position_HEX;  
+
 	TVector3 D1point, D2point;
 	TVector3 D1vectorX, D1vectorY, D1vectorZ, D2vectorX, D2vectorY, D2vectorZ;
 	// obroty wzgledem osi komory
 	double D1_x_rot, D1_y_rot, D1_z_rot;
 	double D2_x_rot, D2_y_rot, D2_z_rot;
+
+	wire hex_data[7];
+	
+
+
 };
 
 #endif

@@ -17,19 +17,19 @@ Hist::Hist()
 	inter_histos_rough = false;
 	inter_histos_preselected = false;
 
-	//init_start_histos_rough();
-	//init_tof_histos_rough();
-	//init_D1_histos_rough();
-	//init_D2_histos_rough();
-	//init_HEX_histos_rough();
+	init_start_histos_rough();
+	init_tof_histos_rough();
+	init_D1_histos_rough();
+	init_D2_histos_rough();
+	init_HEX_histos_rough();
 	//init_fiber_histos_rough();
 	//init_inter_histos_rough();
 
-	//init_start_histos_preselected();
-	//init_tof_histos_preselected();
+	init_start_histos_preselected();
+	init_tof_histos_preselected();
 	init_D1_histos_preselected();
 	init_D2_histos_preselected();
-	//init_HEX_histos_preselected();
+	init_HEX_histos_preselected();
 	//init_fiber_histos_preselected();
 	//init_inter_histos_preselected();
 }
@@ -693,7 +693,7 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 
 				wire1 = _d1_data->layer_data[j]->preselected_elements.at(i)-1;
 				time1 = _d1_data->layer_data[j]->preselected_times.at(i);
-				distance1 = _d1_data->layer_data[j]->distances_from_wire.at(i);
+				//distance1 = _d1_data->layer_data[j]->distances_from_wire.at(i);
 				D1_wires_offsets[j][wire1] -> Fill(time1);
 			}
 			Hist::D1_Preselected_Multiplicity[j] -> Fill(_d1_data->layer_data[j]->preselected_elements.size());
@@ -715,25 +715,25 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 				{
 					wire1 = _d1_data->layer_data[j]->preselected_elements.at(i)-1;
 					time1 = _d1_data->layer_data[j]->preselected_times.at(i);
-					distance1 = _d1_data->layer_data[j]->distances_from_wire.at(i);
+					//distance1 = _d1_data->layer_data[j]->distances_from_wire.at(i);
 					//tot = _d1_data->layer_data[j]->tot.at(i);
 					//D1_L1[wire1] -> Fill(time1, tot);				
 					for (unsigned int k = 0; k < _d1_data->layer_data[j+1]->preselected_elements.size(); k++)
 					{
 						wire2 = _d1_data->layer_data[j+1]->preselected_elements.at(k)-1;
 						time2 = _d1_data->layer_data[j+1]->preselected_times.at(k);	
-						distance2 = _d1_data->layer_data[j+1]->distances_from_wire.at(i);
+						//distance2 = _d1_data->layer_data[j+1]->distances_from_wire.at(i);
 						if (wire1>=0&&wire1<42)
 						{
 							if (wire2 == wire1)
 							{
 								Hist::D1_L1L2[wire1][0] -> Fill(time1, time2);
-								D1_L1L2_distances[wire1][0] -> Fill(distance1, distance2);
+								//D1_L1L2_distances[wire1][0] -> Fill(distance1, distance2);
 							}
 							if (wire2 != wire1)
 							{
 								Hist::D1_L1L2[wire1][1] -> Fill(time1, time2);
-								D1_L1L2_distances[wire1][1] -> Fill(distance1, distance2);
+								//D1_L1L2_distances[wire1][1] -> Fill(distance1, distance2);
 							}
 						}
 					}
@@ -745,25 +745,25 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 				{
 					wire1 = _d1_data->layer_data[j]->preselected_elements.at(i)-1;
 					time1 = _d1_data->layer_data[j]->preselected_times.at(i);
-					distance1 = _d1_data->layer_data[j]->distances_from_wire.at(i);
+					//distance1 = _d1_data->layer_data[j]->distances_from_wire.at(i);
 					//tot = _d1_data->layer_data[j]->tot.at(i);
 					//D1_L1[wire1] -> Fill(time1, tot);				
 					for (unsigned int k = 0; k < _d1_data->layer_data[j+1]->preselected_elements.size(); k++)
 					{
 						wire2 = _d1_data->layer_data[j+1]->preselected_elements.at(k)-1;
 						time2 = _d1_data->layer_data[j+1]->preselected_times.at(k);	
-						distance2 = _d1_data->layer_data[j+1]->distances_from_wire.at(i);
+						//distance2 = _d1_data->layer_data[j+1]->distances_from_wire.at(i);
 						if (wire1>=0&&wire1<42)
 						{
 							if (wire2 == wire1)
 							{
 								Hist::D1_L3L4[wire1][0] -> Fill(time1, time2);
-								D1_L3L4_distances[wire1][0] -> Fill(distance1, distance2);
+								//D1_L3L4_distances[wire1][0] -> Fill(distance1, distance2);
 							}
 							if (wire2 != wire1)
 							{
 								Hist::D1_L3L4[wire1][1] -> Fill(time1, time2);
-								D1_L3L4_distances[wire1][1] -> Fill(distance1, distance2);
+								//D1_L3L4_distances[wire1][1] -> Fill(distance1, distance2);
 							}
 						}
 					}
@@ -775,25 +775,25 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 				{
 					wire1 = _d1_data->layer_data[j]->preselected_elements.at(i)-1;
 					time1 = _d1_data->layer_data[j]->preselected_times.at(i);
-					distance1 = _d1_data->layer_data[j]->distances_from_wire.at(i);
+					//distance1 = _d1_data->layer_data[j]->distances_from_wire.at(i);
 					//tot = _d1_data->layer_data[j]->tot.at(i);
 					//D1_L1[wire1] -> Fill(time1, tot);				
 					for (unsigned int k = 0; k < _d1_data->layer_data[j+1]->preselected_elements.size(); k++)
 					{
 						wire2 = _d1_data->layer_data[j+1]->preselected_elements.at(k)-1;
 						time2 = _d1_data->layer_data[j+1]->preselected_times.at(k);	
-						distance2 = _d1_data->layer_data[j+1]->distances_from_wire.at(i);
+						//distance2 = _d1_data->layer_data[j+1]->distances_from_wire.at(i);
 						if (wire1>=0&&wire1<42)
 						{
 							if (wire2 == wire1)
 							{
 								Hist::D1_L5L6[wire1][0] -> Fill(time1, time2);
-								D1_L5L6_distances[wire1][0] -> Fill(distance1, distance2);
+								//D1_L5L6_distances[wire1][0] -> Fill(distance1, distance2);
 							}
 							if (wire2 != wire1)
 							{
 								Hist::D1_L5L6[wire1][1] -> Fill(time1, time2);
-								D1_L5L6_distances[wire1][1] -> Fill(distance1, distance2);
+								//D1_L5L6_distances[wire1][1] -> Fill(distance1, distance2);
 							}
 						}
 					}
@@ -805,25 +805,25 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 				{
 					wire1 = _d1_data->layer_data[j]->preselected_elements.at(i)-1;
 					time1 = _d1_data->layer_data[j]->preselected_times.at(i);
-					distance1 = _d1_data->layer_data[j]->distances_from_wire.at(i);
+					//distance1 = _d1_data->layer_data[j]->distances_from_wire.at(i);
 					//tot = _d1_data->layer_data[j]->tot.at(i);
 					//D1_L1[wire1] -> Fill(time1, tot);				
 					for (unsigned int k = 0; k < _d1_data->layer_data[j+1]->preselected_elements.size(); k++)
 					{
 						wire2 = _d1_data->layer_data[j+1]->preselected_elements.at(k)-1;
 						time2 = _d1_data->layer_data[j+1]->preselected_times.at(k);	
-						distance2 = _d1_data->layer_data[j+1]->distances_from_wire.at(i);
+						//distance2 = _d1_data->layer_data[j+1]->distances_from_wire.at(i);
 						if (wire1>=0&&wire1<42)
 						{
 							if (wire2 == wire1)
 							{
 								Hist::D1_L7L8[wire1][0] -> Fill(time1, time2);
-								D1_L7L8_distances[wire1][0] -> Fill(distance1, distance2);
+								//D1_L7L8_distances[wire1][0] -> Fill(distance1, distance2);
 							}
 							if (wire2 != wire1)
 							{
 								Hist::D1_L7L8[wire1][1] -> Fill(time1, time2);
-								D1_L7L8_distances[wire1][1] -> Fill(distance1, distance2);
+								//D1_L7L8_distances[wire1][1] -> Fill(distance1, distance2);
 							}
 						}
 					}
@@ -886,25 +886,25 @@ void Hist::fill_D2_histos_preselected(D2_hist_data* _d2_data)
 				{
 					wire1 = _d2_data->layer_data[j]->preselected_elements.at(i)-1;
 					time1 = _d2_data->layer_data[j]->preselected_times.at(i);
-					distance1 = _d2_data->layer_data[j]->distances_from_wire.at(i);
+					//distance1 = _d2_data->layer_data[j]->distances_from_wire.at(i);
 					//tot = _d2_data->layer_data[j]->tot.at(i);
 					//D1_L1[wire1] -> Fill(time1, tot);				
 					for (unsigned int k = 0; k < _d2_data->layer_data[j+1]->preselected_elements.size(); k++)
 					{
 						wire2 = _d2_data->layer_data[j+1]->preselected_elements.at(k)-1;
 						time2 = _d2_data->layer_data[j+1]->preselected_times.at(k);	
-						distance2 = _d2_data->layer_data[j+1]->distances_from_wire.at(i);
+						//distance2 = _d2_data->layer_data[j+1]->distances_from_wire.at(i);
 						if (wire1>=0&&wire1<42)
 						{
 							if (wire2 == wire1)
 							{
 								Hist::D2_L1L2[wire1][0] -> Fill(time1, time2);
-								Hist::D2_L1L2_distances[wire1][0] -> Fill(distance1, distance2);
+								//Hist::D2_L1L2_distances[wire1][0] -> Fill(distance1, distance2);
 							}
 							if (wire2 != wire1)
 							{
 								Hist::D2_L1L2[wire1][1] -> Fill(time1, time2);
-								Hist::D2_L1L2_distances[wire1][1] -> Fill(distance1, distance2);
+								//Hist::D2_L1L2_distances[wire1][1] -> Fill(distance1, distance2);
 							}
 						}
 					}
@@ -916,25 +916,25 @@ void Hist::fill_D2_histos_preselected(D2_hist_data* _d2_data)
 				{
 					wire1 = _d2_data->layer_data[j]->preselected_elements.at(i)-1;
 					time1 = _d2_data->layer_data[j]->preselected_times.at(i);
-					distance1 = _d2_data->layer_data[j]->distances_from_wire.at(i);
+					//distance1 = _d2_data->layer_data[j]->distances_from_wire.at(i);
 					//tot = _d2_data->layer_data[j]->tot.at(i);
 					//D1_L1[wire1] -> Fill(time1, tot);				
 					for (unsigned int k = 0; k < _d2_data->layer_data[j+1]->preselected_elements.size(); k++)
 					{
 						wire2 = _d2_data->layer_data[j+1]->preselected_elements.at(k)-1;
 						time2 = _d2_data->layer_data[j+1]->preselected_times.at(k);	
-						distance2 = _d2_data->layer_data[j+1]->distances_from_wire.at(i);
+						//distance2 = _d2_data->layer_data[j+1]->distances_from_wire.at(i);
 						if (wire1>=0&&wire1<42)
 						{
 							if (wire2 == wire1)
 							{
 								Hist::D2_L3L4[wire1][0] -> Fill(time1, time2);
-								Hist::D2_L3L4_distances[wire1][0] -> Fill(distance1, distance2);
+								//Hist::D2_L3L4_distances[wire1][0] -> Fill(distance1, distance2);
 							}
-							if (wire2 == wire1+1)
+							if (wire2 != wire1)
 							{
 								Hist::D2_L3L4[wire1][1] -> Fill(time1, time2);
-								Hist::D2_L3L4_distances[wire1][1] -> Fill(distance1, distance2);
+								//Hist::D2_L3L4_distances[wire1][1] -> Fill(distance1, distance2);
 							}
 						}
 					}
@@ -946,25 +946,25 @@ void Hist::fill_D2_histos_preselected(D2_hist_data* _d2_data)
 				{
 					wire1 = _d2_data->layer_data[j]->preselected_elements.at(i)-1;
 					time1 = _d2_data->layer_data[j]->preselected_times.at(i);
-					distance1 = _d2_data->layer_data[j]->distances_from_wire.at(i);
+					//distance1 = _d2_data->layer_data[j]->distances_from_wire.at(i);
 					//tot = _d2_data->layer_data[j]->tot.at(i);
 					//D1_L1[wire1] -> Fill(time1, tot);				
 					for (unsigned int k = 0; k < _d2_data->layer_data[j+1]->preselected_elements.size(); k++)
 					{
 						wire2 = _d2_data->layer_data[j+1]->preselected_elements.at(k)-1;
 						time2 = _d2_data->layer_data[j+1]->preselected_times.at(k);	
-						distance2 = _d2_data->layer_data[j+1]->distances_from_wire.at(i);
+						//distance2 = _d2_data->layer_data[j+1]->distances_from_wire.at(i);
 						if (wire1>=0&&wire1<42)
 						{
 							if (wire2 == wire1)
 							{
 								Hist::D2_L5L6[wire1][0] -> Fill(time1, time2);
-								Hist::D2_L5L6_distances[wire1][0] -> Fill(distance1, distance2);
+								//Hist::D2_L5L6_distances[wire1][0] -> Fill(distance1, distance2);
 							}
-							if (wire2 == wire1+1)
+							if (wire2 == !wire1)
 							{
 								Hist::D2_L5L6[wire1][1] -> Fill(time1, time2);
-								Hist::D2_L5L6_distances[wire1][1] -> Fill(distance1, distance2);
+								//Hist::D2_L5L6_distances[wire1][1] -> Fill(distance1, distance2);
 							}
 						}
 					}

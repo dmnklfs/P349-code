@@ -16,6 +16,9 @@ D1D23d::D1D23d(const Config &_config)
 	y_lab_position_D2 = _config.D2_y_lab_position;
 	z_lab_position_D2 = _config.D2_z_lab_position;
 
+	x_lab_position_HEX = _config.HEX_x_lab_position;
+	z_lab_position_HEX = _config.HEX_z_lab_position;
+
 	// points in the geometric centre of DCs
 	D1point.SetXYZ(0, 0, 0);
 	D2point.SetXYZ(0, 0, 0);
@@ -119,6 +122,14 @@ void D1D23d::get_data(data_for_track_reconstruction _single_event_data)
 
 		}
 	}
+	for (int i = 0; i < 6; i++)
+	{
+		single_event_data.wire_number[i] = _single_event_data.HEX.wireNo[i];
+		single_event_data.wire_posX[i] = _single_event_data.HEX.positionsWiresX[i]+x_lab_position_HEX;
+		single_event_data.wire_posZ[i] = _single_event_data.HEX.positionsZ[i]+z_lab_position_HEX;
+		single_event_data.drift_time[i] = _single_event_data.HEX.drift_times[i];
+	}
+
 	TrackRecoData.push_back(single_event_data);
 }
 
@@ -140,38 +151,24 @@ void D1D23d::rotateD1(double _ax, double _ay, double _az)
 	ay = _ay*TMath::DegToRad();
 	az = _az*TMath::DegToRad();
 	int no_of_chosen_events = TrackRecoData.size();
-	//std::cout << "Rotating D1..." << std::endl;
 
 	TVector3 RefAxis0, RefAxis1, RefAxis2;	
 
-	// rotate around DCs x axis
-	RefAxis0 = D2vectorX;
+	RefAxis0 = D1vectorX;
 	D1vectorY.Rotate(ax,RefAxis0);
 	D1vectorZ.Rotate(ax,RefAxis0);
+
 	RefAxis1 = D1vectorY;
-	//std::cout << "x " << std::endl;
-	//std::cout << D1vectorX.X() << " " << D1vectorX.Y() << " " << D1vectorX.Z() << " " << std::endl;
-	//std::cout << D1vectorY.X() << " " << D1vectorY.Y() << " " << D1vectorY.Z() << " " << std::endl;
-	//std::cout << D1vectorZ.X() << " " << D1vectorZ.Y() << " " << D1vectorZ.Z() << " " << std::endl;
-	// rotate around DCs y axis (DC xz plane)
 	D1vectorZ.Rotate(ay,RefAxis1);
 	D1vectorX.Rotate(ay,RefAxis1);
+
 	RefAxis2 = D1vectorZ;
-	//std::cout << "y " << std::endl;
-	//std::cout << D1vectorX.X() << " " << D1vectorX.Y() << " " << D1vectorX.Z() << " " << std::endl;
-	//std::cout << D1vectorY.X() << " " << D1vectorY.Y() << " " << D1vectorY.Z() << " " << std::endl;
-	//std::cout << D1vectorZ.X() << " " << D1vectorZ.Y() << " " << D1vectorZ.Z() << " " << std::endl;
-	// rotate around DCs z axis
 	D1vectorX.Rotate(az,RefAxis2);
 	D1vectorY.Rotate(az,RefAxis2);
-	//std::cout << "z " << std::endl;
-	//std::cout << D1vectorX.X() << " " << D1vectorX.Y() << " " << D1vectorX.Z() << " " << std::endl;
-	//std::cout << D1vectorY.X() << " " << D1vectorY.Y() << " " << D1vectorY.Z() << " " << std::endl;
-	//std::cout << D1vectorZ.X() << " " << D1vectorZ.Y() << " " << D1vectorZ.Z() << " " << std::endl;
 
 	for (unsigned int i = 0; i < no_of_chosen_events; i++)
 	{
-		for (int j = 0; j < 8; j++) // here just added x and z offsets for correct start parameters
+		for (int j = 0; j < 8; j++)
 		{
 			TrackRecoData.at(i).HitPoints[j+6].Rotate(ax,RefAxis0);
 			TrackRecoData.at(i).HitVectors[j+6].Rotate(ax,RefAxis0);
@@ -179,9 +176,6 @@ void D1D23d::rotateD1(double _ax, double _ay, double _az)
 			TrackRecoData.at(i).HitVectors[j+6].Rotate(ay,RefAxis1);
 			TrackRecoData.at(i).HitPoints[j+6].Rotate(az,RefAxis2);
 			TrackRecoData.at(i).HitVectors[j+6].Rotate(az,RefAxis2);
-			//std::cout << j + 6 + 1 << "X " << TrackRecoData.at(i).HitVectors[j+6].X() << std::endl;
-			//std::cout << j + 6 + 1 << "Y " << TrackRecoData.at(i).HitVectors[j+6].Y() << std::endl;
-			//std::cout << j + 6 + 1 << "Z " << TrackRecoData.at(i).HitVectors[j+6].Z() << std::endl;
 
 		}
 	}
@@ -360,6 +354,7 @@ void D1D23d::fit_in_3d()
 {
 	FitToLines * fit;
 	unsigned int no_of_chosen_events = TrackRecoData.size();
+	//std::cout << "a " << std::endl;
 	for (unsigned int i = 0; i < no_of_chosen_events; i++)
 	{
 		fit = FitToLines::GetInstance();
@@ -385,6 +380,7 @@ double D1D23d::get_mean_chisq()
 	int iter = 0;
 	for (int i = 0; i < TrackRecoData.size(); i++)
 	{	
+
 		//if (i%10000==0) draw_chambers(i);
 		//std::cout << TrackRecoData.at(i).take_to_mean << std::endl;
 		if (TrackRecoData.at(i).take_to_mean == -1)
@@ -731,4 +727,55 @@ double D1D23d::draw_chambers(int event_no)
 	TString name = Form("event_%d", event_no);
     test -> Write();
 
+}
+
+void D1D23d::calibrate_wires_HEX()
+{
+	int wire, layer;
+	double z;
+	double scale;
+	double wireX,wireZ;
+	double trackX, trackY;
+	double drifttime,distance;
+	for (int i = 0; i < TrackRecoData.size(); i++)
+	{
+		for (int k = 0; k < 6; k++)
+		{
+			wire = TrackRecoData.at(i).wire_number[k];
+			//std::cout << "wire " << wire << std::endl;
+			//std::cout << TrackRecoData.at(i).wire_posX[layer] << std::endl;
+			if (wire==24)
+			{
+				layer = k;
+				
+				wireX = TrackRecoData.at(i).wire_posX[layer];
+				wireZ = TrackRecoData.at(i).wire_posZ[layer];
+
+				scale = -fabs((8*z_lab_position_D1 + 6*z_lab_position_D2)*pow(14,-1) - wireZ);
+				//std::cout << scale << std::endl;
+				z = TrackRecoData.at(i).TrackVector.Z();
+				trackX = scale*TrackRecoData.at(i).TrackVector.X()*pow(z,-1) + TrackRecoData.at(i).TrackPoint.X();
+				trackY = scale*TrackRecoData.at(i).TrackVector.Y()*pow(z,-1) + TrackRecoData.at(i).TrackPoint.Y();
+				//std::cout << "wireZ " << wireZ << std::endl;
+				//std::cout << "wireX " << wireX << std::endl;
+				//std::cout << "trackX " << trackX << std::endl;
+				distance = fabs(trackX-wireX);
+				//std::cout << "distance " << distance << std::endl;
+				drifttime = TrackRecoData.at(i).drift_time[layer];
+				hex_data[layer].Distance.push_back(distance);
+				hex_data[layer].DriftTime.push_back(drifttime);
+			}
+			
+		}
+	}
+
+	TGraph *calibration[7];
+	TString name;
+	for (int i = 0; i < 6; i++)
+	{
+		if (hex_data[i].DriftTime.size()==0) calibration[i] = new TGraph();
+		else calibration[i] = new TGraph(hex_data[i].DriftTime.size(), &(hex_data[i].DriftTime.at(0)), &(hex_data[i].Distance.at(0)));
+		name = Form("layer%d",i);
+		calibration[i] -> Write(name);
+	}
 }

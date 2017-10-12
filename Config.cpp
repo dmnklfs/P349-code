@@ -120,11 +120,11 @@ Config::Config()
 	HEX_x_offset = 0;
 	HEX_y_rotation_angle = (0)*3.14/180; // rad
 	HEX_layer_wire_frame_offset[0] = 0;
-	HEX_layer_wire_frame_offset[1] = 3.6735;
-	HEX_layer_wire_frame_offset[2] = 2.7735;
+	HEX_layer_wire_frame_offset[1] = 3.6735-1.8;
+	HEX_layer_wire_frame_offset[2] = 2.7735-1.8;
 	HEX_layer_wire_frame_offset[3] = 0.9;
-	HEX_layer_wire_frame_offset[4] = 3.6735;
-	HEX_layer_wire_frame_offset[5] = 4.5735;
+	HEX_layer_wire_frame_offset[4] = 3.6735-3*1.8;
+	HEX_layer_wire_frame_offset[5] = 4.5735-3*1.8;
 	HEX_layer_wire_frame_offset[6] = 0.9;
 	HEX_distance_to_1st_layer = 6.0145;	// z
 	HEX_distance_between_straight_wires = 1.8;		// x
@@ -465,8 +465,8 @@ Config::Config()
 		}
 		else
 		{
-			D1_layer_min_hits[i] = 1;
-			D1_layer_max_hits[i] = 1;
+			D1_layer_min_hits[i] = -1;
+			D1_layer_max_hits[i] = -1;
 			D1_drift_time_min[i] = -1500;
 			D1_drift_time_max[i] = 1500;
 		}

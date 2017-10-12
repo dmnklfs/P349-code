@@ -63,7 +63,7 @@ void DCLayer::choose_corr_leading()
 			//std::cout << "time before check: " << RoughDriftTime.at(i) << std::endl;
 			if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i))))
 			{	
-				DriftTime.push_back(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i)));
+				DriftTime.push_back(RoughDriftTime.at(i)+ DriftTimeOffset.at(-1+RoughWire.at(i)));
 				Wire.push_back(RoughWire.at(i));
 				TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
 				//break;

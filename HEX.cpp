@@ -67,10 +67,10 @@ bool HEX::was_correct_event()
 			HEX_no_of_cells_with_hits = HEX_no_of_cells_with_hits + Layer[i]-> Wire.size();
 		}
 	}
-	/*if (no_of_layers_with_hits == 6)
-	{
-		correct_event = true;
-	}*/
+//	if (no_of_layers_with_hits > 0)
+//	{
+//		correct_event = true;
+//	}
 
 	int wire1;
 	int wire2;
@@ -223,10 +223,27 @@ data_for_HEX_track_reco HEX::get_data_for_track_reco() // i need here only infor
 	data_for_HEX_track_reco data_for_calibration;
 	for (int i = 0; i < 6; i++)
 	{
-		data_for_calibration.positionsWiresX[i]	= Layer[i] -> Wire.at(0);
 		data_for_calibration.positionsHitsX[i]	= Layer[i] -> AbsoluteXHitPosition.at(0);
 		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
 		data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
+		data_for_calibration.errorsX[i]	= Layer[i] -> HitPositionError.at(0);
+		data_for_calibration.positionsWiresX[i]	= Layer[i] -> Wire.at(0);
+		data_for_calibration.wireNo[i] = Layer[i] -> Wire.at(0);
+//		if ((Layer[i] -> Wire.size())!=0)
+//		{
+//			data_for_calibration.positionsWiresX[i]	= Layer[i] -> Wire.at(0);
+//			data_for_calibration.positionsHitsX[i] = -1;
+//			data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
+//			data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
+//			data_for_calibration.wireNo[i] = Layer[i] -> Wire.at(0);
+//		}
+//		else
+//		{
+//			data_for_calibration.positionsWiresX[i] = -1;
+//			data_for_calibration.positionsHitsX[i] = -1;
+//			data_for_calibration.positionsZ[i] = -1;
+//			data_for_calibration.drift_times[i] = -1;
+//		}
 	}
 	return data_for_calibration;
 }

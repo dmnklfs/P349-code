@@ -264,7 +264,7 @@ void CalibrationLayer3d_HEX::apply_corrections()
 		corr_bin = Bins.at(i);
 		if(-1!=ProjectionMean.at(corr_bin))
 		{
-			if (no_of_iteration!=0) Distances.at(i) = Distances.at(i) + ProjectionMean.at(corr_bin);
+			if (true) Distances.at(i) = Distances.at(i) + ProjectionMean.at(corr_bin);
 			else Distances.at(i) = Distances.at(i);
 			SigmaForCalibration.push_back(ProjectionSigma.at(corr_bin));
 		}

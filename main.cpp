@@ -50,22 +50,25 @@ int main(int argc, char *argv[])
  			good_hit_data.edge = in_out -> Tree::get_edge();
  			good_hit_data.treal = in_out -> Tree::get_treal();
 		  // filling detectors variables
-	   	if (good_hit_data.detector == START) single_event -> Start::fill_good_hits(good_hit_data);
-	   	if (good_hit_data.detector == NTOF) single_event -> TOF::fill_good_hits(good_hit_data);	
-	   	if (good_hit_data.detector == ND1) single_event -> D1::fill_good_hits(good_hit_data);
-	   	if (good_hit_data.detector == ND2) single_event -> D2::fill_good_hits(good_hit_data);
-	   	if (good_hit_data.detector == NHEX) single_event -> HEX::fill_good_hits(good_hit_data);
-	   	if (good_hit_data.detector == NINTER) single_event -> Intermediate::fill_good_hits(good_hit_data);
-	   	if (good_hit_data.detector == NFIBER) single_event -> Fiber::fill_good_hits(good_hit_data);		
+	   	if (good_hit_data.detector == START)   single_event -> Start::fill_good_hits(good_hit_data);
+	   	if (good_hit_data.detector == NTOF)    single_event -> TOF::fill_good_hits(good_hit_data);	
+	   	if (good_hit_data.detector == ND1)     single_event -> D1::fill_good_hits(good_hit_data);
+	   	if (good_hit_data.detector == ND2)     single_event -> D2::fill_good_hits(good_hit_data);
+	   	if (good_hit_data.detector == NHEX)    single_event -> HEX::fill_good_hits(good_hit_data);
+	   	if (good_hit_data.detector == NINTER)  single_event -> Intermediate::fill_good_hits(good_hit_data);
+	   	if (good_hit_data.detector == NFIBER)  single_event -> Fiber::fill_good_hits(good_hit_data);		
 		} // end of loop over good hits
 
     //std::cout << "-------" << entry << std::endl;
+    //std::cout << " ok " << std::endl;
 		if (single_event -> SingleEvent::was_correct_event(analysis_stage) && entry > 0)// && entry > 50000 && entry < 60000
  		{
-       delme_iter++;
+      //std::cout << " ok2 " << std::endl;
+      delme_iter++;
  			// filling control histos for preselected data
  			// checking if preselected tree = 1/0 and filling the tree or not
  			name = Form("Event_%ld", entry);
+
       single_event -> SingleEvent::test_calculate_distances();
  			in_out -> Tree::fill_preselected_data_tree();
       in_out -> Tree::fill_preselected_histos(single_event -> SingleEvent::get_hist_data());
@@ -84,7 +87,7 @@ int main(int argc, char *argv[])
        //delete event_to_display;
        //std::cout << "ok1" << std::endl;
        //calibration_D2 -> get_data( single_event -> SingleEvent::D2::get_data_for_calibration() ); 
-       //std::cout << "ok2" << std::endl;
+       //std::cout << "ok3" << std::endl;
        //std::cout << "ok1" << std::endl;
        //calibration_HEX -> get_data( single_event -> SingleEvent::HEX::get_data_for_calibration() ); 
        //track_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
@@ -105,13 +108,26 @@ int main(int argc, char *argv[])
     in_out -> Tree::save_output_file();
 
     TFile test_file("results/res_file.root","UPDATE");
+//
+//    std::cout << "iter " << delme_iter << std::endl;
 
-    std::cout << "iter " << delme_iter << std::endl;
+//    track_reco -> tell_no_of_events();
+//    //!track_reco -> set_detectors_positions_on_points();
+//    track_reco -> fit_in_3d_D1();
+//    track_reco -> fit_in_3d_D2();
+//    track_reco -> fit_in_3d_HEX();
+//    track_reco -> plot_D1_d2_phi_corr();
+//    track_reco -> set_detectors_positions_on_vectors();
+//    track_reco -> reconstructed_D2_vs_expected_D1();
+//    track_reco -> save_histos();
 
     d1d2 -> tell_no_of_events();
+    //std::cout << "1" << std::endl;
     d1d2 -> calculate_init_params();
+    //std::cout << "2" << std::endl;
     d1d2 -> set_config_positions();
-
+    //std::cout << "3" << std::endl;
+//
     // 2d shift/rotations determination
     double first_offset1, first_offset2, step1, step2;
     int no_of_iter1, no_of_iter2;
@@ -128,6 +144,7 @@ int main(int argc, char *argv[])
 
     const int npoints2d = no_of_iter1*no_of_iter2;
     double var1[npoints2d], var2[npoints2d], off1, off2, chi[npoints2d];
+
 //
 //    //std::cout << "offset determination... " << i + 1 << " out of " << no_of_iter << " done" << std::endl;
 //    for (int j = 0; j < no_of_iter1; j++)
@@ -160,7 +177,7 @@ int main(int argc, char *argv[])
 //    graph->GetYaxis()->SetTitle("x shift");
 //    graph->Write();
 
-    // one dimensional shifts/rotations
+  // one dimensional shifts/rotations
     first_offset1 = 0;
     step1 = 0;
     no_of_iter1 = 1;
@@ -168,30 +185,19 @@ int main(int argc, char *argv[])
     const int npoints = no_of_iter1;
     double var[npoints], chisq[npoints];
 
-    //d1d2 -> shiftD2(0.05, 0, 0, 1);
-    //d1d2 -> shiftD2(0, 0.389,0, 1);
-    //d1d2 -> shiftD2(0, 0, 0.95, 1);
-    //d1d2 -> rotateD2(0.513, 0, 0);
-    //d1d2 -> rotateD2(0, 0.0031, 0);
-    //d1d2 -> rotateD2(0, 0, 0.1475/2);
-    //d1d2 -> rotateD1(0, 0,-0.072);
-    //d1d2 -> rotateD1(10, 10, 10);
-    //d1d2 -> shiftD1();
-    //d1d2 -> rotateD2(-10, -10, -10);
-    //std::cout << "offset determination... " << i + 1 << " out of " << no_of_iter << " done" << std::endl;
-    //d1d2 -> shiftD2(0,0,30,1);
-    //d1d2 -> rotateD2(-10, -10, -10);
 
     //d1d2 -> fit_in_3d();
+    //std::cout << "ok1" << std::endl;
     //d1d2 -> get_mean_chisq();
+    //std::cout << "ok1" << std::endl;
 
-    d1d2 -> shiftD2(0.0406,0,0,1);
-    d1d2 -> shiftD2(0,0,2.35,1);
-    d1d2 -> shiftD2(0,-0.36,0,1);
-    d1d2 -> shiftD2(0,0,0.10,1);
-    d1d2 -> rotateD2(0, -0.006, 0);
-    d1d2 -> rotateD2(0.094,0 , 0);
-    d1d2 -> rotateD2(0 ,0 , 0.013);
+    d1d2 -> shiftD2(0.0409,0,0,1);
+    d1d2 -> shiftD2(0,0,2.42,1);
+    d1d2 -> shiftD2(0,-0.37,0,1);
+    d1d2 -> shiftD2(0,0,0.01,1);
+    d1d2 -> rotateD2(0, -0.004, 0);
+    d1d2 -> rotateD2(0.112,0 , 0);
+    //d1d2 -> rotateD2(0 ,0 , 0.013);
 
 
     for (int j = 0; j < no_of_iter1; j++)
@@ -200,30 +206,31 @@ int main(int argc, char *argv[])
       if (j==0) off1 = first_offset1;
       else off1 = step1;
       //d1d2 -> shiftD2(0,0,off1,1);
-      //d1d2 -> rotateD2(0, 0, off1);
+      //d1d2 -> rotateD2(off1, 0, 0);
       d1d2 -> fit_in_3d();
       chisq[j] = d1d2 -> get_mean_chisq();
       var1[j] = first_offset1 + j*step1;
 
     }
 
-    TCanvas *fitcanvas = new TCanvas("#chi^{2}","#chi^{2}",500,500);
-    TGraph *graph1d = new TGraph(npoints,var1,chisq);
-    TF1 *parabola = new TF1("parabola","[0]*x*x+[1]*x+[2]", first_offset1, first_offset1 + no_of_iter1*step1);
-    parabola->SetParName(0,"a");
-    parabola->SetParName(1,"b");
-    parabola->SetParName(2,"c");
-    double a, b, shift;
-    graph1d->SetMarkerStyle(20);
-    graph1d->Fit("parabola");
-    a = parabola->GetParameter(0);
-    b = parabola->GetParameter(1);
-    shift = -b/(2*a);
-    std::cout << shift << std::endl;
-    graph1d->Draw();
-    fitcanvas->Write(argv[1]);
+//    TCanvas *fitcanvas = new TCanvas("#chi^{2}","#chi^{2}",500,500);
+//    TGraph *graph1d = new TGraph(npoints,var1,chisq);
+//    TF1 *parabola = new TF1("parabola","[0]*x*x+[1]*x+[2]", first_offset1, first_offset1 + no_of_iter1*step1);
+//    parabola->SetParName(0,"a");
+//    parabola->SetParName(1,"b");
+//    parabola->SetParName(2,"c");
+//    double a, b, shift;
+//    graph1d->SetMarkerStyle(20);
+//    graph1d->Fit("parabola");
+//    a = parabola->GetParameter(0);
+//    b = parabola->GetParameter(1);
+//    shift = -b/(2*a);
+//    std::cout << shift << std::endl;
+//    graph1d->Draw();
+//    fitcanvas->Write(argv[1]);
 
-    d1d2 -> draw_chambers(0);
+//    d1d2 -> draw_chambers(0);
+    d1d2 -> calibrate_wires_HEX();
     d1d2->fill_histos();
     d1d2->save_histos();
 
@@ -275,20 +282,10 @@ int main(int argc, char *argv[])
 //      calibrationd1d2 -> deletations();
 //    }
 
-//    track_reco -> tell_no_of_events();
-//    //!track_reco -> set_detectors_positions_on_points();
-//    track_reco -> fit_in_3d_D1();
-//    track_reco -> fit_in_3d_D2();
-//    track_reco -> fit_in_3d_HEX();
-//    track_reco -> plot_D1_d2_phi_corr();
-//    track_reco -> set_detectors_positions_on_vectors();
-//    track_reco -> reconstructed_D2_vs_expected_D1();
-//    track_reco -> save_histos();
-
 //    calibration_HEX -> tell_no_of_events();
 //    calibration_HEX -> set_no_of_bin_in_event();
 //
-//    for (int i = 0; i < 3; i++)
+//    for (int i = 0; i < 10; i++)
 //    {
 //      calibration_HEX -> set_no_of_iteration(i);
 //      calibration_HEX -> calculate_hit_position();
@@ -300,7 +297,7 @@ int main(int argc, char *argv[])
 //      calibration_HEX -> plot_current_calibration();
 //      calibration_HEX -> deletations();
 //    }
-//    
+    
 
     /*calibration_D2 -> tell_no_of_events();
     calibration_D2 -> set_no_of_bin_in_event();
