@@ -151,6 +151,9 @@ struct DCLayer_hist_data
 	std::vector<double> &preselected_times;
 	std::vector<double> &tot;
 	std::vector<double> &distances_from_wire;
+	bool were_2leading;
+	int noof_leading_edges;
+	double leading1, leading2;
 };
 
 struct D1_hist_data

@@ -37,7 +37,7 @@ bool SingleEvent::was_correct_event(const int stage)
 	// 				- it is correct in selected detectots 
 	// 				- or we read already preselected data 
 	// if ( (start && tof && D1 && D2 && HEX && Start::getTimeUp()<10 && Start::getTimeDown()<10) || stage == 2)
-	if ( (start&&D1&&D2&&HEX&&tof) || stage == 2)
+	if ( (start&&tof) || stage == 2)
 	{
 		return true;
 	}
@@ -77,7 +77,7 @@ data_for_track_reconstruction SingleEvent::get_data_for_track_reconstruction()
 	track_reco_data.D2 = D2::get_data_for_track_reco();
 	//std::cout << "ok7 " << std::endl;
 	//std::cout << " a " << std::endl;
-	track_reco_data.HEX = HEX::get_data_for_track_reco();
+	//track_reco_data.HEX = HEX::get_data_for_track_reco();
 	//std::cout << "ok8 " << std::endl;
 	//std::cout << "ok3 " << std::endl;
 	//for (int i = 0; i < 8; i++)
@@ -126,10 +126,10 @@ void SingleEvent::test_calculate_distances()
 	D2::set_hits_absolute_positions();
 
 	//std::cout << " a " << std::endl;
-	HEX::calculate_distances_from_wires();
-	HEX::calculate_wire_positions_in_detector();
+	//HEX::calculate_distances_from_wires();
+	//HEX::calculate_wire_positions_in_detector();
 //	//std::cout << " b " << std::endl;
-	HEX::set_hits_absolute_positions();
+	//HEX::set_hits_absolute_positions();
 
 }
 

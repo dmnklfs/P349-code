@@ -141,11 +141,17 @@ void Hist::init_D1_histos_preselected()
 	{
 		// preselected
 		temp_name = Form("D1 preselected data layer %d wires;wire;counts", i+1);
-		D1_Preselected_Elements[i] = new TH1F(temp_name, temp_name, 60, -0.5, 59.5);
+		D1_Preselected_Elements[i] = new TH1F(temp_name, temp_name, 70, -10.5, 59.5);
 		temp_name = Form("D1 preselected layer %d multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		D1_Preselected_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
 		temp_name = Form("D1 preselected layer %d drift time;drift time [ns];counts", i+1);
 		D1_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
+		temp_name = Form("D1 leading times differences %d ;drift time difference [ns];counts", i+1);
+		D1_leading_times_differences[i] = new TH1F(temp_name, temp_name, 200, -10, 600);
+		temp_name = Form("D1 no of leading edges before trailing %d; no of leading edges [ns];counts", i+1);
+		D1_no_of_leading_before_trailing[i] = new TH1F(temp_name, temp_name, 11, -0.5, 10.5);
+		temp_name = Form("D1 1st hit vs. 2nd %d; wire_no_1; wire_no_2", i+1);
+		D1_multiple_hits_correlations[i] = new TH2F(temp_name,temp_name, 41,0.5,41.5,41,0.5,41.5);
 
 		for (int j = 0; j < 42; j++)
 		{
@@ -261,13 +267,19 @@ void Hist::init_D2_histos_preselected()
 	{
 		// wire distribution
 		temp_name = Form("D2 preselected data layer %d wires;wire;counts", i+1);
-		D2_Preselected_Elements[i] = new TH1F(temp_name, temp_name, 60, -0.5, 59.5);
+		D2_Preselected_Elements[i] = new TH1F(temp_name, temp_name, 70, -10.5, 59.5);
 		// multiplicity distribution
 		temp_name = Form("D2 preselected layer %d multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		D2_Preselected_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
 		// drift time distribution
 		temp_name = Form("D2 preselected layer %d drift time;drift time [ns];counts", i+1);
 		D2_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
+		temp_name = Form("D2 leading times differences %d ;drift time difference [ns];counts", i+1);
+		D2_leading_times_differences[i] = new TH1F(temp_name, temp_name, 200, -10, 600);
+		temp_name = Form("D2 no of leading edges before trailing %d; no of leading edges [ns];counts", i+1);
+		D2_no_of_leading_before_trailing[i] = new TH1F(temp_name, temp_name, 11, -0.5, 10.5);
+		temp_name = Form("D2 1st hit vs. 2nd %d; wire_no_1; wire_no_2", i+1);
+		D2_multiple_hits_correlations[i] = new TH2F(temp_name,temp_name, 41,0.5,41.5,41,0.5,41.5);
 		// ---WIRES---
 		for (int j = 0; j < 42; j++)
 		{
@@ -356,11 +368,13 @@ void Hist::init_HEX_histos_preselected()
 	{
 		// preselected
 		temp_name = Form("HEX preselected data layer %d wires;wire;counts", i+1);
-		HEX_Preselected_Elements[i] = new TH1F(temp_name, temp_name, 60, -0.5, 59.5);
+		HEX_Preselected_Elements[i] = new TH1F(temp_name, temp_name, 70, -10.5, 59.5);
 		temp_name = Form("HEX preselected layer %d multiplicity;multiplicity (hits: leading+trailing);counts", i+1);
 		HEX_Preselected_Multiplicity[i] = new TH1F(temp_name, temp_name, 15, -0.5, 14.5);
 		temp_name = Form("HEX preselected layer %d drift time;drift time [ns];counts", i+1);
 		HEX_Preselected_DriftTime[i] = new TH1F(temp_name, temp_name, 1000, -1500, 1500);
+		temp_name = Form("HEX 1st hit vs. 2nd %d; wire_no_1; wire_no_2", i+1);
+		HEX_multiple_hits_correlations[i] = new TH2F(temp_name,temp_name, 41,0.5,41.5,41,0.5,41.5);
 		// ---WIRES---
 		for (int j = 0; j < 80; j++)
 		{
@@ -697,7 +711,17 @@ void Hist::fill_D1_histos_preselected(D1_hist_data* _d1_data)
 				D1_wires_offsets[j][wire1] -> Fill(time1);
 			}
 			Hist::D1_Preselected_Multiplicity[j] -> Fill(_d1_data->layer_data[j]->preselected_elements.size());
-
+			if (_d1_data->layer_data[j]->were_2leading) Hist::D1_leading_times_differences[j] -> Fill(_d1_data->layer_data[j]->leading2 - _d1_data->layer_data[j]->leading1);
+			Hist::D1_no_of_leading_before_trailing[j] -> Fill(_d1_data->layer_data[j]->noof_leading_edges);
+			if (_d1_data->layer_data[j]->preselected_elements.size()==2)
+			{
+				//for (int i = 1; i < _d1_data->layer_data[j]->preselected_elements.size(); i++)
+				//{
+					D1_multiple_hits_correlations[j] -> Fill(_d1_data->layer_data[j]->preselected_elements.at(0),_d1_data->layer_data[j]->preselected_elements.at(1));
+				//}
+				
+			}
+			//std::cout << " " << _d1_data->layer_data[j]->noof_leading_edges << std::endl;
 //			for (int i = 0; i < 42; i++) multiplicities[i] = 0;
 //	
 //			for (int i = 0; i < _d1_data->layer_data[j]->preselected_elements.size(); i++)
@@ -877,9 +901,16 @@ void Hist::fill_D2_histos_preselected(D2_hist_data* _d2_data)
 				wire1 = _d2_data->layer_data[j]->preselected_elements.at(i)-1;
 				time1 = _d2_data->layer_data[j]->preselected_times.at(i);
 				D2_wires_offsets[j][wire1] -> Fill(time1);
+
 			}
 			Hist::D2_Preselected_Multiplicity[j] -> Fill(_d2_data->layer_data[j]->preselected_elements.size());
+			if (_d2_data->layer_data[j]->were_2leading) Hist::D2_leading_times_differences[j] -> Fill(_d2_data->layer_data[j]->leading2 - _d2_data->layer_data[j]->leading1);
+			Hist::D2_no_of_leading_before_trailing[j] -> Fill(_d2_data->layer_data[j]->noof_leading_edges);
 						// correlation histograms are filled in
+			if (_d2_data->layer_data[j]->preselected_elements.size()==2)
+			{
+				D2_multiple_hits_correlations[j] -> Fill(_d2_data->layer_data[j]->preselected_elements.at(0),_d2_data->layer_data[j]->preselected_elements.at(1));
+			}
 			if (0==j)
 			{
 				for (unsigned int i = 0; i < _d2_data->layer_data[j]->preselected_elements.size(); i++)
@@ -1006,8 +1037,13 @@ void Hist::fill_HEX_histos_preselected(HEX_hist_data* _hex_data)
 				wire1 = _hex_data->layer_data[j]->preselected_elements.at(i)-1;
 				time1 = _hex_data->layer_data[j]->preselected_times.at(i);
 				Hist::HEX_wires_offsets[j][wire1] -> Fill(time1);
+
 			}
 			Hist::HEX_Preselected_Multiplicity[j] -> Fill(_hex_data->layer_data[j]->preselected_elements.size());
+			if (_hex_data->layer_data[j]->preselected_elements.size()==2)
+			{
+				HEX_multiple_hits_correlations[j] -> Fill(_hex_data->layer_data[j]->preselected_elements.at(0),_hex_data->layer_data[j]->preselected_elements.at(1));
+			}
 			if (0==j) // straight 1 & 4
 			{
 				for (unsigned int i = 0; i < _hex_data->layer_data[j]->preselected_elements.size(); i++)

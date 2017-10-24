@@ -430,6 +430,9 @@ void Tree::save_preselected_histos()
 			Hist::D1_Preselected_Elements[i] -> Write();
 			Hist::D1_Preselected_Multiplicity[i] -> Write();
 			Hist::D1_Preselected_DriftTime[i] -> Write();
+			Hist::D1_leading_times_differences[i] -> Write();
+			Hist::D1_no_of_leading_before_trailing[i] -> Write();
+			Hist::D1_multiple_hits_correlations[i] -> Write();
 		}
 		make_hist_dir("D1CorrWiresDriftTime",2);
 		for (int i = 0; i < 42; i++)
@@ -506,6 +509,9 @@ void Tree::save_preselected_histos()
 			Hist::D2_Preselected_Elements[i] -> Write();
 			Hist::D2_Preselected_Multiplicity[i] -> Write();
 			Hist::D2_Preselected_DriftTime[i] -> Write();
+			Hist::D2_multiple_hits_correlations[i] -> Write();
+			Hist::D2_leading_times_differences[i] -> Write();
+			Hist::D2_no_of_leading_before_trailing[i] -> Write();
 		}
 		make_hist_dir("D2DriftTimes",2);
 		for (int i = 0; i < 6; i++)
@@ -551,6 +557,7 @@ void Tree::save_preselected_histos()
 			Hist::HEX_Preselected_Elements[i] -> Write();
 			Hist::HEX_Preselected_Multiplicity[i] -> Write();
 			Hist::HEX_Preselected_DriftTime[i] -> Write();
+			Hist::HEX_multiple_hits_correlations[i] -> Write();
 		}
 		make_hist_dir("HEXDriftTimes",2);
 		for (int i = 0; i < 7; i++)

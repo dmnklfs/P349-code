@@ -118,6 +118,9 @@ public:
 	//TH2F *D1_L8[42];
 	//TH1F *D1_channel_multiplicities[8][42];
 	TH1F *D1_wires_offsets[8][42];
+	TH1F *D1_leading_times_differences[8];
+	TH1F *D1_no_of_leading_before_trailing[8];
+	TH2F *D1_multiple_hits_correlations[8];
 	TH1F *D1_no_of_planes;
 	TH1F *D1_no_of_cells;
 	TH2F *D1_no_planes_vs_cells;
@@ -130,6 +133,9 @@ public:
 	TH1F *D2_Preselected_Multiplicity[6];
 	TH1F *D2_Preselected_DriftTime[6];
 	TH1F *D2_wires_offsets[6][42];
+	TH1F *D2_leading_times_differences[6];
+	TH1F *D2_no_of_leading_before_trailing[6];
+	TH2F *D2_multiple_hits_correlations[6];
 	TH2F *D2_L1L2[42][2]; // all wires, left - right
 	TH2F *D2_L3L4[42][2];
 	TH2F *D2_L5L6[42][2];
@@ -148,6 +154,7 @@ public:
 	TH1F *HEX_Preselected_Multiplicity[7];
 	TH1F *HEX_Preselected_DriftTime[7];;
 	TH1F *HEX_wires_offsets[7][80];
+	TH2F *HEX_multiple_hits_correlations[7];
 	TH2F *HEX_L1L4[50][2]; // all wires, left - right
 	TH2F *HEX_L2L3[50][2];
 	TH2F *HEX_L5L6[50][2];

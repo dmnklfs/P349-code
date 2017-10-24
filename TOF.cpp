@@ -25,12 +25,14 @@ void TOF::fill_good_hits(single_gh_data _good_hit_data)
 {
 	if ( 1 == _good_hit_data.layer)
 	{
+		
 		RoughEdgeUp.push_back(_good_hit_data.edge);
 		RoughTrealUp.push_back(_good_hit_data.treal);
 		RoughElementUp.push_back(_good_hit_data.element);
 	}
 	if ( 2 == _good_hit_data.layer)
 	{
+		
 		RoughEdgeDown.push_back(_good_hit_data.edge);
 		RoughTrealDown.push_back(_good_hit_data.treal);
 		RoughElementDown.push_back(_good_hit_data.element);

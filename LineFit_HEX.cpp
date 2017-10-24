@@ -174,25 +174,39 @@ double LineFit_HEX::get_chisq()
 	double xi, yi;
 	// straight
 	// layer 1
+
 	t = z[0] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
+	//std::cout << "xi0 " << xi << std::endl;
+	//std::cout << "yi0 " << yi << std::endl;
 	delta  = x[0] - xi;
 	layer_chisq[0] = (delta*delta)/(errors[0]*errors[0]);
+	//std::cout << "layer_chisq[0] " << layer_chisq[0] << std::endl;
 	// layer 2
 	t = z[3] - zp;
 	xi = t*par[2] + par[0];
 	yi = t*par[3] + par[1];
+	//std::cout << "xi1 " << xi << std::endl;
+	//std::cout << "yi1 " << yi << std::endl;
 	delta  = x[1] - xi;
 	layer_chisq[3] = (delta*delta)/(errors[3]*errors[3]);
+	//std::cout << "layer_chisq[3] " << layer_chisq[3] << std::endl;
 
 	for (int i = 0; i < 4; i++)
 	{
 		t = z[inclined[i]] - zp;
+		//std::cout << "z[inclined[i]] " << z[inclined[i]] << std::endl;
 		xi = t*par[2] + par[0];
 		yi = t*par[3] + par[1];
 		delta  = (a[i]*xi-yi+b[i])*(a[i]*xi-yi+b[i])/(a[i]*a[i]+1);
+
+		//std::cout << "xi" << inclined[i] << " " << xi << std::endl;
+		//std::cout << "yi" << inclined[i] << " " << yi << std::endl;
+		//std::cout << " a[i] " << a[i] << std::endl;
+		//std::cout << " b[i] " << b[i] << std::endl;
 		layer_chisq[inclined[i]] = delta/(errors[inclined[i]]*errors[inclined[i]]);
+		//std::cout << inclined[i] << " layer_chisq[i] " << layer_chisq[inclined[i]] << std::endl;
 	}
 	for (int i = 0; i < 6; i++)
 	{
@@ -222,6 +236,10 @@ void LineFit_HEX::calculate_start_params()
 	t = (zp - track_z)/track_uz;
 	start_xp = track_x + t*track_ux;
 	start_yp = track_y + t*track_uy;
+	//std::cout << "start_xp " << start_xp << std::endl;
+	//std::cout << "start_yp " << start_yp << std::endl;
+	//std::cout << "start_uz " << start_ux << std::endl;
+	//std::cout << "start_uy " << start_uy << std::endl;
 }
 
 void LineFit_HEX::fit_with_minuit()
@@ -250,7 +268,7 @@ void LineFit_HEX::fit_with_minuit()
 
 	// Set start values and step sizes for parameters
 	double vstart[4] = {start_xp, start_yp, start_ux, start_uy};
-	double step[4] = {0.01 , 0.01, 0.001, 0.001};
+	double step[4] = {0.0001 , 0.0001, 0.00001, 0.00001};
 	gMinuit->mnparm(0, "xp", vstart[0], step[0], 0, 0, ierflg);
 	gMinuit->mnparm(1, "yp", vstart[1], step[1], 0, 0, ierflg);
 	gMinuit->mnparm(2, "ux", vstart[2], step[2], 0, 0, ierflg);
@@ -296,6 +314,11 @@ void LineFit_HEX::fit_with_minuit()
 	ux = params[2];
 	uy = params[3];
 	uz = 1;
+
+	//std::cout << "xp fit results: " << xp << std::endl;
+	//std::cout << "yp fit results: " << yp << std::endl;
+	//std::cout << "ux fit results: " << ux << std::endl;
+	//std::cout << "uy fit results: " << uy << std::endl;
 
 	delete gMinuit;
 }

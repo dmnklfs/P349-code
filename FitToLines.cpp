@@ -19,11 +19,12 @@ void d1d23dfcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t ifl
 	f = rec->GlobalFCN( par ); 
 }
 
-void FitToLines::set_line(TVector3 _point, TVector3 _direction)
+void FitToLines::set_line(TVector3 _point, TVector3 _direction, double position_error)
 {
 	line3d aline;
 	aline.point = _point;
 	aline.direction = _direction;
+	aline.pos_error = position_error;
 	LinesToFit.push_back(aline);
 }
 
@@ -48,6 +49,7 @@ double FitToLines::GlobalFCN(const double * par)
 	//calculate chisquare
 	double chisq = 0;
 	double delta = 0;
+	double err = 0;
 	double zp, vz;
 	double linex, liney, linez;
 	vz = 1;
@@ -56,12 +58,17 @@ double FitToLines::GlobalFCN(const double * par)
 	tpoint.SetXYZ(par[0],par[1],z_reference);
 	tvector.SetXYZ(par[2],par[3],vz);
 	TVector3 lpoint, lvector;
+	TVector3 temp;
 	for (int i = 0; i < points; i++)
 	{
 		lpoint = LinesToFit.at(i).point;
 		lvector = LinesToFit.at(i).direction;
-		delta = fabs( ((tvector.Cross(lvector)).Dot(tpoint - lpoint))*pow((tvector.Cross(lvector)).Mag(),-1) );
-		chisq += delta*delta;
+		temp = tvector.Cross(lvector).Unit();
+		delta = fabs( temp.Dot(tpoint - lpoint) );
+		if (i<6) 	err = fabs(temp.X()*(D2Xvector.X()*LinesToFit.at(i).pos_error))+fabs(temp.Y()*(D2Xvector.Y()*LinesToFit.at(i).pos_error))+fabs(temp.Z()*(D2Xvector.Z()*LinesToFit.at(i).pos_error));
+		else 		err = fabs(temp.X()*(D1Xvector.X()*LinesToFit.at(i).pos_error))+fabs(temp.Y()*(D1Xvector.Y()*LinesToFit.at(i).pos_error))+fabs(temp.Z()*(D1Xvector.Z()*LinesToFit.at(i).pos_error));
+		//err = 1;
+		chisq += (delta*delta)*pow((err*err),-1);
 		//bledy trzeba obl tak, jak poprzednio (bo na nie nie wplywa raczej obrot ukladu)
 	}
 	return chisq;
@@ -72,6 +79,10 @@ double FitToLines::calculate_chisq()
 	const int points = LinesToFit.size();
 	int i;
 	//calculate chisquare
+	
+	//D1Xvector
+	//D2Xvector
+
 	double chisq = 0;
 	double delta = 0;
 	//par[0] = xp;
@@ -86,16 +97,74 @@ double FitToLines::calculate_chisq()
 	tpoint = TrackPoint;
 	tvector = TrackVector;
 	TVector3 lpoint, lvector;
+	TVector3 temp;
+	double err;
 	for (int i = 0; i < points; i++)
 	{
 		lpoint = LinesToFit.at(i).point;
 		lvector = LinesToFit.at(i).direction;
-		delta = fabs( ((tvector.Cross(lvector)).Dot(tpoint - lpoint))*pow((tvector.Cross(lvector)).Mag(),-1) );
-		chisq += delta*delta;
-		//bledy trzeba obl tak, jak poprzednio (bo na nie nie wplywa raczej obrot ukladu)
+		temp = tvector.Cross(lvector).Unit();
+		delta = fabs( temp.Dot(tpoint - lpoint) );
+		if (i<6) 	err = fabs(temp.X()*(D2Xvector.X()*LinesToFit.at(i).pos_error))+fabs(temp.Y()*(D2Xvector.Y()*LinesToFit.at(i).pos_error))+fabs(temp.Z()*(D2Xvector.Z()*LinesToFit.at(i).pos_error));
+		else 		err = fabs(temp.X()*(D1Xvector.X()*LinesToFit.at(i).pos_error))+fabs(temp.Y()*(D1Xvector.Y()*LinesToFit.at(i).pos_error))+fabs(temp.Z()*(D1Xvector.Z()*LinesToFit.at(i).pos_error));
+		//err=1;
+		chisq += (delta*delta)*pow((err*err),-1);
 	}
 	//std::cout << chisq << std::endl;
 	return chisq;
+}
+
+void FitToLines::check_errors()
+{
+	const int points = LinesToFit.size();
+	const int noofiter = 100;
+	TVector3 tpoint, tvector;
+	std::vector<double> resVal, resChi;
+	tpoint = TrackPoint;
+	tvector = TrackVector;
+	TVector3 lpoint, lvector;
+	TVector3 temp;
+	double err, tempval,step, chisq, delta;
+
+	tempval = tpoint.X();
+	step = 0.0001*tempval;
+	tempval = tempval - noofiter*0.5*step;
+	tpoint.SetX(tempval);
+	for (int j = 0; j < noofiter; j++)
+	{
+		chisq = 0;
+		tpoint.SetX(tpoint.X()+step);
+		for (int i = 0; i < points; i++)
+		{
+			lpoint = LinesToFit.at(i).point;
+			lvector = LinesToFit.at(i).direction;
+			temp = tvector.Cross(lvector).Unit();
+			delta = fabs( temp.Dot(tpoint - lpoint) );
+			if (i<6) 	err = fabs(temp.X()*(D2Xvector.X()*LinesToFit.at(i).pos_error))+fabs(temp.Y()*(D2Xvector.Y()*LinesToFit.at(i).pos_error))+fabs(temp.Z()*(D2Xvector.Z()*LinesToFit.at(i).pos_error));
+			else 		err = fabs(temp.X()*(D1Xvector.X()*LinesToFit.at(i).pos_error))+fabs(temp.Y()*(D1Xvector.Y()*LinesToFit.at(i).pos_error))+fabs(temp.Z()*(D1Xvector.Z()*LinesToFit.at(i).pos_error));
+			chisq += (delta*delta)*pow((err*err),-1);
+		}
+		resVal.push_back(tpoint.X());
+		resChi.push_back(chisq);
+	}
+	TGraph *graph = new TGraph(noofiter, &(resVal.at(0)),&(resChi.at(0)));
+	TF1 *parabola = new TF1("parabola","[0]*x*x+[1]*x+[2]", resVal.at(0), resVal.back());
+    double a, b, c,shift,chival;
+    graph->SetMarkerStyle(20);
+    parabola->SetParameters(374800,-149800,14960);
+    //graph->Fit("parabola");
+    //a = parabola->GetParameter(0);
+    //b = parabola->GetParameter(1);
+    //c = parabola->GetParameter(2);
+    //shift = -b/(2*a);
+    //chival = a*shift*shift+b*shift+c;
+    //std::cout << "shift " << shift << std::endl;
+    //std::cout << "chival " << chival << std::endl;
+	gDirectory->pwd();
+	graph -> Write();
+	//TCanvas *c = new TCanvas("c1","c1",500,500);
+	//graph -> Draw();
+	//c->SaveAs("./test.png","png");
 }
 
 void FitToLines::fit_with_minuit()
@@ -192,4 +261,12 @@ bool FitToLines::err_flag()
 	return errflag;
 }
 
+void FitToLines::set_D1_error_vector(TVector3 D1vec)
+{
+	D1Xvector = D1vec;
+}
 
+void FitToLines::set_D2_error_vector(TVector3 D2vec)
+{
+	D2Xvector = D2vec;
+}

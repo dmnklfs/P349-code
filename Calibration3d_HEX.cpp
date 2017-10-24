@@ -326,10 +326,9 @@ void Calibration3d_HEX::fit_in_3d()
 		fit3d_HEX -> Fit3d_HEX::calculate_intersection_points();
 		fit3d_HEX -> Fit3d_HEX::calculate_3d_track_parameters();
 		fit3d_HEX -> Fit3d_HEX::set_detector_position(x_lab_position, z_lab_position, half_x_dim, half_z_dim, distance_to_1st_layer);
-		fit3d_HEX -> Fit3d_HEX::calculate_projections_on_hit_planes_calculations();
+		
 
 		fit3d_HEX -> Fit3d_HEX::make_fit_to_lines(false);
-		fit3d_HEX -> Fit3d_HEX::calculate_projections_on_hit_planes_fit();
 		track3d_fit_point = fit3d_HEX -> Fit3d_HEX::return_track_point();
 		track3d_fit_vector = fit3d_HEX -> Fit3d_HEX::return_track_vector();
 		fit3d_HEX -> Fit3d_HEX::calculate_wires_xy_functions();
@@ -343,10 +342,6 @@ void Calibration3d_HEX::fit_in_3d()
 
 			temp_chi2 = fit3d_HEX -> Fit3d_HEX::get_chisq();
 			temp_chi2_prob = TMath::Prob(temp_chi2,2);
-			//std::cout << "ok" << std::endl;
-			// straight
-			aSt = fit3d_HEX -> Fit3d_HEX::get_track_8lines_projection_params(0,0); // remove
-			bSt = fit3d_HEX -> Fit3d_HEX::get_track_8lines_projection_params(0,1);
 
 			// not from track projection - from calculate phi/theta
 			track_angle = TMath::ATan(aSt)*180*pow(3.14,-1);

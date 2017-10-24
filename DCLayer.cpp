@@ -26,6 +26,7 @@ void DCLayer::fill_rough_data(single_gh_data _good_hit_data)
 	RoughDriftTime.push_back(_good_hit_data.treal);
 	RoughWire.push_back(_good_hit_data.element);
 	RoughEdge.push_back(_good_hit_data.edge);
+	//std::cout << RoughEdge.back() << std::endl;
 }
 
 bool DCLayer::was_correct_event()
@@ -46,54 +47,103 @@ void DCLayer::check_hits()
 	else correct_event = false;
 }
 
-// makes a loop over edges vector and chooses trailing times from correct pairs of leading and trailing edges
-// (applies constraints on time range and elements range according to Config)
-// wersja 1
 void DCLayer::choose_corr_leading()
 {
-	//std::cout << "DCLayer::choose_corr_leading()" << std::endl;
-	int iterations = RoughEdge.size()-1;
-	if (RoughEdge.size()-1 < 0) iterations = 0;
-	//std::cout << "---" << std::endl;
+	//std::cout << "ok" << std::endl;
+	double first_leading_tdriff = -1;
+	int iterations = RoughEdge.size();
+	were_2leading = false;
+	bool same_wire = false;
+	int temp_wire;
+	noof_leading_edges = 0;
+	//std::cout << "---------------" << std::endl;
+	//if (RoughEdge.size()-1 < 0) iterations = 0;
 	for (int i = 0; i < iterations; i++)
 	{
-		//std::cout << "1. " << RoughEdge.at(i) << " 2. " << RoughEdge.at(i+1) << " 3. " << RoughWire.at(i) << " 4. " << RoughWire.at(i+1) << std::endl;
-		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))//&&RoughWire.at(i)>=10&&RoughWire.at(i)<=26)
+		/*if (1==RoughEdge.at(i))
 		{
-			//std::cout << "time before check: " << RoughDriftTime.at(i) << std::endl;
-			if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i))))
-			{	
-				DriftTime.push_back(RoughDriftTime.at(i)+ DriftTimeOffset.at(-1+RoughWire.at(i)));
-				Wire.push_back(RoughWire.at(i));
-				TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
-				//break;
+			temp_wire = RoughWire.at(i);
+			noof_leading_edges++;
+			if (noof_leading_edges == 0)
+			if (noof_leading_edges == 1) leading1 = RoughDriftTime.at(i);
+			if (noof_leading_edges > 1)
+			{
+				were_2leading = true;
+				//std::cout << noof_leading_edges << std::endl;
 			}
+		}*/
+		if (1==RoughEdge.at(i))//&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))//&&RoughWire.at(i)>=10&&RoughWire.at(i)<=26)
+		{
+			//std::cout << "Wire.size() edge check " << Wire.size() << std::endl;
+			//if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i))))
+			//{	
+				//std::cout << "range ok " << std::endl;
+				//if (Wire.size()==0)
+				//{
+					//std::cout << RoughWire.at(i) << std::endl;
+					DriftTime.push_back(RoughDriftTime.at(i));//+ DriftTimeOffset.at(-1+RoughWire.at(i)));
+					Wire.push_back(RoughWire.at(i));
+					//TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
+					//leading2 = RoughDriftTime.at(i);
+					//std::cout << DriftTime.size() << " " << DriftTime.at(0) << std::endl;
+					//break;
+					//std::cout << "Wire.size() " << Wire.size() << std::endl;
+				//}
+//				else
+//				{
+//					//std::cout << "size is not zero" << std::endl;
+//					if (Wire.at(0)==RoughWire.at(i))
+//					{
+//						//std::cout << "equal numbers" << std::endl;
+//						DriftTime.push_back(RoughDriftTime.at(i)+ DriftTimeOffset.at(-1+RoughWire.at(i)));
+//						Wire.push_back(RoughWire.at(i));
+//						TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
+//						//std::cout << "Wire.size() " << Wire.size() << std::endl;
+//						//leading2 = RoughDriftTime.at(i);
+//						//std::cout << DriftTime.size() << " " << DriftTime.at(0) << std::endl;
+//						//break;
+//						
+//					}
+//				}
+
+				
+			//}
 		}
-		//if (RoughEdge.at(i)==RoughEdge.at(i+1)) break;
 	}
+	//std::cout << "ok1" << std::endl;
 }
 
-// wersja 2: pierwsza poprawna para, jeśli jest.
-//void DCLayer::choose_corr_leading()
-//{
-//	//std::cout << "DCLayer::choose_corr_leading()" << std::endl;
-//	int iterations = RoughEdge.size()-1;
-//	if (RoughEdge.size()>=2)
-//	{
-//		//std::cout << "1. " << RoughEdge.at(i) << " 2. " << RoughEdge.at(i+1) << " 3. " << RoughWire.at(i) << " 4. " << RoughWire.at(i+1) << std::endl;
-//		int i = 0;
-//		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))//&&RoughWire.at(i)>=10&&RoughWire.at(i)<=26)
-//		{
-//			//std::cout << "time before check: " << RoughDriftTime.at(i) << std::endl;
-//			if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i))))
-//			{	
-//				DriftTime.push_back(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i)));
-//				Wire.push_back(RoughWire.at(i));
-//				TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
-//			}
-//		}
-//	}
-//}
+/*void DCLayer::choose_corr_leading()
+{
+	double first_leading_tdriff = -1;
+	int iterations = RoughEdge.size()-1;
+	bool was_leading_trailing = false;
+	if (RoughEdge.size()-1 < 0) iterations = 0;
+	for (int i = 0; i < iterations; i++)
+	{
+		if (1==RoughEdge.at(i)&&0==RoughEdge.at(i+1)&&RoughWire.at(i)==RoughWire.at(i+1))//&&RoughWire.at(i)>=10&&RoughWire.at(i)<=26)
+		{
+			was_leading_trailing = true;
+		}
+	}
+	if (was_leading_trailing)
+	{
+		for (int i = 0; i < iterations; i++)
+		{
+			if (1==RoughEdge.at(i))
+			{
+				if (check_time_range(RoughDriftTime.at(i) + DriftTimeOffset.at(-1+RoughWire.at(i))))
+				{	
+					DriftTime.push_back(RoughDriftTime.at(i)+ DriftTimeOffset.at(-1+RoughWire.at(i)));
+					Wire.push_back(RoughWire.at(i));
+					TOT.push_back(RoughDriftTime.at(i+1)-RoughDriftTime.at(i));
+					break;
+				}
+			}
+		}	
+	}
+	std::cout << DriftTime.size() << " " << DriftTime.at(0) << std::endl;
+}*/
 
 bool DCLayer::check_time_range(double drift_time)
 {
@@ -114,6 +164,10 @@ DCLayer_hist_data* DCLayer::get_hist_data()
 	DCLayer_hist_data *DCLayer_data = new DCLayer_hist_data(RoughWire, Wire, RoughDriftTime, DriftTime, TOT, HitsDistancesFromWires);
 	DCLayer_data -> rough_multiplicity = RoughWire.size();
 	DCLayer_data -> preselected_multiplicity = Wire.size();
+	DCLayer_data -> were_2leading = were_2leading;
+	DCLayer_data -> leading1 = leading1;
+	DCLayer_data -> leading2 = leading2;
+	DCLayer_data -> noof_leading_edges = noof_leading_edges;
 	return DCLayer_data;
 }
 

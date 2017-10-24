@@ -58,7 +58,7 @@ TrackReconstruction::TrackReconstruction(const Config &_config)
 	x_reco_HEX_exp_D1 = new TH2F("x_recHEX_exp_D1","x_recHEX_exp_D1; reconstructed from HEX (cm); expected from D1",400,-20,20,400,-20,20);
 	y_reco_HEX_exp_D1 = new TH2F("y_recHEX_exp_D1","y_recHEX_exp_D1; reconstructed from HEX (cm); expected from D1",400,-20,20,400,-20,20);
 	x_reco_HEX_minus_exp_D1 = new TH1F("x_rec_HEX_minus_exp_D1","x_rec_HEX_minus_exp_D1;difference [cm];N", 200, -1.5, 1.5);
-	y_reco_HEX_minus_exp_D1 = new TH1F("y_rec_HEX_minus_exp_D1","y_rec_HEX_minus_exp_D1;difference [cm];N", 700, -4, 6);
+	y_reco_HEX_minus_exp_D1 = new TH1F("y_rec_HEX_minus_exp_D1","y_rec_HEX_minus_exp_D1;difference [cm];N", 1400, -20, 20);
 
 	TString name;
 	for (int i = 0; i < 6; i++)
@@ -122,7 +122,9 @@ void TrackReconstruction::get_data(data_for_track_reconstruction _single_event_d
 	for (int i = 0; i < 6; i++)
 	{
 		single_event_data.x_wire_pos_HEX[i] = _single_event_data.HEX.positionsWiresX[i];
+		//std::cout << "track reco wires: " << _single_event_data.HEX.positionsWiresX[i] << std::endl;
 		single_event_data.x_hit_pos_HEX[i] = _single_event_data.HEX.positionsHitsX[i];
+		//std::cout << "track reco hits: " << _single_event_data.HEX.positionsHitsX[i] << std::endl;
 		single_event_data.x_err_hit_pos_HEX[i] = _single_event_data.HEX.errorsX[i];
 		single_event_data.z_hit_pos_HEX[i] = _single_event_data.HEX.positionsZ[i];
 	}

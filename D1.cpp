@@ -110,39 +110,39 @@ bool D1::was_correct_event()
 //		//correct_event = true;
 //	}
 
-	int wire1;
-	int wire2;
-	int wire3;
-	int wire4;
-	int wire5;
-	int wire6;
-	int wire7;
-	int wire8;
-	bool pair1, pair2, pair3, pair4;
-	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[2]&&correct_in_layer[3]&&correct_in_layer[4]&&correct_in_layer[5]&&correct_in_layer[6]&&correct_in_layer[7])
-	{
-		wire1 = Layer[0] -> DCLayer::Wire.at(0);
-		wire2 = Layer[1] -> DCLayer::Wire.at(0);
-		wire3 = Layer[2] -> DCLayer::Wire.at(0);
-		wire4 = Layer[3] -> DCLayer::Wire.at(0);
-		wire5 = Layer[4] -> DCLayer::Wire.at(0);
-		wire6 = Layer[5] -> DCLayer::Wire.at(0);		
-		wire7 = Layer[6] -> DCLayer::Wire.at(0);
-		wire8 = Layer[7] -> DCLayer::Wire.at(0);
-
-		pair1 = false;
-		pair2 = false;
-		pair3 = false;
-		pair4 = false;
-		if (wire2==wire1||wire2==wire1+1) pair1 = true;
-		if (wire3==wire4||wire3==wire4+1) pair2 = true;
-		if (wire5==wire6||wire5==wire6+1) pair3 = true;
-		if (wire8==wire7||wire8==wire7+1) pair4 = true;
-
-		if (pair1&&pair2&&pair3&&pair4) correct_event = true;
-	}
-
-	return correct_event;
+//	int wire1;
+//	int wire2;
+//	int wire3;
+//	int wire4;
+//	int wire5;
+//	int wire6;
+//	int wire7;
+//	int wire8;
+//	bool pair1, pair2, pair3, pair4;
+//	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[2]&&correct_in_layer[3]&&correct_in_layer[4]&&correct_in_layer[5]&&correct_in_layer[6]&&correct_in_layer[7])
+//	{
+//		wire1 = Layer[0] -> DCLayer::Wire.at(0);
+//		wire2 = Layer[1] -> DCLayer::Wire.at(0);
+//		wire3 = Layer[2] -> DCLayer::Wire.at(0);
+//		wire4 = Layer[3] -> DCLayer::Wire.at(0);
+//		wire5 = Layer[4] -> DCLayer::Wire.at(0);
+//		wire6 = Layer[5] -> DCLayer::Wire.at(0);		
+//		wire7 = Layer[6] -> DCLayer::Wire.at(0);
+//		wire8 = Layer[7] -> DCLayer::Wire.at(0);
+//
+//		pair1 = false;
+//		pair2 = false;
+//		pair3 = false;
+//		pair4 = false;
+//		if (wire2==wire1||wire2==wire1+1) pair1 = true;
+//		if (wire3==wire4||wire3==wire4+1) pair2 = true;
+//		if (wire5==wire6||wire5==wire6+1) pair3 = true;
+//		if (wire8==wire7||wire8==wire7+1) pair4 = true;
+//
+//		if (pair1&&pair2&&pair3&&pair4) correct_event = true;
+//	}
+//
+//	return correct_event;
 }
 
 D1_hist_data* D1::get_hist_data()
@@ -286,6 +286,7 @@ data_for_D1_track_reco D1::get_data_for_track_reco() // i need here only informa
 		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
 		data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
 		data_for_calibration.errorsX[i]	= Layer[i] -> HitPositionError.at(0);
+		//std::cout << "HitPositionError " << Layer[i] -> HitPositionError.at(0) << std::endl;
 	}
 	return data_for_calibration;
 }

@@ -64,6 +64,10 @@ public:
 
 	int layer_no;
 
+	bool were_2leading;
+	int noof_leading_edges;
+	double leading1, leading2;
+
 };
 
 #endif

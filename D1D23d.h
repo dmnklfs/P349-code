@@ -40,10 +40,10 @@ struct d1d2_3d_data
 	int take_to_mean;
 
 	//delme
-	double wire_posX[7];
-	double wire_posZ[7];
-	double drift_time[7];
-	double wire_number[7];
+//	double wire_posX[7];
+//	double wire_posZ[7];
+//	double drift_time[7];
+//	double wire_number[7];
 
 //	double x_hit_pos_D1[8];
 //	double x_err_hit_pos_D1[8];
@@ -78,11 +78,11 @@ struct d1d2_3d_data
 	}
 };
 
-struct wire
+/*struct wire
 {
 	std::vector<double> DriftTime;
 	std::vector<double> Distance;
-};
+};*/
 
 class D1D23d
 {
@@ -142,7 +142,7 @@ private:
 	double D1_x_rot, D1_y_rot, D1_z_rot;
 	double D2_x_rot, D2_y_rot, D2_z_rot;
 
-	wire hex_data[7];
+	//wire hex_data[7];
 	
 
 

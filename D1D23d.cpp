@@ -41,7 +41,7 @@ D1D23d::D1D23d(const Config &_config)
 	phi = new TH1F("phi", "phi; phi_xz [deg]; N", 200, 75, 105);
 	theta = new TH1F("theta", "theta; theta_yz [deg]; N", 200, 75, 105);
 	chi2 = new TH1F("#chi^{2}","#chi^{2};#chi^{2};N", 1000, -0.001, 0.05);
-	chi2_resc = new TH1F("#chi^{2}","#chi^{2};#chi^{2};N", 250, -0.25, 25);
+	chi2_resc = new TH1F("#chi^{2}_ndf","#chi^{2}/ndf;#chi^{2}/ndf;N", 150, -0.25, 10);
 	calc_px = new TH1F("calc_px",";calc_px,N",6250,-20,20);
 	calc_py = new TH1F("calc_py",";calc_py,N",5000,-40,40);
 	calc_pz = new TH1F("calc_pz",";calc_pz,N",500,-60,0);
@@ -122,13 +122,14 @@ void D1D23d::get_data(data_for_track_reconstruction _single_event_data)
 
 		}
 	}
-	for (int i = 0; i < 6; i++)
+	/*for (int i = 0; i < 6; i++)
 	{
 		single_event_data.wire_number[i] = _single_event_data.HEX.wireNo[i];
 		single_event_data.wire_posX[i] = _single_event_data.HEX.positionsWiresX[i]+x_lab_position_HEX;
 		single_event_data.wire_posZ[i] = _single_event_data.HEX.positionsZ[i]+z_lab_position_HEX;
 		single_event_data.drift_time[i] = _single_event_data.HEX.drift_times[i];
-	}
+		//std::cout << "d1d23d " << single_event_data.wire_posX[i] << std::endl;
+	}*/
 
 	TrackRecoData.push_back(single_event_data);
 }
@@ -352,15 +353,29 @@ void D1D23d::calculate_init_params()
 
 void D1D23d::fit_in_3d()
 {
+	/*std::cout << "D1vectorX.X() " << D1vectorX.X() << std::endl;
+	std::cout << "D1vectorX.Y() " << D1vectorX.Y() << std::endl;
+	std::cout << "D1vectorX.Z() " << D1vectorX.Z() << std::endl;
+	std::cout << "phi " << D1vectorX.Phi()*pow(TMath::DegToRad(),-1) << std::endl;
+	std::cout << "theta " << D1vectorX.Theta()*pow(TMath::DegToRad(),-1) << std::endl;
+
+	std::cout << "D2vectorX.X() " << D2vectorX.X() << std::endl;
+	std::cout << "D2vectorX.Y() " << D2vectorX.Y() << std::endl;
+	std::cout << "D2vectorX.Z() " << D2vectorX.Z() << std::endl;
+	std::cout << "phi " << D2vectorX.Phi()*pow(TMath::DegToRad(),-1) << std::endl;
+	std::cout << "theta " << D2vectorX.Theta()*pow(TMath::DegToRad(),-1) << std::endl;*/
+
 	FitToLines * fit;
 	unsigned int no_of_chosen_events = TrackRecoData.size();
 	//std::cout << "a " << std::endl;
 	for (unsigned int i = 0; i < no_of_chosen_events; i++)
 	{
 		fit = FitToLines::GetInstance();
+		fit -> set_D1_error_vector(D1vectorX);
+		fit -> set_D2_error_vector(D2vectorX);
 		for (int j = 0; j < 14; j++)
 		{
-			fit -> set_line(TrackRecoData.at(i).HitPoints[j],TrackRecoData.at(i).HitVectors[j]);
+			fit -> set_line(TrackRecoData.at(i).HitPoints[j],TrackRecoData.at(i).HitVectors[j], TrackRecoData.at(i).x_err_hit_pos[j]);
 		}
 		fit -> set_init_params(TrackRecoData.at(i).ApproxTrackPoint,TrackRecoData.at(i).ApproxTrackVector);
 		fit -> set_z_reference((8*z_lab_position_D1 + 6*z_lab_position_D2)*pow(14,-1));
@@ -370,6 +385,7 @@ void D1D23d::fit_in_3d()
 		TrackRecoData.at(i).TrackPoint = fit -> get_track_point();
 		TrackRecoData.at(i).TrackVector = fit -> get_track_vector();
 		TrackRecoData.at(i).chi2 = fit -> calculate_chisq();
+		//fit -> check_errors();
 		delete fit;
 	}
 }
@@ -405,7 +421,7 @@ double D1D23d::get_mean_chisq()
 			//std::cout << TrackRecoData.at(i).chi2 << std::endl;
 		}
 	}
-	std::cout << iter << " out of " << TrackRecoData.size()  << std::endl;
+	//std::cout << iter << " out of " << TrackRecoData.size()  << std::endl;
 	mean_chisq = mean_chisq*pow(TrackRecoData.size(),-1);
 	return mean_chisq;
 }
@@ -416,6 +432,7 @@ void D1D23d::fill_histos()
 	for (unsigned int i = 0; i < no_of_chosen_events; i++)
 	{
 		chi2 -> Fill(TrackRecoData.at(i).chi2);
+		chi2_resc -> Fill(TrackRecoData.at(i).chi2*0.1);
 		phi -> Fill(calculate_phi_xz(TrackRecoData.at(i).TrackVector.X(),TrackRecoData.at(i).TrackVector.Z()));
 		theta -> Fill(calculate_phi_xz(TrackRecoData.at(i).TrackVector.Y(),TrackRecoData.at(i).TrackVector.Z()));
 		track_px -> Fill(TrackRecoData.at(i).TrackPoint.X());
@@ -431,6 +448,7 @@ void D1D23d::save_histos()
 {
 	gDirectory->pwd();
 	chi2 -> Write();
+	chi2_resc ->Write();
 	phi -> Write();
 	theta -> Write();
 	calc_px -> Write();
@@ -729,7 +747,7 @@ double D1D23d::draw_chambers(int event_no)
 
 }
 
-void D1D23d::calibrate_wires_HEX()
+/*void D1D23d::calibrate_wires_HEX()
 {
 	int wire, layer;
 	double z;
@@ -770,12 +788,17 @@ void D1D23d::calibrate_wires_HEX()
 	}
 
 	TGraph *calibration[7];
+	TCanvas *c[7];
 	TString name;
 	for (int i = 0; i < 6; i++)
 	{
 		if (hex_data[i].DriftTime.size()==0) calibration[i] = new TGraph();
 		else calibration[i] = new TGraph(hex_data[i].DriftTime.size(), &(hex_data[i].DriftTime.at(0)), &(hex_data[i].Distance.at(0)));
 		name = Form("layer%d",i);
-		calibration[i] -> Write(name);
+		c[i] = new TCanvas(name, name);
+		calibration[i] -> SetMarkerStyle(7);
+		calibration[i] -> SetMaximum(2);
+		calibration[i] -> Draw("AP");
+		c[i] -> Write(name);
 	}
-}
+}*/

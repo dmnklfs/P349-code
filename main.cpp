@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
   //CalibrationD1D2 *calibrationd1d2 = new CalibrationD1D2(config);
   //TrackReconstruction *track_reco = new TrackReconstruction(config);
   //D1D2Reconstruction  *d1d2_reco = new D1D2Reconstruction(config);
-  D1D23d *d1d2 = new D1D23d(config);
+  //*D1D23d *d1d2 = new D1D23d(config);
 	std::cout << "* start of the loop over the events" << std::endl;
   int delme_iter = 0;
 	for (long int entry = 0; entry < in_out -> Tree::get_no_of_events_to_analyse(); entry++)
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
     //std::cout << "-------" << entry << std::endl;
     //std::cout << " ok " << std::endl;
-		if (single_event -> SingleEvent::was_correct_event(analysis_stage) && entry > 0)// && entry > 50000 && entry < 60000
+		if (single_event -> SingleEvent::was_correct_event(analysis_stage))// && entry > 50000 && entry < 60000
  		{
       //std::cout << " ok2 " << std::endl;
       delme_iter++;
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
  			// checking if preselected tree = 1/0 and filling the tree or not
  			name = Form("Event_%ld", entry);
 
-      single_event -> SingleEvent::test_calculate_distances();
+      //single_event -> SingleEvent::test_calculate_distances();
  			in_out -> Tree::fill_preselected_data_tree();
       in_out -> Tree::fill_preselected_histos(single_event -> SingleEvent::get_hist_data());
  			//tof -> Fill(single_event -> SingleEvent::getTOF());
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
        //calibration_HEX -> get_data( single_event -> SingleEvent::HEX::get_data_for_calibration() ); 
        //track_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
        //d1d2_reco -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
-       d1d2 -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
+       //*d1d2 -> get_data(single_event -> SingleEvent::get_data_for_track_reconstruction());
        //std::cout << "ok0 " << std::endl;
        //calibrationd1d2 -> get_data(single_event -> SingleEvent::get_data_for_D1D2_calibration());
        //std::cout << "ok01" << std::endl;
@@ -121,29 +121,42 @@ int main(int argc, char *argv[])
 //    track_reco -> reconstructed_D2_vs_expected_D1();
 //    track_reco -> save_histos();
 
-    d1d2 -> tell_no_of_events();
+//*    d1d2 -> tell_no_of_events();
     //std::cout << "1" << std::endl;
-    d1d2 -> calculate_init_params();
+//*    d1d2 -> calculate_init_params();
     //std::cout << "2" << std::endl;
-    d1d2 -> set_config_positions();
+//*    d1d2 -> set_config_positions();
     //std::cout << "3" << std::endl;
-//
+
+    //d1d2 -> rotateD1(0, 0, 45);
+    //d1d2 -> rotateD2(0, 45, 0);
+//*    d1d2 -> shiftD2(0.0409,0,0,1);
+//*    d1d2 -> shiftD2(0,0,2.42,1);
+//*    d1d2 -> shiftD2(0,-0.37,0,1);
+//*    d1d2 -> shiftD2(0,0,0.01,1);
+//*    d1d2 -> rotateD2(0, -0.004, 0);
+//*    d1d2 -> rotateD2(0.112,0 , 0);
+//*    d1d2 -> fit_in_3d();
+
+    //chisq[j] = d1d2 -> get_mean_chisq();
+//*    d1d2->fill_histos();
+//*    d1d2->save_histos();
     // 2d shift/rotations determination
-    double first_offset1, first_offset2, step1, step2;
-    int no_of_iter1, no_of_iter2;
-
-    // z
-    first_offset1 = -3.5;
-    step1 = 0.01;
-    no_of_iter1 = 100;
-
-    // x
-    first_offset2 = -0.05;
-    step2 = 0.01;
-    no_of_iter2 = 10;
-
-    const int npoints2d = no_of_iter1*no_of_iter2;
-    double var1[npoints2d], var2[npoints2d], off1, off2, chi[npoints2d];
+//    double first_offset1, first_offset2, step1, step2;
+//    int no_of_iter1, no_of_iter2;
+//
+//    // z
+//    first_offset1 = -3.5;
+//    step1 = 0.01;
+//    no_of_iter1 = 100;
+//
+//    // x
+//    first_offset2 = -0.05;
+//    step2 = 0.01;
+//    no_of_iter2 = 10;
+//
+//    const int npoints2d = no_of_iter1*no_of_iter2;
+//    double var1[npoints2d], var2[npoints2d], off1, off2, chi[npoints2d];
 
 //
 //    //std::cout << "offset determination... " << i + 1 << " out of " << no_of_iter << " done" << std::endl;
@@ -178,40 +191,40 @@ int main(int argc, char *argv[])
 //    graph->Write();
 
   // one dimensional shifts/rotations
-    first_offset1 = 0;
-    step1 = 0;
-    no_of_iter1 = 1;
-
-    const int npoints = no_of_iter1;
-    double var[npoints], chisq[npoints];
-
-
-    //d1d2 -> fit_in_3d();
-    //std::cout << "ok1" << std::endl;
-    //d1d2 -> get_mean_chisq();
-    //std::cout << "ok1" << std::endl;
-
-    d1d2 -> shiftD2(0.0409,0,0,1);
-    d1d2 -> shiftD2(0,0,2.42,1);
-    d1d2 -> shiftD2(0,-0.37,0,1);
-    d1d2 -> shiftD2(0,0,0.01,1);
-    d1d2 -> rotateD2(0, -0.004, 0);
-    d1d2 -> rotateD2(0.112,0 , 0);
-    //d1d2 -> rotateD2(0 ,0 , 0.013);
-
-
-    for (int j = 0; j < no_of_iter1; j++)
-    {
-      if (j%10 == 0) { std::cout << j << " out of " << no_of_iter1 << " done " << std::endl; }
-      if (j==0) off1 = first_offset1;
-      else off1 = step1;
-      //d1d2 -> shiftD2(0,0,off1,1);
-      //d1d2 -> rotateD2(off1, 0, 0);
-      d1d2 -> fit_in_3d();
-      chisq[j] = d1d2 -> get_mean_chisq();
-      var1[j] = first_offset1 + j*step1;
-
-    }
+//    first_offset1 = 0;
+//    step1 = 0;
+//    no_of_iter1 = 1;
+//
+//    const int npoints = no_of_iter1;
+//    double var[npoints], chisq[npoints];
+//
+//
+//    //d1d2 -> fit_in_3d();
+//    //std::cout << "ok1" << std::endl;
+//    //d1d2 -> get_mean_chisq();
+//    //std::cout << "ok1" << std::endl;
+//
+//    d1d2 -> shiftD2(0.0409,0,0,1);
+//    d1d2 -> shiftD2(0,0,2.42,1);
+//    d1d2 -> shiftD2(0,-0.37,0,1);
+//    d1d2 -> shiftD2(0,0,0.01,1);
+//    d1d2 -> rotateD2(0, -0.004, 0);
+//    d1d2 -> rotateD2(0.112,0 , 0);
+//    //d1d2 -> rotateD2(0 ,0 , 0.013);
+//
+//
+//    for (int j = 0; j < no_of_iter1; j++)
+//    {
+//      if (j%10 == 0) { std::cout << j << " out of " << no_of_iter1 << " done " << std::endl; }
+//      if (j==0) off1 = first_offset1;
+//      else off1 = step1;
+//      //d1d2 -> shiftD2(0,0,off1,1);
+//      //d1d2 -> rotateD2(off1, 0, 0);
+//      d1d2 -> fit_in_3d();
+//      chisq[j] = d1d2 -> get_mean_chisq();
+//      var1[j] = first_offset1 + j*step1;
+//
+//    }
 
 //    TCanvas *fitcanvas = new TCanvas("#chi^{2}","#chi^{2}",500,500);
 //    TGraph *graph1d = new TGraph(npoints,var1,chisq);
@@ -230,9 +243,9 @@ int main(int argc, char *argv[])
 //    fitcanvas->Write(argv[1]);
 
 //    d1d2 -> draw_chambers(0);
-    d1d2 -> calibrate_wires_HEX();
-    d1d2->fill_histos();
-    d1d2->save_histos();
+//    d1d2 -> calibrate_wires_HEX();
+//    d1d2->fill_histos();
+//    d1d2->save_histos();
 
 
 //    // in D1D2Reconstruction offsets for y and for x/z work differently. y is set on hit functions, x/z are set on data

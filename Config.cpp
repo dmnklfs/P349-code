@@ -114,17 +114,17 @@ Config::Config()
 
 	HEX_half_x_dim = 0.5*150.0; // 0.5 * detector dimensions
 	HEX_half_z_dim = 0.5*29.3;
-	HEX_x_lab_position = 35+0.17;
+	HEX_x_lab_position = 35+0.17+0.2;
     HEX_z_lab_position = -139.8;
 	HEX_z_offset = 0; // up to the beginning of the detector (not: 1st layer)
 	HEX_x_offset = 0;
 	HEX_y_rotation_angle = (0)*3.14/180; // rad
 	HEX_layer_wire_frame_offset[0] = 0;
-	HEX_layer_wire_frame_offset[1] = 3.6735-1.8;
-	HEX_layer_wire_frame_offset[2] = 2.7735-1.8;
+	HEX_layer_wire_frame_offset[1] = 3.6735-0*1.8;		// 77
+	HEX_layer_wire_frame_offset[2] = 2.7735-0*1.8;		// 77
 	HEX_layer_wire_frame_offset[3] = 0.9;
-	HEX_layer_wire_frame_offset[4] = 3.6735-3*1.8;
-	HEX_layer_wire_frame_offset[5] = 4.5735-3*1.8;
+	HEX_layer_wire_frame_offset[4] = 3.6735-4*1.8;		// 76
+	HEX_layer_wire_frame_offset[5] = 4.5735-4*1.8;		// 76
 	HEX_layer_wire_frame_offset[6] = 0.9;
 	HEX_distance_to_1st_layer = 6.0145;	// z
 	HEX_distance_between_straight_wires = 1.8;		// x
@@ -454,10 +454,10 @@ Config::Config()
 	{
 		//if (i==0||i==1||i==6||i==7)
 		//if (i==0||i==1)
-		if (true)
+		if (false)
 		{
 			D1_layer_min_hits[i] = 1;
-			D1_layer_max_hits[i] = 1;
+			D1_layer_max_hits[i] = -1;
 			//if (i==0) D1_drift_time_min[i] = 100;
 			//else D1_drift_time_min[i] = 0;
 			D1_drift_time_min[i] = 0;
@@ -467,18 +467,18 @@ Config::Config()
 		{
 			D1_layer_min_hits[i] = -1;
 			D1_layer_max_hits[i] = -1;
-			D1_drift_time_min[i] = -1500;
-			D1_drift_time_max[i] = 1500;
+			D1_drift_time_min[i] = 0;
+			D1_drift_time_max[i] = 609;
 		}
 	}
 	
 	// ---DRIFT CHEMBER D2---
 	for (int i = 0; i < 6; i++)
 	{
-		if (true)
+		if (false)
 		{
 			D2_layer_min_hits[i] = 1;
-			D2_layer_max_hits[i] = 1;
+			D2_layer_max_hits[i] = -1;
 			D2_drift_time_min[i] = 0;
 			D2_drift_time_max[i] = 609;
 		}
@@ -486,8 +486,8 @@ Config::Config()
 		{
 			D2_layer_min_hits[i] = -1;
 			D2_layer_max_hits[i] = -1;
-			D2_drift_time_min[i] = -1500;
-			D2_drift_time_max[i] = 1500;
+			D2_drift_time_min[i] = 0;
+			D2_drift_time_max[i] = 609;
 		}
 	}
 
@@ -496,7 +496,7 @@ Config::Config()
 	{
 		//if (i==0||i==3)
 		//if (i==0||i==1)
-		if (true)
+		if (false)
 		{
 			HEX_layer_min_hits[i] = 1;
 			HEX_layer_max_hits[i] = 1;

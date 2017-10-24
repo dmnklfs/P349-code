@@ -24,8 +24,6 @@ HEX::HEX(const Config &_config)
 	HEX_no_of_cells_with_hits = 0;
 	half_x_dim = _config.HEX_half_x_dim;
 	half_z_dim = _config.HEX_half_z_dim;
-	z_offset = _config.HEX_z_offset;
-	x_offset = _config.HEX_x_offset;
 	y_rotation_angle = _config.HEX_y_rotation_angle;
 	distance_to_1st_layer = _config.HEX_distance_to_1st_layer;
 	distance_between_straight_wires = _config.HEX_distance_between_straight_wires;
@@ -57,7 +55,7 @@ bool HEX::was_correct_event()
 	correct_event = false;
 	no_of_layers_with_hits = 0;
 	bool correct_in_layer[7];
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		correct_in_layer[i] = Layer[i]-> DCLayer::was_correct_event();
 		if (correct_in_layer[i]) no_of_layers_with_hits++;
@@ -72,33 +70,33 @@ bool HEX::was_correct_event()
 //		correct_event = true;
 //	}
 
-	int wire1;
-	int wire2;
-	int wire3;
-	int wire4;
-	int wire5;
-	int wire6;
-	int wire7;
-	bool pair1, pair2, pair3, pair4;
-	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[2]&&correct_in_layer[3]&&correct_in_layer[4]&&correct_in_layer[5])
-	{
-		wire1 = Layer[0] -> DCLayer::Wire.at(0);
-		wire2 = Layer[1] -> DCLayer::Wire.at(0);
-		wire3 = Layer[2] -> DCLayer::Wire.at(0);
-		wire4 = Layer[3] -> DCLayer::Wire.at(0);
-		wire5 = Layer[4] -> DCLayer::Wire.at(0);
-		wire6 = Layer[5] -> DCLayer::Wire.at(0);
-
-		pair1 = false;
-		pair2 = false;
-		pair3 = false;
-		if (wire4==wire1||wire4+1==wire1) pair1 = true;
-		//if ((wire2==wire1-1||wire2==wire1-2)&&(wire3==wire1||wire3==wire1-1)&&(wire2==wire3||wire3==wire2+1)) pair2 = true;
-		//if ((wire5==wire1+1||wire5==wire1+2)&&(wire6==wire1||wire6==wire1+1)&&(wire5==wire6||wire6==wire5-1)) pair3 = true;
-		if (wire2==wire3||wire3==wire2+1) pair2 = true;
-		if (wire5==wire6||wire6==wire5-1) pair3 = true;
-		if (pair1&&pair2&&(pair3)) correct_event = true;
-	}
+//	int wire1;
+//	int wire2;
+//	int wire3;
+//	int wire4;
+//	int wire5;
+//	int wire6;
+//	int wire7;
+//	bool pair1, pair2, pair3, pair4;
+//	if (correct_in_layer[0]&&correct_in_layer[1]&&correct_in_layer[2]&&correct_in_layer[3]&&correct_in_layer[4]&&correct_in_layer[5])
+//	{
+//		wire1 = Layer[0] -> DCLayer::Wire.at(0);
+//		wire2 = Layer[1] -> DCLayer::Wire.at(0);
+//		wire3 = Layer[2] -> DCLayer::Wire.at(0);
+//		wire4 = Layer[3] -> DCLayer::Wire.at(0);
+//		wire5 = Layer[4] -> DCLayer::Wire.at(0);
+//		wire6 = Layer[5] -> DCLayer::Wire.at(0);
+//
+//		pair1 = false;
+//		pair2 = false;
+//		pair3 = false;
+//		if (wire4==wire1||wire4+1==wire1) pair1 = true;
+//		//if ((wire2==wire1-1||wire2==wire1-2)&&(wire3==wire1||wire3==wire1-1)&&(wire2==wire3||wire3==wire2+1)) pair2 = true;
+//		//if ((wire5==wire1+1||wire5==wire1+2)&&(wire6==wire1||wire6==wire1+1)&&(wire5==wire6||wire6==wire5-1)) pair3 = true;
+//		if (wire2==wire3||wire3==wire2+1) pair2 = true;
+//		if (wire5==wire6||wire6==wire5-1) pair3 = true;
+//		if (pair1&&pair2&&(pair3)) correct_event = true;
+//	}
 
 	return correct_event;
 }
@@ -154,7 +152,7 @@ void HEX::calculate_wire_positions_in_detector()
 			// change READING so that orientation of the x axis and direction of increasing of wires/elements were the same - 04.10
 			//std::cout << "ok" << std::endl;
 			x = calc_position_in_detector((Layer[no_of_layer]->Wire.at(ii)), distance_between_straight_wires, -half_x_dim + layer_wire_frame_offset[no_of_layer]);
-			//std::cout << "wires " << i << " " << Layer[no_of_layer]->Wire.at(ii) << " " << x << std::endl;
+			//std::cout << "wires " << i << " " << layer_wire_frame_offset[no_of_layer] << std::endl;
 			//std::cout << "wires r " << i << " " << no_of_wires[no_of_layer]-(49-Layer[no_of_layer]->Wire.at(ii)) << " " << x << std::endl;
 			Layer[no_of_layer]->AbsoluteXWirePosition.push_back(x);
 			Layer[no_of_layer]->AbsoluteZPosition.push_back(z);
@@ -227,7 +225,8 @@ data_for_HEX_track_reco HEX::get_data_for_track_reco() // i need here only infor
 		data_for_calibration.positionsZ[i]	= Layer[i] -> AbsoluteZPosition.at(0);
 		data_for_calibration.drift_times[i]	= Layer[i] -> DriftTime.at(0);
 		data_for_calibration.errorsX[i]	= Layer[i] -> HitPositionError.at(0);
-		data_for_calibration.positionsWiresX[i]	= Layer[i] -> Wire.at(0);
+		data_for_calibration.positionsWiresX[i]	= Layer[i] -> AbsoluteXWirePosition.at(0);
+		//std::cout << "get data wirex" << Layer[i] -> AbsoluteXWirePosition.at(0) << std::endl;
 		data_for_calibration.wireNo[i] = Layer[i] -> Wire.at(0);
 //		if ((Layer[i] -> Wire.size())!=0)
 //		{

@@ -41,6 +41,7 @@ struct line3d
 {
 	TVector3 point;
 	TVector3 direction;
+	double pos_error;
 };
 
 class FitToLines
@@ -50,7 +51,7 @@ public:
 	static FitToLines * GetInstance();
 	~FitToLines(){ _this = NULL; }
 	double GlobalFCN(const double * par);
-	void set_line(TVector3 _point, TVector3 _direction);
+	void set_line(TVector3 _point, TVector3 _direction, double position_error);
 	void set_init_params(TVector3 _point, TVector3 _direction);
 	void calculate_distances_to_lines();
 	void set_z_reference(double _z_reference);
@@ -58,7 +59,10 @@ public:
 	double calculate_chisq();
 	TVector3 get_track_vector();
 	TVector3 get_track_point();
+	void set_D1_error_vector(TVector3 D1vec);
+	void set_D2_error_vector(TVector3 D2vec);
 	bool err_flag();
+	void check_errors();
 	bool errflag;
 private:
 	
@@ -68,6 +72,7 @@ private:
 	std::vector<line3d> LinesToFit;
 	TVector3 InitTrackPoint, InitTrackVector;
 	TVector3 TrackPoint, TrackVector;
+	TVector3 D1Xvector, D2Xvector;
 
 };
 
